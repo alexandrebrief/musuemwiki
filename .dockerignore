@@ -1,0 +1,22 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+venv
+.env
+
+# Données
+data/*.db
+*.log
+
+# IDE
+.vscode
+.idea
+*.swp
+
+# Docker
+Dockerfile
+docker-compose.yml
