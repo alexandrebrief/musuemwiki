@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+.env
+
+# Données sensibles ou temporaires
+data/*.db
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Docker
+*.pid
