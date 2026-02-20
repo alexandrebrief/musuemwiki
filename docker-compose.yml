@@ -5,9 +5,8 @@ services:
     build: ./app
     container_name: museumwiki_app
     ports:
-      - "5000:5000"
+      - "5001:5000"  # Changé le port pour éviter conflits
     volumes:
       - ./data:/app/data
-      - ./app:/app
     environment:
-      DATA_PATH: /app/data/artworks_latest.csv
+      - DATA_PATH=/app/data/artworks_latest.csv

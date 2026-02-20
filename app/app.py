@@ -46,6 +46,30 @@ def index():
                          artworks=df.head(20).to_dict('records'),
                          stats=stats)
 
+@app.route('/search')
+def search():
+    """Page de recherche"""
+    query = request.args.get('q', '')
+    df = load_artworks()
+    
+    if query:
+        # Recherche dans titre, createur, lieu, genre
+        mask = (
+            df['titre'].str.contains(query, case=False, na=False) |
+            df['createur'].str.contains(query, case=False, na=False) |
+            df['lieu'].str.contains(query, case=False, na=False) |
+            df['genre'].str.contains(query, case=False, na=False)
+        )
+        results = df[mask]
+    else:
+        results = pd.DataFrame()
+    
+    return render_template('search.html', 
+                         query=query,
+                         results=results.to_dict('records'),
+                         count=len(results))
+
+
 @app.route('/api/artworks')
 def api_artworks():
     """API JSON pour les œuvres"""
