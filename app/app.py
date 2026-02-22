@@ -66,8 +66,11 @@ def index():
 
 @app.route('/search')
 def search():
-    """Page de recherche"""
+    """Page de recherche avec pagination"""
     query = request.args.get('q', '')
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
+    
     df = load_artworks()
     
     if query:
@@ -78,15 +81,25 @@ def search():
             df['lieu'].str.contains(query, case=False, na=False) |
             df['genre'].str.contains(query, case=False, na=False)
         )
-        results = df[mask]
+        all_results = df[mask]
+        total = len(all_results)
+        
+        # Pagination
+        start = (page - 1) * per_page
+        end = start + per_page
+        results_page = all_results.iloc[start:end]
+        total_pages = (total + per_page - 1) // per_page
     else:
-        results = pd.DataFrame()
+        results_page = pd.DataFrame()
+        total = 0
+        total_pages = 1
     
     return render_template('search.html', 
                          query=query,
-                         results=results.to_dict('records'),
-                         count=len(results))
-
+                         results=results_page.to_dict('records'),
+                         count=total,
+                         page=page,
+                         total_pages=total_pages)
 
 @app.route('/api/artworks')
 def api_artworks():

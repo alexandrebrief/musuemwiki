@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuseumWiki - Galerie</title>
+    
+    {/* ==================== STYLES BOOTSTRAP ==================== */}
+    {/* Bootstrap est un framework CSS qui facilite le design responsive */}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    {/* ==================== STYLES PERSONNALISÉS ==================== */}
+    <style>
+        /* Style pour chaque carte d'œuvre */
+        .artwork-card {
+            margin-bottom: 20px;            /* Espace entre les cartes */
+            transition: transform 0.2s;      /* Animation douce au survol */
+            height: 100%;                    /* Hauteur uniforme */
+        }
+        
+        /* Effet au survol de la carte */
+        .artwork-card:hover {
+            transform: scale(1.05);           /* La carte grossit légèrement */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);  /* Ombre portée */
+            z-index: 10;                      /* Passe au-dessus des autres */
+        }
+        
+        /* Boîte de statistiques avec dégradé */
+        .stats-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        /* Style pour les images sans image */
+        .no-image-placeholder {
+            background-color: #6c757d;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    {/* ==================== BARRE DE NAVIGATION ==================== */}
+    {/* La navbar reste présente sur toutes les pages */}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            {/* Logo / Titre du site - cliquable pour retour à l'accueil */}
+            <a class="navbar-brand" href="/">🖼️ MuseumWiki</a>
+            
+            {/* Bouton pour version mobile (hamburger) */}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            {/* Menu de navigation */}
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    {/* LIEN ACCUEIL - page principale avec galerie */}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Accueil</a>
+                    </li>
+                    
+                    {/* LIEN RECHERCHE - pour chercher des œuvres spécifiques */}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search">Recherche</a>
+                    </li>
+                    
+                    {/* LIEN STATISTIQUES - graphiques et analyses */}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/stats">Statistiques</a>
+                    </li>
+                    
+                    {/* LIEN À PROPOS - informations sur le projet */}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">À propos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {/* ==================== CONTENU PRINCIPAL ==================== */}
+    <div class="container mt-4">
+        {/* ==================== BOÎTE DE STATISTIQUES ==================== */}
+        {/* Ces stats sont passées depuis app.py via le dictionnaire 'stats' */}
+        <div class="stats-box">
+            <div class="row">
+                {/* Colonne 1: Nombre total d'œuvres */}
+                <div class="col-md-4 text-center">
+                    <h3>{{ stats.total }}</h3>
+                    <p>Œuvres totales</p>
+                </div>
+                
+                {/* Colonne 2: Œuvres avec image */}
+                <div class="col-md-4 text-center">
+                    <h3>{{ stats.with_image }}</h3>
+                    <p>Avec image</p>
+                </div>
+                
+                {/* Colonne 3: Date de dernière mise à jour */}
+                <div class="col-md-4 text-center">
+                    <h3>{{ stats.last_update }}</h3>
+                    <p>Dernière mise à jour</p>
+                </div>
+            </div>
+        </div>
+
+        {/* ==================== TITRE DE LA SECTION ==================== */}
+        <h2 class="mb-4">Dernières œuvres</h2>
+        
+        {/* ==================== GRILLE DES ŒUVRES ==================== */}
+        {/* La grille Bootstrap utilise 12 colonnes au total */}
+        {/* col-md-3 = 4 cartes par ligne sur desktop (12/3=4) */}
+        <div class="row">
+            {/* Boucle Jinja2 - parcourt toutes les œuvres de la page */}
+            {% for artwork in artworks %}
+            {/* Chaque œuvre occupe 3 colonnes sur desktop */}
+            <div class="col-md-3 mb-4">
+                {/* Carte Bootstrap avec style personnalisé */}
+                <div class="card h-100 artwork-card">
+                    
+                    {/* ==================== IMAGE DE L'ŒUVRE ==================== */}
+                    {/* Vérifie si une URL d'image existe */}
+                    {% if artwork.image_url %}
+                        {/* Affichage de l'image avec dimensions contrôlées */}
+                        <img src="{{ artwork.image_url }}" 
+                             class="card-img-top" 
+                             alt="{{ artwork.titre }}"
+                             style="height: 200px; object-fit: cover;"
+                             onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<div class=\'no-image-placeholder\'>Image non disponible</div>';">
+                    {% else %}
+                        {/* Placeholder quand pas d'image */}
+                        <div class="no-image-placeholder">
+                            🖼️ Pas d'image
+                        </div>
+                    {% endif %}
+                    
+                    {/* ==================== CORPS DE LA CARTE ==================== */}
+                    <div class="card-body d-flex flex-column">
+                        {/* Titre de l'œuvre (tronqué à 50 caractères) */}
+                        <h5 class="card-title">{{ artwork.titre[:50] }}{% if artwork.titre|length > 50 %}...{% endif %}</h5>
+                        
+                        {/* Informations sur l'œuvre */}
+                        <p class="card-text flex-grow-1">
+                            {/* Artiste (créateur) en gras */}
+                            <strong>{{ artwork.createur }}</strong><br>
+                            
+                            {/* Date - n'affiche que l'année si disponible */}
+                            <small>
+                                📅 {{ artwork.date[:4] if artwork.date and artwork.date != 'Inconnu' else 'Date inconnue' }}
+                            </small><br>
+                            
+                            {/* Lieu de conservation si disponible */}
+                            {% if artwork.lieu and artwork.lieu != 'Inconnu' %}
+                                <small>🏛️ {{ artwork.lieu[:30] }}{% if artwork.lieu|length > 30 %}...{% endif %}</small><br>
+                            {% endif %}
+                            
+                            {/* Genre si disponible */}
+                            {% if artwork.genre and artwork.genre != 'Inconnu' %}
+                                <small>🏷️ {{ artwork.genre }}</small>
+                            {% endif %}
+                        </p>
+                        
+                        {/* Bouton vers Wikidata (s'ouvre dans un nouvel onglet) */}
+                        <a href="{{ artwork.wikidata_url }}" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="btn btn-sm btn-primary mt-auto">
+                            Voir sur Wikidata
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {/* ==================== ZONE PAGINATION ==================== */}
+        {/* À AJOUTER ICI - Les boutons de pagination viendront ici */}
+        <!--
+            La pagination sera ajoutée ici pour naviguer entre les pages
+            avec les boutons Précédent, Suivant et les numéros de pages
+        -->
+    </div>
+
+    {/* ==================== SCRIPTS JAVASCRIPT ==================== */}
+    {/* Bootstrap a besoin de JavaScript pour certains composants */}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

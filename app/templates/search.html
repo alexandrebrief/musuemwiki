@@ -5,38 +5,224 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MuseumWiki - Recherche</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .artwork-card {
-            margin-bottom: 20px;
-            transition: transform 0.2s;
-            height: 100%;
+        * {
+            font-family: 'Inter', sans-serif;
         }
-        .artwork-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        
+        body {
+            background-color: #f5f5f7;
         }
+        
+        .navbar-custom {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            font-weight: 500;
+            margin: 0 10px;
+        }
+        
+        .nav-link.active {
+            color: white !important;
+        }
+        
+        .search-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+        
         .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-input {
+            border-radius: 50px;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            font-size: 1rem;
+        }
+        
+        .search-button {
+            background: white;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255,255,255,0.3);
+        }
+        
+        .results-info {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .results-count {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        
+        .results-filter select {
+            border-radius: 8px;
+            padding: 0.4rem 1rem;
+            border: 1px solid #ddd;
+        }
+        
+        .artwork-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            height: 100%;
+            border: none;
+        }
+        
+        .artwork-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+        }
+        
+        .artwork-image {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .artwork-image-placeholder {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .artwork-info {
+            padding: 1.2rem;
+        }
+        
+        .artwork-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a1a2e;
+            line-height: 1.4;
+        }
+        
+        .artwork-artist {
+            color: #666;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+        
+        .artwork-details {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 0.8rem;
+        }
+        
+        .wikidata-link {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 40px;
-            border-radius: 10px;
-            margin-bottom: 30px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s;
         }
-        .search-input {
-            max-width: 500px;
-            margin: 0 auto;
+        
+        .wikidata-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(102,126,234,0.4);
+            color: white;
+        }
+        
+        .pagination {
+            margin-top: 2rem;
+            margin-bottom: 3rem;
+            justify-content: center;
+        }
+        
+        .page-link {
+            color: #1a1a2e;
+            border: none;
+            margin: 0 5px;
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+        }
+        
+        .page-item.active .page-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+        }
+        
+        .page-item.disabled .page-link {
+            background: #f0f0f0;
+            color: #aaa;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 4rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 4rem;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container">
-            <a class="navbar-brand" href="/">🖼️ MuseumWiki</a>
+            <a class="navbar-brand" href="/">MUSEUMWIKI</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/">Accueil</a>
                     </li>
@@ -54,64 +240,103 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <div class="search-box text-center">
-            <h1 class="mb-4">🔍 Rechercher une œuvre</h1>
-            <form action="/search" method="get" class="search-input">
-                <div class="input-group">
+    <div class="search-header text-center">
+        <div class="container">
+            <h1 class="display-4">Recherche</h1>
+            <p class="lead">Trouvez des œuvres par artiste, titre, musée ou genre</p>
+            
+            <div class="search-box">
+                <form action="/search" method="get">
                     <input type="text" 
                            name="q" 
-                           class="form-control form-control-lg" 
-                           placeholder="Titre, artiste, musée, genre..."
+                           class="search-input" 
+                           placeholder="Ex: Monet, Louvre, Portrait, Les nymphéas..."
                            value="{{ query }}">
-                    <button class="btn btn-light btn-lg" type="submit">
+                    <button class="search-button" type="submit">
                         Rechercher
                     </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
+    </div>
 
+    <div class="container">
         {% if query %}
-            <div class="mb-4">
-                <h3>Résultats pour "{{ query }}"</h3>
-                <p>{{ count }} œuvre(s) trouvée(s)</p>
+            <div class="results-info">
+                <span class="results-count">
+                    {{ count }} résultat(s) pour "{{ query }}"
+                </span>
+                <span class="results-filter">
+                    Page {{ page }} sur {{ total_pages }}
+                </span>
             </div>
 
             {% if results %}
                 <div class="row">
                     {% for artwork in results %}
-                    <div class="col-md-3 mb-4">
-                        <div class="card artwork-card">
-                            {% if artwork.image_url %}
-                            <img src="{{ artwork.image_url }}" class="card-img-top" alt="{{ artwork.titre }}" style="height: 200px; object-fit: cover;">
+                    <div class="col-md-3">
+                        <div class="artwork-card">
+                            {% if artwork.image_url and artwork.image_url != '' %}
+                            <img src="{{ artwork.image_url }}" class="artwork-image" alt="{{ artwork.titre }}">
                             {% else %}
-                            <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
-                                🖼️ Pas d'image
+                            <div class="artwork-image-placeholder">
+                                Image non disponible
                             </div>
                             {% endif %}
-                            <div class="card-body">
-                                <h5 class="card-title">{{ artwork.titre[:50] }}{% if artwork.titre|length > 50 %}...{% endif %}</h5>
-                                <p class="card-text">
-                                    <strong>👨‍🎨 {{ artwork.createur }}</strong><br>
-                                    <small>📅 {{ artwork.date[:4] if artwork.date else 'Date inconnue' }}</small><br>
-                                    <small>🏛️ {{ artwork.lieu[:30] if artwork.lieu else 'Lieu inconnu' }}</small><br>
-                                    {% if artwork.genre %}
-                                    <small>🏷️ {{ artwork.genre }}</small>
-                                    {% endif %}
-                                </p>
-                                <a href="{{ artwork.wikidata_url }}" target="_blank" class="btn btn-sm btn-primary">Voir sur Wikidata</a>
+                            <div class="artwork-info">
+                                <div class="artwork-title">{{ artwork.titre[:40] }}{% if artwork.titre|length > 40 %}...{% endif %}</div>
+                                <div class="artwork-artist">{{ artwork.createur }}</div>
+                                <div class="artwork-details">
+                                    {{ artwork.date[:4] if artwork.date else 'Date inconnue' }}<br>
+                                    {{ artwork.lieu[:20] if artwork.lieu else 'Lieu inconnu' }}
+                                </div>
+                                <a href="{{ artwork.wikidata_url }}" target="_blank" class="wikidata-link">Voir sur Wikidata</a>
                             </div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
+
+                <!-- PAGINATION -->
+                <nav class="pagination-wrapper">
+                    <ul class="pagination">
+                        <li class="page-item {{ 'disabled' if page == 1 else '' }}">
+                            <a class="page-link" href="?q={{ query }}&page={{ page - 1 }}">Précédent</a>
+                        </li>
+                        
+                        {% for p in range(1, total_pages + 1) %}
+                            {% if p == page %}
+                                <li class="page-item active"><span class="page-link">{{ p }}</span></li>
+                            {% elif p <= 3 or p > total_pages - 3 or (p >= page - 2 and p <= page + 2) %}
+                                <li class="page-item"><a class="page-link" href="?q={{ query }}&page={{ p }}">{{ p }}</a></li>
+                            {% elif p == 4 and page > 4 %}
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        <li class="page-item {{ 'disabled' if page == total_pages else '' }}">
+                            <a class="page-link" href="?q={{ query }}&page={{ page + 1 }}">Suivant</a>
+                        </li>
+                    </ul>
+                </nav>
             {% else %}
-                <div class="alert alert-info">
-                    Aucune œuvre trouvée pour "{{ query }}". Essayez d'autres mots-clés !
+                <div class="no-results">
+                    <h3>Aucune œuvre trouvée</h3>
+                    <p>Essayez avec d'autres mots-clés</p>
                 </div>
             {% endif %}
+        {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted">Utilisez la barre de recherche ci-dessus pour trouver des œuvres</p>
+            </div>
         {% endif %}
     </div>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <p class="mb-0">MuseumWiki - Base de données d'œuvres d'art</p>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
