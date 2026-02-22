@@ -1,42 +1,71 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <!-- ============================================
+         MÉTADONNÉES ET RESSOURCES
+         ============================================ -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MuseumWiki - Collection</title>
+    <title>MuseumWiki - Collection d'œuvres d'art</title>
+    
+    <!-- Bootstrap CSS (framework pour le design responsive) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts : Inter (typographie moderne et lisible) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- ============================================
+         STYLES PERSONNALISÉS
+         ============================================ -->
     <style>
+        /* ---------- RESET ET BASE ---------- */
         * {
             font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
             background-color: #f5f5f7;
+            line-height: 1.6;
         }
         
+        /* ---------- BARRE DE NAVIGATION ---------- */
         .navbar-custom {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             padding: 1rem 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
         
         .navbar-brand {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1.5rem;
             letter-spacing: 0.5px;
+            color: white !important;
         }
         
         .nav-link {
             font-weight: 500;
             margin: 0 10px;
             transition: all 0.3s;
+            color: rgba(255,255,255,0.9) !important;
         }
         
         .nav-link:hover {
             transform: translateY(-2px);
+            color: white !important;
         }
         
+        .nav-link.active {
+            color: white !important;
+            font-weight: 600;
+        }
+        
+        /* ---------- SECTION HÉROÏQUE (EN-TÊTE) ---------- */
         .hero-section {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
@@ -56,6 +85,7 @@
             opacity: 0.9;
         }
         
+        /* ---------- GRILLE DE STATISTIQUES ---------- */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -88,15 +118,33 @@
             font-weight: 500;
         }
         
+        /* ---------- GRILLE DES ŒUVRES ---------- */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -12px;
+            margin-left: -12px;
+        }
+        
+        .col-md-3 {
+            padding-right: 12px;
+            padding-left: 12px;
+            margin-bottom: 24px;  /* Espace vertical entre les lignes */
+            width: 25%;
+            box-sizing: border-box;
+        }
+        
+        /* Carte d'œuvre */
         .artwork-card {
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 25px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             transition: all 0.3s;
             height: 100%;
             border: none;
+            display: flex;
+            flex-direction: column;
         }
         
         .artwork-card:hover {
@@ -104,25 +152,44 @@
             box-shadow: 0 12px 20px rgba(0,0,0,0.15);
         }
         
+        /* Zone image */
         .artwork-image {
             height: 250px;
             width: 100%;
             object-fit: cover;
             border-bottom: 1px solid #eee;
+            background-color: #f0f0f0;
         }
         
+        /* Placeholder quand pas d'image (version pro, sans texte) */
         .artwork-image-placeholder {
             height: 250px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 500;
+            width: 100%;
+            background: linear-gradient(145deg, #e0e0e0 0%, #b0b0b0 100%);
+            position: relative;
         }
         
+        /* Effet de texture subtile pour le placeholder */
+        .artwork-image-placeholder::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255,255,255,0.05) 0px,
+                rgba(255,255,255,0.05) 10px,
+                rgba(0,0,0,0.02) 10px,
+                rgba(0,0,0,0.02) 20px
+            );
+        }
+        
+        /* Informations de l'œuvre */
         .artwork-info {
             padding: 1.2rem;
+            flex-grow: 1;
         }
         
         .artwork-title {
@@ -137,35 +204,22 @@
             color: #666;
             font-weight: 500;
             margin-bottom: 0.3rem;
+            font-size: 0.95rem;
         }
         
         .artwork-details {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #888;
         }
         
-        .wikidata-link {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.4rem 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        
-        .wikidata-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(102,126,234,0.4);
-            color: white;
-        }
-        
+        /* ---------- PAGINATION ---------- */
         .pagination {
             margin-top: 2rem;
+            margin-bottom: 3rem;
             justify-content: center;
+            display: flex;
+            list-style: none;
+            padding-left: 0;
         }
         
         .page-link {
@@ -174,28 +228,71 @@
             margin: 0 5px;
             border-radius: 8px;
             font-weight: 500;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .page-link:hover {
+            background: #f0f0f0;
         }
         
         .page-item.active .page-link {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
+            color: white;
         }
         
+        .page-item.disabled .page-link {
+            color: #ccc;
+            pointer-events: none;
+        }
+        
+        /* ---------- PIED DE PAGE ---------- */
         .footer {
             background: #1a1a2e;
             color: white;
             padding: 2rem 0;
             margin-top: 4rem;
         }
+        
+        /* ---------- RESPONSIVE (tablettes) ---------- */
+        @media (max-width: 768px) {
+            .col-md-3 {
+                width: 50%;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+        }
+        
+        /* ---------- RESPONSIVE (mobiles) ---------- */
+        @media (max-width: 480px) {
+            .col-md-3 {
+                width: 100%;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- ============================================
+         BARRE DE NAVIGATION
+         ============================================ -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container">
+            <!-- Logo / nom du site -->
             <a class="navbar-brand" href="/">MUSEUMWIKI</a>
+            
+            <!-- Bouton menu pour mobile -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
+            <!-- Liens de navigation -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
@@ -215,6 +312,9 @@
         </div>
     </nav>
 
+    <!-- ============================================
+         SECTION HÉROÏQUE
+         ============================================ -->
     <div class="hero-section">
         <div class="container text-center">
             <h1 class="hero-title">Collection d'œuvres d'art</h1>
@@ -222,7 +322,11 @@
         </div>
     </div>
 
+    <!-- ============================================
+         CONTENU PRINCIPAL
+         ============================================ -->
     <div class="container">
+        <!-- Statistiques générales -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number">{{ stats.total }}</div>
@@ -242,39 +346,53 @@
             </div>
         </div>
 
+        <!-- Grille des œuvres -->
         <div class="row">
             {% for artwork in artworks %}
-
-<div class="col-md-3">
-    <a href="/oeuvre/{{ artwork.id }}" style="text-decoration: none; color: inherit;">
-        <div class="artwork-card">
-            {% if artwork.image_url and artwork.image_url != '' %}
-            <img src="{{ artwork.image_url }}" class="artwork-image" alt="{{ artwork.titre }}">
-            {% else %}
-            <div class="artwork-image-placeholder">
-                Image non disponible
+            <!-- Carte pour chaque œuvre (4 par ligne) -->
+            <div class="col-md-3">
+                <a href="/oeuvre/{{ artwork.id }}" style="text-decoration: none; color: inherit;">
+                    <div class="artwork-card">
+                        <!-- Affichage de l'image ou placeholder gris -->
+                        {% if artwork.image_url and artwork.image_url != '' %}
+                        <img src="{{ artwork.image_url }}" 
+                             class="artwork-image" 
+                             alt="{{ artwork.titre }}"
+                             loading="lazy">  <!-- Chargement différé pour performance -->
+                        {% else %}
+                        <!-- Placeholder élégant sans texte -->
+                        <div class="artwork-image-placeholder"></div>
+                        {% endif %}
+                        
+                        <!-- Informations texte -->
+                        <div class="artwork-info">
+                            <div class="artwork-title">
+                                {{ artwork.titre[:50] }}{% if artwork.titre|length > 50 %}...{% endif %}
+                            </div>
+                            <div class="artwork-artist">
+                                {{ artwork.createur }}
+                            </div>
+                            <div class="artwork-details">
+                                {{ artwork.date[:4] if artwork.date else 'Date inconnue' }}
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
-            {% endif %}
-            <div class="artwork-info">
-                <div class="artwork-title">{{ artwork.titre[:50] }}{% if artwork.titre|length > 50 %}...{% endif %}</div>
-                <div class="artwork-artist">{{ artwork.createur }}</div>
-                <div class="artwork-details">
-                    {{ artwork.date[:4] if artwork.date else 'Date inconnue' }}
-                </div>
-            </div>
-        </div>
-    </a>
-</div>
-
             {% endfor %}
         </div>
 
+        <!-- ============================================
+             PAGINATION
+             ============================================ -->
         <nav class="pagination-wrapper">
             <ul class="pagination">
+                <!-- Bouton précédent -->
                 <li class="page-item {{ 'disabled' if stats.page == 1 else '' }}">
                     <a class="page-link" href="?page={{ stats.page - 1 }}">Précédent</a>
                 </li>
                 
+                <!-- Numéros de page -->
                 {% for p in range(1, stats.total_pages + 1) %}
                     {% if p == stats.page %}
                         <li class="page-item active"><span class="page-link">{{ p }}</span></li>
@@ -285,6 +403,7 @@
                     {% endif %}
                 {% endfor %}
                 
+                <!-- Bouton suivant -->
                 <li class="page-item {{ 'disabled' if stats.page == stats.total_pages else '' }}">
                     <a class="page-link" href="?page={{ stats.page + 1 }}">Suivant</a>
                 </li>
@@ -292,12 +411,16 @@
         </nav>
     </div>
 
+    <!-- ============================================
+         PIED DE PAGE
+         ============================================ -->
     <footer class="footer">
         <div class="container text-center">
-            <p class="mb-0">MuseumWiki - Base de données d'œuvres d'art</p>
+            <p class="mb-0">© MuseumWiki - Base de données d'œuvres d'art | Données issues de Wikidata</p>
         </div>
     </footer>
 
+    <!-- Bootstrap JavaScript (pour le menu mobile) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

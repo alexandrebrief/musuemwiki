@@ -74,6 +74,40 @@
                             <span class="info-label">Mouvement :</span>
                             <span class="info-value">{{ oeuvre.mouvement }}</span>
                         </div>
+<div class="info-item">
+    <span class="info-label">Dimensions :</span>
+    <span class="info-value">
+        {% if oeuvre.hauteur and oeuvre.largeur %}
+            {{ oeuvre.hauteur }} x {{ oeuvre.largeur }} cm
+        {% elif oeuvre.hauteur %}
+            H: {{ oeuvre.hauteur }} cm
+        {% elif oeuvre.largeur %}
+            L: {{ oeuvre.largeur }} cm
+        {% else %}
+            Non renseigné
+        {% endif %}
+    </span>
+</div>
+<div class="info-item">
+    <span class="info-label">Matériau :</span>
+    <span class="info-value">{{ oeuvre.materiau if oeuvre.materiau else 'Non renseigné' }}</span>
+</div>
+<div class="info-item">
+    <span class="info-label">Collection :</span>
+    <span class="info-value">{{ oeuvre.collection if oeuvre.collection else 'Non renseigné' }}</span>
+</div>
+<div class="info-item">
+    <span class="info-label">N° inventaire :</span>
+    <span class="info-value">{{ oeuvre.inventaire if oeuvre.inventaire else 'Non renseigné' }}</span>
+</div>
+<div class="info-item">
+    <span class="info-label">Sujet :</span>
+    <span class="info-value">{{ oeuvre.sujet if oeuvre.sujet else 'Non renseigné' }}</span>
+</div>
+<div class="info-item">
+    <span class="info-label">Lieu de création :</span>
+    <span class="info-value">{{ oeuvre.creation_lieu if oeuvre.creation_lieu else 'Non renseigné' }}</span>
+</div>
                         <div class="info-item">
                             <span class="info-label">ID Wikidata :</span>
                             <span class="info-value">{{ oeuvre.id }}</span>
