@@ -28,23 +28,41 @@ def load_artworks():
         print(f"Erreur de chargement: {e}")
         return pd.DataFrame()
 
+
+
+
 @app.route('/')
 def index():
-    """Page d'accueil avec galerie"""
+    """Page d'accueil avec galerie et pagination"""
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
+    
     df = load_artworks()
     total = len(df)
-    with_image = len(df[df['image_url'] != ''])
+    
+    # Pagination
+    start = (page - 1) * per_page
+    end = start + per_page
+    artworks_page = df.iloc[start:end]
+    
+    total_pages = (total + per_page - 1) // per_page
     
     stats = {
         'total': total,
-        'with_image': with_image,
-        'without_image': total - with_image,
-        'last_update': datetime.now().strftime('%d/%m/%Y')
+        'with_image': len(df[df['image_url'] != '']),
+        'without_image': total - len(df[df['image_url'] != '']),
+        'last_update': datetime.now().strftime('%d/%m/%Y'),
+        'page': page,
+        'total_pages': total_pages,
+        'per_page': per_page
     }
     
     return render_template('index.html', 
-                         artworks=df.head(20).to_dict('records'),
+                         artworks=artworks_page.to_dict('records'),
                          stats=stats)
+
+
+
 
 @app.route('/search')
 def search():
