@@ -11,26 +11,29 @@ import plotly.express as px
 import plotly.utils
 import json
 from datetime import datetime
+_df_cache = None
 
 app = Flask(__name__)
 
-# Chemin vers les données
-DATA_PATH = os.getenv('DATA_PATH', '/app/data/artworks_latest.csv')
+# Déterminer le chemin des données selon l'environnement
+if os.path.exists('/app/data/artworks_latest.csv'):
+    DATA_PATH = '/app/data/artworks_latest.csv'   # Dans Docker
+else:
+    DATA_PATH = '../data/artworks_latest.csv'     # En local
+
 
 def load_artworks():
-    """Charge les œuvres depuis le CSV"""
-    try:
-        df = pd.read_csv(DATA_PATH)
-        print("✅ CSV chargé avec succès")
-        print(f"📊 Colonnes trouvées : {list(df.columns)}")
-        print(f"📊 Nombre de lignes : {len(df)}")
-        
-        # Nettoyer les données
-        df = df.fillna('Inconnu')
-        return df
-    except Exception as e:
-        print(f"❌ Erreur de chargement: {e}")
-        return pd.DataFrame()
+    """Charge les œuvres depuis le CSV (avec cache)"""
+    global _df_cache
+    if _df_cache is None:
+        try:
+            _df_cache = pd.read_csv(DATA_PATH)
+            _df_cache = _df_cache.fillna('Inconnu')
+            print("✅ CSV chargé en cache")
+        except Exception as e:
+            print(f"❌ Erreur de chargement: {e}")
+            return pd.DataFrame()
+    return _df_cache
 
 
 
@@ -124,6 +127,51 @@ def api_artworks():
     df = load_artworks()
     limit = request.args.get('limit', 100, type=int)
     return jsonify(df.head(limit).to_dict('records'))
+
+@app.route('/api/suggestions')
+def suggestions():
+    """API pour l'autocomplete : retourne les suggestions en fonction de la saisie"""
+    query = request.args.get('q', '').strip()
+    if len(query) < 2:  # Pas de suggestion avant 2 caractères
+        return jsonify([])
+    
+    df = load_artworks()
+    
+    # Chercher les correspondances
+    mask_artistes = df['createur'].str.contains(query, case=False, na=False)
+    mask_oeuvres = df['titre'].str.contains(query, case=False, na=False)
+    mask_musees = df['lieu'].str.contains(query, case=False, na=False)
+    
+    suggestions = []
+    
+    # Artistes (max 3)
+    artistes = df[mask_artistes]['createur'].drop_duplicates().head(3).tolist()
+    for artiste in artistes:
+        suggestions.append({
+            'texte': artiste,
+            'categorie': 'artiste',
+            'icone': '🎨'
+        })
+    
+    # Œuvres (max 3)
+    oeuvres = df[mask_oeuvres]['titre'].drop_duplicates().head(3).tolist()
+    for oeuvre in oeuvres:
+        suggestions.append({
+            'texte': oeuvre,
+            'categorie': 'œuvre',
+            'icone': '🖼️'
+        })
+    
+    # Musées (max 3)
+    musees = df[mask_musees]['lieu'].drop_duplicates().head(3).tolist()
+    for musee in musees:
+        suggestions.append({
+            'texte': musee,
+            'categorie': 'musée',
+            'icone': '🏛️'
+        })
+    
+    return jsonify(suggestions[:9])  # Max 9 suggestions
 
 @app.route('/artist/<artist_name>')
 def artist_works(artist_name):

@@ -6,213 +6,238 @@
     <title>MuseumWiki - Recherche</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        body {
-            background-color: #f5f5f7;
-        }
-        
-        .navbar-custom {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            padding: 1rem 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        
-        .navbar-brand {
-            font-weight: 600;
-            font-size: 1.5rem;
-            color: white !important;
-        }
-        
-        .nav-link {
-            color: rgba(255,255,255,0.8) !important;
-            font-weight: 500;
-            margin: 0 10px;
-        }
-        
-        .nav-link.active {
-            color: white !important;
-        }
-        
-        .search-header {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            padding: 3rem 0;
-            margin-bottom: 3rem;
-        }
-        
-        .search-box {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .search-input {
-            border-radius: 50px;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            width: 100%;
-            font-size: 1rem;
-        }
-        
-        .search-button {
-            background: white;
-            color: #1a1a2e;
-            border: none;
-            border-radius: 50px;
-            padding: 0.8rem 2rem;
-            font-weight: 600;
-            margin-top: 1rem;
-            transition: all 0.3s;
-        }
-        
-        .search-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255,255,255,0.3);
-        }
-        
-        .results-info {
-            background: white;
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .results-count {
-            font-weight: 600;
-            color: #1a1a2e;
-        }
-        
-        .results-filter select {
-            border-radius: 8px;
-            padding: 0.4rem 1rem;
-            border: 1px solid #ddd;
-        }
-        
-        .artwork-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-            height: 100%;
-            border: none;
-        }
-        
-        .artwork-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
-        }
-        
-        .artwork-image {
-            height: 200px;
-            width: 100%;
-            object-fit: cover;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .artwork-image-placeholder {
-            height: 200px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 500;
-        }
-        
-        .artwork-info {
-            padding: 1.2rem;
-        }
-        
-        .artwork-title {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #1a1a2e;
-            line-height: 1.4;
-        }
-        
-        .artwork-artist {
-            color: #666;
-            font-weight: 500;
-            margin-bottom: 0.3rem;
-            font-size: 0.9rem;
-        }
-        
-        .artwork-details {
-            font-size: 0.8rem;
-            color: #888;
-            margin-bottom: 0.8rem;
-        }
-        
-        .wikidata-link {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        
-        .wikidata-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(102,126,234,0.4);
-            color: white;
-        }
-        
-        .pagination {
-            margin-top: 2rem;
-            margin-bottom: 3rem;
-            justify-content: center;
-        }
-        
-        .page-link {
-            color: #1a1a2e;
-            border: none;
-            margin: 0 5px;
-            border-radius: 8px;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-        }
-        
-        .page-item.active .page-link {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            color: white;
-        }
-        
-        .page-item.disabled .page-link {
-            background: #f0f0f0;
-            color: #aaa;
-        }
-        
-        .no-results {
-            text-align: center;
-            padding: 4rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-        
-        .footer {
-            background: #1a1a2e;
-            color: white;
-            padding: 2rem 0;
-            margin-top: 4rem;
-        }
-    </style>
+
+
+
+<style>
+    * {
+        font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+        background-color: #f5f5f7;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .navbar-custom {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 1rem 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .navbar-brand {
+        font-weight: 600;
+        font-size: 1.5rem;
+        color: white !important;
+    }
+    
+    .nav-link {
+        color: rgba(255,255,255,0.8) !important;
+        font-weight: 500;
+        margin: 0 10px;
+    }
+    
+    .nav-link.active {
+        color: white !important;
+    }
+    
+    .search-header {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+    }
+    
+    .search-box {
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+    }
+    
+    .search-input {
+        border-radius: 50px;
+        padding: 0.8rem 1.5rem;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        width: 100%;
+        font-size: 1rem;
+    }
+    
+    .search-button {
+        background: white;
+        color: #1a1a2e;
+        border: none;
+        border-radius: 50px;
+        padding: 0.8rem 2rem;
+        font-weight: 600;
+        margin-top: 1rem;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .search-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255,255,255,0.3);
+    }
+    
+    /* STYLE CORRIGÉ DES SUGGESTIONS - Texte à gauche et noir */
+    .suggestions-box {
+        width: 100%;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-top: 5px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        position: absolute;
+        z-index: 1000;
+        left: 0;
+        text-align: left !important;
+    }
+    
+    .suggestion-item {
+        padding: 12px 16px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+        color: #000000 !important;  /* Noir forcé */
+        font-size: 14px;
+        text-align: left !important;  /* Alignement gauche forcé */
+        background: white;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .suggestion-item strong {
+        font-weight: 600;
+        color: #000000 !important;  /* Noir forcé */
+    }
+    
+    .suggestion-item small {
+        color: #555555 !important;  /* Gris foncé pour la catégorie */
+        margin-left: 8px;
+        font-style: italic;
+    }
+    
+    .suggestion-item:hover {
+        background: #f0f0f0;  /* Gris clair au survol */
+    }
+    
+    .suggestion-item:last-child {
+        border-bottom: none;
+    }
+    
+    .results-info {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .results-count {
+        font-weight: 600;
+        color: #1a1a2e;
+    }
+    
+    .artwork-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+        height: 100%;
+        border: none;
+    }
+    
+    .artwork-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+    }
+    
+    .artwork-image {
+        height: 200px;
+        width: 100%;
+        object-fit: cover;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .artwork-image-placeholder {
+        height: 200px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 500;
+    }
+    
+    .artwork-info {
+        padding: 1.2rem;
+        text-align: left;
+    }
+    
+    .artwork-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #1a1a2e;
+        line-height: 1.4;
+        text-align: left;
+    }
+    
+    .artwork-artist {
+        color: #666;
+        font-weight: 500;
+        margin-bottom: 0.3rem;
+        font-size: 0.9rem;
+        text-align: left;
+    }
+    
+    .artwork-details {
+        font-size: 0.8rem;
+        color: #888;
+        margin-bottom: 0.8rem;
+        text-align: left;
+    }
+    
+    .pagination {
+        margin-top: 2rem;
+        margin-bottom: 3rem;
+        justify-content: center;
+    }
+    
+    .page-link {
+        color: #1a1a2e;
+        border: none;
+        margin: 0 5px;
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+    }
+    
+    .page-item.active .page-link {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+    }
+    
+    .footer {
+        background: #1a1a2e;
+        color: white;
+        padding: 2rem 0;
+        margin-top: 4rem;
+    }
+</style>
+
+
+
+
+
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
@@ -245,18 +270,23 @@
             <h1 class="display-4">Recherche</h1>
             <p class="lead">Trouvez des œuvres par artiste, titre, musée ou genre</p>
             
-            <div class="search-box">
-                <form action="/search" method="get">
-                    <input type="text" 
-                           name="q" 
-                           class="search-input" 
-                           placeholder="Ex: Monet, Louvre, Portrait, Les nymphéas..."
-                           value="{{ query }}">
-                    <button class="search-button" type="submit">
-                        Rechercher
-                    </button>
-                </form>
-            </div>
+            
+<div class="search-box">
+    <form action="/search" method="get" autocomplete="off">
+        <input type="text" 
+               name="q" 
+               id="search-input"
+               class="search-input" 
+               placeholder="Ex: Monet, Louvre, Portrait, Les nymphéas..."
+               value="{{ query }}">
+        <button class="search-button" type="submit">
+            Rechercher
+        </button>
+        <!-- Boîte de suggestions (AJOUTER ICI) -->
+        <div id="suggestions" class="suggestions-box" style="display: none; position: absolute; background: white; border: 1px solid #ddd; border-radius: 8px; max-width: 500px; margin-top: 5px; z-index: 1000;"></div>
+    </form>
+</div>
+
         </div>
     </div>
 
@@ -339,5 +369,50 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Autocomplete JavaScript -->
+<script>
+let suggestionsVisible = false;
+
+document.getElementById('search-input').addEventListener('input', function(e) {
+    const query = e.target.value;
+    const suggestionsBox = document.getElementById('suggestions');
+    
+    if (query.length < 2) {
+        suggestionsBox.style.display = 'none';
+        return;
+    }
+    
+    fetch(`/api/suggestions?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+                suggestionsBox.innerHTML = '';
+                data.forEach(suggestion => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+div.innerHTML = `<strong>${suggestion.texte}</strong> <small>${suggestion.categorie}</small>`;
+                    div.onclick = function() {
+                        document.getElementById('search-input').value = suggestion.texte;
+                        suggestionsBox.style.display = 'none';
+                        document.querySelector('.search-button').click();
+                    };
+                    suggestionsBox.appendChild(div);
+                });
+                suggestionsBox.style.display = 'block';
+            } else {
+                suggestionsBox.style.display = 'none';
+            }
+        });
+});
+
+// Cacher les suggestions si on clique ailleurs
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#search-input') && !e.target.closest('#suggestions')) {
+        document.getElementById('suggestions').style.display = 'none';
+    }
+});
+</script>
+
 </body>
 </html>
