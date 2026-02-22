@@ -15,19 +15,22 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Chemin vers les données
-DATA_PATH = os.getenv('DATA_PATH', '../data/artworks_latest.csv')
+DATA_PATH = os.getenv('DATA_PATH', '/app/data/artworks_latest.csv')
 
 def load_artworks():
     """Charge les œuvres depuis le CSV"""
     try:
         df = pd.read_csv(DATA_PATH)
+        print("✅ CSV chargé avec succès")
+        print(f"📊 Colonnes trouvées : {list(df.columns)}")
+        print(f"📊 Nombre de lignes : {len(df)}")
+        
         # Nettoyer les données
         df = df.fillna('Inconnu')
         return df
     except Exception as e:
-        print(f"Erreur de chargement: {e}")
+        print(f"❌ Erreur de chargement: {e}")
         return pd.DataFrame()
-
 
 
 

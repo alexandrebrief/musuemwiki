@@ -1,12 +1,11 @@
 version: '3.8'
 
 services:
-  app:
-    build: ./app
+  museumwiki:
+    build: .
     container_name: museumwiki_app
     ports:
-      - "5001:5000"  # Changé le port pour éviter conflits
+      - "5000:5000"
     volumes:
       - ./data:/app/data
-    environment:
-      - DATA_PATH=/app/data/artworks_latest.csv
+    restart: unless-stopped
