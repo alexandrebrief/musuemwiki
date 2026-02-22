@@ -275,25 +275,25 @@
                 <div class="row">
                     {% for artwork in results %}
                     <div class="col-md-3">
-                        <div class="artwork-card">
-                            {% if artwork.image_url and artwork.image_url != '' %}
-                            <img src="{{ artwork.image_url }}" class="artwork-image" alt="{{ artwork.titre }}">
-                            {% else %}
-                            <div class="artwork-image-placeholder">
-                                Image non disponible
-                            </div>
-                            {% endif %}
-                            <div class="artwork-info">
-                                <div class="artwork-title">{{ artwork.titre[:40] }}{% if artwork.titre|length > 40 %}...{% endif %}</div>
-                                <div class="artwork-artist">{{ artwork.createur }}</div>
-                                <div class="artwork-details">
-                                    {{ artwork.date[:4] if artwork.date else 'Date inconnue' }}<br>
-                                    {{ artwork.lieu[:20] if artwork.lieu else 'Lieu inconnu' }}
-                                </div>
-                                <a href="{{ artwork.wikidata_url }}" target="_blank" class="wikidata-link">Voir sur Wikidata</a>
-                            </div>
-                        </div>
-                    </div>
+    <a href="/oeuvre/{{ artwork.id }}" style="text-decoration: none; color: inherit;">
+        <div class="artwork-card">
+            {% if artwork.image_url and artwork.image_url != '' %}
+            <img src="{{ artwork.image_url }}" class="artwork-image" alt="{{ artwork.titre }}">
+            {% else %}
+            <div class="artwork-image-placeholder">
+                Image non disponible
+            </div>
+            {% endif %}
+            <div class="artwork-info">
+                <div class="artwork-title">{{ artwork.titre[:40] }}{% if artwork.titre|length > 40 %}...{% endif %}</div>
+                <div class="artwork-artist">{{ artwork.createur }}</div>
+                <div class="artwork-details">
+                    {{ artwork.date[:4] if artwork.date else 'Date inconnue' }}
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
                     {% endfor %}
                 </div>
 

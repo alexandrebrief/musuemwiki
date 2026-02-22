@@ -104,6 +104,20 @@ def search():
                          page=page,
                          total_pages=total_pages)
 
+@app.route('/oeuvre/<string:oeuvre_id>')
+def oeuvre_detail(oeuvre_id):
+    """Page détaillée d'une œuvre spécifique"""
+    df = load_artworks()
+    
+    # Cherche l'œuvre par son ID
+    oeuvre_data = df[df['id'] == oeuvre_id].to_dict('records')
+    
+    if oeuvre_data:
+        oeuvre = oeuvre_data[0]
+        return render_template('detail.html', oeuvre=oeuvre)
+    else:
+        return "Œuvre non trouvée", 404
+
 @app.route('/api/artworks')
 def api_artworks():
     """API JSON pour les œuvres"""
