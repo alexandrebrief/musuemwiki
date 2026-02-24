@@ -6,8 +6,8 @@
     <title>MuseumWiki - Recherche d'œuvres</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== STYLE MUSÉE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -16,9 +16,12 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f5f0e8;  /* Beige musée */
-            color: #2c3e50;  /* Bleu-gris profond */
+            background-color: #f5f0e8;
+            color: #2c3e50;
             line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
         h1, h2, h3, h4, h5, h6 {
@@ -27,9 +30,8 @@
             color: #1e2b3a;
         }
         
-        /* Navigation sobre */
         .navbar {
-            background: #2c3e50 !important;  /* Bleu-gris foncé */
+            background: #2c3e50 !important;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             padding: 1rem 0;
         }
@@ -38,7 +40,7 @@
             font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
             font-weight: 600;
-            color: #e6d8c3 !important;  /* Beige clair */
+            color: #e6d8c3 !important;
             letter-spacing: 0.5px;
         }
         
@@ -60,46 +62,43 @@
             font-weight: 500;
         }
         
-        /* En-tête sobre */
         .hero-section {
-            padding: 3rem 0 2rem;
+            padding: 2rem 0 1rem;
             text-align: center;
             background: #f5f0e8;
         }
         
         .hero-title {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 600;
             color: #2c3e50;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
         }
         
         .hero-subtitle {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #5d6d7e;
             font-weight: 300;
         }
         
-        /* Barre de recherche */
         .search-container {
-            max-width: 600px;
-            margin: 2rem auto 3rem;
+            max-width: 500px;
+            margin: 1rem auto 1.5rem;
             position: relative;
         }
         
         .search-form {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             position: relative;
         }
         
         .search-input {
             flex: 1;
-            padding: 1rem 1.5rem;
+            padding: 0.8rem 1.2rem;
             border: 1px solid #d4c9b9;
             border-radius: 50px;
-            font-size: 1rem;
-            transition: all 0.2s;
+            font-size: 0.95rem;
             background: white;
         }
         
@@ -110,43 +109,41 @@
         }
         
         .search-button {
-            padding: 0 2rem;
+            padding: 0 1.5rem;
             background: #2c3e50;
             color: white;
             border: none;
             border-radius: 50px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
+            font-size: 0.95rem;
         }
         
-        .search-button:hover {
-            background: #1e2b3a;
-        }
-        
-        /* Suggestions */
         .suggestions-box {
             position: absolute;
-            top: calc(100% + 8px);
+            top: calc(100% + 5px);
             left: 0;
             right: 0;
             background: white;
             border: 1px solid #d4c9b9;
-            border-radius: 16px;
-            box-shadow: 0 12px 24px rgba(44,62,80,0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(44,62,80,0.1);
             z-index: 1000;
-            overflow: hidden;
+            max-height: 250px;
+            overflow-y: auto;
         }
         
         .suggestion-item {
-            padding: 12px 20px;
+            padding: 10px 15px;
             cursor: pointer;
             border-bottom: 1px solid #f0e8dc;
+            font-size: 0.9rem;
             transition: background 0.2s;
         }
         
-        .suggestion-item:last-child {
-            border-bottom: none;
+        .suggestion-item.selected {
+            background: #f0e8dc;
+            border-left: 3px solid #2c3e50;
         }
         
         .suggestion-item:hover {
@@ -164,14 +161,198 @@
             font-size: 0.8rem;
         }
         
-        /* Résultats */
+        /* Barre de filtres */
+        .filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.05);
+        }
+        
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .filter-dropdown {
+            position: relative;
+            min-width: 120px;
+        }
+        
+        .filter-button {
+            width: 100%;
+            background: white;
+            border: 1px solid #d4c9b9;
+            border-radius: 30px;
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            color: #2c3e50;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            white-space: nowrap;
+        }
+        
+        .filter-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 220px;
+            max-height: 250px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #d4c9b9;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+            margin-top: 3px;
+            padding: 0.3rem 0;
+        }
+        
+        .filter-menu.show {
+            display: block;
+        }
+        
+        .filter-menu-item {
+            padding: 0.4rem 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+        
+        .filter-menu-item:hover {
+            background: #f5f0e8;
+        }
+        
+        .filter-menu-item input {
+            accent-color: #2c3e50;
+        }
+        
+        .filter-menu-item label {
+            flex: 1;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .filter-menu-item .count {
+            color: #8e9aab;
+            font-size: 0.75rem;
+        }
+        
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.apply-btn, .clear-btn {
+    padding: 0.3rem 1rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+        
+        .clear-btn {
+            background: white;
+            color: #8e9aab;
+            border: 1px solid #d4c9b9;
+            border-radius: 30px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        
+        .clear-btn i {
+            font-size: 0.75rem;
+        }
+        
+        .sort-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+        
+        .sort-label {
+            font-weight: 500;
+            color: #5d6d7e;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .sort-select {
+            padding: 0.4rem 1.8rem 0.4rem 1rem;
+            border: 1px solid #d4c9b9;
+            border-radius: 30px;
+            background: white;
+            color: #2c3e50;
+            font-size: 0.85rem;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232c3e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            min-width: 120px;
+        }
+        
+        /* Tags persistants */
+        .selected-filters {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        .selected-filter {
+            background: #2c3e50;
+            color: white;
+            padding: 0.25rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .selected-filter i {
+            cursor: pointer;
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+        
+        .selected-filter i:hover {
+            opacity: 1;
+        }
+        
         .results-info {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding: 1rem 0;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 0;
             border-bottom: 1px solid #d4c9b9;
+            font-size: 0.9rem;
             color: #5d6d7e;
         }
         
@@ -183,98 +364,89 @@
         .artworks-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-            margin: 2rem 0;
+            gap: 20px;
         }
         
         .artwork-card {
             background: white;
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
-            transition: all 0.3s;
             text-decoration: none;
             color: inherit;
-            box-shadow: 0 4px 12px rgba(44,62,80,0.05);
+            box-shadow: 0 2px 8px rgba(44,62,80,0.05);
         }
         
         .artwork-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(44,62,80,0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(44,62,80,0.1);
         }
         
         .artwork-image {
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: cover;
-            background-color: #f0e8dc;
         }
         
         .artwork-image-placeholder {
             width: 100%;
-            height: 200px;
+            height: 180px;
             background: linear-gradient(145deg, #e6d8c3, #d4c9b9);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #5d6d7e;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 0.8rem;
         }
         
         .artwork-info {
-            padding: 1.2rem;
-            background: white;
+            padding: 1rem;
         }
         
         .artwork-title {
             font-family: 'Playfair Display', serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: #2c3e50;
-            margin-bottom: 0.3rem;
-            line-height: 1.4;
+            margin-bottom: 0.2rem;
+            line-height: 1.3;
         }
         
         .artwork-artist {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #5d6d7e;
             margin-bottom: 0.2rem;
         }
         
-        .artwork-museum {
-            font-size: 0.8rem;
+        .artwork-year {
+            font-size: 0.75rem;
             color: #8e9aab;
+            margin-bottom: 0.2rem;
         }
         
-        .no-results {
-            text-align: center;
-            padding: 4rem;
+        .artwork-museum {
+            font-size: 0.75rem;
             color: #8e9aab;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(44,62,80,0.05);
         }
         
         .pagination {
-            margin: 3rem 0;
+            margin: 2rem 0;
+            display: flex;
             justify-content: center;
-            gap: 5px;
+            gap: 4px;
         }
         
         .page-link {
-            border: none;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
             color: #5d6d7e;
             background: white;
-            border-radius: 8px;
-            font-weight: 400;
             text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-block;
         }
         
         .page-link:hover {
             background: #f0e8dc;
-            color: #2c3e50;
         }
         
         .page-item.active .page-link {
@@ -282,34 +454,41 @@
             color: white;
         }
         
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #8e9aab;
+            background: white;
+            border-radius: 12px;
+        }
+        
         .footer {
             background: #2c3e50;
             color: #e6d8c3;
-            padding: 2rem 0;
-            margin-top: 3rem;
+            padding: 1.5rem 0;
+            margin-top: auto;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            width: 100%;
         }
         
         @media (max-width: 768px) {
             .artworks-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 16px;
             }
-            .hero-title {
-                font-size: 2rem;
+            .filter-row {
+                flex-wrap: wrap;
+            }
+            .sort-container {
+                margin-left: 0;
+                width: 100%;
+                justify-content: flex-end;
             }
         }
         
         @media (max-width: 480px) {
             .artworks-grid {
                 grid-template-columns: 1fr;
-            }
-            .search-form {
-                flex-direction: column;
-            }
-            .search-button {
-                padding: 1rem;
             }
         }
     </style>
@@ -346,21 +525,86 @@
 
     <div class="container">
         <div class="search-container">
-            <form action="/" method="get" class="search-form" autocomplete="off">
+            <form action="/" method="get" class="search-form" autocomplete="off" id="search-form">
                 <input type="text" 
                        name="q" 
                        id="search-input"
                        class="search-input" 
-                       placeholder="Ex: Monet, Louvre, Les nymphéas..."
+                       placeholder="Ex: Monet, Louvre..."
                        value="{{ query }}">
                 <button type="submit" class="search-button">Rechercher</button>
                 <div id="suggestions" class="suggestions-box" style="display: none;"></div>
             </form>
         </div>
 
-        {% if query %}
+
+<!-- Barre de filtres -->
+<div class="filter-section">
+    <div class="filter-row">
+        <span class="filter-label">Filtrer :</span>
+        
+        <!-- Artiste -->
+        <div class="filter-dropdown">
+            <button class="filter-button" onclick="toggleDropdown('artist-dropdown')">
+                Artiste <i class="fas fa-chevron-down"></i>
+            </button>
+            <div id="artist-dropdown" class="filter-menu"></div>
+        </div>
+        
+        <!-- Musée -->
+        <div class="filter-dropdown">
+            <button class="filter-button" onclick="toggleDropdown('museum-dropdown')">
+                Musée <i class="fas fa-chevron-down"></i>
+            </button>
+            <div id="museum-dropdown" class="filter-menu"></div>
+        </div>
+        
+        <!-- Mouvement -->
+        <div class="filter-dropdown">
+            <button class="filter-button" onclick="toggleDropdown('movement-dropdown')">
+                Mouvement <i class="fas fa-chevron-down"></i>
+            </button>
+            <div id="movement-dropdown" class="filter-menu"></div>
+        </div>
+        
+        <!-- Boutons empilés (l'un sur l'autre) -->
+        <div style="display: flex; flex-direction: column; gap: 4px; margin-left: 10px;">
+            <button class="apply-btn" onclick="applyFilters()" style="padding: 0.3rem 0.8rem; font-size: 0.75rem; background: #2c3e50; color: white; border: none; border-radius: 30px; font-weight: 500; cursor: pointer; white-space: nowrap; min-width: 70px;">
+                Appliquer
+            </button>
+            <button class="clear-btn" onclick="clearAndApply()" style="padding: 0.3rem 0.8rem; font-size: 0.7rem; background: white; color: #8e9aab; border: 1px solid #d4c9b9; border-radius: 30px; cursor: pointer; white-space: nowrap; min-width: 70px;">
+                <i class="fas fa-times" style="font-size: 0.6rem; margin-right: 3px;"></i> Effacer
+            </button>
+        </div>
+        
+        <!-- Tri avec label (collé à droite) -->
+        <div class="sort-container" style="margin-left: auto;">
+            <span class="sort-label">Trier par :</span>
+            <select id="sort" class="sort-select" onchange="applySort()">
+                <option value="relevance" {% if sort == 'relevance' %}selected{% endif %}>Pertinence</option>
+                <option value="date_asc" {% if sort == 'date_asc' %}selected{% endif %}>Date ↑</option>
+                <option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>Date ↓</option>
+                <option value="title_asc" {% if sort == 'title_asc' %}selected{% endif %}>Titre A→Z</option>
+                <option value="artist_asc" {% if sort == 'artist_asc' %}selected{% endif %}>Artiste A→Z</option>
+            </select>
+        </div>
+    </div>
+    
+    <!-- Tags persistants -->
+    <div id="selected-filters" class="selected-filters"></div>
+</div>
+
+
+
+
+
+
+        {% if query or museums or movements or artists %}
             <div class="results-info">
-                <span class="results-count">{{ count }} résultat(s) pour "{{ query }}"</span>
+                <span class="results-count">
+                    {% if query %}"{{ query }}" - {% endif %}
+                    {{ count }} résultat(s)
+                </span>
                 <span>Page {{ page }} sur {{ total_pages }}</span>
             </div>
 
@@ -369,61 +613,92 @@
                     {% for artwork in results %}
                     <a href="/oeuvre/{{ artwork.id }}" class="artwork-card">
                         {% if artwork.image_url and artwork.image_url != '' %}
-                        <img src="{{ artwork.image_url }}" class="artwork-image" alt="{{ artwork.titre }}" loading="lazy">
+                        <img src="{{ artwork.image_url }}" class="artwork-image" loading="lazy">
                         {% else %}
                         <div class="artwork-image-placeholder">No image</div>
                         {% endif %}
                         <div class="artwork-info">
-                            <div class="artwork-title">{{ artwork.titre[:40] }}{% if artwork.titre|length > 40 %}...{% endif %}</div>
+                            <div class="artwork-title">{{ artwork.titre[:40] }}</div>
                             <div class="artwork-artist">{{ artwork.createur }}</div>
-                            <div class="artwork-museum">{{ artwork.lieu[:30] if artwork.lieu and artwork.lieu != 'Inconnu' else 'Lieu inconnu' }}</div>
+                            {% if artwork.date %}
+                            <div class="artwork-year">{{ artwork.date[:4] }}</div>
+                            {% endif %}
+                            {% if artwork.lieu and artwork.lieu != 'Inconnu' %}
+                            <div class="artwork-museum">{{ artwork.lieu[:30] }}</div>
+                            {% endif %}
                         </div>
                     </a>
                     {% endfor %}
                 </div>
 
+                <!-- Pagination -->
                 <nav class="pagination">
                     <ul class="pagination">
                         <li class="page-item {{ 'disabled' if page == 1 else '' }}">
-                            <a class="page-link" href="?q={{ query }}&page={{ page - 1 }}">←</a>
+                            <a class="page-link" href="#" onclick="changePage({{ page - 1 }})">←</a>
                         </li>
                         
                         {% for p in range(1, total_pages + 1) %}
                             {% if p == page %}
                                 <li class="page-item active"><span class="page-link">{{ p }}</span></li>
                             {% elif p <= 3 or p > total_pages - 3 or (p >= page - 2 and p <= page + 2) %}
-                                <li class="page-item"><a class="page-link" href="?q={{ query }}&page={{ p }}">{{ p }}</a></li>
-                            {% elif p == 4 and page > 4 %}
-                                <li class="page-item disabled"><span class="page-link">…</span></li>
+                                <li class="page-item"><a class="page-link" href="#" onclick="changePage({{ p }})">{{ p }}</a></li>
                             {% endif %}
                         {% endfor %}
                         
                         <li class="page-item {{ 'disabled' if page == total_pages else '' }}">
-                            <a class="page-link" href="?q={{ query }}&page={{ page + 1 }}">→</a>
+                            <a class="page-link" href="#" onclick="changePage({{ page + 1 }})">→</a>
                         </li>
                     </ul>
                 </nav>
             {% else %}
                 <div class="no-results">
-                    <p>Aucun résultat trouvé pour "{{ query }}"</p>
+                    <p>Aucun résultat trouvé</p>
                 </div>
             {% endif %}
+        {% else %}
+            <div class="no-results">
+                <p>Commencez votre recherche ci-dessus</p>
+            </div>
         {% endif %}
     </div>
 
     <footer class="footer">
         <div class="container">
-            <p>MuseumWiki · Collection d'œuvres d'art · Données Wikidata</p>
+            <p>MuseumWiki · Données Wikidata</p>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ============================================
+        // VARIABLES GLOBALES
+        // ============================================
+        let selectedFilters = {
+            artists: [],
+            museums: [],
+            movements: []
+        };
+        
+        let suggestions = [];
+        let selectedSuggestionIndex = -1;
+        
+        // Récupérer les filtres depuis l'URL au chargement
+        (function initFiltersFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            selectedFilters.artists = urlParams.getAll('artist');
+            selectedFilters.museums = urlParams.getAll('museum');
+            selectedFilters.movements = urlParams.getAll('movement');
+        })();
+        
+        // ============================================
+        // SUGGESTIONS AVEC NAVIGATION CLAVIER
+        // ============================================
         const searchInput = document.getElementById('search-input');
         const suggestionsBox = document.getElementById('suggestions');
         
         searchInput.addEventListener('input', function(e) {
             const query = e.target.value;
+            selectedSuggestionIndex = -1;
             
             if (query.length < 2) {
                 suggestionsBox.style.display = 'none';
@@ -433,19 +708,24 @@
             fetch(`/api/suggestions?q=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
+                    suggestions = data;
                     if (data.length > 0) {
-                        suggestionsBox.innerHTML = '';
-                        data.forEach(suggestion => {
-                            const div = document.createElement('div');
-                            div.className = 'suggestion-item';
-                            div.innerHTML = `<strong>${suggestion.texte}</strong> <small>${suggestion.categorie}</small>`;
-                            div.onclick = function() {
-                                searchInput.value = suggestion.texte;
+                        suggestionsBox.innerHTML = data.map((s, index) => 
+                            `<div class="suggestion-item" data-index="${index}">
+                                <strong>${s.texte}</strong> <small>${s.categorie}</small>
+                            </div>`
+                        ).join('');
+                        
+                        // Ajouter les événements de clic
+                        document.querySelectorAll('.suggestion-item').forEach(item => {
+                            item.addEventListener('click', function() {
+                                const index = this.dataset.index;
+                                searchInput.value = suggestions[index].texte;
                                 suggestionsBox.style.display = 'none';
                                 document.querySelector('.search-form').submit();
-                            };
-                            suggestionsBox.appendChild(div);
+                            });
                         });
+                        
                         suggestionsBox.style.display = 'block';
                     } else {
                         suggestionsBox.style.display = 'none';
@@ -453,11 +733,302 @@
                 });
         });
         
+        // Navigation clavier
+        searchInput.addEventListener('keydown', function(e) {
+            const items = document.querySelectorAll('.suggestion-item');
+            
+            if (items.length === 0) return;
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, items.length - 1);
+                updateSelectedSuggestion(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
+                updateSelectedSuggestion(items);
+            } else if (e.key === 'Enter' && selectedSuggestionIndex >= 0) {
+                e.preventDefault();
+                searchInput.value = suggestions[selectedSuggestionIndex].texte;
+                suggestionsBox.style.display = 'none';
+                document.querySelector('.search-form').submit();
+            }
+        });
+        
+        function updateSelectedSuggestion(items) {
+            items.forEach((item, index) => {
+                if (index === selectedSuggestionIndex) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+        
         document.addEventListener('click', function(e) {
             if (!e.target.closest('#search-input') && !e.target.closest('.suggestions-box')) {
                 suggestionsBox.style.display = 'none';
             }
         });
+        
+        // ============================================
+        // GESTION DES DROPDOWNS
+        // ============================================
+        function toggleDropdown(id) {
+            document.querySelectorAll('.filter-menu').forEach(menu => {
+                menu.classList.remove('show');
+            });
+            document.getElementById(id).classList.toggle('show');
+        }
+        
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.filter-dropdown')) {
+                document.querySelectorAll('.filter-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+        
+        // ============================================
+        // CHARGEMENT DES OPTIONS DE FILTRES
+        // ============================================
+        function loadFilterOptions() {
+            const query = document.getElementById('search-input').value;
+            
+            // Artistes
+            fetch(`/api/artists?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('artist-dropdown');
+                    if (data.length === 0) {
+                        container.innerHTML = '<div class="filter-menu-item">Aucune information</div>';
+                    } else {
+                        container.innerHTML = data.map(a => {
+                            const id = `artist-${a.name.replace(/[^a-zA-Z0-9]/g, '-')}`;
+                            return `
+                                <div class="filter-menu-item">
+                                    <input type="checkbox" value="${a.name}" id="${id}">
+                                    <label for="${id}">${a.name}</label>
+                                    <span class="count">(${a.count})</span>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                    
+                    // Restaurer les checkboxes cochées
+                    selectedFilters.artists.forEach(val => {
+                        const cb = document.querySelector(`#artist-dropdown input[value="${val}"]`);
+                        if (cb) cb.checked = true;
+                    });
+                });
+            
+            // Musées
+            fetch(`/api/museums?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('museum-dropdown');
+                    if (data.length === 0) {
+                        container.innerHTML = '<div class="filter-menu-item">Aucune information</div>';
+                    } else {
+                        container.innerHTML = data.map(m => {
+                            const id = `museum-${m.name.replace(/[^a-zA-Z0-9]/g, '-')}`;
+                            return `
+                                <div class="filter-menu-item">
+                                    <input type="checkbox" value="${m.name}" id="${id}">
+                                    <label for="${id}">${m.name}</label>
+                                    <span class="count">(${m.count})</span>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                    
+                    selectedFilters.museums.forEach(val => {
+                        const cb = document.querySelector(`#museum-dropdown input[value="${val}"]`);
+                        if (cb) cb.checked = true;
+                    });
+                });
+            
+            // Mouvements
+            fetch(`/api/movements?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('movement-dropdown');
+                    if (data.length === 0) {
+                        container.innerHTML = '<div class="filter-menu-item">Aucune information</div>';
+                    } else {
+                        container.innerHTML = data.map(m => {
+                            const id = `movement-${m.name.replace(/[^a-zA-Z0-9]/g, '-')}`;
+                            return `
+                                <div class="filter-menu-item">
+                                    <input type="checkbox" value="${m.name}" id="${id}">
+                                    <label for="${id}">${m.name}</label>
+                                    <span class="count">(${m.count})</span>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                    
+                    selectedFilters.movements.forEach(val => {
+                        const cb = document.querySelector(`#movement-dropdown input[value="${val}"]`);
+                        if (cb) cb.checked = true;
+                    });
+                });
+        }
+        
+        // Charger au démarrage et quand la recherche change
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFilterOptions();
+            updateSelectedFiltersDisplay();
+        });
+        
+        searchInput.addEventListener('change', loadFilterOptions);
+        
+        // ============================================
+        // GESTION DES FILTRES SÉLECTIONNÉS
+        // ============================================
+        function collectSelectedFilters() {
+            selectedFilters.artists = [];
+            selectedFilters.museums = [];
+            selectedFilters.movements = [];
+            
+            document.querySelectorAll('#artist-dropdown input:checked').forEach(cb => {
+                selectedFilters.artists.push(cb.value);
+            });
+            document.querySelectorAll('#museum-dropdown input:checked').forEach(cb => {
+                selectedFilters.museums.push(cb.value);
+            });
+            document.querySelectorAll('#movement-dropdown input:checked').forEach(cb => {
+                selectedFilters.movements.push(cb.value);
+            });
+            
+            updateSelectedFiltersDisplay();
+        }
+        
+        function updateSelectedFiltersDisplay() {
+            const container = document.getElementById('selected-filters');
+            container.innerHTML = '';
+            
+            selectedFilters.artists.forEach(a => {
+                container.innerHTML += `<span class="selected-filter">${a} <i class="fas fa-times" onclick="removeFilter('artist', '${a}')"></i></span>`;
+            });
+            selectedFilters.museums.forEach(m => {
+                container.innerHTML += `<span class="selected-filter">${m} <i class="fas fa-times" onclick="removeFilter('museum', '${m}')"></i></span>`;
+            });
+            selectedFilters.movements.forEach(m => {
+                container.innerHTML += `<span class="selected-filter">${m} <i class="fas fa-times" onclick="removeFilter('movement', '${m}')"></i></span>`;
+            });
+        }
+        
+        function removeFilter(type, value) {
+            const index = selectedFilters[`${type}s`].indexOf(value);
+            if (index !== -1) {
+                selectedFilters[`${type}s`].splice(index, 1);
+                const cb = document.querySelector(`input[value="${value}"]`);
+                if (cb) cb.checked = false;
+            }
+            updateSelectedFiltersDisplay();
+            applyFilters();
+        }
+        
+        function clearAllFilters() {
+            selectedFilters = {
+                artists: [],
+                museums: [],
+                movements: []
+            };
+            document.querySelectorAll('.filter-menu input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            updateSelectedFiltersDisplay();
+        }
+        
+        function applyFilters() {
+            collectSelectedFilters();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const q = urlParams.get('q') || '';
+            const sort = document.getElementById('sort').value;
+            
+            let url = `/?q=${q}&sort=${sort}`;
+            
+            selectedFilters.artists.forEach(a => {
+                url += `&artist=${encodeURIComponent(a)}`;
+            });
+            selectedFilters.museums.forEach(m => {
+                url += `&museum=${encodeURIComponent(m)}`;
+            });
+            selectedFilters.movements.forEach(m => {
+                url += `&movement=${encodeURIComponent(m)}`;
+            });
+            
+            window.location.href = url;
+        }
+        
+        function applySort() {
+            collectSelectedFilters();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const q = urlParams.get('q') || '';
+            const sort = document.getElementById('sort').value;
+            
+            let url = `/?q=${q}&sort=${sort}`;
+            
+            selectedFilters.artists.forEach(a => {
+                url += `&artist=${encodeURIComponent(a)}`;
+            });
+            selectedFilters.museums.forEach(m => {
+                url += `&museum=${encodeURIComponent(m)}`;
+            });
+            selectedFilters.movements.forEach(m => {
+                url += `&movement=${encodeURIComponent(m)}`;
+            });
+            
+            window.location.href = url;
+        }
+        
+        function changePage(page) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const q = urlParams.get('q') || '';
+            const sort = document.getElementById('sort').value;
+            
+            let url = `/?q=${q}&page=${page}&sort=${sort}`;
+            
+            selectedFilters.artists.forEach(a => {
+                url += `&artist=${encodeURIComponent(a)}`;
+            });
+            selectedFilters.museums.forEach(m => {
+                url += `&museum=${encodeURIComponent(m)}`;
+            });
+            selectedFilters.movements.forEach(m => {
+                url += `&movement=${encodeURIComponent(m)}`;
+            });
+            
+            window.location.href = url;
+        }
+        
+// Effacer et appliquer
+function clearAndApply() {
+    // Décocher toutes les cases
+    document.querySelectorAll('.filter-menu input[type="checkbox"]').forEach(cb => {
+        cb.checked = false;
+    });
+    
+    // Vider les filtres sélectionnés
+    selectedFilters = {
+        artists: [],
+        museums: [],
+        movements: []
+    };
+    
+    // Mettre à jour l'affichage
+    updateSelectedFiltersDisplay();
+    
+    // Appliquer les filtres (qui sont maintenant vides)
+    applyFilters();
+}        
+        
+        
+        
     </script>
 </body>
 </html>
