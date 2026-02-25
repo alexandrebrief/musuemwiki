@@ -353,6 +353,8 @@ def handle_unverified_user(user, email):
     
     return redirect(url_for('verify_email_pending', email=email))
 
+
+
 # ============================================
 # 5. FILTRES POUR LES TEMPLATES
 # ============================================
