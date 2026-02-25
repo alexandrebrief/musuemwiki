@@ -392,32 +392,63 @@ def index():
     
     base_query = get_filtered_query(query, artists, museums, movements)
     
-    if sort == 'date_asc':
-        base_query = base_query.order_by(Artwork.date)
-    elif sort == 'date_desc':
-        base_query = base_query.order_by(Artwork.date.desc())
-    elif sort == 'title_asc':
-        base_query = base_query.order_by(Artwork.titre)
-    elif sort == 'title_desc':
-        base_query = base_query.order_by(Artwork.titre.desc())
-    elif sort == 'artist_asc':
-        base_query = base_query.order_by(Artwork.createur)
-    elif sort == 'artist_desc':
-        base_query = base_query.order_by(Artwork.createur.desc())
+    # Si pas de recherche et pas de filtres, afficher les œuvres populaires
+    if not query and not artists and not museums and not movements:
+        # Compter les favoris par œuvre
+        favorite_counts = db.session.query(
+            Favorite.artwork_id, 
+            func.count(Favorite.id).label('fav_count')
+        ).group_by(Favorite.artwork_id).subquery()
+        
+        # Joindre avec les œuvres pour avoir les infos complètes
+        popular_query = db.session.query(Artwork).outerjoin(
+            favorite_counts, 
+            Artwork.id == favorite_counts.c.artwork_id
+        ).order_by(
+            func.coalesce(favorite_counts.c.fav_count, 0).desc(),
+            func.random()  # Pour départager les ex-aequo
+        )
+        
+        # Pagination pour les populaires
+        pagination = popular_query.paginate(page=page, per_page=per_page, error_out=False)
+    else:
+        # Application du tri pour les recherches
+        if sort == 'date_asc':
+            base_query = base_query.order_by(Artwork.date)
+        elif sort == 'date_desc':
+            base_query = base_query.order_by(Artwork.date.desc())
+        elif sort == 'title_asc':
+            base_query = base_query.order_by(Artwork.titre)
+        elif sort == 'title_desc':
+            base_query = base_query.order_by(Artwork.titre.desc())
+        elif sort == 'artist_asc':
+            base_query = base_query.order_by(Artwork.createur)
+        elif sort == 'artist_desc':
+            base_query = base_query.order_by(Artwork.createur.desc())
+        
+        pagination = base_query.paginate(page=page, per_page=per_page, error_out=False)
     
-    pagination = base_query.paginate(page=page, per_page=per_page, error_out=False)
+    results_page = pagination.items
+    total = pagination.total
+    total_pages = pagination.pages
+    
+    # Récupérer le nombre de favoris pour chaque œuvre affichée
+    favorite_counts = {}
+    for artwork in results_page:
+        count = Favorite.query.filter_by(artwork_id=artwork.id).count()
+        favorite_counts[artwork.id] = count
     
     return render_template('index.html', 
                          query=query,
-                         results=[a.to_dict() for a in pagination.items],
-                         count=pagination.total,
+                         results=[a.to_dict() for a in results_page],
+                         favorite_counts=favorite_counts,
+                         count=total,
                          page=page,
-                         total_pages=pagination.pages,
+                         total_pages=total_pages,
                          artists=artists,
                          museums=museums,
                          movements=movements,
                          sort=sort)
-
 
 @app.route('/oeuvre/<string:oeuvre_id>')
 def oeuvre_detail(oeuvre_id):

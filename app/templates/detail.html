@@ -31,8 +31,6 @@
             color: #1e2b3a;
         }
         
-        /* ===== STYLES SPÉCIFIQUES À DETAIL ===== */
-        
         /* Bouton favori */
         .favorite-btn {
             font-size: 1.8rem;
@@ -57,12 +55,56 @@
             color: #dc3545;
         }
         
-        /* Étoiles pour la note globale - avec demi-étoiles */
+        /* Image cliquable */
+        .artwork-image-container {
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .artwork-image-container:hover {
+            opacity: 0.9;
+        }
+        
+        /* Modal image */
+        .modal-image {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+        
+        .modal-content.bg-transparent {
+            background: transparent !important;
+        }
+        
+        .modal-close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.8);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1060;
+            transition: all 0.2s;
+        }
+        
+        .modal-close-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+        
+        /* Étoiles - 5 étoiles avec demi */
         .rating-stars {
             display: inline-flex;
             flex-direction: row-reverse;
             justify-content: flex-end;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: #ddd;
             cursor: pointer;
         }
@@ -71,6 +113,8 @@
             padding: 0 0.1rem;
             transition: color 0.2s;
             position: relative;
+            width: 0.9em;
+            overflow: visible;
         }
         
         .rating-stars .star.half:before {
@@ -82,113 +126,130 @@
             overflow: hidden;
         }
         
-        .rating-stars[data-rating] .star {
+        .rating-stars .star.selected,
+        .rating-stars .star.half.selected {
             color: #ffc107;
         }
         
-        /* Curseurs ultra compacts */
-        .rating-slider-container {
-            margin: 0.5rem 0;
-            padding: 0.3rem 0.8rem;
-            background: #f8f4ee;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            font-size: 0.9rem;
-        }
-        
-        .rating-slider-label {
-            font-weight: 500;
-            min-width: 80px;
-        }
-        
-        .rating-slider {
-            flex: 1;
-            height: 4px;
-            border-radius: 2px;
-            background: #e0d6c8;
-            outline: none;
-            -webkit-appearance: none;
-        }
-        
-        .rating-slider:focus {
-            outline: none;
-        }
-        
-        .rating-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #2c3e50;
-            cursor: pointer;
-        }
-        
-        .rating-value-display {
-            font-weight: 600;
-            color: #2c3e50;
-            min-width: 2.5rem;
-            text-align: right;
-            font-size: 0.9rem;
-        }
-        
-        /* Notes moyennes compactes */
-        .average-ratings {
-            margin-top: 1rem;
-            padding: 0.8rem;
+/* Curseurs ultra compacts - version finale */
+/* Curseurs ultra compacts - version corrigée */
+.rating-slider-container {
+    margin: 0.15rem 0;
+    padding: 0.1rem 0.3rem;
+    background: #f8f4ee;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;  /* Espacement entre les éléments */
+    font-size: 0.75rem;
+    height: 24px;
+    width: fit-content;  /* ← CRUCIAL : le fond s'adapte au contenu */
+    max-width: 100%;      /* Mais ne dépasse pas */
+}
+
+.rating-slider-label {
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: #2c3e50;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+}
+
+.rating-slider {
+    width: 100px;
+    height: 3px;
+    border-radius: 2px;
+    background: #e0d6c8;
+    outline: none;
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.rating-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #2c3e50;
+    cursor: pointer;
+}
+
+.rating-value-display {
+    font-weight: 500;
+    color: #2c3e50;
+    min-width: 40px;
+    text-align: right;
+    font-size: 0.75rem;
+    font-family: 'Inter', sans-serif;
+    background: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+    border: 1px solid #e0d6c8;
+}
+        /* Modules avec fond blanc */
+        .module-card {
             background: white;
-            border-radius: 6px;
-            font-size: 0.85rem;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
         
-        .average-row {
+        .module-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        /* Avis du public */
+        .public-ratings {
+            margin-top: 1rem;
+        }
+        
+        .rating-row {
             display: flex;
             align-items: center;
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.3rem;
         }
         
-        .average-label {
-            min-width: 70px;
+        .rating-label {
+            min-width: 100px;
             color: #5d6d7e;
+            font-size: 0.9rem;
+            font-weight: 400;
         }
         
-        .average-stars {
+        .rating-stars-display {
             color: #ffc107;
             margin-right: 0.5rem;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             letter-spacing: 1px;
         }
         
-        .average-value {
-            font-weight: 600;
+        .rating-value {
+            font-weight: 400;
             color: #2c3e50;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
         }
         
         .total-notes {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: #5d6d7e;
             margin-top: 0.3rem;
             font-style: italic;
         }
         
-        /* Section de notation compacte */
-        .rating-section {
-            background: white;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
-        
-        .rating-section h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
+        /* Votre avis */
+        .your-rating {
+            margin-top: 1rem;
         }
         
         /* Commentaires */
         .comments-section {
-            margin-top: 1.5rem;
+            margin-top: 1rem;
         }
         
         .comment-card {
@@ -203,7 +264,7 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 0.3rem;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
         
         .comment-author {
@@ -218,45 +279,36 @@
         .comment-content {
             color: #2c3e50;
             line-height: 1.4;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
         }
         
-        .comment-ratings {
-            display: flex;
-            gap: 1rem;
-            margin-top: 0.3rem;
-            font-size: 0.75rem;
-            color: #5d6d7e;
-        }
-        
-        .comment-ratings i {
-            color: #ffc107;
-            margin-right: 0.2rem;
-        }
-        
-        /* Zone de commentaire compacte */
+        /* Zone de commentaire */
         .comment-box {
-            background: white;
-            border-radius: 6px;
-            padding: 0.8rem;
             margin-top: 0.5rem;
         }
         
         .comment-box textarea {
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.4rem;
             border: 1px solid #e0d6c8;
             border-radius: 4px;
             resize: vertical;
             font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             margin-bottom: 0.5rem;
         }
         
         .comment-box textarea:focus {
             outline: none;
             border-color: #2c3e50;
-            box-shadow: 0 0 0 0.2rem rgba(44,62,80,0.1);
+            box-shadow: 0 0 0 0.1rem rgba(44,62,80,0.1);
+        }
+        
+        .comment-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0.5rem;
         }
         
         .btn-save-comment {
@@ -264,60 +316,128 @@
             color: #e6d8c3;
             border: none;
             border-radius: 4px;
-            padding: 0.3rem 1.2rem;
-            font-size: 0.9rem;
+            padding: 0.25rem 1rem;
+            font-size: 0.8rem;
             transition: all 0.2s;
+            cursor: pointer;
         }
         
         .btn-save-comment:hover {
             background: #1e2b3a;
         }
         
-        /* Message pour non-connectés */
+        .btn-edit-comment {
+            background: transparent;
+            color: #5d6d7e;
+            border: 1px solid #e0d6c8;
+            border-radius: 4px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-edit-comment:hover {
+            background: #f5f0e8;
+        }
+        
+        .user-comment {
+            background: #f0f4f8;
+            border-left: 3px solid #2c3e50;
+        }
+        
+        .visibility-options {
+            display: flex;
+            gap: 1rem;
+            margin: 0.3rem 0;
+            font-size: 0.8rem;
+        }
+        
+        .visibility-options label {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: #5d6d7e;
+            cursor: pointer;
+        }
+        
+        .visibility-options input[type="radio"] {
+            accent-color: #2c3e50;
+            margin: 0;
+        }
+        
         .login-prompt {
             text-align: center;
-            padding: 1.5rem;
+            padding: 1rem;
             background: white;
-            border-radius: 8px;
+            border-radius: 6px;
             margin: 1rem 0;
-            font-size: 0.9rem;
-        }
-        
-        .login-prompt a {
-            color: #2c3e50;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        
-        .login-prompt a:hover {
-            text-decoration: underline;
+            font-size: 0.85rem;
         }
         
         .auto-save-hint {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #5d6d7e;
-            margin-top: 0.3rem;
-            text-align: right;
         }
     </style>
 </head>
 <body>
     {% include 'navbar.html' %}
 
+    <!-- Modal pour image agrandie -->
+    <div class="modal fade" id="imageModal" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="true" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content bg-transparent border-0">
+                <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="modal-body text-center p-0">
+                    <img src="" alt="" class="modal-image" id="modalImage">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container my-4">
         <div class="row">
-            <!-- Colonne image -->
+            <!-- Colonne image (gauche) -->
             <div class="col-md-6">
                 {% if oeuvre.image_url %}
-                <img src="{{ oeuvre.image_url }}" alt="{{ oeuvre.titre }}" class="img-fluid rounded shadow">
+                <div class="artwork-image-container" onclick="openImageModal('{{ oeuvre.image_url }}')">
+                    <img src="{{ oeuvre.image_url }}" alt="{{ oeuvre.titre }}" class="img-fluid rounded shadow">
+                </div>
                 {% else %}
                 <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded shadow" style="height: 350px;">
                     <i class="fas fa-image fa-3x"></i>
                 </div>
                 {% endif %}
+                
+                <!-- Avis du public (module avec fond blanc) -->
+                <div class="module-card public-ratings">
+                    <h3 class="module-title">Avis du public</h3>
+                    
+                    <div class="rating-row">
+                        <span class="rating-label">Note moyenne :</span>
+                        <span class="rating-stars-display" id="avg-globale-stars">☆☆☆☆☆</span>
+                        <span class="rating-value" id="avg-globale">-/5</span>
+                    </div>
+                    <div class="rating-row">
+                        <span class="rating-label">Technique :</span>
+                        <span class="rating-value" id="avg-technique">-/5</span>
+                    </div>
+                    <div class="rating-row">
+                        <span class="rating-label">Originalité :</span>
+                        <span class="rating-value" id="avg-originalite">-/5</span>
+                    </div>
+                    <div class="rating-row">
+                        <span class="rating-label">Émotion :</span>
+                        <span class="rating-value" id="avg-emotion">-/5</span>
+                    </div>
+                    <div class="total-notes" id="total-notes">Basé sur 0 note(s)</div>
+                </div>
             </div>
             
-            <!-- Colonne infos -->
+            <!-- Colonne infos (droite) -->
             <div class="col-md-6">
                 <div class="d-flex justify-content-between align-items-start">
                     <h1 style="font-size: 2rem;">{{ oeuvre.titre }}</h1>
@@ -330,7 +450,7 @@
                 </div>
                 
                 <p class="lead" style="font-size: 1.1rem;">{{ oeuvre.createur }}</p>
-                <p style="margin-bottom: 0.3rem;"><strong>Date :</strong> {{ oeuvre.date or 'Inconnue' }}</p>
+                <p style="margin-bottom: 0.3rem;"><strong>Date :</strong> {{ oeuvre.date[:4] if oeuvre.date else 'Inconnue' }}</p>
                 <p style="margin-bottom: 0.3rem;"><strong>Lieu :</strong> {{ oeuvre.lieu or 'Inconnu' }}</p>
                 <p style="margin-bottom: 1rem;"><strong>Mouvement :</strong> {{ oeuvre.mouvement or 'Non spécifié' }}</p>
                 
@@ -340,97 +460,103 @@
                 </a>
                 {% endif %}
                 
-                <!-- Notes moyennes compactes -->
-                <div class="average-ratings">
-                    <div class="average-row">
-                        <span class="average-label">Globale :</span>
-                        <span class="average-stars" id="avg-globale-stars">☆☆☆☆☆</span>
-                        <span class="average-value" id="avg-globale">-</span>
+                <!-- Votre avis (module avec fond blanc) -->
+                {% if session.user_id %}
+                <div class="module-card your-rating">
+                    <h3 class="module-title">Votre avis</h3>
+                    
+                    <!-- Note globale avec 5 étoiles (demi-étoiles) -->
+<div class="mb-2">
+    <span style="font-weight: 400; font-size: 0.9rem;">Note globale</span>
+    <div class="rating-stars" id="note-globale-stars" data-rating="0">
+        <span class="star" data-value="5">★</span>
+        <span class="star" data-value="4">★</span>
+        <span class="star" data-value="3">★</span>
+        <span class="star" data-value="2">★</span>
+        <span class="star" data-value="1">★</span>
+    </div>
+    <input type="hidden" id="note-globale" name="note_globale" value="0">
+</div>
+                    
+<!-- Curseurs ultra compacts avec affichage formaté -->
+    <!-- Technique -->
+    <div class="rating-slider-container">
+        <span class="rating-slider-label">Technique</span>
+        <input type="range" id="note-technique" class="rating-slider" min="0" max="5" step="0.5" value="0">
+        <span class="rating-value-display" id="technique-value">0/5</span>
+    </div>
+    
+    <!-- Originalité -->
+    <div class="rating-slider-container">
+        <span class="rating-slider-label">Originalité</span>
+        <input type="range" id="note-originalite" class="rating-slider" min="0" max="5" step="0.5" value="0">
+        <span class="rating-value-display" id="originalite-value">0/5</span>
+    </div>
+    
+    <!-- Émotion -->
+    <div class="rating-slider-container">
+        <span class="rating-slider-label">Émotion</span>
+        <input type="range" id="note-emotion" class="rating-slider" min="0" max="5" step="0.5" value="0">
+        <span class="rating-value-display" id="emotion-value">0/5</span>
+    </div>
+    
+                    
+                    <!-- Commentaire -->
+                    <div class="comment-box">
+                        <div id="user-comment-display" style="display: none;">
+                            <div class="comment-card user-comment" id="displayed-comment">
+                                <div class="comment-header">
+                                    <span class="comment-author">{{ session.username }}</span>
+                                    <span class="comment-date">À l'instant</span>
+                                </div>
+                                <div class="comment-content" id="displayed-comment-text"></div>
+                                <div class="comment-actions">
+                                    <button class="btn-edit-comment" onclick="editComment()">
+                                        <i class="fas fa-edit"></i> Modifier
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="comment-edit-area">
+                            <textarea id="commentaire" rows="2" placeholder="Votre commentaire..."></textarea>
+                            
+                            <div class="visibility-options">
+                                <label>
+                                    <input type="radio" name="visibility" value="public" checked> 
+                                    <i class="fas fa-globe"></i> Public
+                                </label>
+                                <label>
+                                    <input type="radio" name="visibility" value="private"> 
+                                    <i class="fas fa-lock"></i> Privé
+                                </label>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="auto-save-hint">
+                                    <i class="fas fa-save"></i> Auto
+                                </span>
+                                <button type="button" class="btn-save-comment" onclick="saveComment()">
+                                    Publier
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="average-row">
-                        <span class="average-label">Technique :</span>
-                        <span class="average-value" id="avg-technique">-</span>
-                    </div>
-                    <div class="average-row">
-                        <span class="average-label">Originalité :</span>
-                        <span class="average-value" id="avg-originalite">-</span>
-                    </div>
-                    <div class="average-row">
-                        <span class="average-label">Émotion :</span>
-                        <span class="average-value" id="avg-emotion">-</span>
-                    </div>
-                    <div class="total-notes" id="total-notes">Basé sur 0 note(s)</div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Section notation compacte -->
-        {% if session.user_id %}
-        <div class="rating-section">
-            <h3>Noter cette œuvre</h3>
-            
-            <!-- Note globale avec demi-étoiles -->
-            <div class="mb-2">
-                <label class="form-label" style="font-weight: 500; font-size: 0.9rem;">Note globale</label>
-                <div class="rating-stars" id="note-globale-stars" data-rating="0">
-                    <span class="star" data-value="5">★</span>
-                    <span class="star" data-value="4.5">★</span>
-                    <span class="star" data-value="4">★</span>
-                    <span class="star" data-value="3.5">★</span>
-                    <span class="star" data-value="3">★</span>
-                    <span class="star" data-value="2.5">★</span>
-                    <span class="star" data-value="2">★</span>
-                    <span class="star" data-value="1.5">★</span>
-                    <span class="star" data-value="1">★</span>
-                    <span class="star" data-value="0.5">★</span>
+                {% else %}
+                <div class="login-prompt">
+                    <i class="fas fa-star" style="color: #5d6d7e;"></i>
+                    <a href="/login">Connectez-vous</a> pour donner votre avis
                 </div>
-                <input type="hidden" id="note-globale" name="note_globale" value="0">
-            </div>
-            
-            <!-- Curseurs ultra compacts -->
-            <div class="rating-slider-container">
-                <span class="rating-slider-label">Technique</span>
-                <input type="range" id="note-technique" class="rating-slider" min="0" max="5" step="0.5" value="0">
-                <span class="rating-value-display" id="technique-value">0</span>
-            </div>
-            
-            <div class="rating-slider-container">
-                <span class="rating-slider-label">Originalité</span>
-                <input type="range" id="note-originalite" class="rating-slider" min="0" max="5" step="0.5" value="0">
-                <span class="rating-value-display" id="originalite-value">0</span>
-            </div>
-            
-            <div class="rating-slider-container">
-                <span class="rating-slider-label">Émotion</span>
-                <input type="range" id="note-emotion" class="rating-slider" min="0" max="5" step="0.5" value="0">
-                <span class="rating-value-display" id="emotion-value">0</span>
-            </div>
-            
-            <!-- Zone de commentaire -->
-            <div class="comment-box">
-                <textarea id="commentaire" rows="2" placeholder="Votre commentaire..."></textarea>
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="auto-save-hint">
-                        <i class="fas fa-save"></i> Notes sauvegardées automatiquement
-                    </span>
-                    <button type="button" class="btn-save-comment" onclick="saveComment()">
-                        Publier
-                    </button>
+                {% endif %}
+                
+                <!-- Commentaires du public (module avec fond blanc) -->
+                <div class="module-card comments-section">
+                    <h3 class="module-title">Commentaires du public</h3>
+                    <div id="comments-container">
+                        <!-- Les commentaires seront chargés dynamiquement -->
+                    </div>
                 </div>
-            </div>
-        </div>
-        {% else %}
-        <div class="login-prompt">
-            <i class="fas fa-star" style="color: #5d6d7e; margin-right: 0.5rem;"></i>
-            <a href="/login">Connectez-vous</a> pour noter cette œuvre
-        </div>
-        {% endif %}
-        
-        <!-- Section des commentaires -->
-        <div class="comments-section">
-            <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Commentaires</h3>
-            <div id="comments-container">
-                <!-- Les commentaires seront chargés dynamiquement -->
             </div>
         </div>
     </div>
@@ -444,6 +570,22 @@
         const artworkId = '{{ oeuvre.id }}';
         let currentRating = null;
         let saveTimeout;
+        let userHasComment = false;
+        
+        // ============================================
+        // GESTION DE L'IMAGE
+        // ============================================
+        
+        function openImageModal(imageUrl) {
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = imageUrl;
+            
+            const imageModal = new bootstrap.Modal(document.getElementById('imageModal'), {
+                backdrop: true,
+                keyboard: true
+            });
+            imageModal.show();
+        }
         
         // ============================================
         // GESTION DES FAVORIS
@@ -500,12 +642,11 @@
                 }
             } catch (error) {
                 console.error('Erreur toggle favori:', error);
-                alert('Erreur lors de la modification des favoris');
             }
         }
         
         // ============================================
-        // GESTION DES NOTES (ÉTOILES AVEC DEMI)
+        // GESTION DES NOTES (ÉTOILES)
         // ============================================
         
         function initStars() {
@@ -517,15 +658,13 @@
                 star.addEventListener('click', function() {
                     const value = parseFloat(this.dataset.value);
                     hiddenInput.value = value;
-                    starsContainer.setAttribute('data-rating', value);
                     
-                    // Mettre à jour les couleurs
                     stars.forEach(s => {
                         const starValue = parseFloat(s.dataset.value);
                         if (starValue <= value) {
-                            s.style.color = '#ffc107';
+                            s.classList.add('selected');
                         } else {
-                            s.style.color = '#ddd';
+                            s.classList.remove('selected');
                         }
                     });
                     
@@ -562,26 +701,42 @@
         // GESTION DES CURSEURS
         // ============================================
         
-        function initSliders() {
-            const sliders = [
-                { id: 'note-technique', display: 'technique-value' },
-                { id: 'note-originalite', display: 'originalite-value' },
-                { id: 'note-emotion', display: 'emotion-value' }
-            ];
-            
-            sliders.forEach(s => {
-                const slider = document.getElementById(s.id);
-                const display = document.getElementById(s.display);
-                
-                slider.addEventListener('input', function() {
-                    display.textContent = this.value;
-                });
-                
-                slider.addEventListener('change', function() {
-                    autoSaveRating();
-                });
-            });
-        }
+function initSliders() {
+    const sliders = [
+        { id: 'note-technique', display: 'technique-value' },
+        { id: 'note-originalite', display: 'originalite-value' },
+        { id: 'note-emotion', display: 'emotion-value' }
+    ];
+    
+    sliders.forEach(s => {
+        const slider = document.getElementById(s.id);
+        const display = document.getElementById(s.display);
+        
+        // Initialisation avec le bon format
+        const value = parseFloat(slider.value);
+        display.textContent = formatNote(value);
+        
+        slider.addEventListener('input', function() {
+            const val = parseFloat(this.value);
+            display.textContent = formatNote(val);
+        });
+        
+        slider.addEventListener('change', function() {
+            autoSaveRating();
+        });
+    });
+}
+
+// Fonction pour formater la note (gère les .5)
+function formatNote(value) {
+    // Si c'est un nombre entier
+    if (value % 1 === 0) {
+        return value + '/5';
+    } else {
+        // Remplacer le point par une virgule pour l'affichage
+        return value.toString().replace('.', ',') + '/5';
+    }
+}
         
         // ============================================
         // SAUVEGARDE AUTOMATIQUE
@@ -625,8 +780,13 @@
         }
         
         // ============================================
-        // SAUVEGARDE DU COMMENTAIRE
+        // GESTION DU COMMENTAIRE
         // ============================================
+        
+        function editComment() {
+            document.getElementById('user-comment-display').style.display = 'none';
+            document.getElementById('comment-edit-area').style.display = 'block';
+        }
         
         async function saveComment() {
             {% if not session.user_id %}
@@ -635,19 +795,24 @@
             {% endif %}
             
             const comment = document.getElementById('commentaire').value;
+            const visibility = document.querySelector('input[name="visibility"]:checked').value;
             
             if (!comment.trim()) {
-                alert('Veuillez écrire un commentaire');
                 return;
             }
             
+            const noteGlobale = parseFloat(document.getElementById('note-globale').value);
+            const noteTechnique = parseFloat(document.getElementById('note-technique').value);
+            const noteOriginalite = parseFloat(document.getElementById('note-originalite').value);
+            const noteEmotion = parseFloat(document.getElementById('note-emotion').value);
+            
             const ratingData = {
                 artwork_id: artworkId,
-                note_globale: parseFloat(document.getElementById('note-globale').value),
-                note_technique: parseFloat(document.getElementById('note-technique').value),
-                note_originalite: parseFloat(document.getElementById('note-originalite').value),
-                note_emotion: parseFloat(document.getElementById('note-emotion').value),
-                commentaire: comment
+                note_globale: noteGlobale,
+                note_technique: noteTechnique,
+                note_originalite: noteOriginalite,
+                note_emotion: noteEmotion,
+                commentaire: visibility === 'public' ? comment : ''
             };
             
             try {
@@ -660,14 +825,20 @@
                 });
                 
                 if (response.ok) {
-                    alert('Commentaire publié !');
-                    document.getElementById('commentaire').value = '';
-                    loadComments();
+                    // Afficher le commentaire dans "Votre avis"
+                    document.getElementById('displayed-comment-text').textContent = comment;
+                    
+                    document.getElementById('user-comment-display').style.display = 'block';
+                    document.getElementById('comment-edit-area').style.display = 'none';
+                    
+                    // Recharger les commentaires publics si le commentaire est public
+                    if (visibility === 'public') {
+                        loadComments();
+                    }
                     loadArtworkStats();
                 }
             } catch (error) {
                 console.error('Erreur:', error);
-                alert('Erreur lors de la publication');
             }
         }
         
@@ -684,6 +855,7 @@
                 if (data.has_rating) {
                     currentRating = data.rating;
                     
+                    // Note globale
                     document.getElementById('note-globale').value = data.rating.note_globale;
                     
                     const stars = document.querySelectorAll('#note-globale-stars .star');
@@ -691,12 +863,15 @@
                     stars.forEach(s => {
                         const starValue = parseFloat(s.dataset.value);
                         if (starValue <= currentValue) {
+                            s.classList.add('selected');
                             s.style.color = '#ffc107';
                         } else {
+                            s.classList.remove('selected');
                             s.style.color = '#ddd';
                         }
                     });
                     
+                    // Curseurs
                     document.getElementById('note-technique').value = data.rating.note_technique;
                     document.getElementById('technique-value').textContent = data.rating.note_technique;
                     
@@ -706,7 +881,14 @@
                     document.getElementById('note-emotion').value = data.rating.note_emotion;
                     document.getElementById('emotion-value').textContent = data.rating.note_emotion;
                     
-                    document.getElementById('commentaire').value = data.rating.commentaire || '';
+                    // Commentaire
+                    if (data.rating.commentaire) {
+                        document.getElementById('commentaire').value = data.rating.commentaire;
+                        document.getElementById('displayed-comment-text').textContent = data.rating.commentaire;
+                        
+                        document.getElementById('user-comment-display').style.display = 'block';
+                        document.getElementById('comment-edit-area').style.display = 'none';
+                    }
                 }
             } catch (error) {
                 console.error('Erreur chargement note:', error);
@@ -723,10 +905,10 @@
                 const response = await fetch(`/api/artwork/stats/${artworkId}`);
                 const stats = await response.json();
                 
-                document.getElementById('avg-globale').textContent = stats.moyenne_globale.toFixed(1);
-                document.getElementById('avg-technique').textContent = stats.moyenne_technique.toFixed(1);
-                document.getElementById('avg-originalite').textContent = stats.moyenne_originalite.toFixed(1);
-                document.getElementById('avg-emotion').textContent = stats.moyenne_emotion.toFixed(1);
+                document.getElementById('avg-globale').textContent = stats.moyenne_globale.toFixed(1) + '/5';
+                document.getElementById('avg-technique').textContent = stats.moyenne_technique.toFixed(1) + '/5';
+                document.getElementById('avg-originalite').textContent = stats.moyenne_originalite.toFixed(1) + '/5';
+                document.getElementById('avg-emotion').textContent = stats.moyenne_emotion.toFixed(1) + '/5';
                 document.getElementById('total-notes').textContent = `Basé sur ${stats.total_notes} note(s)`;
                 
                 const avgStars = document.getElementById('avg-globale-stars');
@@ -763,7 +945,7 @@
                     commentsContainer.innerHTML = `
                         <div class="comment-card">
                             <div class="comment-content" style="text-align: center; color: #5d6d7e;">
-                                Aucun commentaire pour le moment. Soyez le premier à donner votre avis !
+                                Aucun commentaire public pour le moment.
                             </div>
                         </div>
                     `;
@@ -779,12 +961,6 @@
                                 <span class="comment-date">${c.created_at}</span>
                             </div>
                             <div class="comment-content">${c.commentaire}</div>
-                            <div class="comment-ratings">
-                                <span><i class="fas fa-star"></i> ${c.note_globale}</span>
-                                <span><i class="fas fa-paint-brush"></i> ${c.notes.technique}</span>
-                                <span><i class="fas fa-lightbulb"></i> ${c.notes.originalite}</span>
-                                <span><i class="fas fa-heart"></i> ${c.notes.emotion}</span>
-                            </div>
                         </div>
                     `;
                 });

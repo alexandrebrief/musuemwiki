@@ -578,7 +578,10 @@
     <!-- ============================================
          NAVBAR
          ============================================ -->
-    <nav class="navbar navbar-expand-lg">
+
+
+
+<nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="/">MUSEUMWIKI</a>
             
@@ -642,6 +645,15 @@
             </div>
         </div>
     </nav>
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     <!-- ============================================
          FILTRES (remontés)
@@ -716,26 +728,35 @@
 
             {% if results %}
                 <div class="artworks-grid">
-                    {% for artwork in results %}
-                    <a href="/oeuvre/{{ artwork.id }}" class="artwork-card">
-                        {% if artwork.image_url and artwork.image_url != '' %}
-                        <img src="{{ artwork.image_url }}" class="artwork-image" loading="lazy">
-                        {% else %}
-                        <div class="artwork-image-placeholder">No image</div>
-                        {% endif %}
-                        <div class="artwork-info">
-                            <div class="artwork-title">{{ artwork.titre[:40] }}</div>
-                            <div class="artwork-artist">{{ artwork.createur }}</div>
-                            {% if artwork.date %}
-                            <div class="artwork-year">{{ artwork.date[:4] }}</div>
-                            {% endif %}
-                            {% if artwork.lieu and artwork.lieu != 'Inconnu' %}
-                            <div class="artwork-museum">{{ artwork.lieu[:30] }}</div>
-                            {% endif %}
-                        </div>
-                    </a>
-                    {% endfor %}
-                </div>
+ {% for artwork in results %}
+<a href="/oeuvre/{{ artwork.id }}" class="artwork-card">
+    {% if artwork.image_url and artwork.image_url != '' %}
+    <img src="{{ artwork.image_url }}" class="artwork-image" loading="lazy">
+    {% else %}
+    <div class="artwork-image-placeholder">No image</div>
+    {% endif %}
+    <div class="artwork-info">
+        <div class="artwork-title">{{ artwork.titre[:40] }}</div>
+        <div class="artwork-artist">{{ artwork.createur }}</div>
+        {% if artwork.date %}
+        <div class="artwork-year">{{ artwork.date[:4] }}</div>
+        {% endif %}
+        {% if artwork.lieu and artwork.lieu != 'Inconnu' %}
+        <div class="artwork-museum">{{ artwork.lieu[:30] }}</div>
+        {% endif %}
+        
+        <!-- Badge de popularité -->
+        {% if not query and not artists and not museums and not movements %}
+            {% if favorite_counts[artwork.id] > 0 %}
+            <div class="popular-badge">
+                <i class="fas fa-heart" style="color: #dc3545;"></i> 
+                {{ favorite_counts[artwork.id] }} favori{% if favorite_counts[artwork.id] > 1 %}s{% endif %}
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</a>
+{% endfor %}
 
                 <!-- Pagination avec ellipses -->
                 <nav class="pagination">
@@ -801,11 +822,7 @@
     <!-- ============================================
          FOOTER
          ============================================ -->
-    <footer class="footer">
-        <div class="container">
-            <p>MuseumWiki · Données Wikidata</p>
-        </div>
-    </footer>
+{% include 'footer.html' %}
 
     <!-- ============================================
          SCRIPTS
