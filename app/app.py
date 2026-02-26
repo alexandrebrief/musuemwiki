@@ -586,6 +586,15 @@ def suggestions():
 # ============================================
 # 8. ROUTES PAGES STATIQUES
 # ============================================
+@app.route('/api/favorites/list')
+def list_favorites():
+    """Liste tous les IDs des favoris de l'utilisateur connecté"""
+    if 'user_id' not in session:
+        return jsonify([])
+    
+    favorites = Favorite.query.filter_by(user_id=session['user_id']).all()
+    return jsonify([fav.artwork_id for fav in favorites])
+
 
 @app.route('/api/comments/<artwork_id>')
 def get_comments(artwork_id):
