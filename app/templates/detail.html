@@ -25,6 +25,9 @@
             --border-light: #f0e8dc;
             --accent: #dc3545;
             --star: #ffc107;
+            --info: #3498db;
+            --pen: #9b59b6;
+            --comments: #e67e22;
             --shadow: 0 2px 8px rgba(44, 62, 80, 0.03);
             --shadow-hover: 0 4px 12px rgba(44, 62, 80, 0.05);
             --radius: 12px;
@@ -72,11 +75,20 @@
         }
 
         /* ============================================
-           COLONNE IMAGE (AGRANDIE)
+           COLONNE IMAGE (STICKY)
            ============================================ */
         .image-section {
             position: sticky;
-            top: 2rem;
+            top: 0.5rem;
+            align-self: start;
+            height: fit-content;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .image-section::-webkit-scrollbar {
+            display: none;
         }
 
         .artwork-image-container {
@@ -86,6 +98,10 @@
             background: var(--white);
             transition: all 0.3s ease;
             box-shadow: var(--shadow);
+            max-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .artwork-image-container:hover {
@@ -134,12 +150,24 @@
         }
 
         .block-title i {
-            color: var(--text-soft);
             font-size: 1rem;
         }
 
+        .block-title .fa-info-circle {
+            color: var(--info);
+        }
+        .block-title .fa-pen {
+            color: var(--pen);
+        }
+        .block-title .fa-star {
+            color: var(--star);
+        }
+        .block-title .fa-comments {
+            color: var(--comments);
+        }
+
         /* ============================================
-           BLOC INFORMATIONS (format compact)
+           BLOC INFORMATIONS (alignement parfait)
            ============================================ */
         .info-compact {
             display: flex;
@@ -148,15 +176,16 @@
         }
 
         .info-line {
-            display: flex;
+            display: grid;
+            grid-template-columns: 80px 1fr;  /* Largeur fixe pour les labels */
+            gap: 1rem;
             align-items: baseline;
-            gap: 0.5rem;
         }
 
         .info-label {
             font-size: 0.9rem;
             color: var(--text-light);
-            min-width: 70px;
+            text-align: left;
         }
 
         .info-value {
@@ -185,35 +214,35 @@
         }
 
         /* ============================================
-           BLOC AVIS DU PUBLIC
+           BLOC AVIS DU PUBLIC (1 colonne)
            ============================================ */
-        .ratings-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+        .ratings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
         }
 
         .rating-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 1rem;
         }
 
         .rating-label {
             color: var(--text-light);
-            font-size: 0.8rem;
-            min-width: 65px;
+            font-size: 0.9rem;
+            min-width: 80px;
         }
 
         .rating-stars-display {
             color: var(--star);
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            min-width: 55px;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            min-width: 70px;
         }
 
         .rating-value {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--text-soft);
         }
 
@@ -251,7 +280,6 @@
             transform: scale(1.05);
         }
 
-        /* Curseurs */
         .sliders-container {
             display: flex;
             flex-direction: column;
@@ -266,8 +294,8 @@
         }
 
         .slider-label {
-            min-width: 70px;
-            font-size: 0.85rem;
+            min-width: 80px;
+            font-size: 0.9rem;
             color: var(--text);
         }
 
@@ -304,11 +332,10 @@
         .slider-value {
             min-width: 45px;
             text-align: right;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--text-soft);
         }
 
-        /* Commentaire */
         .comment-box textarea {
             width: 100%;
             padding: 0.8rem;
@@ -383,7 +410,7 @@
         }
 
         /* ============================================
-           BLOC COMMENTAIRES
+           BLOC COMMENTAIRES (4 icônes)
            ============================================ */
         .comments-list {
             display: flex;
@@ -433,7 +460,8 @@
             gap: 1.2rem;
             padding-top: 0.5rem;
             border-top: 1px solid var(--border-light);
-            font-size: 0.7rem;
+            font-size: 0.75rem;
+            flex-wrap: wrap;
         }
 
         .comment-note {
@@ -448,13 +476,13 @@
         }
 
         /* ============================================
-           BOUTON FAVORI (ROND BLANC, PAS DE CONTOUR ROUGE)
+           BOUTON FAVORI (PARFAITEMENT ROND)
            ============================================ */
         .favorite-btn {
             width: 45px;
             height: 45px;
             background: white;
-            border-radius: 50%;
+            border-radius: 50%;  /* Garantit un rond parfait */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -464,6 +492,7 @@
             border: 1px solid rgba(0,0,0,0.05);
             color: #dc3545;
             font-size: 1.3rem;
+            flex-shrink: 0;
         }
 
         .favorite-btn:hover {
@@ -473,8 +502,8 @@
         }
 
         .favorite-btn.active {
-            background: white;  /* Reste blanc */
-            border: 1px solid rgba(0,0,0,0.05);  /* Pas de bordure rouge */
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
         .favorite-btn.active i {
@@ -549,6 +578,7 @@
 
             .image-section {
                 position: static;
+                max-height: none;
             }
 
             .artwork-image {
@@ -557,10 +587,6 @@
         }
 
         @media (max-width: 768px) {
-            .ratings-grid {
-                grid-template-columns: 1fr;
-            }
-
             .slider-row {
                 flex-direction: column;
                 align-items: flex-start;
@@ -572,8 +598,12 @@
             }
 
             .info-line {
-                flex-direction: column;
+                grid-template-columns: 1fr;
                 gap: 0.2rem;
+            }
+
+            .rating-item {
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -597,7 +627,7 @@
 
     <div class="detail-container">
         <div class="detail-grid">
-            <!-- COLONNE GAUCHE : IMAGE (AGRANDIE) -->
+            <!-- COLONNE GAUCHE : IMAGE (AGRANDIE ET STICKY) -->
             <div class="image-section">
                 {% if oeuvre.image_url %}
                 <div class="artwork-image-container" onclick="openImageModal('{{ oeuvre.image_url }}')">
@@ -623,26 +653,26 @@
                     {% endif %}
                 </div>
 
-                <!-- BLOC 1 : INFORMATIONS (format compact) -->
+                <!-- BLOC 1 : INFORMATIONS (format compact avec alignement parfait) -->
                 <div class="info-block">
                     <div class="block-title">
                         <i class="fas fa-info-circle"></i> Informations
                     </div>
                     <div class="info-compact">
                         <div class="info-line">
-                            <span class="info-label">Artiste :</span>
+                            <span class="info-label">Artiste:</span>
                             <span class="info-value">{{ oeuvre.createur }}</span>
                         </div>
                         <div class="info-line">
-                            <span class="info-label">Date :</span>
+                            <span class="info-label">Date:</span>
                             <span class="info-value">{{ oeuvre.date[:4] if oeuvre.date else 'Inconnue' }}</span>
                         </div>
                         <div class="info-line">
-                            <span class="info-label">Lieu :</span>
+                            <span class="info-label">Lieu:</span>
                             <span class="info-value">{{ oeuvre.lieu or 'Inconnu' }}</span>
                         </div>
                         <div class="info-line">
-                            <span class="info-label">Mouvement :</span>
+                            <span class="info-label">Mouvement:</span>
                             <span class="info-value">{{ oeuvre.mouvement or 'Non spécifié' }}</span>
                         </div>
                     </div>
@@ -743,12 +773,12 @@
                 </div>
                 {% endif %}
 
-                <!-- BLOC 3 : AVIS DU PUBLIC -->
+                <!-- BLOC 3 : AVIS DU PUBLIC (1 colonne) -->
                 <div class="info-block">
                     <div class="block-title">
                         <i class="fas fa-star"></i> Avis du public
                     </div>
-                    <div class="ratings-grid">
+                    <div class="ratings-list">
                         <div class="rating-item">
                             <span class="rating-label">Globale</span>
                             <span class="rating-stars-display" id="avg-globale-stars">☆☆☆☆☆</span>
@@ -770,7 +800,7 @@
                     <div class="total-notes" id="total-notes">Basé sur 0 note(s)</div>
                 </div>
 
-                <!-- BLOC 4 : COMMENTAIRES DU PUBLIC -->
+                <!-- BLOC 4 : COMMENTAIRES DU PUBLIC (4 icônes) -->
                 <div class="info-block">
                     <div class="block-title">
                         <i class="fas fa-comments"></i> Commentaires du public
@@ -818,7 +848,7 @@
             new bootstrap.Modal(document.getElementById('imageModal')).show();
         }
 
-        // FAVORIS (rond blanc, pas de contour rouge)
+        // FAVORIS (rond parfait)
         async function checkFavorite() {
             {% if session.user_id %}
             try {
@@ -876,7 +906,6 @@
             stars.forEach(s => {
                 s.addEventListener('click', function() {
                     const val = parseFloat(this.dataset.value);
-                    // Si on clique sur la même étoile que la valeur actuelle, on met 0
                     if (val === parseFloat(hidden.value)) {
                         hidden.value = 0;
                         stars.forEach(ss => ss.classList.remove('selected'));
@@ -891,7 +920,14 @@
             });
         }
 
-        // CURSEURS (affichage 1 ou 0, pas 1,0)
+        // CURSEURS (affichage sans décimales inutiles)
+        function formatSliderValue(val) {
+            if (Number.isInteger(val)) {
+                return val + '/5';
+            }
+            return val.toFixed(1).replace('.', ',') + '/5';
+        }
+
         function initSliders() {
             const sliders = [
                 { id: 'note-technique', display: 'technique-value' },
@@ -906,12 +942,7 @@
                 
                 const update = () => {
                     let val = parseFloat(slider.value);
-                    // Afficher 1 au lieu de 1,0
-                    if (Number.isInteger(val)) {
-                        disp.textContent = val + '/5';
-                    } else {
-                        disp.textContent = val.toFixed(1).replace('.', ',') + '/5';
-                    }
+                    disp.textContent = formatSliderValue(val);
                 };
                 
                 update();
@@ -1008,13 +1039,13 @@
                 });
                 
                 document.getElementById('note-technique').value = r.note_technique;
-                document.getElementById('technique-value').textContent = (Number.isInteger(r.note_technique) ? r.note_technique : r.note_technique.toFixed(1).replace('.', ',')) + '/5';
+                document.getElementById('technique-value').textContent = formatSliderValue(r.note_technique);
                 
                 document.getElementById('note-originalite').value = r.note_originalite;
-                document.getElementById('originalite-value').textContent = (Number.isInteger(r.note_originalite) ? r.note_originalite : r.note_originalite.toFixed(1).replace('.', ',')) + '/5';
+                document.getElementById('originalite-value').textContent = formatSliderValue(r.note_originalite);
                 
                 document.getElementById('note-emotion').value = r.note_emotion;
-                document.getElementById('emotion-value').textContent = (Number.isInteger(r.note_emotion) ? r.note_emotion : r.note_emotion.toFixed(1).replace('.', ',')) + '/5';
+                document.getElementById('emotion-value').textContent = formatSliderValue(r.note_emotion);
                 
                 if (r.commentaire) {
                     document.getElementById('commentaire').value = r.commentaire;
@@ -1069,8 +1100,9 @@
                         <div class="comment-content">${c.commentaire}</div>
                         <div class="comment-notes">
                             <span class="comment-note"><i class="fas fa-star"></i> ${c.notes.technique}</span>
-                            <span class="comment-note"><i class="fas fa-lightbulb"></i> ${c.notes.originalite}</span>
-                            <span class="comment-note"><i class="fas fa-heart"></i> ${c.notes.emotion}</span>
+                            <span class="comment-note"><i class="fas fa-paint-brush"></i> ${c.notes.originalite}</span>
+                            <span class="comment-note"><i class="fas fa-lightbulb"></i> ${c.notes.emotion}</span>
+                            <span class="comment-note"><i class="fas fa-heart"></i> ${c.note_globale}</span>
                         </div>
                     </div>
                 `).join('');
