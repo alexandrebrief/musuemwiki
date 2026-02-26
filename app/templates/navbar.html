@@ -43,74 +43,63 @@
             font-weight: 500;
         }
         
-        /* ===== BARRE DE RECHERCHE COMPLÈTE ===== */
-.navbar-search {
-    display: flex;
-    align-items: center;
-    background: rgba(255,255,255,0.15);
-    border-radius: 30px;
-    padding: 0.15rem 0.15rem 0.15rem 0.8rem;  /* ← Réduit de 0.3rem à 0.15rem */
-    margin: 0 1rem;
-    flex: 0 1 400px;
-    border: 1px solid rgba(255,255,255,0.2);
-    position: relative;
-}
-
-.navbar-search input {
-    background: transparent;
-    border: none;
-    color: white;
-    width: 100%;
-    padding: 0.4rem 0;
-    font-size: 0.95rem;
-}
-
-.navbar-search input::placeholder {
-    color: rgba(255,255,255,0.7);
-}
-
-.navbar-search input:focus {
-    outline: none;
-    box-shadow: none;  /* ← Supprime le cadre orange */
-}
-
-.search-button {
-    background: transparent;
-    border: none;
-    color: white;
-    padding: 0.25rem 0.6rem;  /* ← Réduit */
-    cursor: pointer;
-    font-size: 0.9rem;        /* ← Réduit */
-    transition: all 0.2s;
-}
-
-.clear-search {
-    background: transparent;
-    border: none;
-    color: rgba(255,255,255,0.5);
-    padding: 0.15rem 0.4rem;  /* ← Réduit */
-    cursor: pointer;
-    font-size: 0.75rem;       /* ← Réduit */
-    transition: all 0.2s;
-    order: -1;
-}
+        /* ===== BARRE DE RECHERCHE ===== */
+        .navbar-search {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.15);
+            border-radius: 30px;
+            padding: 0.15rem 0.15rem 0.15rem 0.8rem;
+            margin: 0 1rem;
+            flex: 0 1 400px;
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+        }
         
-        .clear-search:hover {
-            color: rgba(255,255,255,0.9);
+        .navbar-search input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+            padding: 0.4rem 0;
+            font-size: 0.95rem;
+        }
+        
+        .navbar-search input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .navbar-search input:focus {
+            outline: none;
+            box-shadow: none;
         }
         
         .search-button {
             background: transparent;
             border: none;
             color: white;
-            padding: 0.4rem 0.8rem;
+            padding: 0.25rem 0.6rem;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
             transition: all 0.2s;
         }
         
         .search-button:hover {
             transform: scale(1.1);
+        }
+        
+        .clear-search {
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            padding: 0.15rem 0.4rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+        
+        .clear-search:hover {
+            color: rgba(255,255,255,0.9);
         }
         
         /* Suggestions */
@@ -224,20 +213,18 @@
     </style>
     
     <div class="container">
-        <!-- Logo / Nom du site avec variable -->
+        <!-- Logo / Nom du site -->
         <a class="navbar-brand" href="/">{{ site_name }}</a>
         
-        <!-- Barre de recherche COMPLÈTE (identique à index) -->
+        <!-- Barre de recherche -->
         <div class="navbar-search">
             <form action="/" method="get" class="d-flex align-items-center w-100" autocomplete="off" id="navbar-search-form">
                 <input type="text" 
                        name="q" 
-                       id="search-input"
-                       class="search-input" 
-                       placeholder="Rechercher un artiste, une œuvre..."
-                       value="{{ query if query else '' }}">
+                       id="navbar-search-input"  <!-- ID CHANGÉ pour éviter conflit -->
+                    
                 {% if query %}
-                <button type="button" class="clear-search" onclick="clearSearch()">
+                <button type="button" class="clear-search" onclick="window.clearNavbarSearch ? clearNavbarSearch() : window.location.href='/'">
                     <i class="fas fa-times"></i>
                 </button>
                 {% endif %}
@@ -246,7 +233,7 @@
                 </button>
             </form>
             <!-- Suggestions -->
-            <div id="suggestions" class="suggestions-box"></div>
+            <div id="navbar-suggestions" class="suggestions-box"></div>  <!-- ID CHANGÉ -->
         </div>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -266,7 +253,7 @@
                 </li>
                 
                 {% if session.username %}
-                    <!-- Utilisateur connecté - MÊME STYLE QUE CONNEXION -->
+                    <!-- Utilisateur connecté -->
                     <li class="nav-item dropdown">
                         <a class="nav-link btn-login dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ session.username }}
@@ -291,22 +278,20 @@
 </nav>
 
 <script>
-// Fonction pour effacer la recherche
-function clearSearch() {
-    document.getElementById('search-input').value = '';
-    window.location.href = '/';
-}
-
-// ===== SUGGESTIONS AVEC NAVIGATION CLAVIER =====
-let suggestions = [];
-let selectedSuggestionIndex = -1;
-const searchInput = document.getElementById('search-input');
-const suggestionsBox = document.getElementById('suggestions');
-
-if (searchInput) {
+// ===== SUGGESTIONS - VERSION ISOLÉE =====
+(function() {
+    // Ne pas interférer avec le script principal
+    const searchInput = document.getElementById('navbar-search-input');
+    const suggestionsBox = document.getElementById('navbar-suggestions');
+    
+    if (!searchInput || !suggestionsBox) return;
+    
+    let navbarSuggestions = [];
+    let selectedIndex = -1;
+    
     searchInput.addEventListener('input', function(e) {
         const query = e.target.value;
-        selectedSuggestionIndex = -1;
+        selectedIndex = -1;
         
         if (query.length < 2) {
             suggestionsBox.style.display = 'none';
@@ -316,7 +301,7 @@ if (searchInput) {
         fetch(`/api/suggestions?q=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
-                suggestions = data;
+                navbarSuggestions = data;
                 if (data.length > 0) {
                     suggestionsBox.innerHTML = data.map((s, index) => 
                         `<div class="suggestion-item" data-index="${index}">
@@ -324,10 +309,10 @@ if (searchInput) {
                         </div>`
                     ).join('');
                     
-                    document.querySelectorAll('.suggestion-item').forEach(item => {
+                    suggestionsBox.querySelectorAll('.suggestion-item').forEach(item => {
                         item.addEventListener('click', function() {
                             const index = this.dataset.index;
-                            searchInput.value = suggestions[index].texte;
+                            searchInput.value = navbarSuggestions[index].texte;
                             suggestionsBox.style.display = 'none';
                             document.getElementById('navbar-search-form').submit();
                         });
@@ -342,29 +327,29 @@ if (searchInput) {
     
     // Navigation clavier
     searchInput.addEventListener('keydown', function(e) {
-        const items = document.querySelectorAll('.suggestion-item');
+        const items = suggestionsBox.querySelectorAll('.suggestion-item');
         
         if (items.length === 0) return;
         
         if (e.key === 'ArrowDown') {
             e.preventDefault();
-            selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, items.length - 1);
-            updateSelectedSuggestion(items);
+            selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+            updateSelected(items);
         } else if (e.key === 'ArrowUp') {
             e.preventDefault();
-            selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
-            updateSelectedSuggestion(items);
-        } else if (e.key === 'Enter' && selectedSuggestionIndex >= 0) {
+            selectedIndex = Math.max(selectedIndex - 1, -1);
+            updateSelected(items);
+        } else if (e.key === 'Enter' && selectedIndex >= 0) {
             e.preventDefault();
-            searchInput.value = suggestions[selectedSuggestionIndex].texte;
+            searchInput.value = navbarSuggestions[selectedIndex].texte;
             suggestionsBox.style.display = 'none';
             document.getElementById('navbar-search-form').submit();
         }
     });
     
-    function updateSelectedSuggestion(items) {
+    function updateSelected(items) {
         items.forEach((item, index) => {
-            if (index === selectedSuggestionIndex) {
+            if (index === selectedIndex) {
                 item.classList.add('selected');
             } else {
                 item.classList.remove('selected');
@@ -372,10 +357,20 @@ if (searchInput) {
         });
     }
     
+    // Fermer les suggestions en cliquant ailleurs
     document.addEventListener('click', function(e) {
-        if (!e.target.closest('#search-input') && !e.target.closest('.suggestions-box')) {
+        if (!e.target.closest('#navbar-search-input') && !e.target.closest('#navbar-suggestions')) {
             suggestionsBox.style.display = 'none';
         }
     });
-}
+})();
+
+// Fonction de clear pour la navbar
+window.clearNavbarSearch = function() {
+    const input = document.getElementById('navbar-search-input');
+    if (input) {
+        input.value = '';
+        window.location.href = '/';
+    }
+};
 </script>

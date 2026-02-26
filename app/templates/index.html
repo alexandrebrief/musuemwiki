@@ -6,7 +6,7 @@
     <title>{{ site_name }} - Recherche d'œuvres</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         /* ============================================
            STYLES GÉNÉRAUX
@@ -564,15 +564,26 @@
             text-decoration: none;
             font-size: 0.9rem;
             display: inline-block;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
         }
         
         .page-link:hover {
             background: #f0e8dc;
+            border-color: #d4c9b9;
         }
         
         .page-item.active .page-link {
             background: #2c3e50;
             color: white;
+            border-color: #2c3e50;
+        }
+        
+        .page-item.disabled .page-link {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
         }
         
         .ellipsis {
@@ -684,7 +695,7 @@
                 
                 <!-- Artiste -->
                 <div class="filter-dropdown">
-                    <button class="filter-button" onclick="toggleDropdown('artist-dropdown')">
+                    <button class="filter-button" id="artist-dropdown-btn">
                         Artiste <i class="fas fa-chevron-down"></i>
                     </button>
                     <div id="artist-dropdown" class="filter-menu"></div>
@@ -692,7 +703,7 @@
                 
                 <!-- Musée -->
                 <div class="filter-dropdown">
-                    <button class="filter-button" onclick="toggleDropdown('museum-dropdown')">
+                    <button class="filter-button" id="museum-dropdown-btn">
                         Musée <i class="fas fa-chevron-down"></i>
                     </button>
                     <div id="museum-dropdown" class="filter-menu"></div>
@@ -700,7 +711,7 @@
                 
                 <!-- Mouvement -->
                 <div class="filter-dropdown">
-                    <button class="filter-button" onclick="toggleDropdown('movement-dropdown')">
+                    <button class="filter-button" id="movement-dropdown-btn">
                         Mouvement <i class="fas fa-chevron-down"></i>
                     </button>
                     <div id="movement-dropdown" class="filter-menu"></div>
@@ -708,8 +719,8 @@
                 
                 <!-- Boutons empilés -->
                 <div class="action-buttons">
-                    <button class="apply-btn" onclick="applyFilters()">Appliquer</button>
-                    <button class="clear-btn" onclick="clearAndApply()">
+                    <button class="apply-btn" id="apply-filters-btn">Appliquer</button>
+                    <button class="clear-btn" id="clear-filters-btn">
                         <i class="fas fa-times"></i> Effacer
                     </button>
                 </div>
@@ -717,7 +728,7 @@
                 <!-- Tri avec label -->
                 <div class="sort-container">
                     <span class="sort-label">Trier par :</span>
-                    <select id="sort" class="sort-select" onchange="applySort()">
+                    <select id="sort" class="sort-select">
                         <option value="relevance" {% if sort == 'relevance' %}selected{% endif %}>Pertinence</option>
                         <option value="date_asc" {% if sort == 'date_asc' %}selected{% endif %}>Date ↑</option>
                         <option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>Date ↓</option>
@@ -763,12 +774,11 @@
             <!-- Grille des œuvres -->
             <div class="artworks-grid">
                 {% for artwork in results %}
-                <div class="artwork-card" onclick="window.location.href='/oeuvre/{{ artwork.id }}'" style="cursor: pointer;">
+                <!-- Carte cliquable (sauf le bouton favori) -->
+                <div class="artwork-card" data-href="/oeuvre/{{ artwork.id }}" style="cursor: pointer; position: relative;">
                     
                     <!-- BOUTON FAVORI -->
-                    <div class="favorite-icon" 
-                         onclick="toggleFavoriteFromIndex('{{ artwork.id }}', event)"
-                         data-artwork-id="{{ artwork.id }}">
+                    <div class="favorite-icon" data-artwork-id="{{ artwork.id }}">
                         <i class="far fa-heart" id="favorite-icon-{{ artwork.id }}"></i>
                     </div>
                     
@@ -790,7 +800,7 @@
                         <div class="artwork-museum">{{ artwork.lieu[:30] }}</div>
                         {% endif %}
 
-                        <!-- Badge de popularité (uniquement sur la page d'accueil) -->
+                        <!-- Badge de popularité -->
                         {% if not query and not artists and not museums and not movements %}
                             {% if favorite_counts[artwork.id] > 0 %}
                             <div class="popular-badge">
@@ -809,13 +819,13 @@
             <nav class="pagination">
                 <ul class="pagination">
                     <li class="page-item {{ 'disabled' if page == 1 else '' }}">
-                        <a class="page-link" href="#" onclick="changePage({{ page - 1 }}); return false;">←</a>
+                        <a class="page-link" id="prev-page" href="#">←</a>
                     </li>
                     
                     {% if total_pages > 7 %}
                         <!-- Première page -->
                         <li class="page-item {{ 'active' if page == 1 else '' }}">
-                            <a class="page-link" href="#" onclick="changePage(1); return false;">1</a>
+                            <a class="page-link" data-page="1" href="#">1</a>
                         </li>
                         
                         <!-- Ellipse si besoin -->
@@ -827,7 +837,7 @@
                         {% for p in range(page-2, page+3) %}
                             {% if p > 1 and p < total_pages %}
                                 <li class="page-item {{ 'active' if p == page else '' }}">
-                                    <a class="page-link" href="#" onclick="changePage({{ p }}); return false;">{{ p }}</a>
+                                    <a class="page-link" data-page="{{ p }}" href="#">{{ p }}</a>
                                 </li>
                             {% endif %}
                         {% endfor %}
@@ -839,19 +849,19 @@
                         
                         <!-- Dernière page -->
                         <li class="page-item {{ 'active' if page == total_pages else '' }}">
-                            <a class="page-link" href="#" onclick="changePage({{ total_pages }}); return false;">{{ total_pages }}</a>
+                            <a class="page-link" data-page="{{ total_pages }}" href="#">{{ total_pages }}</a>
                         </li>
                     {% else %}
                         <!-- Moins de 7 pages : afficher toutes -->
                         {% for p in range(1, total_pages + 1) %}
                             <li class="page-item {{ 'active' if p == page else '' }}">
-                                <a class="page-link" href="#" onclick="changePage({{ p }}); return false;">{{ p }}</a>
+                                <a class="page-link" data-page="{{ p }}" href="#">{{ p }}</a>
                             </li>
                         {% endfor %}
                     {% endif %}
                     
                     <li class="page-item {{ 'disabled' if page == total_pages else '' }}">
-                        <a class="page-link" href="#" onclick="changePage({{ page + 1 }}); return false;">→</a>
+                        <a class="page-link" id="next-page" href="#">→</a>
                     </li>
                 </ul>
             </nav>
@@ -899,25 +909,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // ============================================
-        // VARIABLES GLOBALES
-        // ============================================
-        let selectedFilters = {
-            artists: [],
-            museums: [],
-            movements: []
-        };
-        
-        let suggestions = [];
-        let selectedSuggestionIndex = -1;
-        
-        // Récupérer les filtres depuis l'URL au chargement
-        (function initFiltersFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            selectedFilters.artists = urlParams.getAll('artist');
-            selectedFilters.museums = urlParams.getAll('museum');
-            selectedFilters.movements = urlParams.getAll('movement');
-        })();
+<script>
+(function() {
+    // ============================================
+    // VARIABLES GLOBALES
+    // ============================================
+    let selectedFilters = {
+        artists: [],
+        museums: [],
+        movements: []
+    };
+    
+    let suggestions = [];
+    let selectedSuggestionIndex = -1;
+    
+    // ... reste du code ...
+})();
+</script>
         
         // ============================================
         // FONCTIONS GÉNÉRALES
@@ -934,85 +942,87 @@
         const searchInput = document.getElementById('search-input');
         const suggestionsBox = document.getElementById('suggestions');
         
-        searchInput.addEventListener('input', function(e) {
-            const query = e.target.value;
-            selectedSuggestionIndex = -1;
-            
-            if (query.length < 2) {
-                suggestionsBox.style.display = 'none';
-                return;
-            }
-            
-            fetch(`/api/suggestions?q=${encodeURIComponent(query)}`)
-                .then(response => response.json())
-                .then(data => {
-                    suggestions = data;
-                    if (data.length > 0) {
-                        suggestionsBox.innerHTML = data.map((s, index) => 
-                            `<div class="suggestion-item" data-index="${index}">
-                                <strong>${s.texte}</strong> <small>${s.categorie}</small>
-                            </div>`
-                        ).join('');
-                        
-                        document.querySelectorAll('.suggestion-item').forEach(item => {
-                            item.addEventListener('click', function() {
-                                const index = this.dataset.index;
-                                searchInput.value = suggestions[index].texte;
-                                suggestionsBox.style.display = 'none';
-                                setTimeout(() => {
-                                    loadFilterOptions();
-                                    document.getElementById('navbar-search-form').submit();
-                                }, 100);
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value;
+                selectedSuggestionIndex = -1;
+                
+                if (query.length < 2) {
+                    suggestionsBox.style.display = 'none';
+                    return;
+                }
+                
+                fetch(`/api/suggestions?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        suggestions = data;
+                        if (data.length > 0) {
+                            suggestionsBox.innerHTML = data.map((s, index) => 
+                                `<div class="suggestion-item" data-index="${index}">
+                                    <strong>${s.texte}</strong> <small>${s.categorie}</small>
+                                </div>`
+                            ).join('');
+                            
+                            document.querySelectorAll('.suggestion-item').forEach(item => {
+                                item.addEventListener('click', function() {
+                                    const index = this.dataset.index;
+                                    searchInput.value = suggestions[index].texte;
+                                    suggestionsBox.style.display = 'none';
+                                    setTimeout(() => {
+                                        loadFilterOptions();
+                                        document.getElementById('navbar-search-form').submit();
+                                    }, 100);
+                                });
                             });
-                        });
-                        
-                        suggestionsBox.style.display = 'block';
+                            
+                            suggestionsBox.style.display = 'block';
+                        } else {
+                            suggestionsBox.style.display = 'none';
+                        }
+                    });
+            });
+            
+            // Navigation clavier
+            searchInput.addEventListener('keydown', function(e) {
+                const items = document.querySelectorAll('.suggestion-item');
+                
+                if (items.length === 0) return;
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, items.length - 1);
+                    updateSelectedSuggestion(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
+                    updateSelectedSuggestion(items);
+                } else if (e.key === 'Enter' && selectedSuggestionIndex >= 0) {
+                    e.preventDefault();
+                    searchInput.value = suggestions[selectedSuggestionIndex].texte;
+                    suggestionsBox.style.display = 'none';
+                    setTimeout(() => {
+                        loadFilterOptions();
+                        document.getElementById('navbar-search-form').submit();
+                    }, 100);
+                }
+            });
+            
+            function updateSelectedSuggestion(items) {
+                items.forEach((item, index) => {
+                    if (index === selectedSuggestionIndex) {
+                        item.classList.add('selected');
                     } else {
-                        suggestionsBox.style.display = 'none';
+                        item.classList.remove('selected');
                     }
                 });
-        });
-        
-        // Navigation clavier
-        searchInput.addEventListener('keydown', function(e) {
-            const items = document.querySelectorAll('.suggestion-item');
-            
-            if (items.length === 0) return;
-            
-            if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, items.length - 1);
-                updateSelectedSuggestion(items);
-            } else if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
-                updateSelectedSuggestion(items);
-            } else if (e.key === 'Enter' && selectedSuggestionIndex >= 0) {
-                e.preventDefault();
-                searchInput.value = suggestions[selectedSuggestionIndex].texte;
-                suggestionsBox.style.display = 'none';
-                setTimeout(() => {
-                    loadFilterOptions();
-                    document.getElementById('navbar-search-form').submit();
-                }, 100);
             }
-        });
-        
-        function updateSelectedSuggestion(items) {
-            items.forEach((item, index) => {
-                if (index === selectedSuggestionIndex) {
-                    item.classList.add('selected');
-                } else {
-                    item.classList.remove('selected');
+            
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('#search-input') && !e.target.closest('.suggestions-box') && !e.target.closest('.search-button') && !e.target.closest('.clear-search')) {
+                    suggestionsBox.style.display = 'none';
                 }
             });
         }
-        
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('#search-input') && !e.target.closest('.suggestions-box') && !e.target.closest('.search-button') && !e.target.closest('.clear-search')) {
-                suggestionsBox.style.display = 'none';
-            }
-        });
         
         // ============================================
         // GESTION DES DROPDOWNS
@@ -1023,6 +1033,19 @@
             });
             document.getElementById(id).classList.toggle('show');
         }
+        
+        // Initialiser les dropdowns sans onclick
+        document.getElementById('artist-dropdown-btn')?.addEventListener('click', function() {
+            toggleDropdown('artist-dropdown');
+        });
+        
+        document.getElementById('museum-dropdown-btn')?.addEventListener('click', function() {
+            toggleDropdown('museum-dropdown');
+        });
+        
+        document.getElementById('movement-dropdown-btn')?.addEventListener('click', function() {
+            toggleDropdown('movement-dropdown');
+        });
         
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.filter-dropdown')) {
@@ -1037,7 +1060,7 @@
         // ============================================
 
         function loadFilterOptions() {
-            const query = document.getElementById('search-input').value;
+            const query = document.getElementById('search-input')?.value || '';
             
             function buildUrl(basePath) {
                 let url = `${basePath}?q=${encodeURIComponent(query)}`;
@@ -1060,20 +1083,22 @@
                 .then(response => response.json())
                 .then(data => {
                     const container = document.getElementById('artist-dropdown');
+                    if (!container) return;
+                    
                     if (data.length === 0) {
                         container.innerHTML = '<div class="filter-menu-item">Aucun artiste</div>';
                     } else {
-                        container.innerHTML = data.map(a => {
-                            const id = `artist-${a.name.replace(/[^a-zA-Z0-9]/g, '-')}`;
-                            const checked = selectedFilters.artists.includes(a.name) ? 'checked' : '';
-                            return `
-                                <div class="filter-menu-item">
-                                    <input type="checkbox" value="${a.name}" id="${id}" ${checked}>
-                                    <label for="${id}">${a.name}</label>
-                                    <span class="count">(${a.count})</span>
-                                </div>
-                            `;
-                        }).join('');
+container.innerHTML = data.map(a => {
+    const id = `artist-${a.name.replace(/[^a-zA-Z0-9]/g, '-')}`;
+    const checked = selectedFilters.artists.includes(a.name) ? 'checked' : '';
+    return `
+        <div class="filter-menu-item">
+            <input type="checkbox" value="${a.name}" id="${id}" ${checked}>
+            <label for="${id}">${a.name}</label>
+            <span class="count">(${a.count})</span>
+        </div>
+    `;
+}).join('');
                     }
                 });
             
@@ -1082,6 +1107,8 @@
                 .then(response => response.json())
                 .then(data => {
                     const container = document.getElementById('museum-dropdown');
+                    if (!container) return;
+                    
                     if (data.length === 0) {
                         container.innerHTML = '<div class="filter-menu-item">Aucun musée</div>';
                     } else {
@@ -1104,6 +1131,8 @@
                 .then(response => response.json())
                 .then(data => {
                     const container = document.getElementById('movement-dropdown');
+                    if (!container) return;
+                    
                     if (data.length === 0) {
                         container.innerHTML = '<div class="filter-menu-item">Aucun mouvement</div>';
                     } else {
@@ -1123,20 +1152,22 @@
         }
 
         // Recharger les filtres quand la recherche change
-        searchInput.addEventListener('input', function() {
-            clearTimeout(window.filterTimer);
-            window.filterTimer = setTimeout(loadFilterOptions, 500);
-        });
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(window.filterTimer);
+                window.filterTimer = setTimeout(loadFilterOptions, 500);
+            });
 
-        searchInput.addEventListener('change', loadFilterOptions);
+            searchInput.addEventListener('change', loadFilterOptions);
+        }
 
-        document.getElementById('navbar-search-form').addEventListener('submit', function(e) {
+        document.getElementById('navbar-search-form')?.addEventListener('submit', function(e) {
             setTimeout(loadFilterOptions, 500);
         });
 
-        document.querySelector('.apply-btn').addEventListener('click', function() {
-            setTimeout(loadFilterOptions, 500);
-        });
+        // Boutons Appliquer et Effacer
+        document.getElementById('apply-filters-btn')?.addEventListener('click', applyFilters);
+        document.getElementById('clear-filters-btn')?.addEventListener('click', clearAndApply);
         
         // ============================================
         // GESTION DES FILTRES SÉLECTIONNÉS
@@ -1159,19 +1190,35 @@
             updateSelectedFiltersDisplay();
         }
         
+                // Gestionnaire global pour les icônes de suppression
+        document.addEventListener('click', function(e) {
+            // Vérifie si on a cliqué sur l'icône ou son parent
+            if (e.target.classList.contains('remove-filter') || 
+                e.target.parentElement?.classList.contains('remove-filter')) {
+                
+                const icon = e.target.closest('.remove-filter') || e.target;
+                const type = icon.dataset.type;
+                const value = icon.dataset.value;
+                removeFilter(type, value);
+            }
+        });
+        
+        
         function updateSelectedFiltersDisplay() {
             const container = document.getElementById('selected-filters');
+            if (!container) return;
+            
             container.innerHTML = '';
             
-            selectedFilters.artists.forEach(a => {
-                container.innerHTML += `<span class="selected-filter">${a} <i class="fas fa-times" onclick="removeFilter('artist', '${a}')"></i></span>`;
-            });
-            selectedFilters.museums.forEach(m => {
-                container.innerHTML += `<span class="selected-filter">${m} <i class="fas fa-times" onclick="removeFilter('museum', '${m}')"></i></span>`;
-            });
-            selectedFilters.movements.forEach(m => {
-                container.innerHTML += `<span class="selected-filter">${m} <i class="fas fa-times" onclick="removeFilter('movement', '${m}')"></i></span>`;
-            });
+selectedFilters.artists.forEach(a => {
+    container.innerHTML += `<span class="selected-filter">${a} <i class="fas fa-times remove-filter" data-type="artist" data-value="${a}"></i></span>`;
+});
+selectedFilters.museums.forEach(m => {
+    container.innerHTML += `<span class="selected-filter">${m} <i class="fas fa-times remove-filter" data-type="museum" data-value="${m}"></i></span>`;
+});
+selectedFilters.movements.forEach(m => {
+    container.innerHTML += `<span class="selected-filter">${m} <i class="fas fa-times remove-filter" data-type="movement" data-value="${m}"></i></span>`;
+});
         }
         
         function removeFilter(type, value) {
@@ -1206,7 +1253,7 @@
             const q = urlParams.get('q') || '';
             const sort = document.getElementById('sort').value;
             
-            let url = `/?q=${q}&sort=${sort}`;
+            let url = `/?q=${encodeURIComponent(q)}&sort=${encodeURIComponent(sort)}`;
             
             selectedFilters.artists.forEach(a => {
                 url += `&artist=${encodeURIComponent(a)}`;
@@ -1228,7 +1275,7 @@
             const q = urlParams.get('q') || '';
             const sort = document.getElementById('sort').value;
             
-            let url = `/?q=${q}&sort=${sort}`;
+            let url = `/?q=${encodeURIComponent(q)}&sort=${encodeURIComponent(sort)}`;
             
             selectedFilters.artists.forEach(a => {
                 url += `&artist=${encodeURIComponent(a)}`;
@@ -1241,6 +1288,36 @@
             });
             
             window.location.href = url;
+        }
+        
+        // Initialiser le tri
+        document.getElementById('sort')?.addEventListener('change', applySort);
+        
+        // ============================================
+        // GESTION DE LA PAGINATION
+        // ============================================
+        function initPagination() {
+            document.querySelectorAll('.page-link[data-page]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = parseInt(this.dataset.page);
+                    changePage(page);
+                });
+            });
+            
+            document.getElementById('prev-page')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!this.closest('.page-item').classList.contains('disabled')) {
+                    changePage({{ page - 1 }});
+                }
+            });
+            
+            document.getElementById('next-page')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!this.closest('.page-item').classList.contains('disabled')) {
+                    changePage({{ page + 1 }});
+                }
+            });
         }
         
         function changePage(page) {
@@ -1248,7 +1325,7 @@
             const q = urlParams.get('q') || '';
             const sort = document.getElementById('sort').value;
             
-            let url = `/?q=${q}&page=${page}&sort=${sort}`;
+            let url = `/?q=${encodeURIComponent(q)}&page=${page}&sort=${encodeURIComponent(sort)}`;
             
             selectedFilters.artists.forEach(a => {
                 url += `&artist=${encodeURIComponent(a)}`;
@@ -1264,21 +1341,17 @@
         }
         
         // ============================================
-        // GESTION DES FAVORIS DEPUIS L'INDEX
+        // GESTION DES FAVORIS
         // ============================================
         
-        async function toggleFavoriteFromIndex(artworkId, event) {
-            event.preventDefault();
-            event.stopPropagation();
-            
+        async function toggleFavorite(artworkId, element) {
             {% if not session.user_id %}
                 // Non connecté : ne rien faire
                 return;
             {% endif %}
             
-            // Connecté : on toggle le favori
-            const parent = event.currentTarget;
-            const icon = parent.querySelector('i');
+            const parent = element.closest('.favorite-icon');
+            const icon = element;
             
             try {
                 const response = await fetch('/api/favorite/toggle', {
@@ -1305,7 +1378,21 @@
             }
         }
         
-        // Vérifier l'état des favoris au chargement (si connecté)
+        // Initialiser les boutons favoris
+        function initFavoriteButtons() {
+            document.querySelectorAll('.favorite-icon').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const artworkId = this.dataset.artworkId;
+                    const icon = this.querySelector('i');
+                    toggleFavorite(artworkId, icon);
+                });
+            });
+        }
+        
+        // Vérifier l'état des favoris au chargement
         async function checkAllFavorites() {
             {% if session.user_id %}
             try {
@@ -1326,6 +1413,42 @@
             {% endif %}
         }
         
+// ============================================
+// GESTION DES CLIQUES SUR LES CARTES - VERSION SIMPLE
+// ============================================
+function initArtworkCards() {
+    console.log('Initialisation des cartes...');
+    const cards = document.querySelectorAll('.artwork-card');
+    
+    cards.forEach(card => {
+        // Supprimer l'ancien écouteur s'il existe
+        card.removeEventListener('click', cardClickHandler);
+        // Ajouter le nouvel écouteur
+        card.addEventListener('click', cardClickHandler);
+    });
+}
+
+function cardClickHandler(e) {
+    // Ignorer si on clique sur le bouton favori
+    if (e.target.closest('.favorite-icon')) {
+        return;
+    }
+    
+    // Redirection
+    const href = this.dataset.href;
+    if (href) {
+        window.location.href = href;
+    }
+}
+
+// Initialisation multiple pour être sûr
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(initArtworkCards, 100);  // Petit délai pour être sûr
+});
+
+// Aussi après chaque mise à jour des résultats (si vous avez du chargement AJAX)
+window.addEventListener('load', initArtworkCards);
+        
         // ============================================
         // INITIALISATION
         // ============================================
@@ -1333,7 +1456,31 @@
             loadFilterOptions();
             updateSelectedFiltersDisplay();
             checkAllFavorites();
+            initArtworkCards();
+            initFavoriteButtons();
+            initPagination();
         });
     </script>
+    <script>
+console.log('SCRIPT DÉBUT');
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded - recherche des cartes');
+    const cards = document.querySelectorAll('.artwork-card');
+    console.log('Cartes trouvées au chargement:', cards.length);
+    
+    cards.forEach((card, i) => {
+        console.log(`Carte ${i} attachée`);
+        card.addEventListener('click', function(e) {
+            console.log('CLIC DÉTECTÉ !');
+            if (!e.target.closest('.favorite-icon')) {
+                window.location.href = this.dataset.href;
+            }
+        });
+    });
+});
+console.log('SCRIPT FIN');
+</script>
+    
+    
 </body>
 </html>

@@ -62,17 +62,21 @@ db = SQLAlchemy(app)
 # 2.1 SÉCURITÉ - HEADERS HTTP (Flask-Talisman)
 # ============================================
 
+# Remplacer la configuration Talisman actuelle par :
 Talisman(app,
     content_security_policy={
         'default-src': ["'self'"],
-        'script-src': ["'self'", "https://cdn.jsdelivr.net", "https://code.jquery.com", "https://cdnjs.cloudflare.com"],
-        'style-src': ["'self'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "'unsafe-inline'"],
+        # Ajouter 'unsafe-inline' pour le développement
+        'script-src': ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", 
+                      "https://code.jquery.com", "https://cdnjs.cloudflare.com"],
+        'style-src': ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", 
+                     "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
         'font-src': ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
         'img-src': ["'self'", "data:", "https:", "http:", "*"],
     },
-    force_https=False,
+    force_https=False,  # Désactivé en développement
     strict_transport_security=True,
-    session_cookie_secure=False,
+    session_cookie_secure=False,  # False en développement
     session_cookie_http_only=True,
     referrer_policy='strict-origin-when-cross-origin'
 )
