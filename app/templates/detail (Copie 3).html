@@ -25,8 +25,9 @@
             --border-light: #f0e8dc;
             --accent: #dc3545;
             --star: #ffc107;
-            --shadow: 0 2px 8px rgba(44, 62, 80, 0.03);
-            --shadow-hover: 0 4px 12px rgba(44, 62, 80, 0.05);
+            --star-soft: #ffd966;
+            --shadow: 0 4px 12px rgba(44, 62, 80, 0.03);
+            --shadow-hover: 0 8px 20px rgba(44, 62, 80, 0.06);
             --radius: 12px;
             --radius-sm: 6px;
         }
@@ -45,6 +46,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            font-weight: 300;
         }
 
         h1, h2, h3, h4, h5, h6 {
@@ -67,7 +69,7 @@
         .detail-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            gap: 2.5rem;
         }
 
         /* ============================================
@@ -85,7 +87,6 @@
             overflow: hidden;
             background: var(--white);
             transition: all 0.3s ease;
-            box-shadow: var(--shadow);
         }
 
         .artwork-image-container:hover {
@@ -112,55 +113,98 @@
         }
 
         /* ============================================
-           BLOCS UNIFORMES
+           COLONNE INFORMATIONS
            ============================================ */
-        .info-block {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-light);
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
-        .block-title {
-            font-size: 1.1rem;
-            margin-bottom: 1.2rem;
-            color: var(--text);
+        /* En-tête avec titre et favori - plus élégant */
+        .artwork-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .artwork-header h1 {
+            font-size: clamp(1.8rem, 3vw, 2.4rem);
+            margin: 0;
+            line-height: 1.2;
             font-weight: 500;
+        }
+
+        .favorite-btn {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            background: transparent;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--accent);
+            font-size: 1.4rem;
+            border: 1px solid var(--border);
+            background: var(--white);
         }
 
-        .block-title i {
-            color: var(--text-soft);
-            font-size: 0.9rem;
+        .favorite-btn:hover {
+            transform: scale(1.1);
+            border-color: var(--accent);
+            background: #fff0f0;
         }
 
-        /* ============================================
-           BLOC INFORMATIONS
-           ============================================ */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem 1.5rem;
+        .favorite-btn.active {
+            background: #fff0f0;
+            border-color: var(--accent);
         }
 
-        .info-item {
+        .favorite-btn.loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .favorite-btn.loading i {
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Métadonnées de l'œuvre - plus épuré */
+        .artwork-metadata {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem 2rem;
+            padding: 0.5rem 0;
+        }
+
+        .metadata-item {
             display: flex;
             flex-direction: column;
             gap: 0.2rem;
         }
 
-        .info-label {
+        .metadata-label {
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--text-soft);
+            font-weight: 300;
         }
 
-        .info-value {
+        .metadata-value {
             font-size: 0.95rem;
+            font-weight: 400;
             color: var(--text);
         }
 
@@ -168,41 +212,55 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            margin-top: 1rem;
-            padding: 0.4rem 1.2rem;
-            background: var(--background);
+            padding: 0.5rem 1.2rem;
+            background: var(--white);
             color: var(--text);
             border: 1px solid var(--border);
             border-radius: 30px;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             transition: all 0.2s;
+            width: fit-content;
         }
 
         .wikidata-link:hover {
             border-color: var(--primary);
-            background: var(--white);
+            background: var(--background);
         }
 
         /* ============================================
-           BLOC AVIS DU PUBLIC
+           AVIS DU PUBLIC - STYLE ÉPURÉ
            ============================================ */
+        .ratings-section {
+            background: transparent;
+            padding: 0.5rem 0;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
         .ratings-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+            gap: 1rem 2rem;
         }
 
         .rating-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.8rem;
         }
 
         .rating-label {
             color: var(--text-light);
             font-size: 0.8rem;
-            min-width: 65px;
+            font-weight: 300;
+            min-width: 70px;
         }
 
         .rating-stars-display {
@@ -214,27 +272,38 @@
 
         .rating-value {
             font-size: 0.8rem;
+            font-weight: 300;
             color: var(--text-soft);
+            min-width: 35px;
         }
 
         .total-notes {
-            margin-top: 1rem;
+            margin-top: 0.8rem;
             font-size: 0.75rem;
             color: var(--text-soft);
             font-style: italic;
+            text-align: left;
         }
 
         /* ============================================
-           BLOC VOTRE AVIS
+           VOTRE AVIS - SOUS L'IMAGE
            ============================================ */
+        .review-section {
+            background: transparent;
+            padding: 0.5rem 0;
+            border-top: 1px solid var(--border-light);
+            margin-top: 0.5rem;
+        }
+
+        /* Étoiles de notation - plus fines */
         .rating-stars {
             display: inline-flex;
             flex-direction: row-reverse;
             justify-content: flex-end;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: var(--border);
             cursor: pointer;
-            margin: 0.5rem 0;
+            margin: 0.3rem 0;
         }
 
         .rating-stars .star {
@@ -243,7 +312,7 @@
         }
 
         .rating-stars .star.selected {
-            color: var(--star);
+            color: var(--star-soft);
         }
 
         .rating-stars .star:hover {
@@ -251,11 +320,16 @@
             transform: scale(1.05);
         }
 
+        /* Curseurs - VERSION CORRIGÉE */
         .sliders-container {
             display: flex;
             flex-direction: column;
-            gap: 0.8rem;
+            gap: 0.6rem;
             margin: 1rem 0;
+            background: var(--white);
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
         }
 
         .slider-row {
@@ -268,6 +342,7 @@
             min-width: 70px;
             font-size: 0.85rem;
             color: var(--text);
+            font-weight: 300;
         }
 
         .slider-wrapper {
@@ -293,10 +368,12 @@
             border-radius: 50%;
             background: var(--primary);
             cursor: pointer;
+            transition: all 0.2s;
             opacity: 0.8;
         }
 
         .rating-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
             opacity: 1;
         }
 
@@ -304,7 +381,13 @@
             min-width: 45px;
             text-align: right;
             font-size: 0.8rem;
+            font-weight: 300;
             color: var(--text-soft);
+        }
+
+        /* Zone de commentaire - épurée */
+        .comment-box {
+            margin-top: 1rem;
         }
 
         .comment-box textarea {
@@ -313,19 +396,22 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             resize: vertical;
+            transition: all 0.2s;
             background: var(--white);
+            font-weight: 300;
         }
 
         .comment-box textarea:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.05);
         }
 
         .visibility-options {
             display: flex;
-            gap: 1rem;
+            gap: 1.2rem;
             margin: 0.8rem 0;
         }
 
@@ -336,18 +422,26 @@
             color: var(--text-light);
             cursor: pointer;
             font-size: 0.8rem;
+            font-weight: 300;
+        }
+
+        .visibility-options i {
+            font-size: 0.8rem;
+            opacity: 0.7;
         }
 
         .comment-actions {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
+            gap: 1rem;
             margin-top: 0.5rem;
         }
 
         .auto-save-hint {
             font-size: 0.7rem;
             color: var(--text-soft);
+            font-weight: 300;
         }
 
         .btn-save-comment {
@@ -357,19 +451,44 @@
             border-radius: 30px;
             padding: 0.4rem 1.2rem;
             font-size: 0.8rem;
+            font-weight: 300;
             cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
         }
 
         .btn-save-comment:hover {
             background: var(--primary-light);
         }
 
+        /* Commentaire utilisateur */
         .user-comment {
-            background: var(--background);
-            border-left: 3px solid var(--primary);
+            background: var(--white);
+            border-left: 2px solid var(--primary);
             padding: 1rem;
             border-radius: var(--radius-sm);
             margin: 1rem 0;
+        }
+
+        .user-comment .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .user-comment .comment-author {
+            font-weight: 400;
+            color: var(--text);
+        }
+
+        .user-comment .comment-content {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text);
+            font-weight: 300;
         }
 
         .btn-edit-comment {
@@ -378,11 +497,37 @@
             border: none;
             font-size: 0.7rem;
             cursor: pointer;
+            padding: 0.2rem 0.5rem;
+        }
+
+        .btn-edit-comment:hover {
+            color: var(--primary);
+        }
+
+        .login-prompt {
+            text-align: center;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+            margin: 1rem 0;
+        }
+
+        .login-prompt a {
+            color: var(--primary);
+            font-weight: 400;
+            text-decoration: none;
+            border-bottom: 1px dotted var(--primary);
         }
 
         /* ============================================
-           BLOC COMMENTAIRES
+           COMMENTAIRES PUBLICS - AVEC ICÔNES
            ============================================ */
+        .comments-section {
+            background: transparent;
+            padding: 0.5rem 0;
+        }
+
         .comments-list {
             display: flex;
             flex-direction: column;
@@ -390,10 +535,15 @@
         }
 
         .comment-card {
-            background: var(--background);
+            background: var(--white);
             border-radius: var(--radius-sm);
             padding: 1rem;
             border: 1px solid var(--border-light);
+            transition: all 0.2s;
+        }
+
+        .comment-card:hover {
+            border-color: var(--border);
         }
 
         .comment-header {
@@ -405,30 +555,35 @@
         }
 
         .comment-author {
+            font-weight: 400;
+            color: var(--text);
             display: flex;
             align-items: center;
             gap: 0.3rem;
-            color: var(--text);
         }
 
         .comment-author i {
             color: var(--text-soft);
+            font-size: 0.7rem;
         }
 
         .comment-date {
             color: var(--text-soft);
             font-size: 0.7rem;
+            font-weight: 300;
         }
 
         .comment-content {
+            color: var(--text);
+            line-height: 1.5;
             font-size: 0.85rem;
             margin-bottom: 0.8rem;
-            line-height: 1.5;
+            font-weight: 300;
         }
 
         .comment-notes {
             display: flex;
-            gap: 1rem;
+            gap: 1.2rem;
             padding-top: 0.5rem;
             border-top: 1px solid var(--border-light);
             font-size: 0.7rem;
@@ -441,62 +596,19 @@
             color: var(--text-soft);
         }
 
-        .comment-note .fa-paint-brush {
+        .comment-note i {
+            font-size: 0.7rem;
+        }
+
+        .comment-note .fa-star {
             color: var(--star);
         }
         .comment-note .fa-lightbulb {
             color: var(--star);
         }
         .comment-note .fa-heart {
-            color: var(--star);
-        }
-
-        /* ============================================
-           BOUTON FAVORI (ANCIENNE VERSION)
-           ============================================ */
-        .favorite-btn {
-            width: 45px;
-            height: 45px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: all 0.2s;
-            border: 1px solid rgba(0,0,0,0.05);
-            color: #dc3545;
-            font-size: 1.3rem;
-        }
-
-        .favorite-btn:hover {
-            transform: scale(1.1);
-            background: white;
-            box-shadow: 0 4px 12px rgba(220,53,69,0.2);
-        }
-
-        .favorite-btn.active {
-            background: #fff0f0;
-            border-color: #dc3545;
-        }
-
-        .favorite-btn.active i {
-            color: #dc3545;
-        }
-
-        .favorite-btn.loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .favorite-btn.loading i {
-            animation: spin 1s infinite linear;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            color: var(--accent);
+            opacity: 0.7;
         }
 
         /* ============================================
@@ -512,7 +624,7 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: white;
+            background: var(--white);
             border: none;
             border-radius: 50%;
             width: 40px;
@@ -523,24 +635,14 @@
             justify-content: center;
             cursor: pointer;
             z-index: 1060;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            opacity: 0.9;
         }
 
-        /* ============================================
-           LOGIN PROMPT
-           ============================================ */
-        .login-prompt {
-            text-align: center;
-            padding: 2rem;
-            background: var(--white);
-            border-radius: var(--radius);
-            border: 1px solid var(--border-light);
-        }
-
-        .login-prompt a {
-            color: var(--primary);
-            text-decoration: none;
-            border-bottom: 1px dotted var(--primary);
+        .modal-close-btn:hover {
+            opacity: 1;
+            transform: scale(1.05);
         }
 
         /* ============================================
@@ -549,16 +651,23 @@
         @media (max-width: 992px) {
             .detail-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
 
-            .info-grid {
+            .ratings-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 768px) {
+            .detail-container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+
             .ratings-grid {
                 grid-template-columns: 1fr;
+                gap: 0.8rem;
             }
 
             .slider-row {
@@ -571,20 +680,19 @@
                 width: 100%;
             }
 
-            .info-grid {
-                grid-template-columns: 1fr;
+            .metadata-item {
+                width: 100%;
             }
         }
 
         @media (max-width: 480px) {
-            .artwork-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
+            .artwork-header h1 {
+                font-size: 1.6rem;
             }
 
-            .favorite-btn {
-                align-self: flex-end;
+            .comment-notes {
+                flex-wrap: wrap;
+                gap: 0.8rem;
             }
         }
     </style>
@@ -608,8 +716,9 @@
 
     <div class="detail-container">
         <div class="detail-grid">
-            <!-- COLONNE GAUCHE : IMAGE -->
+            <!-- COLONNE GAUCHE : IMAGE + VOTRE AVIS -->
             <div class="image-section">
+                <!-- Image -->
                 {% if oeuvre.image_url %}
                 <div class="artwork-image-container" onclick="openImageModal('{{ oeuvre.image_url }}')">
                     <img src="{{ oeuvre.image_url }}" alt="{{ oeuvre.titre }}" class="artwork-image" loading="lazy">
@@ -619,86 +728,13 @@
                     <i class="fas fa-image fa-2x" style="opacity: 0.4;"></i>
                 </div>
                 {% endif %}
-            </div>
 
-            <!-- COLONNE DROITE : TOUS LES BLOCS -->
-            <div class="info-section" style="display: flex; flex-direction: column; gap: 1.5rem;">
-                
-                <!-- En-tête avec titre et favori -->
-                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <h1 style="font-size: clamp(1.8rem, 3vw, 2.4rem); margin: 0;">{{ oeuvre.titre }}</h1>
-                    {% if session.user_id %}
-                    <div id="favorite-btn" class="favorite-btn" onclick="toggleFavorite()">
-                        <i class="far fa-heart" id="favorite-icon"></i>
-                    </div>
-                    {% endif %}
-                </div>
-
-                <!-- BLOC 1 : INFORMATIONS -->
-                <div class="info-block">
-                    <div class="block-title">
-                        <i class="fas fa-info-circle"></i> Informations
-                    </div>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">Artiste</span>
-                            <span class="info-value">{{ oeuvre.createur }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Date</span>
-                            <span class="info-value">{{ oeuvre.date[:4] if oeuvre.date else 'Inconnue' }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Lieu</span>
-                            <span class="info-value">{{ oeuvre.lieu or 'Inconnu' }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Mouvement</span>
-                            <span class="info-value">{{ oeuvre.mouvement or 'Non spécifié' }}</span>
-                        </div>
-                    </div>
-                    {% if oeuvre.wikidata_url %}
-                    <a href="{{ oeuvre.wikidata_url }}" target="_blank" class="wikidata-link">
-                        <i class="fab fa-wikipedia-w"></i> Voir sur Wikidata
-                    </a>
-                    {% endif %}
-                </div>
-
-                <!-- BLOC 2 : AVIS DU PUBLIC -->
-                <div class="info-block">
-                    <div class="block-title">
-                        <i class="fas fa-star"></i> Avis du public
-                    </div>
-                    <div class="ratings-grid">
-                        <div class="rating-item">
-                            <span class="rating-label">Globale</span>
-                            <span class="rating-stars-display" id="avg-globale-stars">☆☆☆☆☆</span>
-                            <span class="rating-value" id="avg-globale">-/5</span>
-                        </div>
-                        <div class="rating-item">
-                            <span class="rating-label">Technique</span>
-                            <span class="rating-value" id="avg-technique">-/5</span>
-                        </div>
-                        <div class="rating-item">
-                            <span class="rating-label">Originalité</span>
-                            <span class="rating-value" id="avg-originalite">-/5</span>
-                        </div>
-                        <div class="rating-item">
-                            <span class="rating-label">Émotion</span>
-                            <span class="rating-value" id="avg-emotion">-/5</span>
-                        </div>
-                    </div>
-                    <div class="total-notes" id="total-notes">Basé sur 0 note(s)</div>
-                </div>
-
-                <!-- BLOC 3 : VOTRE AVIS (si connecté) -->
+                <!-- Votre avis (sous l'image) -->
                 {% if session.user_id %}
-                <div class="info-block">
-                    <div class="block-title">
-                        <i class="fas fa-pen"></i> Votre avis
-                    </div>
+                <div class="review-section">
+                    <h3 class="section-title">Votre avis</h3>
                     
-                    <!-- Note globale -->
+                    <!-- Note globale avec étoiles -->
                     <div>
                         <div class="rating-stars" id="note-globale-stars" data-rating="0">
                             <span class="star" data-value="5">★</span>
@@ -710,7 +746,7 @@
                         <input type="hidden" id="note-globale" name="note_globale" value="0">
                     </div>
                     
-                    <!-- Curseurs -->
+                    <!-- Curseurs - version corrigée -->
                     <div class="sliders-container">
                         <div class="slider-row">
                             <span class="slider-label">Technique</span>
@@ -739,6 +775,7 @@
                     
                     <!-- Zone de commentaire -->
                     <div class="comment-box">
+                        <!-- Commentaire existant -->
                         <div id="user-comment-display" style="display: none;">
                             <div class="user-comment">
                                 <div class="comment-header">
@@ -748,12 +785,15 @@
                                     <span class="comment-date">À l'instant</span>
                                 </div>
                                 <div class="comment-content" id="displayed-comment-text"></div>
-                                <button class="btn-edit-comment" onclick="editComment()">
-                                    <i class="fas fa-edit"></i> Modifier
-                                </button>
+                                <div class="comment-actions">
+                                    <button class="btn-edit-comment" onclick="editComment()">
+                                        <i class="fas fa-edit"></i> Modifier
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         
+                        <!-- Zone d'édition -->
                         <div id="comment-edit-area">
                             <textarea id="commentaire" rows="2" placeholder="Votre commentaire..."></textarea>
                             
@@ -780,12 +820,81 @@
                     </div>
                 </div>
                 {% endif %}
+            </div>
 
-                <!-- BLOC 4 : COMMENTAIRES DU PUBLIC -->
-                <div class="info-block">
-                    <div class="block-title">
-                        <i class="fas fa-comments"></i> Commentaires du public
+            <!-- COLONNE DROITE : INFORMATIONS -->
+            <div class="info-section">
+                <!-- En-tête avec titre et favori -->
+                <div class="artwork-header">
+                    <h1>{{ oeuvre.titre }}</h1>
+                    {% if session.user_id %}
+                    <div id="favorite-btn" class="favorite-btn" onclick="toggleFavorite()">
+                        <i class="far fa-heart" id="favorite-icon"></i>
                     </div>
+                    {% endif %}
+                </div>
+
+                <!-- Métadonnées -->
+                <div class="artwork-metadata">
+                    <div class="metadata-item">
+                        <span class="metadata-label">Artiste</span>
+                        <span class="metadata-value">{{ oeuvre.createur }}</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Date</span>
+                        <span class="metadata-value">{{ oeuvre.date[:4] if oeuvre.date else 'Inconnue' }}</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Lieu</span>
+                        <span class="metadata-value">{{ oeuvre.lieu or 'Inconnu' }}</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Mouvement</span>
+                        <span class="metadata-value">{{ oeuvre.mouvement or 'Non spécifié' }}</span>
+                    </div>
+                </div>
+
+                {% if oeuvre.wikidata_url %}
+                <a href="{{ oeuvre.wikidata_url }}" target="_blank" class="wikidata-link">
+                    <i class="fab fa-wikipedia-w"></i> Voir sur Wikidata
+                </a>
+                {% endif %}
+
+                <!-- Avis du public -->
+                <div class="ratings-section">
+                    <h3 class="section-title">Avis du public</h3>
+                    <div class="ratings-grid">
+                        <div class="rating-item">
+                            <span class="rating-label">Globale</span>
+                            <span class="rating-stars-display" id="avg-globale-stars">☆☆☆☆☆</span>
+                            <span class="rating-value" id="avg-globale">-/5</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-label">Technique</span>
+                            <span class="rating-value" id="avg-technique">-/5</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-label">Originalité</span>
+                            <span class="rating-value" id="avg-originalite">-/5</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-label">Émotion</span>
+                            <span class="rating-value" id="avg-emotion">-/5</span>
+                        </div>
+                    </div>
+                    <div class="total-notes" id="total-notes">Basé sur 0 note(s)</div>
+                </div>
+
+                {% if not session.user_id %}
+                <div class="login-prompt">
+                    <i class="fas fa-star" style="color: var(--star); font-size: 1.5rem; margin-bottom: 0.8rem;"></i>
+                    <p><a href="/login">Connectez-vous</a> pour donner votre avis</p>
+                </div>
+                {% endif %}
+
+                <!-- Commentaires du public -->
+                <div class="comments-section">
+                    <h3 class="section-title">Commentaires</h3>
                     <div class="comments-list" id="comments-container">
                         <!-- Chargé dynamiquement -->
                     </div>
@@ -794,54 +903,44 @@
         </div>
     </div>
 
-    {% if not session.user_id %}
-    <!-- MODAL DE CONNEXION (si non connecté) -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Connexion requise</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <i class="fas fa-heart" style="font-size: 2rem; color: #dc3545; margin-bottom: 1rem;"></i>
-                    <p>Connectez-vous pour ajouter des favoris et donner votre avis.</p>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <a href="/login" class="btn btn-primary" style="background: #2c3e50;">Se connecter</a>
-                    <a href="/register" class="btn btn-outline-secondary">S'inscrire</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
     {% include 'footer.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // ============================================
+        // VARIABLES GLOBALES
+        // ============================================
         const artworkId = '{{ oeuvre.id }}';
+        let currentRating = null;
         let saveTimeout;
 
-        function openImageModal(url) {
-            document.getElementById('modalImage').src = url;
+        // ============================================
+        // GESTION DE L'IMAGE
+        // ============================================
+        function openImageModal(imageUrl) {
+            document.getElementById('modalImage').src = imageUrl;
             new bootstrap.Modal(document.getElementById('imageModal')).show();
         }
 
-        // FAVORIS (ancienne version)
+        // ============================================
+        // GESTION DES FAVORIS
+        // ============================================
         async function checkFavorite() {
             {% if session.user_id %}
             try {
-                const res = await fetch(`/api/favorite/check/${artworkId}`);
-                const data = await res.json();
+                const response = await fetch(`/api/favorite/check/${artworkId}`);
+                const data = await response.json();
                 const btn = document.getElementById('favorite-btn');
                 const icon = document.getElementById('favorite-icon');
+                
                 if (data.favorite) {
                     btn.classList.add('active');
                     icon.className = 'fas fa-heart';
                 }
-            } catch (e) { console.error(e); }
+            } catch (error) {
+                console.error('Erreur vérification favori:', error);
+            }
             {% endif %}
         }
 
@@ -855,7 +954,7 @@
             btn.classList.add('loading');
             
             try {
-                const res = await fetch('/api/favorite/toggle', {
+                const response = await fetch('/api/favorite/toggle', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -863,7 +962,8 @@
                     },
                     body: JSON.stringify({ artwork_id: artworkId })
                 });
-                const data = await res.json();
+                
+                const data = await response.json();
                 const icon = document.getElementById('favorite-icon');
                 
                 if (data.favorite) {
@@ -873,30 +973,35 @@
                     btn.classList.remove('active');
                     icon.className = 'far fa-heart';
                 }
-            } catch (e) { console.error(e); } finally {
+            } catch (error) {
+                console.error('Erreur:', error);
+            } finally {
                 btn.classList.remove('loading');
             }
         }
 
-        // ÉTOILES
+        // ============================================
+        // GESTION DES NOTES
+        // ============================================
         function initStars() {
             const stars = document.querySelectorAll('#note-globale-stars .star');
-            const hidden = document.getElementById('note-globale');
-            if (!stars.length || !hidden) return;
+            const hiddenInput = document.getElementById('note-globale');
             
-            stars.forEach(s => {
-                s.addEventListener('click', function() {
-                    const val = parseFloat(this.dataset.value);
-                    hidden.value = val;
-                    stars.forEach(ss => {
-                        ss.classList.toggle('selected', parseFloat(ss.dataset.value) <= val);
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const value = parseFloat(this.dataset.value);
+                    hiddenInput.value = value;
+                    
+                    stars.forEach(s => {
+                        const starValue = parseFloat(s.dataset.value);
+                        s.classList.toggle('selected', starValue <= value);
                     });
+                    
                     autoSaveRating();
                 });
             });
         }
 
-        // CURSEURS
         function initSliders() {
             const sliders = [
                 { id: 'note-technique', display: 'technique-value' },
@@ -906,12 +1011,12 @@
             
             sliders.forEach(s => {
                 const slider = document.getElementById(s.id);
-                const disp = document.getElementById(s.display);
-                if (!slider || !disp) return;
+                const display = document.getElementById(s.display);
+                if (!slider || !display) return;
                 
                 const update = () => {
                     const val = parseFloat(slider.value);
-                    disp.textContent = val.toFixed(1).replace('.', ',') + '/5';
+                    display.textContent = val.toFixed(1).replace('.', ',') + '/5';
                 };
                 
                 update();
@@ -927,6 +1032,7 @@
 
         async function saveRating() {
             {% if not session.user_id %} return; {% endif %}
+            
             try {
                 await fetch('/api/rating/save', {
                     method: 'POST',
@@ -944,28 +1050,41 @@
                     })
                 });
                 loadArtworkStats();
-            } catch (e) { console.error(e); }
+            } catch (error) {
+                console.error('Erreur sauvegarde:', error);
+            }
         }
 
-        // COMMENTAIRES
+        // ============================================
+        // GESTION DU COMMENTAIRE
+        // ============================================
         function editComment() {
             document.getElementById('user-comment-display').style.display = 'none';
             document.getElementById('comment-edit-area').style.display = 'block';
         }
 
         async function saveComment() {
-            {% if not session.user_id %} return; {% endif %}
+            {% if not session.user_id %}
+            window.location.href = '/login';
+            return;
+            {% endif %}
             
             const comment = document.getElementById('commentaire').value;
-            if (!comment.trim()) { alert('Écrivez un commentaire.'); return; }
+            if (!comment.trim()) {
+                alert('Veuillez écrire un commentaire.');
+                return;
+            }
             
             const noteGlobale = parseFloat(document.getElementById('note-globale').value);
-            if (noteGlobale === 0) { alert('Donnez une note globale.'); return; }
+            if (noteGlobale === 0) {
+                alert('Veuillez donner une note globale.');
+                return;
+            }
             
             const visibility = document.querySelector('input[name="visibility"]:checked').value;
             
             try {
-                const res = await fetch('/api/rating/save', {
+                const response = await fetch('/api/rating/save', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -981,7 +1100,7 @@
                     })
                 });
                 
-                if (res.ok) {
+                if (response.ok) {
                     document.getElementById('displayed-comment-text').textContent = comment;
                     document.getElementById('user-comment-display').style.display = 'block';
                     document.getElementById('comment-edit-area').style.display = 'none';
@@ -989,47 +1108,54 @@
                     if (visibility === 'public') loadComments();
                     loadArtworkStats();
                 }
-            } catch (e) { console.error(e); }
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
         }
 
+        // ============================================
         // CHARGEMENT DES DONNÉES
+        // ============================================
         async function loadUserRating() {
             {% if session.user_id %}
             try {
-                const res = await fetch(`/api/rating/get/${artworkId}`);
-                const data = await res.json();
-                if (!data.has_rating) return;
+                const response = await fetch(`/api/rating/get/${artworkId}`);
+                const data = await response.json();
                 
-                const r = data.rating;
-                document.getElementById('note-globale').value = r.note_globale;
-                
-                document.querySelectorAll('#note-globale-stars .star').forEach(s => {
-                    s.classList.toggle('selected', parseFloat(s.dataset.value) <= r.note_globale);
-                });
-                
-                document.getElementById('note-technique').value = r.note_technique;
-                document.getElementById('technique-value').textContent = r.note_technique.toFixed(1).replace('.', ',') + '/5';
-                
-                document.getElementById('note-originalite').value = r.note_originalite;
-                document.getElementById('originalite-value').textContent = r.note_originalite.toFixed(1).replace('.', ',') + '/5';
-                
-                document.getElementById('note-emotion').value = r.note_emotion;
-                document.getElementById('emotion-value').textContent = r.note_emotion.toFixed(1).replace('.', ',') + '/5';
-                
-                if (r.commentaire) {
-                    document.getElementById('commentaire').value = r.commentaire;
-                    document.getElementById('displayed-comment-text').textContent = r.commentaire;
-                    document.getElementById('user-comment-display').style.display = 'block';
-                    document.getElementById('comment-edit-area').style.display = 'none';
+                if (data.has_rating) {
+                    const r = data.rating;
+                    
+                    document.getElementById('note-globale').value = r.note_globale;
+                    document.querySelectorAll('#note-globale-stars .star').forEach(s => {
+                        s.classList.toggle('selected', parseFloat(s.dataset.value) <= r.note_globale);
+                    });
+                    
+                    document.getElementById('note-technique').value = r.note_technique;
+                    document.getElementById('technique-value').textContent = r.note_technique.toFixed(1).replace('.', ',') + '/5';
+                    
+                    document.getElementById('note-originalite').value = r.note_originalite;
+                    document.getElementById('originalite-value').textContent = r.note_originalite.toFixed(1).replace('.', ',') + '/5';
+                    
+                    document.getElementById('note-emotion').value = r.note_emotion;
+                    document.getElementById('emotion-value').textContent = r.note_emotion.toFixed(1).replace('.', ',') + '/5';
+                    
+                    if (r.commentaire) {
+                        document.getElementById('commentaire').value = r.commentaire;
+                        document.getElementById('displayed-comment-text').textContent = r.commentaire;
+                        document.getElementById('user-comment-display').style.display = 'block';
+                        document.getElementById('comment-edit-area').style.display = 'none';
+                    }
                 }
-            } catch (e) { console.error(e); }
+            } catch (error) {
+                console.error('Erreur chargement note:', error);
+            }
             {% endif %}
         }
 
         async function loadArtworkStats() {
             try {
-                const res = await fetch(`/api/artwork/stats/${artworkId}`);
-                const stats = await res.json();
+                const response = await fetch(`/api/artwork/stats/${artworkId}`);
+                const stats = await response.json();
                 
                 document.getElementById('avg-globale').textContent = stats.moyenne_globale.toFixed(1) + '/5';
                 document.getElementById('avg-technique').textContent = stats.moyenne_technique.toFixed(1) + '/5';
@@ -1046,17 +1172,20 @@
                     else html += '☆';
                 }
                 stars.textContent = html;
-            } catch (e) { console.error(e); }
+                
+            } catch (error) {
+                console.error('Erreur stats:', error);
+            }
         }
 
         async function loadComments() {
             try {
-                const res = await fetch(`/api/comments/${artworkId}`);
-                const comments = await res.json();
+                const response = await fetch(`/api/comments/${artworkId}`);
+                const comments = await response.json();
                 const container = document.getElementById('comments-container');
                 
-                if (!comments.length) {
-                    container.innerHTML = '<div class="comment-card"><div style="text-align: center; color: var(--text-soft);">Aucun commentaire.</div></div>';
+                if (comments.length === 0) {
+                    container.innerHTML = '<div class="comment-card"><div class="comment-content" style="text-align: center; color: var(--text-soft);">Aucun commentaire pour le moment.</div></div>';
                     return;
                 }
                 
@@ -1068,16 +1197,21 @@
                         </div>
                         <div class="comment-content">${c.commentaire}</div>
                         <div class="comment-notes">
-                            <span class="comment-note"><i class="fas fa-paint-brush"></i> ${c.notes.technique}</span>
+                            <span class="comment-note"><i class="fas fa-star"></i> ${c.notes.technique}</span>
                             <span class="comment-note"><i class="fas fa-lightbulb"></i> ${c.notes.originalite}</span>
                             <span class="comment-note"><i class="fas fa-heart"></i> ${c.notes.emotion}</span>
                         </div>
                     </div>
                 `).join('');
-            } catch (e) { console.error(e); }
+                
+            } catch (error) {
+                console.error('Erreur chargement commentaires:', error);
+            }
         }
 
+        // ============================================
         // INITIALISATION
+        // ============================================
         document.addEventListener('DOMContentLoaded', () => {
             initStars();
             initSliders();
