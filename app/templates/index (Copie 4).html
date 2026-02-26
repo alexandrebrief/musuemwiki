@@ -35,7 +35,7 @@
         }
         
         /* ============================================
-           NAVBAR (conservée inchangée)
+           NAVBAR
            ============================================ */
         .navbar {
             background: #2c3e50 !important;
@@ -148,6 +148,11 @@
         /* ============================================
            SUGGESTIONS
            ============================================ */
+        .suggestions-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        
         .suggestions-box {
             position: absolute;
             top: 100%;
@@ -164,10 +169,10 @@
         }
         
         .suggestion-item {
-            padding: 8px 12px;
+            padding: 10px 15px;
             cursor: pointer;
             border-bottom: 1px solid #f0e8dc;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             transition: background 0.2s;
         }
         
@@ -188,7 +193,7 @@
         .suggestion-item small {
             color: #8e9aab;
             margin-left: 8px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
         
         /* ============================================
@@ -196,14 +201,15 @@
            ============================================ */
         .main-layout {
             display: flex;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+            gap: 2rem;
+            margin-top: 2rem;
         }
         
         /* Colonne gauche - Filtres (réduite) */
         .filters-sidebar {
             width: 240px;
             flex-shrink: 0;
+            font-size: 0.85rem;
         }
         
         /* Colonne droite - Résultats */
@@ -223,7 +229,7 @@
             border-radius: 30px;
             color: #2c3e50;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-align: center;
             cursor: pointer;
             margin-bottom: 1rem;
@@ -239,24 +245,22 @@
         }
         
         /* ============================================
-           FILTRES - VERTICAUX (version réduite)
+           FILTRES - VERTICAUX (taille réduite)
            ============================================ */
         .filters-container {
             background: white;
             border-radius: 12px;
-            padding: 1rem;
+            padding: 1.2rem;
             box-shadow: 0 4px 12px rgba(44,62,80,0.05);
         }
         
         .filters-title {
             font-family: 'Playfair Display', serif;
             font-size: 1rem;
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
             color: #2c3e50;
             padding-bottom: 0.4rem;
             border-bottom: 2px solid #f0e8dc;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         
         .filter-group {
@@ -280,15 +284,16 @@
         
         .filter-dropdown-vertical {
             width: 100%;
+            position: relative;
         }
         
         .filter-button-vertical {
             width: 100%;
             background: #f8f4ee;
             border: 1px solid #e0d6c8;
-            border-radius: 20px;
+            border-radius: 30px;
             padding: 0.4rem 0.8rem;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: #2c3e50;
             cursor: pointer;
             display: flex;
@@ -312,7 +317,9 @@
             max-height: 200px;
             overflow-y: auto;
             width: 100%;
-            margin-top: 4px;
+            margin-top: 3px;
+            left: 0;
+            right: 0;
         }
         
         .filter-menu-vertical.show {
@@ -333,8 +340,8 @@
         
         .filter-menu-item input {
             accent-color: #2c3e50;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
         }
         
         .filter-menu-item label {
@@ -343,6 +350,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-size: 0.75rem;
         }
         
         .filter-menu-item .count {
@@ -363,7 +371,7 @@
             background: #2c3e50;
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: 30px;
             font-weight: 500;
             font-size: 0.75rem;
             cursor: pointer;
@@ -380,12 +388,12 @@
             background: white;
             color: #8e9aab;
             border: 1px solid #d4c9b9;
-            border-radius: 20px;
+            border-radius: 30px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 3px;
             font-size: 0.7rem;
             transition: all 0.2s;
         }
@@ -399,18 +407,22 @@
             font-size: 0.6rem;
         }
         
-        /* Tri */
+        /* Tri - mêmes styles que les filtres */
         .sort-vertical {
             margin-top: 1rem;
             padding-top: 1rem;
             border-top: 1px solid #f0e8dc;
         }
         
+        .sort-vertical .filter-group-label {
+            margin-bottom: 0.5rem;
+        }
+        
         .sort-vertical select {
             width: 100%;
-            padding: 0.4rem 0.8rem;
+            padding: 0.4rem 1.2rem 0.4rem 0.8rem;
             border: 1px solid #e0d6c8;
-            border-radius: 20px;
+            border-radius: 30px;
             background: white;
             color: #2c3e50;
             font-size: 0.75rem;
@@ -418,7 +430,7 @@
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%232c3e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 0.8rem center;
+            background-position: right 0.6rem center;
         }
         
         /* Tags persistants */
@@ -433,8 +445,8 @@
         .selected-filter {
             background: #2c3e50;
             color: white;
-            padding: 0.15rem 0.5rem;
-            border-radius: 20px;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
             font-size: 0.7rem;
             display: inline-flex;
             align-items: center;
@@ -524,10 +536,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.2rem;
-            padding: 0.4rem 0;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 0;
             border-bottom: 1px solid #d4c9b9;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #5d6d7e;
         }
         
@@ -536,10 +548,55 @@
             color: #2c3e50;
         }
         
+        /* Bouton Nouveau hasard (simplifié) */
+        .btn-random {
+            background: transparent;
+            border: 1px solid #2c3e50;
+            color: #2c3e50;
+            border-radius: 30px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-random:hover {
+            background: #2c3e50;
+            color: #e6d8c3;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(44,62,80,0.2);
+        }
+        
+        .btn-random i {
+            font-size: 0.8rem;
+            transition: transform 0.3s;
+        }
+        
+        .btn-random:hover i {
+            transform: rotate(180deg);
+        }
+        
+        .btn-random.loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .btn-random.loading i {
+            animation: spin 1s infinite linear;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
         .artworks-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
         
         .artwork-card {
@@ -557,158 +614,167 @@
         
         .artwork-image {
             width: 100%;
-            height: 160px;
+            height: 180px;
             object-fit: cover;
         }
         
         .artwork-image-placeholder {
             width: 100%;
-            height: 160px;
+            height: 180px;
             background: linear-gradient(145deg, #e6d8c3, #d4c9b9);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #5d6d7e;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
         
         .artwork-info {
-            padding: 0.8rem;
+            padding: 1rem;
         }
         
         .artwork-title {
             font-family: 'Playfair Display', serif;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: #2c3e50;
-            margin-bottom: 0.15rem;
-            line-height: 1.2;
+            margin-bottom: 0.2rem;
+            line-height: 1.3;
         }
         
         .artwork-artist {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #5d6d7e;
-            margin-bottom: 0.15rem;
+            margin-bottom: 0.2rem;
         }
         
         .artwork-year {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #8e9aab;
-            margin-bottom: 0.15rem;
+            margin-bottom: 0.2rem;
         }
         
         .artwork-museum {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #8e9aab;
         }
         
         .popular-badge {
-            margin-top: 0.4rem;
-            font-size: 0.7rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
             color: #5d6d7e;
             display: flex;
             align-items: center;
-            gap: 0.2rem;
+            gap: 0.3rem;
         }
         
-        /* Bouton 20 œuvres au hasard */
-        .random-button {
-            background: transparent;
-            border: 1px solid #2c3e50;
-            color: #2c3e50;
-            border-radius: 30px;
-            padding: 0.3rem 1rem;
-            font-size: 0.8rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
-        }
-        
-        .random-button:hover {
-            background: #2c3e50;
-            color: #e6d8c3;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(44,62,80,0.2);
-        }
-        
-        .random-button i {
-            font-size: 0.85rem;
-            transition: transform 0.3s;
-        }
-        
-        .random-button:hover i {
-            transform: rotate(180deg);
-        }
-        
-        .random-button.loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-        
-        .random-button.loading i {
-            animation: spin 1s infinite linear;
-        }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        /* ============================================
-           PAGINATION
-           ============================================ */
-        .pagination {
-            margin: 2rem 0;
-            display: flex;
-            justify-content: center;
-            gap: 4px;
-        }
-        
-        .page-link {
-            padding: 0.3rem 0.7rem;
-            border-radius: 6px;
-            color: #5d6d7e;
-            background: white;
-            text-decoration: none;
-            font-size: 0.85rem;
-            display: inline-block;
-            border: 1px solid transparent;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        
-        .page-link:hover {
-            background: #f0e8dc;
-            border-color: #d4c9b9;
-        }
-        
-        .page-item.active .page-link {
-            background: #2c3e50;
-            color: white;
-            border-color: #2c3e50;
-        }
-        
-        .page-item.disabled .page-link {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        
-        .ellipsis {
-            padding: 0.3rem 0.7rem;
-            color: #8e9aab;
-        }
-        
-        .no-results {
-            text-align: center;
-            padding: 2.5rem;
-            color: #8e9aab;
-            background: white;
-            border-radius: 12px;
-            font-size: 0.9rem;
-        }
+/* ============================================
+   PAGINATION - VERSION CORRIGÉE
+   ============================================ */
+.pagination-wrapper {
+    margin: 2.5rem 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pagination-nav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.pagination-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.page-item {
+    display: inline-block;
+}
+
+.page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.2rem;
+    height: 2.2rem;
+    padding: 0 0.4rem;
+    border-radius: 8px;
+    color: #5d6d7e;
+    background: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 400;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.page-link:hover {
+    background: #f0e8dc;
+    border-color: #d4c9b9;
+    color: #2c3e50;
+    transform: translateY(-1px);
+}
+
+.page-item.active .page-link {
+    background: #2c3e50;
+    color: white;
+    border-color: #2c3e50;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.15);
+}
+
+.page-item.disabled .page-link,
+.page-link.ellipsis {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+    background: transparent;
+    border-color: transparent;
+}
+
+.page-link.ellipsis:hover {
+    background: transparent;
+    transform: none;
+}
+
+.pagination-info {
+    font-size: 0.85rem;
+    color: #8e9aab;
+    text-align: center;
+}
+
+.page-link i {
+    font-size: 0.75rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-link {
+        min-width: 2rem;
+        height: 2rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .pagination-list {
+        gap: 0.2rem;
+    }
+    
+    .page-link {
+        min-width: 1.8rem;
+        height: 1.8rem;
+        font-size: 0.75rem;
+    }
+}
         
         /* ============================================
            FOOTER
@@ -738,7 +804,6 @@
         .modal-title {
             font-family: 'Playfair Display', serif;
             color: #2c3e50;
-            font-size: 1.2rem;
         }
         
         .modal-footer {
@@ -747,8 +812,7 @@
         
         .modal-footer .btn {
             border-radius: 30px;
-            padding: 0.4rem 1.2rem;
-            font-size: 0.9rem;
+            padding: 0.5rem 1.5rem;
         }
         
         .modal-footer .btn-primary {
@@ -760,23 +824,9 @@
             background: #1e2b3a;
         }
         
-        .modal-body i {
-            font-size: 2.5rem;
-        }
-        
-        .modal-body p {
-            font-size: 0.95rem;
-        }
-        
         /* ============================================
            RESPONSIVE
            ============================================ */
-        @media (max-width: 1100px) {
-            .artworks-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        
         @media (max-width: 992px) {
             .navbar-search {
                 order: 3;
@@ -809,7 +859,7 @@
             }
             
             .artworks-grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
         }
         
@@ -848,7 +898,7 @@
             
             <!-- Conteneur des filtres -->
             <div class="filters-container" id="filtersContainer">
-                <h3 class="filters-title">Filtrer</h3>
+                <h3 class="filters-title">Filtrer les œuvres</h3>
                 
                 <!-- Groupe Artiste -->
                 <div class="filter-group">
@@ -857,7 +907,7 @@
                     </div>
                     <div class="filter-dropdown-vertical">
                         <button class="filter-button-vertical" id="artist-dropdown-btn">
-                            Choisir <i class="fas fa-chevron-down"></i>
+                            Choisir un artiste <i class="fas fa-chevron-down"></i>
                         </button>
                         <div id="artist-dropdown" class="filter-menu-vertical"></div>
                     </div>
@@ -870,7 +920,7 @@
                     </div>
                     <div class="filter-dropdown-vertical">
                         <button class="filter-button-vertical" id="museum-dropdown-btn">
-                            Choisir <i class="fas fa-chevron-down"></i>
+                            Choisir un musée <i class="fas fa-chevron-down"></i>
                         </button>
                         <div id="museum-dropdown" class="filter-menu-vertical"></div>
                     </div>
@@ -883,7 +933,7 @@
                     </div>
                     <div class="filter-dropdown-vertical">
                         <button class="filter-button-vertical" id="movement-dropdown-btn">
-                            Choisir <i class="fas fa-chevron-down"></i>
+                            Choisir un mouvement <i class="fas fa-chevron-down"></i>
                         </button>
                         <div id="movement-dropdown" class="filter-menu-vertical"></div>
                     </div>
@@ -903,16 +953,16 @@
                 <!-- Tri -->
                 <div class="sort-vertical">
                     <div class="filter-group-label">
-                        <i class="fas fa-sort"></i> Trier
+                        <i class="fas fa-sort"></i> Trier par
                     </div>
                     <select id="sort">
                         <option value="relevance" {% if sort == 'relevance' %}selected{% endif %}>Pertinence</option>
-                        <option value="date_asc" {% if sort == 'date_asc' %}selected{% endif %}>Date ↑ (ancien)</option>
-                        <option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>Date ↓ (récent)</option>
-                        <option value="title_asc" {% if sort == 'title_asc' %}selected{% endif %}>Titre A → Z</option>
-                        <option value="title_desc" {% if sort == 'title_desc' %}selected{% endif %}>Titre Z → A</option>
-                        <option value="artist_asc" {% if sort == 'artist_asc' %}selected{% endif %}>Artiste A → Z</option>
-                        <option value="artist_desc" {% if sort == 'artist_desc' %}selected{% endif %}>Artiste Z → A</option>
+                        <option value="date_asc" {% if sort == 'date_asc' %}selected{% endif %}>Date ↑ (ancien → récent)</option>
+                        <option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>Date ↓ (récent → ancien)</option>
+                        <option value="title_asc" {% if sort == 'title_asc' %}selected{% endif %}>Titre ↑ (A → Z)</option>
+                        <option value="title_desc" {% if sort == 'title_desc' %}selected{% endif %}>Titre ↓ (Z → A)</option>
+                        <option value="artist_asc" {% if sort == 'artist_asc' %}selected{% endif %}>Artiste ↑ (A → Z)</option>
+                        <option value="artist_desc" {% if sort == 'artist_desc' %}selected{% endif %}>Artiste ↓ (Z → A)</option>
                     </select>
                 </div>
             </div>
@@ -921,13 +971,18 @@
         <!-- COLONNE DROITE - RÉSULTATS -->
         <div class="results-main">
             
-            <!-- Message pour les œuvres aléatoires -->
+            <!-- Message d'accueil pour les œuvres aléatoires -->
             {% if not query and not artists and not museums and not movements and results %}
             <div class="results-info">
-                <button class="random-button" id="random-btn" title="20 œuvres au hasard">
-                    <i class="fas fa-random"></i>
-                    20 Œuvres au hasard
-                </button>
+                <div class="d-flex align-items-center">
+                    <span class="results-count me-3">
+                        <i class="fas fa-random" style="margin-right: 0.5rem;"></i>
+                        {{ count }} œuvres au hasard
+                    </span>
+                    <button class="btn-random" id="btn-random" title="Nouvelles œuvres aléatoires">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
                 <span>Page {{ page }} sur {{ total_pages }}</span>
             </div>
             {% endif %}
@@ -960,9 +1015,7 @@
                         {% if artwork.image_url and artwork.image_url != '' %}
                         <img src="{{ artwork.image_url }}" class="artwork-image" loading="lazy">
                         {% else %}
-                        <div class="artwork-image-placeholder">
-                            <i class="fas fa-image"></i>
-                        </div>
+                        <div class="artwork-image-placeholder">No image</div>
                         {% endif %}
                         
                         <!-- Informations -->
@@ -981,7 +1034,7 @@
                                 {% if favorite_counts[artwork.id] > 0 %}
                                 <div class="popular-badge">
                                     <i class="fas fa-heart" style="color: #dc3545;"></i> 
-                                    {{ favorite_counts[artwork.id] }}
+                                    {{ favorite_counts[artwork.id] }} favori{% if favorite_counts[artwork.id] > 1 %}s{% endif %}
                                 </div>
                                 {% endif %}
                             {% endif %}
@@ -990,66 +1043,69 @@
                     {% endfor %}
                 </div>
 
-                <!-- Pagination -->
-                {% if total_pages > 1 %}
-                <nav class="pagination">
-                    <ul class="pagination">
-                        <li class="page-item {{ 'disabled' if page == 1 else '' }}">
-                            <a class="page-link" id="prev-page" href="#">←</a>
-                        </li>
-                        
-                        {% if total_pages > 7 %}
-                            <li class="page-item {{ 'active' if page == 1 else '' }}">
-                                <a class="page-link" data-page="1" href="#">1</a>
-                            </li>
-                            
-                            {% if page > 4 %}
-                                <li class="page-item disabled"><span class="ellipsis">…</span></li>
-                            {% endif %}
-                            
-                            {% for p in range(page-2, page+3) %}
-                                {% if p > 1 and p < total_pages %}
-                                    <li class="page-item {{ 'active' if p == page else '' }}">
-                                        <a class="page-link" data-page="{{ p }}" href="#">{{ p }}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                            
-                            {% if page < total_pages - 3 %}
-                                <li class="page-item disabled"><span class="ellipsis">…</span></li>
-                            {% endif %}
-                            
-                            <li class="page-item {{ 'active' if page == total_pages else '' }}">
-                                <a class="page-link" data-page="{{ total_pages }}" href="#">{{ total_pages }}</a>
-                            </li>
-                        {% else %}
-                            {% for p in range(1, total_pages + 1) %}
-                                <li class="page-item {{ 'active' if p == page else '' }}">
-                                    <a class="page-link" data-page="{{ p }}" href="#">{{ p }}</a>
-                                </li>
-                            {% endfor %}
-                        {% endif %}
-                        
-                        <li class="page-item {{ 'disabled' if page == total_pages else '' }}">
-                            <a class="page-link" id="next-page" href="#">→</a>
-                        </li>
-                    </ul>
-                </nav>
-                {% endif %}
-
-            {% else %}
-                <div class="no-results">
-                    {% if query or artists or museums or movements %}
-                        <p>Aucun résultat trouvé</p>
-                    {% else %}
-                        <i class="fas fa-paint-brush fa-2x mb-2" style="color: #5d6d7e;"></i>
-                        <h4 style="font-size: 1.2rem;">Bienvenue sur {{ site_name }}</h4>
-                        <p style="font-size: 0.9rem;">Commencez par rechercher une œuvre ou un artiste</p>
-                    {% endif %}
-                </div>
+<!-- Pagination - Version améliorée -->
+{% if total_pages > 1 %}
+<div class="pagination-wrapper">
+    <nav class="pagination-nav" aria-label="Navigation des pages">
+        <ul class="pagination-list">
+            <!-- Page précédente -->
+            <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                <a class="page-link" id="prev-page" href="#" aria-label="Page précédente" {% if page == 1 %}tabindex="-1" aria-disabled="true"{% endif %}>
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+            
+            <!-- Première page -->
+            <li class="page-item {% if page == 1 %}active{% endif %}">
+                <a class="page-link" data-page="1" href="#">1</a>
+            </li>
+            
+            <!-- Points de suspension si nécessaire -->
+            {% if page > 3 %}
+                <li class="page-item disabled">
+                    <span class="page-link ellipsis">…</span>
+                </li>
             {% endif %}
-        </div>
+            
+            <!-- Pages autour de la page courante -->
+            {% for p in range(page-2, page+3) %}
+                {% if p > 1 and p < total_pages %}
+                    <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link" data-page="{{ p }}" href="#">{{ p }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            
+            <!-- Points de suspension si nécessaire -->
+            {% if page < total_pages - 2 %}
+                <li class="page-item disabled">
+                    <span class="page-link ellipsis">…</span>
+                </li>
+            {% endif %}
+            
+            <!-- Dernière page -->
+            {% if total_pages > 1 %}
+                <li class="page-item {% if page == total_pages %}active{% endif %}">
+                    <a class="page-link" data-page="{{ total_pages }}" href="#">{{ total_pages }}</a>
+                </li>
+            {% endif %}
+            
+            <!-- Page suivante -->
+            <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                <a class="page-link" id="next-page" href="#" aria-label="Page suivante" {% if page == total_pages %}tabindex="-1" aria-disabled="true"{% endif %}>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- Information sur la page -->
+    <div class="pagination-info">
+        Page <strong>{{ page }}</strong> sur <strong>{{ total_pages }}</strong> • 
+        {{ count }} résultat{% if count > 1 %}s{% endif %}
     </div>
+</div>
+{% endif %}
 
     <!-- MODAL DE CONNEXION -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
@@ -1060,8 +1116,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <i class="fas fa-heart" style="font-size: 2.5rem; color: #dc3545; margin-bottom: 0.8rem;"></i>
-                    <p style="font-size: 0.95rem;">Vous devez être connecté pour ajouter des œuvres à vos favoris.</p>
+                    <i class="fas fa-heart" style="font-size: 3rem; color: #dc3545; margin-bottom: 1rem;"></i>
+                    <p>Vous devez être connecté pour ajouter des œuvres à vos favoris.</p>
                 </div>
                 <div class="modal-footer justify-content-center">
                     <a href="/login" class="btn btn-primary" style="background: #2c3e50; border: none; border-radius: 30px;">Se connecter</a>
@@ -1074,6 +1130,7 @@
 
     <!-- FOOTER -->
     {% include 'footer.html' %}
+
 
     <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1535,10 +1592,10 @@
     }
     
     // ============================================
-    // BOUTON 20 ŒUVRES AU HASARD
+    // BOUTON NOUVEAU HASARD
     // ============================================
     function initRandomButton() {
-        const randomBtn = document.getElementById('random-btn');
+        const randomBtn = document.getElementById('btn-random');
         if (!randomBtn) return;
         
         randomBtn.addEventListener('click', async function(e) {

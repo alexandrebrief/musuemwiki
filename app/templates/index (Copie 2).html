@@ -148,6 +148,11 @@
         /* ============================================
            SUGGESTIONS
            ============================================ */
+        .suggestions-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        
         .suggestions-box {
             position: absolute;
             top: 100%;
@@ -164,10 +169,10 @@
         }
         
         .suggestion-item {
-            padding: 8px 12px;
+            padding: 10px 15px;
             cursor: pointer;
             border-bottom: 1px solid #f0e8dc;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             transition: background 0.2s;
         }
         
@@ -188,7 +193,7 @@
         .suggestion-item small {
             color: #8e9aab;
             margin-left: 8px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
         
         /* ============================================
@@ -196,13 +201,13 @@
            ============================================ */
         .main-layout {
             display: flex;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+            gap: 2rem;
+            margin-top: 2rem;
         }
         
-        /* Colonne gauche - Filtres (réduite) */
+        /* Colonne gauche - Filtres */
         .filters-sidebar {
-            width: 240px;
+            width: 280px;
             flex-shrink: 0;
         }
         
@@ -217,13 +222,12 @@
         .filter-toggle-btn {
             display: none;
             width: 100%;
-            padding: 0.6rem;
+            padding: 0.8rem;
             background: white;
             border: 1px solid #d4c9b9;
             border-radius: 30px;
             color: #2c3e50;
             font-weight: 500;
-            font-size: 0.9rem;
             text-align: center;
             cursor: pointer;
             margin-bottom: 1rem;
@@ -239,43 +243,41 @@
         }
         
         /* ============================================
-           FILTRES - VERTICAUX (version réduite)
+           FILTRES - VERTICAUX
            ============================================ */
         .filters-container {
             background: white;
-            border-radius: 12px;
-            padding: 1rem;
+            border-radius: 16px;
+            padding: 1.5rem;
             box-shadow: 0 4px 12px rgba(44,62,80,0.05);
         }
         
         .filters-title {
             font-family: 'Playfair Display', serif;
-            font-size: 1rem;
-            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
             color: #2c3e50;
-            padding-bottom: 0.4rem;
+            padding-bottom: 0.5rem;
             border-bottom: 2px solid #f0e8dc;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         
         .filter-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .filter-group-label {
             font-weight: 600;
             color: #2c3e50;
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
         }
         
         .filter-group-label i {
             color: #8e9aab;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
         
         .filter-dropdown-vertical {
@@ -286,9 +288,9 @@
             width: 100%;
             background: #f8f4ee;
             border: 1px solid #e0d6c8;
-            border-radius: 20px;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.75rem;
+            border-radius: 30px;
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
             color: #2c3e50;
             cursor: pointer;
             display: flex;
@@ -309,10 +311,10 @@
             border: 1px solid #d4c9b9;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
             width: 100%;
-            margin-top: 4px;
+            margin-top: 5px;
         }
         
         .filter-menu-vertical.show {
@@ -320,11 +322,11 @@
         }
         
         .filter-menu-item {
-            padding: 0.3rem 0.6rem;
+            padding: 0.5rem 0.8rem;
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-size: 0.75rem;
+            gap: 6px;
+            font-size: 0.85rem;
         }
         
         .filter-menu-item:hover {
@@ -333,8 +335,6 @@
         
         .filter-menu-item input {
             accent-color: #2c3e50;
-            width: 12px;
-            height: 12px;
         }
         
         .filter-menu-item label {
@@ -347,25 +347,24 @@
         
         .filter-menu-item .count {
             color: #8e9aab;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
         }
         
         /* Actions des filtres */
         .filter-actions {
             display: flex;
-            gap: 0.5rem;
-            margin-top: 0.8rem;
+            gap: 0.8rem;
+            margin-top: 1rem;
         }
         
         .filter-actions .apply-btn {
             flex: 2;
-            padding: 0.4rem;
+            padding: 0.6rem;
             background: #2c3e50;
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: 30px;
             font-weight: 500;
-            font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -376,17 +375,16 @@
         
         .filter-actions .clear-btn {
             flex: 1;
-            padding: 0.4rem;
+            padding: 0.6rem;
             background: white;
             color: #8e9aab;
             border: 1px solid #d4c9b9;
-            border-radius: 20px;
+            border-radius: 30px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 4px;
-            font-size: 0.7rem;
             transition: all 0.2s;
         }
         
@@ -395,30 +393,26 @@
             color: #2c3e50;
         }
         
-        .filter-actions .clear-btn i {
-            font-size: 0.6rem;
-        }
-        
         /* Tri */
         .sort-vertical {
-            margin-top: 1rem;
-            padding-top: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
             border-top: 1px solid #f0e8dc;
         }
         
         .sort-vertical select {
             width: 100%;
-            padding: 0.4rem 0.8rem;
+            padding: 0.6rem 1rem;
             border: 1px solid #e0d6c8;
-            border-radius: 20px;
+            border-radius: 30px;
             background: white;
             color: #2c3e50;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             cursor: pointer;
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%232c3e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232c3e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 0.8rem center;
+            background-position: right 1rem center;
         }
         
         /* Tags persistants */
@@ -426,24 +420,24 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 4px;
-            margin-top: 0.8rem;
+            gap: 8px;
+            margin-top: 1rem;
         }
         
         .selected-filter {
             background: #2c3e50;
             color: white;
-            padding: 0.15rem 0.5rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
+            padding: 0.25rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
         }
         
         .selected-filter i {
             cursor: pointer;
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             opacity: 0.8;
         }
         
@@ -524,10 +518,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.2rem;
-            padding: 0.4rem 0;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 0;
             border-bottom: 1px solid #d4c9b9;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #5d6d7e;
         }
         
@@ -538,8 +532,8 @@
         
         .artworks-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
         
         .artwork-card {
@@ -557,67 +551,67 @@
         
         .artwork-image {
             width: 100%;
-            height: 160px;
+            height: 180px;
             object-fit: cover;
         }
         
         .artwork-image-placeholder {
             width: 100%;
-            height: 160px;
+            height: 180px;
             background: linear-gradient(145deg, #e6d8c3, #d4c9b9);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #5d6d7e;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
         
         .artwork-info {
-            padding: 0.8rem;
+            padding: 1rem;
         }
         
         .artwork-title {
             font-family: 'Playfair Display', serif;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: #2c3e50;
-            margin-bottom: 0.15rem;
-            line-height: 1.2;
+            margin-bottom: 0.2rem;
+            line-height: 1.3;
         }
         
         .artwork-artist {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #5d6d7e;
-            margin-bottom: 0.15rem;
+            margin-bottom: 0.2rem;
         }
         
         .artwork-year {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #8e9aab;
-            margin-bottom: 0.15rem;
+            margin-bottom: 0.2rem;
         }
         
         .artwork-museum {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #8e9aab;
         }
         
         .popular-badge {
-            margin-top: 0.4rem;
-            font-size: 0.7rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
             color: #5d6d7e;
             display: flex;
             align-items: center;
-            gap: 0.2rem;
+            gap: 0.3rem;
         }
         
-        /* Bouton 20 œuvres au hasard */
-        .random-button {
+        /* Bouton Nouveau hasard */
+        .btn-random {
             background: transparent;
             border: 1px solid #2c3e50;
             color: #2c3e50;
             border-radius: 30px;
-            padding: 0.3rem 1rem;
+            padding: 0.25rem 1rem;
             font-size: 0.8rem;
             cursor: pointer;
             display: inline-flex;
@@ -626,28 +620,28 @@
             transition: all 0.2s;
         }
         
-        .random-button:hover {
+        .btn-random:hover {
             background: #2c3e50;
             color: #e6d8c3;
             transform: translateY(-2px);
             box-shadow: 0 2px 8px rgba(44,62,80,0.2);
         }
         
-        .random-button i {
-            font-size: 0.85rem;
+        .btn-random i {
+            font-size: 0.9rem;
             transition: transform 0.3s;
         }
         
-        .random-button:hover i {
+        .btn-random:hover i {
             transform: rotate(180deg);
         }
         
-        .random-button.loading {
+        .btn-random.loading {
             opacity: 0.6;
             pointer-events: none;
         }
         
-        .random-button.loading i {
+        .btn-random.loading i {
             animation: spin 1s infinite linear;
         }
         
@@ -667,12 +661,12 @@
         }
         
         .page-link {
-            padding: 0.3rem 0.7rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 6px;
             color: #5d6d7e;
             background: white;
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             display: inline-block;
             border: 1px solid transparent;
             transition: all 0.2s;
@@ -697,17 +691,16 @@
         }
         
         .ellipsis {
-            padding: 0.3rem 0.7rem;
+            padding: 0.4rem 0.8rem;
             color: #8e9aab;
         }
         
         .no-results {
             text-align: center;
-            padding: 2.5rem;
+            padding: 3rem;
             color: #8e9aab;
             background: white;
             border-radius: 12px;
-            font-size: 0.9rem;
         }
         
         /* ============================================
@@ -738,7 +731,6 @@
         .modal-title {
             font-family: 'Playfair Display', serif;
             color: #2c3e50;
-            font-size: 1.2rem;
         }
         
         .modal-footer {
@@ -747,8 +739,7 @@
         
         .modal-footer .btn {
             border-radius: 30px;
-            padding: 0.4rem 1.2rem;
-            font-size: 0.9rem;
+            padding: 0.5rem 1.5rem;
         }
         
         .modal-footer .btn-primary {
@@ -760,23 +751,9 @@
             background: #1e2b3a;
         }
         
-        .modal-body i {
-            font-size: 2.5rem;
-        }
-        
-        .modal-body p {
-            font-size: 0.95rem;
-        }
-        
         /* ============================================
            RESPONSIVE
            ============================================ */
-        @media (max-width: 1100px) {
-            .artworks-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        
         @media (max-width: 992px) {
             .navbar-search {
                 order: 3;
@@ -809,7 +786,7 @@
             }
             
             .artworks-grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
         }
         
@@ -848,7 +825,7 @@
             
             <!-- Conteneur des filtres -->
             <div class="filters-container" id="filtersContainer">
-                <h3 class="filters-title">Filtrer</h3>
+                <h3 class="filters-title">Filtrer les œuvres</h3>
                 
                 <!-- Groupe Artiste -->
                 <div class="filter-group">
@@ -857,7 +834,7 @@
                     </div>
                     <div class="filter-dropdown-vertical">
                         <button class="filter-button-vertical" id="artist-dropdown-btn">
-                            Choisir <i class="fas fa-chevron-down"></i>
+                            Choisir un artiste <i class="fas fa-chevron-down"></i>
                         </button>
                         <div id="artist-dropdown" class="filter-menu-vertical"></div>
                     </div>
@@ -870,7 +847,7 @@
                     </div>
                     <div class="filter-dropdown-vertical">
                         <button class="filter-button-vertical" id="museum-dropdown-btn">
-                            Choisir <i class="fas fa-chevron-down"></i>
+                            Choisir un musée <i class="fas fa-chevron-down"></i>
                         </button>
                         <div id="museum-dropdown" class="filter-menu-vertical"></div>
                     </div>
@@ -883,7 +860,7 @@
                     </div>
                     <div class="filter-dropdown-vertical">
                         <button class="filter-button-vertical" id="movement-dropdown-btn">
-                            Choisir <i class="fas fa-chevron-down"></i>
+                            Choisir un mouvement <i class="fas fa-chevron-down"></i>
                         </button>
                         <div id="movement-dropdown" class="filter-menu-vertical"></div>
                     </div>
@@ -903,16 +880,14 @@
                 <!-- Tri -->
                 <div class="sort-vertical">
                     <div class="filter-group-label">
-                        <i class="fas fa-sort"></i> Trier
+                        <i class="fas fa-sort"></i> Trier par
                     </div>
                     <select id="sort">
                         <option value="relevance" {% if sort == 'relevance' %}selected{% endif %}>Pertinence</option>
-                        <option value="date_asc" {% if sort == 'date_asc' %}selected{% endif %}>Date ↑ (ancien)</option>
-                        <option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>Date ↓ (récent)</option>
+                        <option value="date_asc" {% if sort == 'date_asc' %}selected{% endif %}>Date ↑ (ancien → récent)</option>
+                        <option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>Date ↓ (récent → ancien)</option>
                         <option value="title_asc" {% if sort == 'title_asc' %}selected{% endif %}>Titre A → Z</option>
-                        <option value="title_desc" {% if sort == 'title_desc' %}selected{% endif %}>Titre Z → A</option>
                         <option value="artist_asc" {% if sort == 'artist_asc' %}selected{% endif %}>Artiste A → Z</option>
-                        <option value="artist_desc" {% if sort == 'artist_desc' %}selected{% endif %}>Artiste Z → A</option>
                     </select>
                 </div>
             </div>
@@ -921,13 +896,19 @@
         <!-- COLONNE DROITE - RÉSULTATS -->
         <div class="results-main">
             
-            <!-- Message pour les œuvres aléatoires -->
+            <!-- Message d'accueil pour les œuvres aléatoires -->
             {% if not query and not artists and not museums and not movements and results %}
             <div class="results-info">
-                <button class="random-button" id="random-btn" title="20 œuvres au hasard">
-                    <i class="fas fa-random"></i>
-                    20 Œuvres au hasard
-                </button>
+                <div class="d-flex align-items-center">
+                    <span class="results-count me-3">
+                        <i class="fas fa-random" style="margin-right: 0.5rem;"></i>
+                        Découvrez {{ count }} œuvres au hasard
+                    </span>
+                    <button class="btn-random" id="btn-random" title="Nouvelles œuvres aléatoires">
+                        <i class="fas fa-sync-alt"></i>
+                        <span class="btn-text">Nouveau hasard</span>
+                    </button>
+                </div>
                 <span>Page {{ page }} sur {{ total_pages }}</span>
             </div>
             {% endif %}
@@ -960,9 +941,7 @@
                         {% if artwork.image_url and artwork.image_url != '' %}
                         <img src="{{ artwork.image_url }}" class="artwork-image" loading="lazy">
                         {% else %}
-                        <div class="artwork-image-placeholder">
-                            <i class="fas fa-image"></i>
-                        </div>
+                        <div class="artwork-image-placeholder">No image</div>
                         {% endif %}
                         
                         <!-- Informations -->
@@ -981,7 +960,7 @@
                                 {% if favorite_counts[artwork.id] > 0 %}
                                 <div class="popular-badge">
                                     <i class="fas fa-heart" style="color: #dc3545;"></i> 
-                                    {{ favorite_counts[artwork.id] }}
+                                    {{ favorite_counts[artwork.id] }} favori{% if favorite_counts[artwork.id] > 1 %}s{% endif %}
                                 </div>
                                 {% endif %}
                             {% endif %}
@@ -999,6 +978,7 @@
                         </li>
                         
                         {% if total_pages > 7 %}
+                            <!-- Première page -->
                             <li class="page-item {{ 'active' if page == 1 else '' }}">
                                 <a class="page-link" data-page="1" href="#">1</a>
                             </li>
@@ -1038,13 +1018,14 @@
                 {% endif %}
 
             {% else %}
+                <!-- Message quand aucun résultat -->
                 <div class="no-results">
                     {% if query or artists or museums or movements %}
                         <p>Aucun résultat trouvé</p>
                     {% else %}
-                        <i class="fas fa-paint-brush fa-2x mb-2" style="color: #5d6d7e;"></i>
-                        <h4 style="font-size: 1.2rem;">Bienvenue sur {{ site_name }}</h4>
-                        <p style="font-size: 0.9rem;">Commencez par rechercher une œuvre ou un artiste</p>
+                        <i class="fas fa-paint-brush fa-3x mb-3" style="color: #5d6d7e;"></i>
+                        <h3>Bienvenue sur {{ site_name }}</h3>
+                        <p>Commencez par rechercher une œuvre ou un artiste</p>
                     {% endif %}
                 </div>
             {% endif %}
@@ -1060,8 +1041,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <i class="fas fa-heart" style="font-size: 2.5rem; color: #dc3545; margin-bottom: 0.8rem;"></i>
-                    <p style="font-size: 0.95rem;">Vous devez être connecté pour ajouter des œuvres à vos favoris.</p>
+                    <i class="fas fa-heart" style="font-size: 3rem; color: #dc3545; margin-bottom: 1rem;"></i>
+                    <p>Vous devez être connecté pour ajouter des œuvres à vos favoris.</p>
                 </div>
                 <div class="modal-footer justify-content-center">
                     <a href="/login" class="btn btn-primary" style="background: #2c3e50; border: none; border-radius: 30px;">Se connecter</a>
@@ -1074,6 +1055,7 @@
 
     <!-- FOOTER -->
     {% include 'footer.html' %}
+
 
     <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1225,7 +1207,7 @@
     }
     
     // ============================================
-    // GESTION DES DROPDOWNS
+    // GESTION DES DROPDOWNS (version verticale)
     // ============================================
     function toggleDropdown(id) {
         document.querySelectorAll('.filter-menu-vertical').forEach(menu => {
@@ -1535,10 +1517,10 @@
     }
     
     // ============================================
-    // BOUTON 20 ŒUVRES AU HASARD
+    // BOUTON NOUVEAU HASARD
     // ============================================
     function initRandomButton() {
-        const randomBtn = document.getElementById('random-btn');
+        const randomBtn = document.getElementById('btn-random');
         if (!randomBtn) return;
         
         randomBtn.addEventListener('click', async function(e) {
