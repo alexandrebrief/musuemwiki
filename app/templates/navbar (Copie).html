@@ -3,14 +3,14 @@
         /* ===== STYLES DE BASE ===== */
         .navbar {
             background: #2c3e50 !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 0.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);  /* Ombre plus légère */
+            padding: 0.5rem 0;  /* Réduit de 0.8rem à 0.5rem */
             width: 100%;
         }
         
         .navbar-brand {
             font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;  /* Légèrement agrandi */
+            font-size: 1.3rem;  /* Réduit de 1.5rem à 1.3rem */
             font-weight: 600;
             color: #e6d8c3 !important;
             letter-spacing: 0.5px;
@@ -19,11 +19,11 @@
         
         .navbar-toggler {
             border-color: rgba(255,255,255,0.3);
-            padding: 0.2rem 0.4rem;
+            padding: 0.2rem 0.4rem;  /* Plus petit */
         }
         
         .navbar-toggler-icon {
-            width: 1.2rem;
+            width: 1.2rem;  /* Plus petit */
             height: 1.2rem;
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28230, 216, 195, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
             background-size: 1.2rem;
@@ -32,11 +32,11 @@
         .nav-link {
             color: #e6d8c3 !important;
             font-weight: 400;
-            margin: 0 10px;
-            padding: 0.3rem 0;
+            margin: 0 10px;  /* Réduit de 15px à 10px */
+            padding: 0.3rem 0;  /* Réduit de 0.5rem à 0.3rem */
             border-bottom: 2px solid transparent;
             transition: all 0.2s;
-            font-size: 0.95rem;
+            font-size: 0.95rem;  /* Légèrement plus petit */
         }
         
         .nav-link:hover {
@@ -54,8 +54,8 @@
             align-items: center;
             background: rgba(255,255,255,0.15);
             border-radius: 30px;
-            padding: 0.1rem 0.1rem 0.1rem 0.6rem;
-            margin: 0 0.8rem;
+            padding: 0.1rem 0.1rem 0.1rem 0.6rem;  /* Padding réduit */
+            margin: 0 0.8rem;  /* Marge réduite */
             flex: 0 1 400px;
             border: 1px solid rgba(255,255,255,0.2);
             position: relative;
@@ -66,8 +66,8 @@
             border: none;
             color: white;
             width: 100%;
-            padding: 0.3rem 0;
-            font-size: 0.9rem;
+            padding: 0.3rem 0;  /* Réduit de 0.4rem à 0.3rem */
+            font-size: 0.9rem;  /* Réduit de 0.95rem à 0.9rem */
         }
         
         .navbar-search input::placeholder {
@@ -83,9 +83,9 @@
             background: transparent;
             border: none;
             color: white;
-            padding: 0.2rem 0.5rem;
+            padding: 0.2rem 0.5rem;  /* Réduit */
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.85rem;  /* Réduit de 0.9rem à 0.85rem */
             transition: all 0.2s;
         }
         
@@ -97,9 +97,9 @@
             background: transparent;
             border: none;
             color: rgba(255,255,255,0.5);
-            padding: 0.1rem 0.3rem;
+            padding: 0.1rem 0.3rem;  /* Réduit */
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.7rem;  /* Réduit de 0.75rem à 0.7rem */
             transition: all 0.2s;
         }
         
@@ -125,10 +125,10 @@
         }
         
         .suggestion-item {
-            padding: 8px 12px;
+            padding: 8px 12px;  /* Réduit de 10px 15px */
             cursor: pointer;
             border-bottom: 1px solid #f0e8dc;
-            font-size: 0.85rem;
+            font-size: 0.85rem;  /* Réduit de 0.9rem à 0.85rem */
             transition: background 0.2s;
         }
         
@@ -149,115 +149,205 @@
         .suggestion-item small {
             color: #8e9aab;
             margin-left: 8px;
-            font-size: 0.75rem;
+            font-size: 0.75rem;  /* Réduit de 0.8rem à 0.75rem */
         }
         
-        /* ===== STYLES COMPTE ET CONNEXION - UNIFIÉS ===== */
-        .btn-account, .btn-login {
+        /* ===== BOUTON CONNEXION ===== */
+        .btn-login {
             background: #e6d8c3 !important;
             color: #2c3e50 !important;
             border-radius: 30px !important;
-            padding: 0.4rem 1.2rem !important;
-            font-family: 'Inter', sans-serif !important;  /* Police normale */
-            font-weight: 400 !important;  /* Pas gras */
-            font-size: 0.95rem !important;
-            letter-spacing: 0.3px !important;
+            padding: 0.4rem 1.2rem !important;  /* Réduit de 0.5rem 1.5rem */
+            font-weight: 600 !important;
             border: none !important;
             transition: all 0.2s !important;
-            text-decoration: none !important;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        
-        .btn-account i, .btn-login i {
-            color: #2c3e50;
-            opacity: 0.7;
-            font-size: 0.9rem;
-        }
-        
-        .btn-account:hover, .btn-login:hover {
-            background: #d4c9b9 !important;
-            transform: scale(1.02);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            text-decoration: none !important;
-        }
-        
-        /* Style du dropdown */
-        .dropdown-menu-account {
-            background-color: #ffffff !important;
-            border: 1px solid #e0d6c8 !important;
-            margin-top: 0.5rem;
-            border-radius: 12px !important;
-            box-shadow: 0 8px 20px rgba(44,62,80,0.15) !important;
-            padding: 0.6rem 0 !important;
-            min-width: 220px;
-        }
-        
-        .dropdown-item-account {
-            color: #2c3e50 !important;
-            padding: 0.7rem 1.2rem !important;
-            font-family: 'Inter', sans-serif !important;
-            font-weight: 400 !important;
-            font-size: 0.9rem !important;
-            transition: all 0.2s !important;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            white-space: nowrap;
-            text-decoration: none !important;
-        }
-        
-        /* Séparation légère entre les items */
-        .dropdown-item-account:not(:last-child) {
-            border-bottom: 1px solid #f0e8dc;
-        }
-        
-        .dropdown-item-account i {
-            color: #8e9aab !important;
-            font-size: 0.95rem;
-            width: 20px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-        
-        .dropdown-item-account:hover {
-            background-color: #f5f0e8 !important;
-            color: #2c3e50 !important;
-            text-decoration: none !important;
-        }
-        
-        .dropdown-item-account:hover i {
-            color: #2c3e50 !important;
-        }
-        
-        /* Séparation avant la déconnexion */
-        .dropdown-divider-account {
-            border-top: 1px solid #d4c9b9 !important;
-            margin: 0.5rem 0 !important;
-            opacity: 0.5;
-        }
-        
-        /* Flèche du dropdown */
-        .dropdown-toggle::after {
+            text-decoration: none;
             display: inline-block;
-            margin-left: 0.5em;
-            vertical-align: middle;
-            content: "";
-            border-top: 0.3em solid;
-            border-right: 0.3em solid transparent;
-            border-bottom: 0;
-            border-left: 0.3em solid transparent;
-            opacity: 0.7;
+            font-size: 0.9rem;  /* Légèrement plus petit */
         }
+        
+        .btn-login:hover {
+            background: #d4c9b9 !important;
+            transform: scale(1.05);
+        }
+        
+        /* ===== DROPDOWN MENU ===== */
+        .dropdown-menu {
+            background-color: #2c3e50;
+            border: 1px solid #3a4a5a;
+            margin-top: 0.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            padding: 0.3rem 0;  /* Padding réduit */
+        }
+        
+        .dropdown-item {
+            color: #e6d8c3;
+            padding: 0.4rem 1.2rem;  /* Réduit de 0.5rem 1.5rem */
+            transition: all 0.2s;
+            font-size: 0.9rem;  /* Plus petit */
+        }
+        
+        .dropdown-item:hover {
+            background-color: #3a4a5a;
+            color: #e6d8c3;
+        }
+        
+        .dropdown-divider {
+            border-top-color: #3a4a5a;
+            margin: 0.3rem 0;  /* Marge réduite */
+        }
+      
+         /* Style du bouton compte */
+    .btn-account {
+        background: #e6d8c3 !important;
+        color: #2c3e50 !important;
+        border-radius: 30px !important;
+        padding: 0.4rem 1.2rem !important;
+        font-family: 'Playfair Display', serif !important;  /* Police élégante */
+        font-weight: 400 !important;  /* Normal, pas gras */
+        font-size: 0.95rem !important;
+        letter-spacing: 0.3px !important;
+        border: none !important;
+        transition: all 0.2s !important;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .btn-account i {
+        color: #2c3e50;
+        opacity: 0.7;
+        font-size: 0.9rem;
+    }
+    
+    .btn-account:hover {
+        background: #d4c9b9 !important;
+        transform: scale(1.02);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+
+<!-- ===== STYLES AJOUTÉS POUR LE COMPTE ===== -->
+<style>
+    /* Style du bouton compte et connexion - police normale */
+    .btn-account, .btn-login {
+        background: #e6d8c3 !important;
+        color: #2c3e50 !important;
+        border-radius: 30px !important;
+        padding: 0.4rem 1.2rem !important;
+        font-family: 'Inter', sans-serif !important;
+        font-weight: 400 !important;  /* Normal, pas gras */
+        font-size: 0.95rem !important;
+        letter-spacing: 0.3px !important;
+        border: none !important;
+        transition: all 0.2s !important;
+        text-decoration: none !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .btn-account i, .btn-login i {
+        color: #2c3e50;
+        opacity: 0.7;
+        font-size: 0.9rem;
+    }
+    
+    .btn-account:hover, .btn-login:hover {
+        background: #d4c9b9 !important;
+        transform: scale(1.02);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        text-decoration: none !important;
+    }
+    
+    /* Style du dropdown avec plus d'espacement */
+    .dropdown-menu-account {
+        background-color: #ffffff !important;
+        border: 1px solid #e0d6c8 !important;
+        margin-top: 0.5rem;
+        border-radius: 12px !important;
+        box-shadow: 0 8px 20px rgba(44,62,80,0.15) !important;
+        padding: 0.6rem 0 !important;  /* Légèrement plus d'espace vertical */
+        min-width: 220px;  /* Un peu plus large */
+    }
+    
+    .dropdown-item-account {
+        color: #2c3e50 !important;
+        padding: 0.7rem 1.2rem !important;  /* Plus d'espace vertical entre les items */
+        font-family: 'Inter', sans-serif !important;
+        font-weight: 400 !important;
+        font-size: 0.9rem !important;
+        transition: all 0.2s !important;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;  /* Plus d'espace entre icône et texte */
+        white-space: nowrap;
+        text-decoration: none !important;
+        border-bottom: 1px solid transparent;  /* Pas de bordure par défaut */
+    }
+    
+    /* Séparation légère entre les items */
+    .dropdown-item-account:not(:last-child) {
+        border-bottom: 1px solid #f0e8dc;  /* Ligne très légère de séparation */
+    }
+    
+    /* Pas de bordure pour l'item de déconnexion */
+    .dropdown-item-account:last-child {
+        border-bottom: none;
+    }
+    
+    /* Séparation plus marquée avant la déconnexion */
+    .dropdown-divider-account {
+        border-top: 1px solid #d4c9b9 !important;  /* Ligne plus visible */
+        margin: 0.5rem 0 !important;  /* Plus d'espace autour */
+        opacity: 0.5;
+    }
+    
+    .dropdown-item-account i {
+        color: #8e9aab !important;
+        font-size: 0.95rem;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+    
+    .dropdown-item-account:hover {
+        background-color: #f5f0e8 !important;
+        color: #2c3e50 !important;
+        text-decoration: none !important;
+    }
+    
+    .dropdown-item-account:hover i {
+        color: #2c3e50 !important;
+    }
+    
+    /* Flèche du dropdown */
+    .dropdown-toggle::after {
+        display: inline-block;
+        margin-left: 0.5em;
+        vertical-align: middle;
+        content: "";
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+        opacity: 0.7;
+    }
+
+
+
+      
         
         /* ===== RESPONSIVE ===== */
         @media (max-width: 992px) {
             .navbar-search {
                 order: 3;
                 width: 100%;
-                margin: 0.4rem 0;
+                margin: 0.4rem 0;  /* Marge réduite */
             }
             
             .navbar-collapse {
@@ -266,27 +356,27 @@
             
             .nav-link {
                 margin: 0;
-                padding: 0.4rem 0;
+                padding: 0.4rem 0;  /* Padding réduit */
             }
             
-            .btn-login, .btn-account {
-                margin-top: 0.4rem;
+            .btn-login {
+                margin-top: 0.4rem;  /* Marge réduite */
             }
         }
         
         @media (max-width: 768px) {
             .navbar {
-                padding: 0.4rem 0;
+                padding: 0.4rem 0;  /* Encore plus petit sur mobile */
             }
             
             .navbar-brand {
-                font-size: 1.3rem;
+                font-size: 1.2rem;  /* Plus petit sur mobile */
             }
         }
     </style>
     
     <div class="container">
-        <!-- Logo / Nom du site (légèrement agrandi) -->
+        <!-- Logo / Nom du site -->
         <a class="navbar-brand" href="/">{{ site_name }}</a>
         
         <!-- Barre de recherche -->
@@ -317,45 +407,51 @@
         
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                {% if session.username %}
-                    <!-- Utilisateur connecté -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link btn-account dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="far fa-user-circle"></i>
-                            {{ session.username }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-account dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li>
-                                <a class="dropdown-item-account" href="/profile">
-                                    <i class="far fa-id-card"></i> Mon profil
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item-account" href="/favoris">
-                                    <i class="far fa-heart"></i> Mes favoris
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item-account" href="/mes-oeuvres">
-                                    <i class="far fa-star"></i> Mes œuvres notées
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider-account"></li>
-                            <li>
-                                <a class="dropdown-item-account" href="/logout">
-                                    <i class="fas fa-sign-out-alt"></i> Déconnexion
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                {% else %}
-                    <!-- Utilisateur non connecté - même police, pas gras -->
-                    <li class="nav-item">
-                        <a class="nav-link btn-login" href="/login">
-                            <i class="fas fa-sign-in-alt"></i> Se connecter
-                        </a>
-                    </li>
-                {% endif %}
+
+{% if session.username %}
+    <!-- Utilisateur connecté -->
+    <li class="nav-item dropdown">
+        <a class="nav-link btn-account dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="far fa-user-circle"></i>
+            {{ session.username }}
+        </a>
+        <ul class="dropdown-menu dropdown-menu-account dropdown-menu-end" aria-labelledby="userDropdown">
+            <li>
+                <a class="dropdown-item-account" href="/profile">
+                    <i class="far fa-id-card"></i> Mon profil
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item-account" href="/favoris">
+                    <i class="far fa-heart"></i> Mes favoris
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item-account" href="/mes-oeuvres">
+                    <i class="far fa-star"></i> Mes œuvres notées
+                </a>
+            </li>
+            <li><hr class="dropdown-divider-account"></li>
+            <li>
+                <a class="dropdown-item-account" href="/logout">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </a>
+            </li>
+        </ul>
+    </li>
+{% else %}
+    <!-- Utilisateur non connecté - même police, pas gras -->
+    <li class="nav-item">
+        <a class="nav-link btn-login" href="/login">
+            <i class="fas fa-sign-in-alt"></i> Se connecter
+        </a>
+    </li>
+{% endif %}
+
+
+
+
+
             </ul>
         </div>
     </div>
@@ -364,6 +460,7 @@
 <script>
 // ===== SUGGESTIONS - VERSION ISOLÉE =====
 (function() {
+    // Ne pas interférer avec le script principal
     const searchInput = document.getElementById('navbar-search-input');
     const suggestionsBox = document.getElementById('navbar-suggestions');
     
