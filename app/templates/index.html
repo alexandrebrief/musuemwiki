@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MuseumWiki - Recherche d'œuvres</title>
+    <title>{{ site_name }} - Recherche d'œuvres</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -580,74 +580,7 @@
          ============================================ -->
 
 
-
-<nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="/">MUSEUMWIKI</a>
-            
-            <!-- Barre de recherche dans la navbar -->
-            <div class="navbar-search">
-                <form action="/" method="get" class="d-flex align-items-center w-100" autocomplete="off" id="navbar-search-form">
-                    <input type="text" 
-                           name="q" 
-                           id="search-input"
-                           class="search-input" 
-                           placeholder="Rechercher un artiste, une œuvre..."
-                           value="{{ query }}">
-{% if query %}
-<button type="button" class="clear-search" onclick="clearSearch()">
-    <i class="fas fa-times"></i>
-</button>
-{% endif %}
-                    <button type="submit" class="search-button">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-                <!-- Suggestions (juste sous la barre de recherche) -->
-                <div id="suggestions" class="suggestions-box" style="display: none;"></div>
-            </div>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/stats">Statistiques</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">À propos</a>
-                    </li>
-                    
-                    {% if session.username %}
-                        <!-- Utilisateur connecté -->
-<li class="nav-item dropdown">
-    <a class="nav-link btn-login dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-         {{ session.username }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="/profile"> Mon profil</a></li>
-                                <li><a class="dropdown-item" href="/favoris"> Mes favoris</a></li>
-                                <li><a class="dropdown-item" href="/mes-oeuvres"> Mes œuvres notées</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/logout"> Déconnexion</a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <!-- Bouton Connexion visible -->
-                        <li class="nav-item">
-                            <a class="nav-link btn-login" href="/login">Se connecter</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-    
-    
-    
+{% include 'navbar.html' %}    
     
     
     
