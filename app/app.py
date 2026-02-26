@@ -390,29 +390,10 @@ def index():
     movements = request.args.getlist('movement')
     sort = request.args.get('sort', 'relevance')
     
-    base_query = get_filtered_query(query, artists, museums, movements)
-    
-    # Si pas de recherche et pas de filtres, afficher les œuvres populaires
-    if not query and not artists and not museums and not movements:
-        # Compter les favoris par œuvre
-        favorite_counts = db.session.query(
-            Favorite.artwork_id, 
-            func.count(Favorite.id).label('fav_count')
-        ).group_by(Favorite.artwork_id).subquery()
+    # S'il y a une recherche ou des filtres, on utilise la recherche normale
+    if query or artists or museums or movements:
+        base_query = get_filtered_query(query, artists, museums, movements)
         
-        # Joindre avec les œuvres pour avoir les infos complètes
-        popular_query = db.session.query(Artwork).outerjoin(
-            favorite_counts, 
-            Artwork.id == favorite_counts.c.artwork_id
-        ).order_by(
-            func.coalesce(favorite_counts.c.fav_count, 0).desc(),
-            func.random()  # Pour départager les ex-aequo
-        )
-        
-        # Pagination pour les populaires
-        pagination = popular_query.paginate(page=page, per_page=per_page, error_out=False)
-    else:
-        # Application du tri pour les recherches
         if sort == 'date_asc':
             base_query = base_query.order_by(Artwork.date)
         elif sort == 'date_desc':
@@ -427,12 +408,42 @@ def index():
             base_query = base_query.order_by(Artwork.createur.desc())
         
         pagination = base_query.paginate(page=page, per_page=per_page, error_out=False)
+        results_page = pagination.items
+        
+    else:
+        # Page d'accueil sans recherche : afficher 20 œuvres aléatoires
+        total_oeuvres = Artwork.query.count()
+        
+        if total_oeuvres > 0:
+            # Prendre 20 œuvres aléatoires
+            random_query = Artwork.query.order_by(func.random()).limit(per_page)
+            
+            if page == 1:
+                results_page = random_query.all()
+                total = min(total_oeuvres, per_page)
+                total_pages = 1
+            else:
+                # Pour les pages suivantes, on prend d'autres œuvres aléatoires
+                offset = (page - 1) * per_page
+                results_page = Artwork.query.order_by(func.random()).offset(offset).limit(per_page).all()
+                total = total_oeuvres
+                total_pages = (total_oeuvres + per_page - 1) // per_page
+            
+            pagination = type('Pagination', (), {
+                'items': results_page,
+                'total': total,
+                'pages': total_pages
+            })()
+        else:
+            # Pas d'œuvres dans la BDD
+            results_page = []
+            pagination = type('Pagination', (), {
+                'items': [],
+                'total': 0,
+                'pages': 1
+            })()
     
-    results_page = pagination.items
-    total = pagination.total
-    total_pages = pagination.pages
-    
-    # Récupérer le nombre de favoris pour chaque œuvre affichée
+    # ✅ AJOUTER ICI : Calculer le nombre de favoris pour chaque œuvre
     favorite_counts = {}
     for artwork in results_page:
         count = Favorite.query.filter_by(artwork_id=artwork.id).count()
@@ -441,14 +452,15 @@ def index():
     return render_template('index.html', 
                          query=query,
                          results=[a.to_dict() for a in results_page],
-                         favorite_counts=favorite_counts,
-                         count=total,
+                         count=pagination.total,
                          page=page,
-                         total_pages=total_pages,
+                         total_pages=pagination.pages,
                          artists=artists,
                          museums=museums,
                          movements=movements,
-                         sort=sort)
+                         sort=sort,
+                         favorite_counts=favorite_counts)  # ← AJOUTÉ ICI
+
 
 @app.route('/oeuvre/<string:oeuvre_id>')
 def oeuvre_detail(oeuvre_id):
