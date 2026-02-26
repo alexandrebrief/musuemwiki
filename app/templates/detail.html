@@ -9,376 +9,674 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== STYLES GÉNÉRAUX ===== */
+        /* ============================================
+           VARIABLES ET STYLES GÉNÉRAUX
+           ============================================ */
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #3a4a5a;
+            --secondary: #e6d8c3;
+            --background: #f5f0e8;
+            --text: #2c3e50;
+            --text-light: #5d6d7e;
+            --white: #ffffff;
+            --border: #e0d6c8;
+            --accent: #dc3545;
+            --star: #ffc107;
+            --shadow: 0 4px 12px rgba(44, 62, 80, 0.05);
+            --shadow-hover: 0 8px 20px rgba(44, 62, 80, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f5f0e8;
-            color: #2c3e50;
+            background-color: var(--background);
+            color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
-        
+
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Playfair Display', serif;
             font-weight: 500;
-            color: #1e2b3a;
+            color: var(--primary);
         }
-        
-        /* Bouton favori */
-        .favorite-btn {
-            font-size: 1.8rem;
-            color: #dc3545;
+
+        /* ============================================
+           LAYOUT PRINCIPAL
+           ============================================ */
+        .detail-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        /* Version desktop : 2 colonnes */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* ============================================
+           COLONNE IMAGE
+           ============================================ */
+        .image-section {
+            position: sticky;
+            top: 2rem;
+            align-self: start;
+        }
+
+        .artwork-image-container {
             cursor: pointer;
-            transition: transform 0.2s;
-            background: white;
-            width: 45px;
-            height: 45px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .artwork-image-container:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .artwork-image {
+            width: 100%;
+            height: auto;
+            max-height: 600px;
+            object-fit: contain;
+            background: var(--white);
+        }
+
+        .image-placeholder {
+            height: 400px;
+            background: linear-gradient(135deg, var(--secondary), var(--border));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 1rem;
+            border-radius: 20px;
+        }
+
+        /* ============================================
+           COLONNE INFORMATIONS
+           ============================================ */
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* En-tête avec titre et favori */
+        .artwork-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .artwork-header h1 {
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .favorite-btn {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            background: var(--white);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+            color: var(--accent);
+            font-size: 1.5rem;
         }
-        
+
         .favorite-btn:hover {
             transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
         }
-        
+
         .favorite-btn.active {
-            color: #dc3545;
+            background: #fff0f0;
+            border-color: var(--accent);
         }
-        
-        /* Image cliquable */
-        .artwork-image-container {
+
+        .favorite-btn.loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .favorite-btn.loading i {
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Métadonnées de l'œuvre */
+        .artwork-metadata {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .metadata-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .metadata-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-light);
+        }
+
+        .metadata-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .wikidata-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: var(--primary);
+            color: var(--secondary);
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            margin-top: 1rem;
+        }
+
+        .wikidata-link:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================
+           AVIS DU PUBLIC
+           ============================================ */
+        .ratings-section {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .ratings-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .rating-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
+            background: rgba(245, 240, 232, 0.3);
+            border-radius: 8px;
+        }
+
+        .rating-label {
+            min-width: 100px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .rating-stars-display {
+            color: var(--star);
+            font-size: 1rem;
+            letter-spacing: 2px;
+            min-width: 80px;
+        }
+
+        .rating-value {
+            font-weight: 500;
+            color: var(--text);
+            min-width: 50px;
+        }
+
+        .total-notes {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-style: italic;
+            text-align: right;
+        }
+
+        /* ============================================
+           FORMULAIRE D'AVIS
+           ============================================ */
+        .review-section {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .login-prompt {
+            text-align: center;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .login-prompt a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .login-prompt a:hover {
+            text-decoration: underline;
+        }
+
+        /* Étoiles de notation */
+        .rating-stars {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            font-size: 2rem;
+            color: #ddd;
             cursor: pointer;
-            transition: opacity 0.2s;
+            margin: 0.5rem 0;
         }
-        
-        .artwork-image-container:hover {
-            opacity: 0.9;
+
+        .rating-stars .star {
+            padding: 0 0.2rem;
+            transition: all 0.2s;
         }
-        
-        /* Modal image */
+
+        .rating-stars .star.selected {
+            color: var(--star);
+        }
+
+        .rating-stars .star:hover {
+            color: var(--star);
+            transform: scale(1.1);
+        }
+
+        /* Curseurs de notation */
+        .sliders-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        .rating-slider-container {
+            flex: 1;
+            min-width: 150px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.3rem 0.5rem;
+            background: var(--background);
+            border-radius: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .rating-slider-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            white-space: nowrap;
+            min-width: 70px;
+        }
+
+        .rating-slider {
+            flex: 1;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--border);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .rating-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .rating-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .rating-value-display {
+            min-width: 45px;
+            text-align: right;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        /* Zone de commentaire */
+        .comment-box {
+            margin-top: 1.5rem;
+        }
+
+        .comment-box textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            resize: vertical;
+            transition: all 0.2s;
+        }
+
+        .comment-box textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+        }
+
+        .visibility-options {
+            display: flex;
+            gap: 1.5rem;
+            margin: 0.8rem 0;
+        }
+
+        .visibility-options label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .visibility-options input[type="radio"] {
+            accent-color: var(--primary);
+        }
+
+        .comment-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .auto-save-hint {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .btn-save-comment {
+            background: var(--primary);
+            color: var(--secondary);
+            border: none;
+            border-radius: 30px;
+            padding: 0.6rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-save-comment:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-edit-comment {
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-edit-comment:hover {
+            background: var(--background);
+        }
+
+        /* Commentaire de l'utilisateur */
+        .user-comment {
+            background: #f0f4f8;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            border-radius: 12px;
+        }
+
+        /* ============================================
+           COMMENTAIRES PUBLICS
+           ============================================ */
+        .comments-section {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .comment-card {
+            background: var(--background);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.2s;
+        }
+
+        .comment-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comment-author i {
+            color: var(--star);
+            font-size: 0.8rem;
+        }
+
+        .comment-date {
+            color: var(--text-light);
+        }
+
+        .comment-content {
+            color: var(--text);
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .comment-notes {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px dashed var(--border);
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .comment-note {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .comment-note i {
+            color: var(--star);
+        }
+
+        /* ============================================
+           MODAL IMAGE
+           ============================================ */
         .modal-image {
-            max-width: 90vw;
-            max-height: 90vh;
+            max-width: 95vw;
+            max-height: 95vh;
             object-fit: contain;
         }
-        
-        .modal-content.bg-transparent {
-            background: transparent !important;
-        }
-        
+
         .modal-close-btn {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: rgba(255,255,255,0.8);
+            background: var(--white);
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             font-size: 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 1060;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
             transition: all 0.2s;
         }
-        
+
         .modal-close-btn:hover {
-            background: white;
             transform: scale(1.1);
         }
-        
-        /* Étoiles - 5 étoiles avec demi */
-        .rating-stars {
-            display: inline-flex;
-            flex-direction: row-reverse;
-            justify-content: flex-end;
-            font-size: 1.5rem;
-            color: #ddd;
-            cursor: pointer;
-        }
-        
-        .rating-stars .star {
-            padding: 0 0.1rem;
-            transition: color 0.2s;
-            position: relative;
-            width: 0.9em;
-            overflow: visible;
-        }
-        
-        .rating-stars .star.half:before {
-            content: "★";
-            color: #ffc107;
-            position: absolute;
-            left: 0;
-            width: 50%;
-            overflow: hidden;
-        }
-        
-        .rating-stars .star.selected,
-        .rating-stars .star.half.selected {
-            color: #ffc107;
-        }
-        
-/* Curseurs ultra compacts - version finale */
-/* Curseurs ultra compacts - version corrigée */
-.rating-slider-container {
-    margin: 0.15rem 0;
-    padding: 0.1rem 0.3rem;
-    background: #f8f4ee;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;  /* Espacement entre les éléments */
-    font-size: 0.75rem;
-    height: 24px;
-    width: fit-content;  /* ← CRUCIAL : le fond s'adapte au contenu */
-    max-width: 100%;      /* Mais ne dépasse pas */
-}
 
-.rating-slider-label {
-    font-weight: 400;
-    font-size: 0.75rem;
-    color: #2c3e50;
-    font-family: 'Inter', sans-serif;
-    white-space: nowrap;
-}
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 992px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
 
-.rating-slider {
-    width: 100px;
-    height: 3px;
-    border-radius: 2px;
-    background: #e0d6c8;
-    outline: none;
-    -webkit-appearance: none;
-    margin: 0;
-}
+            .image-section {
+                position: static;
+            }
 
-.rating-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #2c3e50;
-    cursor: pointer;
-}
+            .artwork-image {
+                max-height: 400px;
+            }
+        }
 
-.rating-value-display {
-    font-weight: 500;
-    color: #2c3e50;
-    min-width: 40px;
-    text-align: right;
-    font-size: 0.75rem;
-    font-family: 'Inter', sans-serif;
-    background: white;
-    padding: 2px 4px;
-    border-radius: 3px;
-    border: 1px solid #e0d6c8;
-}
-        /* Modules avec fond blanc */
-        .module-card {
-            background: white;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        @media (max-width: 768px) {
+            .detail-container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+
+            .metadata-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+
+            .sliders-container {
+                flex-direction: column;
+            }
+
+            .rating-slider-container {
+                width: 100%;
+            }
+
+            .rating-item {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .rating-label {
+                min-width: 80px;
+            }
+
+            .comment-notes {
+                flex-wrap: wrap;
+            }
         }
-        
-        .module-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: #2c3e50;
-            font-weight: 500;
-        }
-        
-        /* Avis du public */
-        .public-ratings {
-            margin-top: 1rem;
-        }
-        
-        .rating-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.3rem;
-        }
-        
-        .rating-label {
-            min-width: 100px;
-            color: #5d6d7e;
-            font-size: 0.9rem;
-            font-weight: 400;
-        }
-        
-        .rating-stars-display {
-            color: #ffc107;
-            margin-right: 0.5rem;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-        }
-        
-        .rating-value {
-            font-weight: 400;
-            color: #2c3e50;
-            font-size: 0.9rem;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .total-notes {
-            font-size: 0.8rem;
-            color: #5d6d7e;
-            margin-top: 0.3rem;
-            font-style: italic;
-        }
-        
-        /* Votre avis */
-        .your-rating {
-            margin-top: 1rem;
-        }
-        
-        /* Commentaires */
-        .comments-section {
-            margin-top: 1rem;
-        }
-        
-        .comment-card {
-            background: white;
-            border-radius: 6px;
-            padding: 0.8rem;
-            margin-bottom: 0.8rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.3rem;
-            font-size: 0.8rem;
-        }
-        
-        .comment-author {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        .comment-date {
-            color: #5d6d7e;
-        }
-        
-        .comment-content {
-            color: #2c3e50;
-            line-height: 1.4;
-            font-size: 0.85rem;
-            margin-bottom: 0.3rem;
-        }
-        
-        /* Zone de commentaire */
-        .comment-box {
-            margin-top: 0.5rem;
-        }
-        
-        .comment-box textarea {
-            width: 100%;
-            padding: 0.4rem;
-            border: 1px solid #e0d6c8;
-            border-radius: 4px;
-            resize: vertical;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .comment-box textarea:focus {
-            outline: none;
-            border-color: #2c3e50;
-            box-shadow: 0 0 0 0.1rem rgba(44,62,80,0.1);
-        }
-        
-        .comment-actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 0.5rem;
-        }
-        
-        .btn-save-comment {
-            background: #2c3e50;
-            color: #e6d8c3;
-            border: none;
-            border-radius: 4px;
-            padding: 0.25rem 1rem;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        
-        .btn-save-comment:hover {
-            background: #1e2b3a;
-        }
-        
-        .btn-edit-comment {
-            background: transparent;
-            color: #5d6d7e;
-            border: 1px solid #e0d6c8;
-            border-radius: 4px;
-            padding: 0.25rem 0.8rem;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .btn-edit-comment:hover {
-            background: #f5f0e8;
-        }
-        
-        .user-comment {
-            background: #f0f4f8;
-            border-left: 3px solid #2c3e50;
-        }
-        
-        .visibility-options {
-            display: flex;
-            gap: 1rem;
-            margin: 0.3rem 0;
-            font-size: 0.8rem;
-        }
-        
-        .visibility-options label {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            color: #5d6d7e;
-            cursor: pointer;
-        }
-        
-        .visibility-options input[type="radio"] {
-            accent-color: #2c3e50;
-            margin: 0;
-        }
-        
-        .login-prompt {
-            text-align: center;
-            padding: 1rem;
-            background: white;
-            border-radius: 6px;
-            margin: 1rem 0;
-            font-size: 0.85rem;
-        }
-        
-        .auto-save-hint {
-            font-size: 0.7rem;
-            color: #5d6d7e;
+
+        @media (max-width: 480px) {
+            .artwork-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .favorite-btn {
+                align-self: flex-end;
+            }
+
+            .visibility-options {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -386,7 +684,7 @@
     {% include 'navbar.html' %}
 
     <!-- Modal pour image agrandie -->
-    <div class="modal fade" id="imageModal" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="true" aria-hidden="true">
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content bg-transparent border-0">
                 <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
@@ -399,115 +697,134 @@
         </div>
     </div>
 
-    <div class="container my-4">
-        <div class="row">
-            <!-- Colonne image (gauche) -->
-            <div class="col-md-6">
+    <div class="detail-container">
+        <div class="detail-grid">
+            <!-- COLONNE GAUCHE : IMAGE -->
+            <div class="image-section">
                 {% if oeuvre.image_url %}
                 <div class="artwork-image-container" onclick="openImageModal('{{ oeuvre.image_url }}')">
-                    <img src="{{ oeuvre.image_url }}" alt="{{ oeuvre.titre }}" class="img-fluid rounded shadow">
+                    <img src="{{ oeuvre.image_url }}" alt="{{ oeuvre.titre }}" class="artwork-image" loading="lazy">
                 </div>
                 {% else %}
-                <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded shadow" style="height: 350px;">
-                    <i class="fas fa-image fa-3x"></i>
+                <div class="image-placeholder">
+                    <i class="fas fa-image fa-3x" style="opacity: 0.5;"></i>
                 </div>
                 {% endif %}
-                
-                <!-- Avis du public (module avec fond blanc) -->
-                <div class="module-card public-ratings">
-                    <h3 class="module-title">Avis du public</h3>
-                    
-                    <div class="rating-row">
-                        <span class="rating-label">Note moyenne :</span>
-                        <span class="rating-stars-display" id="avg-globale-stars">☆☆☆☆☆</span>
-                        <span class="rating-value" id="avg-globale">-/5</span>
-                    </div>
-                    <div class="rating-row">
-                        <span class="rating-label">Technique :</span>
-                        <span class="rating-value" id="avg-technique">-/5</span>
-                    </div>
-                    <div class="rating-row">
-                        <span class="rating-label">Originalité :</span>
-                        <span class="rating-value" id="avg-originalite">-/5</span>
-                    </div>
-                    <div class="rating-row">
-                        <span class="rating-label">Émotion :</span>
-                        <span class="rating-value" id="avg-emotion">-/5</span>
-                    </div>
-                    <div class="total-notes" id="total-notes">Basé sur 0 note(s)</div>
-                </div>
             </div>
-            
-            <!-- Colonne infos (droite) -->
-            <div class="col-md-6">
-                <div class="d-flex justify-content-between align-items-start">
-                    <h1 style="font-size: 2rem;">{{ oeuvre.titre }}</h1>
-                    
+
+            <!-- COLONNE DROITE : INFORMATIONS -->
+            <div class="info-section">
+                <!-- En-tête avec titre et favori -->
+                <div class="artwork-header">
+                    <h1>{{ oeuvre.titre }}</h1>
                     {% if session.user_id %}
                     <div id="favorite-btn" class="favorite-btn" onclick="toggleFavorite()">
                         <i class="far fa-heart" id="favorite-icon"></i>
                     </div>
                     {% endif %}
                 </div>
-                
-                <p class="lead" style="font-size: 1.1rem;">{{ oeuvre.createur }}</p>
-                <p style="margin-bottom: 0.3rem;"><strong>Date :</strong> {{ oeuvre.date[:4] if oeuvre.date else 'Inconnue' }}</p>
-                <p style="margin-bottom: 0.3rem;"><strong>Lieu :</strong> {{ oeuvre.lieu or 'Inconnu' }}</p>
-                <p style="margin-bottom: 1rem;"><strong>Mouvement :</strong> {{ oeuvre.mouvement or 'Non spécifié' }}</p>
-                
-                {% if oeuvre.wikidata_url %}
-                <a href="{{ oeuvre.wikidata_url }}" target="_blank" class="btn btn-outline-secondary btn-sm">
-                    <i class="fab fa-wikipedia-w"></i> Voir sur Wikidata
-                </a>
-                {% endif %}
-                
-                <!-- Votre avis (module avec fond blanc) -->
+
+                <!-- Métadonnées de l'œuvre -->
+                <div class="artwork-metadata">
+                    <div class="metadata-grid">
+                        <div class="metadata-item">
+                            <span class="metadata-label">Artiste</span>
+                            <span class="metadata-value">{{ oeuvre.createur }}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="metadata-label">Date</span>
+                            <span class="metadata-value">{{ oeuvre.date[:4] if oeuvre.date else 'Inconnue' }}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="metadata-label">Lieu</span>
+                            <span class="metadata-value">{{ oeuvre.lieu or 'Inconnu' }}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="metadata-label">Mouvement</span>
+                            <span class="metadata-value">{{ oeuvre.mouvement or 'Non spécifié' }}</span>
+                        </div>
+                    </div>
+                    
+                    {% if oeuvre.wikidata_url %}
+                    <a href="{{ oeuvre.wikidata_url }}" target="_blank" class="wikidata-link">
+                        <i class="fab fa-wikipedia-w"></i> Voir sur Wikidata
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- Avis du public -->
+                <div class="ratings-section">
+                    <h3 class="section-title">Avis du public</h3>
+                    <div class="ratings-grid">
+                        <div class="rating-item">
+                            <span class="rating-label">Note globale</span>
+                            <span class="rating-stars-display" id="avg-globale-stars">☆☆☆☆☆</span>
+                            <span class="rating-value" id="avg-globale">-/5</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-label">Technique</span>
+                            <span class="rating-value" id="avg-technique">-/5</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-label">Originalité</span>
+                            <span class="rating-value" id="avg-originalite">-/5</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-label">Émotion</span>
+                            <span class="rating-value" id="avg-emotion">-/5</span>
+                        </div>
+                    </div>
+                    <div class="total-notes" id="total-notes">Basé sur 0 note(s)</div>
+                </div>
+
+                <!-- Votre avis -->
                 {% if session.user_id %}
-                <div class="module-card your-rating">
-                    <h3 class="module-title">Votre avis</h3>
+                <div class="review-section">
+                    <h3 class="section-title">Votre avis</h3>
                     
-                    <!-- Note globale avec 5 étoiles (demi-étoiles) -->
-<div class="mb-2">
-    <span style="font-weight: 400; font-size: 0.9rem;">Note globale</span>
-    <div class="rating-stars" id="note-globale-stars" data-rating="0">
-        <span class="star" data-value="5">★</span>
-        <span class="star" data-value="4">★</span>
-        <span class="star" data-value="3">★</span>
-        <span class="star" data-value="2">★</span>
-        <span class="star" data-value="1">★</span>
-    </div>
-    <input type="hidden" id="note-globale" name="note_globale" value="0">
-</div>
+                    <!-- Note globale avec étoiles -->
+                    <div>
+                        <span style="font-size: 0.9rem; color: var(--text-light);">Note globale</span>
+                        <div class="rating-stars" id="note-globale-stars" data-rating="0">
+                            <span class="star" data-value="5">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="1">★</span>
+                        </div>
+                        <input type="hidden" id="note-globale" name="note_globale" value="0">
+                    </div>
                     
-<!-- Curseurs ultra compacts avec affichage formaté -->
-    <!-- Technique -->
-    <div class="rating-slider-container">
-        <span class="rating-slider-label">Technique</span>
-        <input type="range" id="note-technique" class="rating-slider" min="0" max="5" step="0.5" value="0">
-        <span class="rating-value-display" id="technique-value">0/5</span>
-    </div>
-    
-    <!-- Originalité -->
-    <div class="rating-slider-container">
-        <span class="rating-slider-label">Originalité</span>
-        <input type="range" id="note-originalite" class="rating-slider" min="0" max="5" step="0.5" value="0">
-        <span class="rating-value-display" id="originalite-value">0/5</span>
-    </div>
-    
-    <!-- Émotion -->
-    <div class="rating-slider-container">
-        <span class="rating-slider-label">Émotion</span>
-        <input type="range" id="note-emotion" class="rating-slider" min="0" max="5" step="0.5" value="0">
-        <span class="rating-value-display" id="emotion-value">0/5</span>
-    </div>
-    
+                    <!-- Curseurs pour les notes détaillées -->
+                    <div class="sliders-container">
+                        <div class="rating-slider-container">
+                            <span class="rating-slider-label">Technique</span>
+                            <input type="range" id="note-technique" class="rating-slider" min="0" max="5" step="0.5" value="0">
+                            <span class="rating-value-display" id="technique-value">0/5</span>
+                        </div>
+                        
+                        <div class="rating-slider-container">
+                            <span class="rating-slider-label">Originalité</span>
+                            <input type="range" id="note-originalite" class="rating-slider" min="0" max="5" step="0.5" value="0">
+                            <span class="rating-value-display" id="originalite-value">0/5</span>
+                        </div>
+                        
+                        <div class="rating-slider-container">
+                            <span class="rating-slider-label">Émotion</span>
+                            <input type="range" id="note-emotion" class="rating-slider" min="0" max="5" step="0.5" value="0">
+                            <span class="rating-value-display" id="emotion-value">0/5</span>
+                        </div>
+                    </div>
                     
-                    <!-- Commentaire -->
+                    <!-- Zone de commentaire -->
                     <div class="comment-box">
+                        <!-- Commentaire existant (affiché) -->
                         <div id="user-comment-display" style="display: none;">
-                            <div class="comment-card user-comment" id="displayed-comment">
+                            <div class="user-comment">
                                 <div class="comment-header">
-                                    <span class="comment-author">{{ session.username }}</span>
+                                    <span class="comment-author">
+                                        <i class="fas fa-user-circle"></i> {{ session.username }}
+                                    </span>
                                     <span class="comment-date">À l'instant</span>
                                 </div>
                                 <div class="comment-content" id="displayed-comment-text"></div>
@@ -519,8 +836,9 @@
                             </div>
                         </div>
                         
+                        <!-- Zone d'édition -->
                         <div id="comment-edit-area">
-                            <textarea id="commentaire" rows="2" placeholder="Votre commentaire..."></textarea>
+                            <textarea id="commentaire" rows="3" placeholder="Partagez votre ressenti sur cette œuvre..."></textarea>
                             
                             <div class="visibility-options">
                                 <label>
@@ -533,9 +851,9 @@
                                 </label>
                             </div>
                             
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="comment-actions">
                                 <span class="auto-save-hint">
-                                    <i class="fas fa-save"></i> Auto
+                                    <i class="fas fa-save"></i> Sauvegarde automatique
                                 </span>
                                 <button type="button" class="btn-save-comment" onclick="saveComment()">
                                     Publier
@@ -546,15 +864,15 @@
                 </div>
                 {% else %}
                 <div class="login-prompt">
-                    <i class="fas fa-star" style="color: #5d6d7e;"></i>
-                    <a href="/login">Connectez-vous</a> pour donner votre avis
+                    <i class="fas fa-star" style="color: var(--star); font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <p><a href="/login">Connectez-vous</a> pour donner votre avis et noter cette œuvre</p>
                 </div>
                 {% endif %}
-                
-                <!-- Commentaires du public (module avec fond blanc) -->
-                <div class="module-card comments-section">
-                    <h3 class="module-title">Commentaires du public</h3>
-                    <div id="comments-container">
+
+                <!-- Commentaires du public -->
+                <div class="comments-section">
+                    <h3 class="section-title">Commentaires du public</h3>
+                    <div class="comments-list" id="comments-container">
                         <!-- Les commentaires seront chargés dynamiquement -->
                     </div>
                 </div>
@@ -567,31 +885,26 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Variables globales
+        // ============================================
+        // VARIABLES GLOBALES
+        // ============================================
         const artworkId = '{{ oeuvre.id }}';
         let currentRating = null;
         let saveTimeout;
-        let userHasComment = false;
-        
+
         // ============================================
         // GESTION DE L'IMAGE
         // ============================================
-        
         function openImageModal(imageUrl) {
             const modalImage = document.getElementById('modalImage');
             modalImage.src = imageUrl;
-            
-            const imageModal = new bootstrap.Modal(document.getElementById('imageModal'), {
-                backdrop: true,
-                keyboard: true
-            });
+            const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
             imageModal.show();
         }
-        
+
         // ============================================
         // GESTION DES FAVORIS
         // ============================================
-        
         async function checkFavorite() {
             {% if session.user_id %}
             try {
@@ -613,52 +926,53 @@
             }
             {% endif %}
         }
-        
-async function toggleFavorite() {
-    {% if not session.user_id %}
-    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-    loginModal.show();
-    return;
-    {% endif %}
-    
-    const favoriteBtn = document.getElementById('favorite-btn');
-    favoriteBtn.classList.add('loading');
-    
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    
-    try {
-        const response = await fetch('/api/favorite/toggle', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify({ artwork_id: artworkId })
-        });
-        
-        const data = await response.json();
-        const favoriteIcon = document.getElementById('favorite-icon');
-        
-        if (data.favorite) {
-            favoriteBtn.classList.add('active');
-            favoriteIcon.className = 'fas fa-heart';
-        } else {
-            favoriteBtn.classList.remove('active');
-            favoriteIcon.className = 'far fa-heart';
+
+        async function toggleFavorite() {
+            {% if not session.user_id %}
+            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+            return;
+            {% endif %}
+            
+            const favoriteBtn = document.getElementById('favorite-btn');
+            favoriteBtn.classList.add('loading');
+            
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            try {
+                const response = await fetch('/api/favorite/toggle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ artwork_id: artworkId })
+                });
+                
+                const data = await response.json();
+                const favoriteIcon = document.getElementById('favorite-icon');
+                
+                if (data.favorite) {
+                    favoriteBtn.classList.add('active');
+                    favoriteIcon.className = 'fas fa-heart';
+                } else {
+                    favoriteBtn.classList.remove('active');
+                    favoriteIcon.className = 'far fa-heart';
+                }
+            } catch (error) {
+                console.error('Erreur toggle favori:', error);
+            } finally {
+                favoriteBtn.classList.remove('loading');
+            }
         }
-    } catch (error) {
-        console.error('Erreur toggle favori:', error);
-    } finally {
-        favoriteBtn.classList.remove('loading');
-    }
-}
-        
+
         // ============================================
         // GESTION DES NOTES (ÉTOILES)
         // ============================================
-        
         function initStars() {
             const starsContainer = document.getElementById('note-globale-stars');
+            if (!starsContainer) return;
+            
             const stars = starsContainer.querySelectorAll('.star');
             const hiddenInput = document.getElementById('note-globale');
             
@@ -678,213 +992,150 @@ async function toggleFavorite() {
                     
                     autoSaveRating();
                 });
-                
-                star.addEventListener('mouseover', function() {
-                    const value = parseFloat(this.dataset.value);
-                    stars.forEach(s => {
-                        const starValue = parseFloat(s.dataset.value);
-                        if (starValue <= value) {
-                            s.style.color = '#ffc107';
-                        } else {
-                            s.style.color = '#ddd';
-                        }
-                    });
-                });
-                
-                star.addEventListener('mouseout', function() {
-                    const currentValue = parseFloat(hiddenInput.value);
-                    stars.forEach(s => {
-                        const starValue = parseFloat(s.dataset.value);
-                        if (starValue <= currentValue) {
-                            s.style.color = '#ffc107';
-                        } else {
-                            s.style.color = '#ddd';
-                        }
-                    });
-                });
             });
         }
-        
+
         // ============================================
         // GESTION DES CURSEURS
         // ============================================
-        
-function initSliders() {
-    const sliders = [
-        { id: 'note-technique', display: 'technique-value' },
-        { id: 'note-originalite', display: 'originalite-value' },
-        { id: 'note-emotion', display: 'emotion-value' }
-    ];
-    
-    sliders.forEach(s => {
-        const slider = document.getElementById(s.id);
-        const display = document.getElementById(s.display);
-        
-        // Initialisation avec le bon format
-        const value = parseFloat(slider.value);
-        display.textContent = formatNote(value);
-        
-        slider.addEventListener('input', function() {
-            const val = parseFloat(this.value);
-            display.textContent = formatNote(val);
-        });
-        
-        slider.addEventListener('change', function() {
-            autoSaveRating();
-        });
-    });
-}
+        function initSliders() {
+            const sliders = [
+                { id: 'note-technique', display: 'technique-value' },
+                { id: 'note-originalite', display: 'originalite-value' },
+                { id: 'note-emotion', display: 'emotion-value' }
+            ];
+            
+            sliders.forEach(s => {
+                const slider = document.getElementById(s.id);
+                const display = document.getElementById(s.display);
+                if (!slider || !display) return;
+                
+                const updateDisplay = () => {
+                    const val = parseFloat(slider.value);
+                    display.textContent = (val % 1 === 0) ? val + '/5' : val.toFixed(1).replace('.', ',') + '/5';
+                };
+                
+                updateDisplay();
+                
+                slider.addEventListener('input', updateDisplay);
+                slider.addEventListener('change', autoSaveRating);
+            });
+        }
 
-// Fonction pour formater la note (gère les .5)
-function formatNote(value) {
-    // Si c'est un nombre entier
-    if (value % 1 === 0) {
-        return value + '/5';
-    } else {
-        // Remplacer le point par une virgule pour l'affichage
-        return value.toString().replace('.', ',') + '/5';
-    }
-}
-        
         // ============================================
         // SAUVEGARDE AUTOMATIQUE
         // ============================================
-        
         function autoSaveRating() {
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(saveRating, 800);
         }
-        
-async function saveRating() {
-    {% if not session.user_id %}
-    return;
-    {% endif %}
-    
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    
-    const ratingData = {
-        artwork_id: artworkId,
-        note_globale: parseFloat(document.getElementById('note-globale').value),
-        note_technique: parseFloat(document.getElementById('note-technique').value),
-        note_originalite: parseFloat(document.getElementById('note-originalite').value),
-        note_emotion: parseFloat(document.getElementById('note-emotion').value),
-        commentaire: document.getElementById('commentaire').value
-    };
-    
-    console.log('📤 Envoi des notes (auto):', ratingData);
-    
-    try {
-        const response = await fetch('/api/rating/save', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify(ratingData)
-        });
-        
-        console.log('📥 Réponse status:', response.status);
-        
-        if (response.ok) {
-            const responseData = await response.json();
-            console.log('✅ Réponse succès:', responseData);
-            console.log('🔄 Rechargement des stats...');
-            await loadArtworkStats();
-        } else {
-            const errorText = await response.text();
-            console.error('❌ Erreur réponse:', errorText);
+
+        async function saveRating() {
+            {% if not session.user_id %}
+            return;
+            {% endif %}
+            
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            const ratingData = {
+                artwork_id: artworkId,
+                note_globale: parseFloat(document.getElementById('note-globale').value),
+                note_technique: parseFloat(document.getElementById('note-technique').value),
+                note_originalite: parseFloat(document.getElementById('note-originalite').value),
+                note_emotion: parseFloat(document.getElementById('note-emotion').value),
+                commentaire: document.getElementById('commentaire').value
+            };
+            
+            try {
+                const response = await fetch('/api/rating/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify(ratingData)
+                });
+                
+                if (response.ok) {
+                    console.log('Notes sauvegardées');
+                    loadArtworkStats();
+                }
+            } catch (error) {
+                console.error('Erreur sauvegarde:', error);
+            }
         }
-    } catch (error) {
-        console.error('❌ Erreur réseau:', error);
-    }
-}
-        
+
         // ============================================
         // GESTION DU COMMENTAIRE
         // ============================================
-        
         function editComment() {
             document.getElementById('user-comment-display').style.display = 'none';
             document.getElementById('comment-edit-area').style.display = 'block';
         }
-        
-async function saveComment() {
-    {% if not session.user_id %}
-    window.location.href = '/login';
-    return;
-    {% endif %}
-    
-    const comment = document.getElementById('commentaire').value;
-    const visibility = document.querySelector('input[name="visibility"]:checked').value;
-    
-    if (!comment.trim()) {
-        alert('Veuillez écrire un commentaire avant de publier.');
-        return;
-    }
-    
-    const noteGlobale = parseFloat(document.getElementById('note-globale').value);
-    const noteTechnique = parseFloat(document.getElementById('note-technique').value);
-    const noteOriginalite = parseFloat(document.getElementById('note-originalite').value);
-    const noteEmotion = parseFloat(document.getElementById('note-emotion').value);
-    
-    if (noteGlobale === 0) {
-        alert('Veuillez donner une note globale (cliquez sur les étoiles) avant de publier.');
-        return;
-    }
-    
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    
-    const ratingData = {
-        artwork_id: artworkId,
-        note_globale: noteGlobale,
-        note_technique: noteTechnique,
-        note_originalite: noteOriginalite,
-        note_emotion: noteEmotion,
-        commentaire: visibility === 'public' ? comment : ''
-    };
-    
-    console.log('📤 Envoi commentaire:', ratingData);
-    
-    try {
-        const response = await fetch('/api/rating/save', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify(ratingData)
-        });
-        
-        console.log('📥 Réponse status:', response.status);
-        
-        if (response.ok) {
-            const responseData = await response.json();
-            console.log('✅ Réponse succès:', responseData);
+
+        async function saveComment() {
+            {% if not session.user_id %}
+            window.location.href = '/login';
+            return;
+            {% endif %}
             
-            document.getElementById('displayed-comment-text').textContent = comment;
-            document.getElementById('user-comment-display').style.display = 'block';
-            document.getElementById('comment-edit-area').style.display = 'none';
-            alert('Commentaire publié avec succès !');
+            const comment = document.getElementById('commentaire').value;
+            const visibility = document.querySelector('input[name="visibility"]:checked').value;
             
-            if (visibility === 'public') {
-                await loadComments();
+            if (!comment.trim()) {
+                alert('Veuillez écrire un commentaire avant de publier.');
+                return;
             }
-            await loadArtworkStats();
-        } else {
-            const errorData = await response.text();
-            console.error('❌ Erreur serveur:', errorData);
-            alert('Erreur lors de la publication. Code: ' + response.status);
+            
+            const noteGlobale = parseFloat(document.getElementById('note-globale').value);
+            
+            if (noteGlobale === 0) {
+                alert('Veuillez donner une note globale avant de publier.');
+                return;
+            }
+            
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            const ratingData = {
+                artwork_id: artworkId,
+                note_globale: noteGlobale,
+                note_technique: parseFloat(document.getElementById('note-technique').value),
+                note_originalite: parseFloat(document.getElementById('note-originalite').value),
+                note_emotion: parseFloat(document.getElementById('note-emotion').value),
+                commentaire: visibility === 'public' ? comment : ''
+            };
+            
+            try {
+                const response = await fetch('/api/rating/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify(ratingData)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('displayed-comment-text').textContent = comment;
+                    document.getElementById('user-comment-display').style.display = 'block';
+                    document.getElementById('comment-edit-area').style.display = 'none';
+                    
+                    if (visibility === 'public') {
+                        loadComments();
+                    }
+                    loadArtworkStats();
+                } else {
+                    alert('Erreur lors de la publication.');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur de connexion.');
+            }
         }
-    } catch (error) {
-        console.error('❌ Erreur:', error);
-        alert('Erreur de connexion. Vérifiez votre réseau.');
-    }
-}
-        
+
         // ============================================
         // CHARGEMENT DES NOTES EXISTANTES
         // ============================================
-        
         async function loadUserRating() {
             {% if session.user_id %}
             try {
@@ -903,28 +1154,23 @@ async function saveComment() {
                         const starValue = parseFloat(s.dataset.value);
                         if (starValue <= currentValue) {
                             s.classList.add('selected');
-                            s.style.color = '#ffc107';
-                        } else {
-                            s.classList.remove('selected');
-                            s.style.color = '#ddd';
                         }
                     });
                     
                     // Curseurs
                     document.getElementById('note-technique').value = data.rating.note_technique;
-                    document.getElementById('technique-value').textContent = data.rating.note_technique;
+                    document.getElementById('technique-value').textContent = data.rating.note_technique + '/5';
                     
                     document.getElementById('note-originalite').value = data.rating.note_originalite;
-                    document.getElementById('originalite-value').textContent = data.rating.note_originalite;
+                    document.getElementById('originalite-value').textContent = data.rating.note_originalite + '/5';
                     
                     document.getElementById('note-emotion').value = data.rating.note_emotion;
-                    document.getElementById('emotion-value').textContent = data.rating.note_emotion;
+                    document.getElementById('emotion-value').textContent = data.rating.note_emotion + '/5';
                     
                     // Commentaire
                     if (data.rating.commentaire) {
                         document.getElementById('commentaire').value = data.rating.commentaire;
                         document.getElementById('displayed-comment-text').textContent = data.rating.commentaire;
-                        
                         document.getElementById('user-comment-display').style.display = 'block';
                         document.getElementById('comment-edit-area').style.display = 'none';
                     }
@@ -934,59 +1180,50 @@ async function saveComment() {
             }
             {% endif %}
         }
-        
+
         // ============================================
         // CHARGEMENT DES STATISTIQUES
         // ============================================
-        
         async function loadArtworkStats() {
-    console.log('📊 Chargement des stats pour:', artworkId);
-    try {
-        const response = await fetch(`/api/artwork/stats/${artworkId}`);
-        const stats = await response.json();
-        console.log('📊 Stats reçues:', stats);
-        
-        document.getElementById('avg-globale').textContent = stats.moyenne_globale.toFixed(1) + '/5';
-        document.getElementById('avg-technique').textContent = stats.moyenne_technique.toFixed(1) + '/5';
-        document.getElementById('avg-originalite').textContent = stats.moyenne_originalite.toFixed(1) + '/5';
-        document.getElementById('avg-emotion').textContent = stats.moyenne_emotion.toFixed(1) + '/5';
-        document.getElementById('total-notes').textContent = `Basé sur ${stats.total_notes} note(s)`;
-        
-        const avgStars = document.getElementById('avg-globale-stars');
-        const avg = stats.moyenne_globale;
-        let starsHtml = '';
-        for (let i = 0; i < 5; i++) {
-            if (avg >= i + 1) {
-                starsHtml += '★';
-            } else if (avg >= i + 0.5) {
-                starsHtml += '½';
-            } else {
-                starsHtml += '☆';
+            try {
+                const response = await fetch(`/api/artwork/stats/${artworkId}`);
+                const stats = await response.json();
+                
+                document.getElementById('avg-globale').textContent = stats.moyenne_globale.toFixed(1) + '/5';
+                document.getElementById('avg-technique').textContent = stats.moyenne_technique.toFixed(1) + '/5';
+                document.getElementById('avg-originalite').textContent = stats.moyenne_originalite.toFixed(1) + '/5';
+                document.getElementById('avg-emotion').textContent = stats.moyenne_emotion.toFixed(1) + '/5';
+                document.getElementById('total-notes').textContent = `Basé sur ${stats.total_notes} note(s)`;
+                
+                const avgStars = document.getElementById('avg-globale-stars');
+                const avg = stats.moyenne_globale;
+                let starsHtml = '';
+                for (let i = 0; i < 5; i++) {
+                    if (avg >= i + 1) starsHtml += '★';
+                    else if (avg >= i + 0.5) starsHtml += '½';
+                    else starsHtml += '☆';
+                }
+                avgStars.textContent = starsHtml;
+                
+            } catch (error) {
+                console.error('Erreur chargement stats:', error);
             }
         }
-        avgStars.textContent = starsHtml;
-        console.log('⭐ Étoiles affichées:', starsHtml);
-        
-    } catch (error) {
-        console.error('❌ Erreur chargement stats:', error);
-    }
-}
-        
+
         // ============================================
         // CHARGEMENT DES COMMENTAIRES
         // ============================================
-        
         async function loadComments() {
             try {
                 const response = await fetch(`/api/comments/${artworkId}`);
                 const comments = await response.json();
                 
-                const commentsContainer = document.getElementById('comments-container');
+                const container = document.getElementById('comments-container');
                 
                 if (comments.length === 0) {
-                    commentsContainer.innerHTML = `
+                    container.innerHTML = `
                         <div class="comment-card">
-                            <div class="comment-content" style="text-align: center; color: #5d6d7e;">
+                            <div class="comment-content" style="text-align: center; color: var(--text-light);">
                                 Aucun commentaire public pour le moment.
                             </div>
                         </div>
@@ -999,25 +1236,31 @@ async function saveComment() {
                     html += `
                         <div class="comment-card">
                             <div class="comment-header">
-                                <span class="comment-author">${c.username}</span>
+                                <span class="comment-author">
+                                    <i class="fas fa-user-circle"></i> ${c.username}
+                                </span>
                                 <span class="comment-date">${c.created_at}</span>
                             </div>
                             <div class="comment-content">${c.commentaire}</div>
+                            <div class="comment-notes">
+                                <span class="comment-note"><i class="fas fa-star"></i> ${c.notes.technique}</span>
+                                <span class="comment-note"><i class="fas fa-lightbulb"></i> ${c.notes.originalite}</span>
+                                <span class="comment-note"><i class="fas fa-heart"></i> ${c.notes.emotion}</span>
+                            </div>
                         </div>
                     `;
                 });
                 
-                commentsContainer.innerHTML = html;
+                container.innerHTML = html;
                 
             } catch (error) {
                 console.error('Erreur chargement commentaires:', error);
             }
         }
-        
+
         // ============================================
         // INITIALISATION
         // ============================================
-        
         document.addEventListener('DOMContentLoaded', function() {
             initStars();
             initSliders();
