@@ -614,37 +614,44 @@
             {% endif %}
         }
         
-        async function toggleFavorite() {
-            {% if not session.user_id %}
-            window.location.href = '/login';
-            return;
-            {% endif %}
-            
-            try {
-                const response = await fetch('/api/favorite/toggle', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ artwork_id: artworkId })
-                });
-                
-                const data = await response.json();
-                
-                const favoriteBtn = document.getElementById('favorite-btn');
-                const favoriteIcon = document.getElementById('favorite-icon');
-                
-                if (data.favorite) {
-                    favoriteBtn.classList.add('active');
-                    favoriteIcon.className = 'fas fa-heart';
-                } else {
-                    favoriteBtn.classList.remove('active');
-                    favoriteIcon.className = 'far fa-heart';
-                }
-            } catch (error) {
-                console.error('Erreur toggle favori:', error);
-            }
+async function toggleFavorite() {
+    {% if not session.user_id %}
+    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    loginModal.show();
+    return;
+    {% endif %}
+    
+    const favoriteBtn = document.getElementById('favorite-btn');
+    favoriteBtn.classList.add('loading');
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    try {
+        const response = await fetch('/api/favorite/toggle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ artwork_id: artworkId })
+        });
+        
+        const data = await response.json();
+        const favoriteIcon = document.getElementById('favorite-icon');
+        
+        if (data.favorite) {
+            favoriteBtn.classList.add('active');
+            favoriteIcon.className = 'fas fa-heart';
+        } else {
+            favoriteBtn.classList.remove('active');
+            favoriteIcon.className = 'far fa-heart';
         }
+    } catch (error) {
+        console.error('Erreur toggle favori:', error);
+    } finally {
+        favoriteBtn.classList.remove('loading');
+    }
+}
         
         // ============================================
         // GESTION DES NOTES (ÉTOILES)
