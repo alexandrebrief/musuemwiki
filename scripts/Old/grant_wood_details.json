@@ -1,0 +1,4596 @@
+{
+  "head": {
+    "vars": [
+      "œuvre",
+      "œuvreLabel",
+      "dateCreation",
+      "image",
+      "hauteur",
+      "largeur",
+      "materiau",
+      "technique",
+      "collection",
+      "collectionLabel",
+      "lieuConservation",
+      "lieuLabel",
+      "description",
+      "description_fr",
+      "description_en",
+      "inventaire",
+      "dateDebut",
+      "dateFin",
+      "siecle",
+      "genre",
+      "genreLabel",
+      "mouvement",
+      "mouvementLabel",
+      "influencePar",
+      "influenceParLabel",
+      "exposition",
+      "expositionLabel",
+      "proprietaire",
+      "proprietaireLabel"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q78623037"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Calendulas"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1929-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Calendulas.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q6940755"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée d'art de Cedar Rapids"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q6940755"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée d'art de Cedar Rapids"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "89.5.4"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1929-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q12303833"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de fleurs"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q20198039"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Dinner for Threshers"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1934-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Dinner%20for%20Threshers.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1416890"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musées des Beaux-Arts de San Francisco"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1416890"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musées des Beaux-Arts de San Francisco"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1979.7.105"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1934-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1047337"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "scène de genre"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q20198039"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Dinner for Threshers"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1934-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Dinner%20for%20Threshers.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1416890"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musées des Beaux-Arts de San Francisco"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1416890"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musées des Beaux-Arts de San Francisco"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1979.7.105"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1934-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1047337"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "scène de genre"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q18668582"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q28036024"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Farmhouse Near Moret"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1925-01-01T00:00:00Z"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1565911"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée des Beaux-Arts de Houston"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1565911"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée des Beaux-Arts de Houston"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "2011.864"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1925-01-01T00:00:00Z"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134390993"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Grandma Wood's House"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1926-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Grandma%20Wood%27s%20House%20%281926%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1972.14"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1926-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "19.6"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "25.4"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134390993"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Grandma Wood's House"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1926-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Grandma%20Wood%27s%20House%20%281926%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1972.14"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1926-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "19.6"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "25.4"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q20193218"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Haying"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1939-01-01T00:00:00Z"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q214867"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "National Gallery of Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q214867"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "National Gallery of Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1982.7.1"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1939-01-01T00:00:00Z"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "32.8"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "37.7"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q20266565"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Loch Vale"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1927-01-01T00:00:00Z"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q239303"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Art Institute of Chicago"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q239303"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Art Institute of Chicago"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "2000.307"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1927-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "50.8"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "76.2"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q20266565"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Loch Vale"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1927-01-01T00:00:00Z"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q239303"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Art Institute of Chicago"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q239303"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Art Institute of Chicago"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "2000.307"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1927-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q12321255"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "50.8"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "76.2"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q20193228"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "New Road"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1939-01-01T00:00:00Z"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q214867"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "National Gallery of Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q214867"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "National Gallery of Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1982.7.2"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1939-01-01T00:00:00Z"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "33"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "37.9"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q99955563"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Portrait of Nan"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1933-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Portrait%20of%20Nan%2C%20by%20Grant%20Wood.jpg"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1933-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134307"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "portrait"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "90.2"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "74.9"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q99955563"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Portrait of Nan"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1933-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Portrait%20of%20Nan%2C%20by%20Grant%20Wood.jpg"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1933-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134307"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "portrait"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "90.2"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "74.9"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134391054"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Quivering Aspen"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1917-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Quivering%20Aspen%20%281917%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.2"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1917-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "34.6"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "26.6"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134391054"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Quivering Aspen"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1917-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Quivering%20Aspen%20%281917%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.2"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1917-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "34.6"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "26.6"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q28036026"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Red Bedding"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1565911"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée des Beaux-Arts de Houston"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1565911"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée des Beaux-Arts de Houston"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "2011.863"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q28113336"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Sentimental Ballad"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1940-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/%27Sentimental%20Ballad%27%20by%20Grant%20Wood%2C%201940.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q7005718"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "New Britain Museum of American Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q7005718"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "New Britain Museum of American Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1962.01"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1940-01-01T00:00:00Z"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q28787983"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Sheaves of Corn"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q6843409"
+        },
+        "collectionLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Midwest Museum of American Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q6843409"
+        },
+        "lieuLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Midwest Museum of American Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "81.04.0"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q191163"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "paysage"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q28787983"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Sheaves of Corn"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q6843409"
+        },
+        "collectionLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Midwest Museum of American Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q6843409"
+        },
+        "lieuLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Midwest Museum of American Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "81.04.0"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q191163"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "paysage"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q106857709"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134391086"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Ship"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1920-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Ship%20%281920s%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1972.15"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1920-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "14.2"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "22.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134391086"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Ship"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1920-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Ship%20%281920s%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1972.15"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1920-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "14.2"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "22.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q20528182"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Sketch for house in \"American Gothic\""
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1192305"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Smithsonian American Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1192305"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Smithsonian American Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1991.122.2R-V"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "32.0675"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "37.1475"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134378476"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Study for Autumn Oaks"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1928-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Study%20for%20Autumn%20Oaks%20%281928%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1978.117"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1928-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "29.2"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "36.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134378476"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Study for Autumn Oaks"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1928-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Study%20for%20Autumn%20Oaks%20%281928%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1978.117"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1928-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q18668582"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "29.2"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "36.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134390884"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Sunlit House"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1928-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Sunlit%20House%20%281928%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1997.3"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1928-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "31.7"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "37.1"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134390884"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Sunlit House"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1928-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Sunlit%20House%20%281928%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1997.3"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1928-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q18668582"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "31.7"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "37.1"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q104022804"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "The American Golfer"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1940-01-01T00:00:00Z"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1142334"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Crystal Bridges Museum of American Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1142334"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Crystal Bridges Museum of American Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "2014.33"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1940-01-01T00:00:00Z"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "92.7"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "121.9"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q20891259"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "The Birthplace of Herbert Hoover, West Branch, Iowa"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20The%20Birthplace%20of%20Herbert%20Hoover%2C%20West%20Branch%2C%20Iowa%20-%2081.105%20-%20Minneapolis%20Institute%20of%20Arts.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1700481"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Minneapolis Institute of Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1700481"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Minneapolis Institute of Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "81.105"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "29.625"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "39.75"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134378165"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "The Little Chapel, Chancelade"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1926-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20The%20Little%20Chapel%2C%20Chancelade%20%28c.%201926%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.6"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1926-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "31.7"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "38.7"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134378165"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "The Little Chapel, Chancelade"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1926-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20The%20Little%20Chapel%2C%20Chancelade%20%28c.%201926%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.6"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1926-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q18668582"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "31.7"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "38.7"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134377492"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "The Luxembourg Gardens"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1924-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20The%20Luxembourg%20Gardens%20%281924%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "2001.12"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1924-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "32"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "36.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134377492"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "The Luxembourg Gardens"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1924-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20The%20Luxembourg%20Gardens%20%281924%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "2001.12"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1924-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "32"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "36.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134383545"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Truck Garden, Moret"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1924-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Truck%20Garden%2C%20Moret%20%281924%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.3"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1924-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "30.4"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "39"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134383545"
+        },
+        "œuvreLabel": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "Truck Garden, Moret"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1924-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Truck%20Garden%2C%20Moret%20%281924%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.3"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1924-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q18668582"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "30.4"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "39"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q464782"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "American Gothic"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20American%20Gothic%20%281930%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q239303"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Art Institute of Chicago"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q239303"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Art Institute of Chicago"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "1930 painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1930.934"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "78"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "65.3"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q464782"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "American Gothic"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20American%20Gothic%20%281930%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q239303"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Art Institute of Chicago"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q239303"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Art Institute of Chicago"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "1930 painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1930.934"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q3155607"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "78"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "65.3"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q51829816"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Arnold Comes of Age"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arnold%20Comes%20of%20Age.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q7493533"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Sheldon Museum of Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q7493533"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Sheldon Museum of Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "N-38.1931"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134307"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "portrait"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "67.95"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "58.42"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q51829816"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Arnold Comes of Age"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Arnold%20Comes%20of%20Age.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q7493533"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Sheldon Museum of Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q7493533"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Sheldon Museum of Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "N-38.1931"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134307"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "portrait"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q18667172"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "67.95"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "58.42"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q78605063"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Autoportrait"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1932-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.1"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1932-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q192110"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "autoportrait"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "35.5"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "29.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q78605063"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Autoportrait"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1941-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.1"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1932-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q192110"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "autoportrait"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "35.5"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "29.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q78605063"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Autoportrait"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1932-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.1"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1932-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q192110"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "autoportrait"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "35.5"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "29.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q78605063"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Autoportrait"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1941-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.1"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1932-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q192110"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "autoportrait"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "35.5"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "29.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q78605063"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Autoportrait"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1932-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.1"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1941-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q192110"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "autoportrait"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "35.5"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "29.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q78605063"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Autoportrait"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1941-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.1"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1941-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q192110"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "autoportrait"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "35.5"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "29.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q78605063"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Autoportrait"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1932-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.1"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1941-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q192110"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "autoportrait"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "35.5"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "29.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q78605063"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Autoportrait"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1941-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q186499"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Figge Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1965.1"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1941-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q192110"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "autoportrait"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "35.5"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "29.8"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q113990456"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Death on the Ridge Road"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1935-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20Death%20on%20the%20ridge%20road%201935.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q12072937"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Williams College Museum of Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q12072937"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Williams College Museum of Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "47.1.3"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1935-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "81.6"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "99.2"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q113990456"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Death on the Ridge Road"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1935-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20Death%20on%20the%20ridge%20road%201935.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q12072937"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Williams College Museum of Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q12072937"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Williams College Museum of Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "47.1.3"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1935-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "81.6"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "99.2"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q37833283"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Femme aux plantes"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1929-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Woman%20with%20Plants%2C%20by%20Grant%20Wood.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q6940755"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée d'art de Cedar Rapids"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q6940755"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée d'art de Cedar Rapids"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "31.1"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1929-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134307"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "portrait"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "50"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "45"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q37833283"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Femme aux plantes"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1929-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Woman%20with%20Plants%2C%20by%20Grant%20Wood.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q6940755"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée d'art de Cedar Rapids"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q6940755"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée d'art de Cedar Rapids"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "31.1"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1929-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134307"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "portrait"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q106857709"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "50"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "45"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q5227954"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Filles de la Révolution"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1932-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Daughters%20of%20Revolution.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q2970522"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Cincinnati Museum of Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q2970522"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Cincinnati Museum of Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1959.46"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1932-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1551015"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "portrait de groupe"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "50.8"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "101.4"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q5227954"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Filles de la Révolution"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1932-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Daughters%20of%20Revolution.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q2970522"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Cincinnati Museum of Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q2970522"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Cincinnati Museum of Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1959.46"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1932-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1551015"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "portrait de groupe"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "50.8"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "101.4"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q51831248"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "January"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1940-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/%27January%27%20by%20Grant%20Wood%2C%201940-41%2C%20Cleveland%20Museum%20of%20Art.JPG"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q657415"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Cleveland Museum of Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q657415"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Cleveland Museum of Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood (American, 1891-1942) (2002.2)"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "2002.2"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1940-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "67"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "82.5"
+        },
+        "technique": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q174705"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q19920734"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "La Chevauchée nocturne de Paul Revere"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%2C%20The%20Midnight%20Ride%20of%20Paul%20Revere%2C%201931%20%2834571304085%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q160236"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Metropolitan Museum of Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q160236"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Metropolitan Museum of Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "50.117"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q742333"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture d'histoire"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "76.2"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "101.6"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q19920734"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "La Chevauchée nocturne de Paul Revere"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%2C%20The%20Midnight%20Ride%20of%20Paul%20Revere%2C%201931%20%2834571304085%29.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q160236"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Metropolitan Museum of Art"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q160236"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Metropolitan Museum of Art"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "50.117"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q742333"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "peinture d'histoire"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1808397"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "76.2"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "101.6"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q28055137"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "La Fable de Parson Weems"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1939-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Parson%20Weems%27%20Fable.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q255559"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée Amon Carter"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q255559"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée Amon Carter"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1970.43"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1939-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q837024"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "réalisme social"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "97.5"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "127.3"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q28055137"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "La Fable de Parson Weems"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1939-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Parson%20Weems%27%20Fable.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q255559"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée Amon Carter"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q255559"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "musée Amon Carter"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1970.43"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1939-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q837024"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "réalisme social"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q12321255"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "97.5"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "127.3"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q62066852"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Labour d'automne"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Fall%20Plowing.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q496302"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Deere"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q579736"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Moline"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q191163"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "paysage"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "61"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "86"
+        },
+        "proprietaire": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q496302"
+        },
+        "proprietaireLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Deere"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q62066852"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Labour d'automne"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Fall%20Plowing.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q496302"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Deere"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q579736"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Moline"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1931-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q191163"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "paysage"
+        },
+        "mouvement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q15838173"
+        },
+        "mouvementLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "régionalisme"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q12321255"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "61"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "86"
+        },
+        "proprietaire": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q496302"
+        },
+        "proprietaireLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Deere"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134391316"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Paysage"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1928-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Landscape%20%281928%29.jpg"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1928-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "33"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "38.4"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q134391316"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Paysage"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1928-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20Landscape%20%281928%29.jpg"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1928-01-01T00:00:00Z"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q18668582"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "33"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "38.4"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q30041900"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Stone City, Iowa"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Stone%20City%2C%20Iowa%20by%20Grant%20Wood.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1372546"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Joslyn Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1372546"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Joslyn Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1930.35"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q191163"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "paysage"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q296955"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "76.84"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "101.6"
+        }
+      },
+      {
+        "œuvre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q30041900"
+        },
+        "œuvreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Stone City, Iowa"
+        },
+        "dateCreation": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "image": {
+          "type": "uri",
+          "value": "http://commons.wikimedia.org/wiki/Special:FilePath/Stone%20City%2C%20Iowa%20by%20Grant%20Wood.jpg"
+        },
+        "collection": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1372546"
+        },
+        "collectionLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Joslyn Art Museum"
+        },
+        "lieuConservation": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q1372546"
+        },
+        "lieuLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "Joslyn Art Museum"
+        },
+        "description_fr": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "tableau de Grant Wood"
+        },
+        "description_en": {
+          "xml:lang": "en",
+          "type": "literal",
+          "value": "painting by Grant Wood"
+        },
+        "inventaire": {
+          "type": "literal",
+          "value": "1930.35"
+        },
+        "dateDebut": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "1930-01-01T00:00:00Z"
+        },
+        "genre": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q191163"
+        },
+        "genreLabel": {
+          "xml:lang": "fr",
+          "type": "literal",
+          "value": "paysage"
+        },
+        "materiau": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q106857709"
+        },
+        "hauteur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "76.84"
+        },
+        "largeur": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "101.6"
+        }
+      }
+    ]
+  }
+}

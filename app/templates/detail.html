@@ -128,29 +128,30 @@
         }
 
         /* ============================================
-           BLOCS UNIFORMES
+           BLOCS UNIFORMES - VERSION COMPACTE
            ============================================ */
         .info-block {
             background: var(--white);
             border-radius: var(--radius);
-            padding: 1.5rem;
+            padding: 1rem 1.2rem;  /* Réduit de 1.5rem à 1rem */
             box-shadow: var(--shadow);
             border: 1px solid var(--border-light);
+            width: 100%;  /* S'assure que tous les blocs ont la même largeur */
         }
 
         .block-title {
-            font-size: 1.2rem;
-            margin-bottom: 1.2rem;
+            font-size: 1.1rem;  /* Légèrement réduit */
+            margin-bottom: 0.8rem;  /* Réduit */
             color: var(--text);
             display: flex;
             align-items: center;
             gap: 0.5rem;
             border-bottom: 1px solid var(--border-light);
-            padding-bottom: 0.5rem;
+            padding-bottom: 0.4rem;  /* Réduit */
         }
 
         .block-title i {
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
         .block-title .fa-info-circle {
@@ -172,24 +173,24 @@
         .info-compact {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.3rem;  /* Réduit */
         }
 
         .info-line {
             display: grid;
-            grid-template-columns: 80px 1fr;  /* Largeur fixe pour les labels */
-            gap: 1rem;
+            grid-template-columns: 80px 1fr;
+            gap: 0.8rem;  /* Réduit */
             align-items: baseline;
         }
 
         .info-label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;  /* Légèrement réduit */
             color: var(--text-light);
             text-align: left;
         }
 
         .info-value {
-            font-size: 0.95rem;
+            font-size: 0.9rem;  /* Légèrement réduit */
             color: var(--text);
         }
 
@@ -197,14 +198,14 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            margin-top: 0.8rem;
-            padding: 0.4rem 1.2rem;
+            margin-top: 0.6rem;  /* Réduit */
+            padding: 0.3rem 1rem;  /* Réduit */
             background: var(--background);
             color: var(--text);
             border: 1px solid var(--border);
             border-radius: 30px;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.75rem;  /* Réduit */
             transition: all 0.2s;
         }
 
@@ -219,36 +220,36 @@
         .ratings-list {
             display: flex;
             flex-direction: column;
-            gap: 0.8rem;
+            gap: 0.4rem;  /* Réduit */
         }
 
         .rating-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.8rem;  /* Réduit */
         }
 
         .rating-label {
             color: var(--text-light);
-            font-size: 0.9rem;
-            min-width: 80px;
+            font-size: 0.85rem;  /* Réduit */
+            min-width: 70px;  /* Réduit */
         }
 
         .rating-stars-display {
             color: var(--star);
-            font-size: 0.9rem;
+            font-size: 0.85rem;  /* Réduit */
             letter-spacing: 2px;
-            min-width: 70px;
+            min-width: 65px;  /* Réduit */
         }
 
         .rating-value {
-            font-size: 0.9rem;
+            font-size: 0.85rem;  /* Réduit */
             color: var(--text-soft);
         }
 
         .total-notes {
-            margin-top: 1rem;
-            font-size: 0.75rem;
+            margin-top: 0.6rem;  /* Réduit */
+            font-size: 0.7rem;  /* Réduit */
             color: var(--text-soft);
             font-style: italic;
         }
@@ -260,10 +261,10 @@
             display: inline-flex;
             flex-direction: row-reverse;
             justify-content: flex-end;
-            font-size: 2rem;
+            font-size: 1.8rem;  /* Légèrement réduit */
             color: var(--border);
             cursor: pointer;
-            margin: 0.5rem 0;
+            margin: 0.3rem 0;  /* Réduit */
         }
 
         .rating-stars .star {
@@ -283,19 +284,19 @@
         .sliders-container {
             display: flex;
             flex-direction: column;
-            gap: 0.8rem;
-            margin: 1rem 0;
+            gap: 0.5rem;  /* Réduit */
+            margin: 0.8rem 0;  /* Réduit */
         }
 
         .slider-row {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.8rem;  /* Réduit */
         }
 
         .slider-label {
-            min-width: 80px;
-            font-size: 0.9rem;
+            min-width: 70px;  /* Réduit */
+            font-size: 0.85rem;  /* Réduit */
             color: var(--text);
         }
 
@@ -303,7 +304,7 @@
             flex: 1;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.6rem;  /* Réduit */
         }
 
         .rating-slider {
@@ -330,19 +331,19 @@
         }
 
         .slider-value {
-            min-width: 45px;
+            min-width: 40px;  /* Réduit */
             text-align: right;
-            font-size: 0.9rem;
+            font-size: 0.85rem;  /* Réduit */
             color: var(--text-soft);
         }
 
         .comment-box textarea {
             width: 100%;
-            padding: 0.8rem;
+            padding: 0.6rem;  /* Réduit */
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.8rem;  /* Réduit */
             resize: vertical;
             background: var(--white);
         }
@@ -354,28 +355,28 @@
 
         .visibility-options {
             display: flex;
-            gap: 1rem;
-            margin: 0.8rem 0;
+            gap: 0.8rem;  /* Réduit */
+            margin: 0.5rem 0;  /* Réduit */
         }
 
         .visibility-options label {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.3rem;  /* Réduit */
             color: var(--text-light);
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;  /* Réduit */
         }
 
         .comment-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 0.5rem;
+            margin-top: 0.4rem;  /* Réduit */
         }
 
         .auto-save-hint {
-            font-size: 0.7rem;
+            font-size: 0.65rem;  /* Réduit */
             color: var(--text-soft);
         }
 
@@ -384,8 +385,8 @@
             color: var(--white);
             border: none;
             border-radius: 30px;
-            padding: 0.4rem 1.2rem;
-            font-size: 0.8rem;
+            padding: 0.3rem 1rem;  /* Réduit */
+            font-size: 0.75rem;  /* Réduit */
             cursor: pointer;
         }
 
@@ -396,16 +397,16 @@
         .user-comment {
             background: var(--background);
             border-left: 3px solid var(--primary);
-            padding: 1rem;
+            padding: 0.8rem;  /* Réduit */
             border-radius: var(--radius-sm);
-            margin: 1rem 0;
+            margin: 0.8rem 0;  /* Réduit */
         }
 
         .btn-edit-comment {
             background: transparent;
             color: var(--text-light);
             border: none;
-            font-size: 0.7rem;
+            font-size: 0.65rem;  /* Réduit */
             cursor: pointer;
         }
 
@@ -415,13 +416,13 @@
         .comments-list {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.8rem;  /* Réduit */
         }
 
         .comment-card {
             background: var(--background);
             border-radius: var(--radius-sm);
-            padding: 1rem;
+            padding: 0.8rem;  /* Réduit */
             border: 1px solid var(--border-light);
         }
 
@@ -429,8 +430,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
-            font-size: 0.8rem;
+            margin-bottom: 0.4rem;  /* Réduit */
+            font-size: 0.75rem;  /* Réduit */
         }
 
         .comment-author {
@@ -446,33 +447,34 @@
 
         .comment-date {
             color: var(--text-soft);
-            font-size: 0.7rem;
+            font-size: 0.65rem;  /* Réduit */
         }
 
         .comment-content {
-            font-size: 0.85rem;
-            margin-bottom: 0.8rem;
-            line-height: 1.5;
+            font-size: 0.8rem;  /* Réduit */
+            margin-bottom: 0.6rem;  /* Réduit */
+            line-height: 1.4;
         }
 
         .comment-notes {
             display: flex;
-            gap: 1.2rem;
-            padding-top: 0.5rem;
+            gap: 1rem;  /* Réduit */
+            padding-top: 0.4rem;  /* Réduit */
             border-top: 1px solid var(--border-light);
-            font-size: 0.75rem;
+            font-size: 0.7rem;  /* Réduit */
             flex-wrap: wrap;
         }
 
         .comment-note {
             display: flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.2rem;  /* Réduit */
             color: var(--text-soft);
         }
 
         .comment-note i {
             color: var(--star);
+            font-size: 0.7rem;  /* Réduit */
         }
 
         /* ============================================
@@ -482,7 +484,7 @@
             width: 45px;
             height: 45px;
             background: white;
-            border-radius: 50%;  /* Garantit un rond parfait */
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -556,7 +558,7 @@
            ============================================ */
         .login-prompt {
             text-align: center;
-            padding: 2rem;
+            padding: 1.5rem;  /* Réduit */
             background: var(--white);
             border-radius: var(--radius);
             border: 1px solid var(--border-light);
@@ -569,7 +571,7 @@
         }
 
         /* ============================================
-           RESPONSIVE
+           RESPONSIVE - VERSION MOBILE AMÉLIORÉE
            ============================================ */
         @media (max-width: 992px) {
             .detail-grid {
@@ -584,13 +586,24 @@
             .artwork-image {
                 max-height: 500px;
             }
+            
+            /* Sur mobile, les blocs prennent toute la largeur */
+            .info-block {
+                width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .detail-container {
+                padding: 0 1rem;
+            }
         }
 
         @media (max-width: 768px) {
             .slider-row {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 0.3rem;
+                gap: 0.2rem;
             }
 
             .slider-wrapper {
@@ -599,11 +612,16 @@
 
             .info-line {
                 grid-template-columns: 1fr;
-                gap: 0.2rem;
+                gap: 0.1rem;
             }
 
             .rating-item {
                 flex-wrap: wrap;
+            }
+            
+            /* S'assurer que les blocs sont bien pleine largeur */
+            .info-section {
+                width: 100%;
             }
         }
     </style>
@@ -641,7 +659,7 @@
             </div>
 
             <!-- COLONNE DROITE : TOUS LES BLOCS -->
-            <div class="info-section" style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="info-section" style="display: flex; flex-direction: column; gap: 1rem;">  <!-- Gap réduit -->
                 
                 <!-- En-tête avec titre et favori -->
                 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
