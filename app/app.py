@@ -1281,11 +1281,12 @@ def save_rating():
         except:
             return False
     
+    # Validation avec valeurs par défaut à 0 si non présentes
     if not all([
-        validate_note(data.get('note_globale')),
-        validate_note(data.get('note_technique')),
-        validate_note(data.get('note_originalite')),
-        validate_note(data.get('note_emotion'))
+        validate_note(data.get('note_globale', 0)),
+        validate_note(data.get('note_technique', 0)),
+        validate_note(data.get('note_originalite', 0)),
+        validate_note(data.get('note_emotion', 0))
     ]):
         print("❌ Notes invalides")
         return jsonify({'error': 'Notes invalides'}), 400
@@ -1297,10 +1298,10 @@ def save_rating():
     
     if rating:
         print("🔄 Mise à jour note existante")
-        rating.note_globale = float(data['note_globale'])
-        rating.note_technique = float(data['note_technique'])
-        rating.note_originalite = float(data['note_originalite'])
-        rating.note_emotion = float(data['note_emotion'])
+        rating.note_globale = float(data.get('note_globale', 0))
+        rating.note_technique = float(data.get('note_technique', 0))
+        rating.note_originalite = float(data.get('note_originalite', 0))
+        rating.note_emotion = float(data.get('note_emotion', 0))
         rating.commentaire = data.get('commentaire', '')
         message = 'Note mise à jour'
     else:
@@ -1308,10 +1309,10 @@ def save_rating():
         rating = Rating(
             user_id=session['user_id'],
             artwork_id=artwork_id,
-            note_globale=float(data['note_globale']),
-            note_technique=float(data['note_technique']),
-            note_originalite=float(data['note_originalite']),
-            note_emotion=float(data['note_emotion']),
+            note_globale=float(data.get('note_globale', 0)),
+            note_technique=float(data.get('note_technique', 0)),
+            note_originalite=float(data.get('note_originalite', 0)),
+            note_emotion=float(data.get('note_emotion', 0)),
             commentaire=data.get('commentaire', '')
         )
         db.session.add(rating)
@@ -1325,6 +1326,28 @@ def save_rating():
         'message': message,
         'rating': rating.to_dict()
     })
+
+# 👇 ICI tu peux ajouter la nouvelle fonction delete_rating
+@app.route('/api/rating/delete', methods=['POST'])
+def delete_rating():
+    """Supprime la note et le commentaire de l'utilisateur"""
+    if 'user_id' not in session:
+        return jsonify({'error': 'Non connecté'}), 401
+    
+    data = request.get_json()
+    artwork_id = data.get('artwork_id')
+    
+    rating = Rating.query.filter_by(
+        user_id=session['user_id'],
+        artwork_id=artwork_id
+    ).first()
+    
+    if rating:
+        db.session.delete(rating)
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Commentaire supprimé'})
+    else:
+        return jsonify({'error': 'Commentaire non trouvé'}), 404
 
 
 @app.route('/api/rating/get/<artwork_id>')

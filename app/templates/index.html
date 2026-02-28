@@ -485,8 +485,7 @@
         .favorite-icon i {
             color: #dc3545;
             transition: all 0.2s;
-            -webkit-text-stroke: 0.5px #dc3545;
-            -webkit-text-fill-color: transparent;
+ 
         }
 
         .favorite-icon:hover {
@@ -582,7 +581,7 @@
         }
         
         .artwork-info {
-            padding: 0.8rem;
+            padding: 0.4rem;
         }
         
         .artwork-title {
@@ -793,9 +792,12 @@
                 margin: 0.5rem 0;
             }
             
-            .navbar-collapse {
-                flex-wrap: wrap;
-            }
+    .navbar-collapse {
+        background: white !important;  /* Change transparent en white */
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        padding: 0.5rem 0;
+    }
             
             .main-layout {
                 flex-direction: column;
@@ -858,6 +860,109 @@
         margin-bottom: 1.5rem;
     }
 }
+
+
+/* ============================================
+   MOBILE - IMAGES CARRÉES (VERSION MOINS HAUTE)
+   ============================================ */
+@media (max-width: 768px) {
+    .artwork-image {
+        width: 100%;
+        height: 220px;  /* Réduit de 280px à 220px */
+        object-fit: cover;
+    }
+    
+    .artwork-image-placeholder {
+        width: 100%;
+        height: 220px;
+    }
+}
+
+@media (max-width: 480px) {
+    .artwork-image {
+        height: 260px;  /* Réduit de 320px à 260px */
+    }
+    
+    .artwork-image-placeholder {
+        height: 260px;
+    }
+    
+    .artwork-info {
+        padding: 0.8rem;
+    }
+    
+    .artwork-title {
+        font-size: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* Pour que les cartes prennent toute la largeur sur mobile */
+@media (max-width: 480px) {
+    .artworks-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .artwork-card {
+        width: 100%;
+        margin: 0;
+    }
+}
+
+/* ============================================
+   RÉDUIRE L'ESPACE SOUS L'IMAGE SUR MOBILE
+   ============================================ */
+@media (max-width: 768px) {
+    /* Réduire le padding de la zone d'info */
+    .artwork-info {
+        padding: 0.6rem !important;  /* Moins d'espace */
+    }
+    
+    /* Réduire les marges entre les éléments */
+    .artwork-title {
+        margin-bottom: 0.1rem !important;
+        font-size: 0.95rem !important;
+    }
+    
+    .artwork-artist {
+        margin-bottom: 0.1rem !important;
+        font-size: 0.85rem !important;
+    }
+    
+    .artwork-year, .artwork-museum {
+        margin-bottom: 0.1rem !important;
+        font-size: 0.75rem !important;
+    }
+    
+    /* Réduire l'espace du badge de popularité */
+    .popular-badge {
+        margin-top: 0.2rem !important;
+        padding: 0.1rem 0 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .artwork-info {
+        padding: 0.4rem !important;  /* Encore moins sur très petit */
+    }
+    
+    .artwork-title {
+        font-size: 0.9rem !important;
+    }
+    
+    .artwork-artist {
+        font-size: 0.8rem !important;
+    }
+}
+
+
+
+
+
+
 
     </style>
 </head>
@@ -1002,8 +1107,13 @@
                             <div class="artwork-year">{{ artwork.date[:4] }}</div>
                             {% endif %}
                             {% if artwork.lieu and artwork.lieu != 'Inconnu' %}
-                            <div class="artwork-museum">{{ artwork.lieu[:30] }}</div>
-                            {% endif %}
+<div class="artwork-museum">
+    {{ artwork.lieu[:30] }}
+    {% if artwork.pays and artwork.pays != 'Inconnu' %}
+        <span style="color: #8e9aab; font-size: 0.7rem;"> ({{ artwork.pays }})</span>
+    {% endif %}
+</div>
+{% endif %}
 
                             <!-- Badge de popularité -->
                             {% if not query and not artists and not museums and not movements %}
