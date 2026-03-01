@@ -41,12 +41,30 @@
         
         .nav-link:hover {
             border-bottom-color: #e6d8c3;
+
+            
         }
         
         .nav-link.active {
             border-bottom-color: #e6d8c3;
             font-weight: 500;
         }
+        
+
+        
+ /* Espacement pour l'avatar dans la navbar */
+.navbar .nav-item.dropdown .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px !important;
+    margin: 0 auto !important;
+}   
+        
+/* Ajuster la barre de survol pour qu'elle soit plus basse */
+.navbar .nav-item.dropdown .nav-link::after {
+    bottom: -5px !important;  /* Décale la flèche (si présente) */
+}        
         
         /* ===== BARRE DE RECHERCHE ===== */
         .navbar-search {
@@ -212,6 +230,7 @@
                 background: transparent !important;
                 border: none !important;
                 box-shadow: none !important;
+                
             }
             
             .dropdown-item-account {
@@ -316,20 +335,19 @@
         }
         
         /* Style pour l'avatar utilisateur */
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: #e6d8c3;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #2c3e50;
-            font-weight: 600;
-            font-size: 1rem;
-            text-transform: uppercase;
-            margin-right: 5px;
-        }
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    background: #e6d8c3;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0;  /* Enlever les marges */
+}
         
         /* ===== STYLES COMPTE ET CONNEXION - UNIFIÉS ===== */
         .btn-account, .btn-login {
@@ -415,17 +433,10 @@
             opacity: 0.5;
         }
         
-        .dropdown-toggle::after {
-            display: inline-block;
-            margin-left: 0.5em;
-            vertical-align: middle;
-            content: "";
-            border-top: 0.3em solid;
-            border-right: 0.3em solid transparent;
-            border-bottom: 0;
-            border-left: 0.3em solid transparent;
-            opacity: 0.7;
-        }
+/* Supprimer la flèche du dropdown */
+.dropdown-toggle::after {
+    display: none !important;
+}
         
         @media (max-width: 992px) {
             .navbar-search {
@@ -494,46 +505,51 @@
         
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                {% if session.username %}
-                    <!-- Utilisateur connecté - AVATAR AVEC PREMIÈRE LETTRE -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link btn-account dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <div style="width: 32px; height: 32px; background: #e6d8c3; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #2c3e50; font-weight: 600; font-size: 1rem; margin-right: 5px;">
-                                {{ session.username[0]|upper }}
-                            </div>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-account dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li>
-                                <a class="dropdown-item-account" href="/profile">
-                                    <i class="far fa-id-card"></i> Mon profil
-                                </a>
-                            </li>
-<li>
-    <a class="dropdown-item-account" href="/mes-oeuvres">
-        <i class="far fa-star"></i> Mes œuvres d'art
-    </a>
-</li>
-<li>
-    <a class="dropdown-item-account" href="/favoris">
-        <i class="far fa-heart"></i> Mes favoris
-    </a>
-</li>                            
-                            <li><hr class="dropdown-divider-account"></li>
-                            <li>
-                                <a class="dropdown-item-account" href="/logout?next={{ request.path }}">
-                                    <i class="fas fa-sign-out-alt"></i> Déconnexion
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                {% else %}
-                    <!-- Utilisateur non connecté - ICONE QUI OUVRE LA MODALE D'INSCRIPTION -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="openRegisterModal(); return false;" style="display: flex; align-items: center; gap: 5px; color: #e6d8c3;" title="S'inscrire / Se connecter">
-                            <i class="far fa-user-circle" style="font-size: 1.3rem;"></i>
-                        </a>
-                    </li>
-                {% endif %}
+            
+
+{% if session.username %}
+    <!-- Utilisateur connecté - AVATAR AVEC PREMIÈRE LETTRE -->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0;">
+            <div class="user-avatar">
+                {{ session.username[0]|upper }}
+            </div>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-account dropdown-menu-end" aria-labelledby="userDropdown">
+            <li>
+                <a class="dropdown-item-account" href="/profile">
+                    <i class="far fa-id-card"></i> Mon profil
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item-account" href="/mes-oeuvres">
+                    <i class="far fa-star"></i> Mes œuvres notées
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item-account" href="/favoris">
+                    <i class="far fa-heart"></i> Mes favoris
+                </a>
+            </li>                            
+            <li><hr class="dropdown-divider-account"></li>
+            <li>
+                <a class="dropdown-item-account" href="/logout?next={{ request.path }}">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </a>
+            </li>
+        </ul>
+    </li>
+{% else %}
+    <!-- Utilisateur non connecté - ICONE QUI OUVRE LA MODALE D'INSCRIPTION -->
+    <li class="nav-item">
+        <a class="nav-link" href="#" onclick="openRegisterModal(); return false;" style="display: flex; align-items: center; gap: 5px; color: #e6d8c3;" title="S'inscrire / Se connecter">
+            <i class="far fa-user-circle" style="font-size: 1.3rem;"></i>
+        </a>
+    </li>
+{% endif %}
+
+                
+                
             </ul>
         </div>
     </div>

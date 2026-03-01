@@ -497,10 +497,14 @@
             <div class="works-grid grid-4" id="works-grid">
                 {% for work in works %}
                 <div class="work-card" onclick="window.location.href='/oeuvre/{{ work.id }}'">
-                    <!-- BOUTON FAVORI -->
-                    <div class="favorite-icon" data-artwork-id="{{ work.id }}" onclick="event.stopPropagation(); toggleFavorite(this, '{{ work.id }}')">
-                        <i class="fas fa-heart"></i>
-                    </div>
+
+
+<!-- BOUTON FAVORI -->
+<div class="favorite-icon {% if work.is_favorite %}active{% endif %}" 
+     data-artwork-id="{{ work.id }}" 
+     onclick="event.stopPropagation(); toggleFavorite(this, '{{ work.id }}')">
+    <i class="{% if work.is_favorite %}fas{% else %}far{% endif %} fa-heart"></i>
+</div>
                     
                     <!-- Date en badge -->
                     <div class="rating-date">
@@ -618,7 +622,7 @@
             
             localStorage.setItem('mobileViewPreference', columns);
         }
-        
+
         // Charger les préférences au chargement de la page
         document.addEventListener('DOMContentLoaded', function() {
             const savedView = localStorage.getItem('worksViewPreference');
@@ -631,7 +635,7 @@
             const savedMobile = localStorage.getItem('mobileViewPreference');
             if (savedMobile) {
                 setMobileColumns(parseInt(savedMobile));
-            }
+            }          
         });
         
         // Fonction pour toggle favori

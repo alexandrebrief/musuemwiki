@@ -1740,6 +1740,7 @@ def my_rated_works():
         flash('Veuillez vous connecter pour voir vos œuvres notées', 'warning')
         return redirect(url_for('login'))
     
+    # Récupérer les notes de l'utilisateur
     ratings = Rating.query.filter_by(user_id=session['user_id']).all()
     
     works = []
@@ -1748,10 +1749,17 @@ def my_rated_works():
         if artwork:
             work_data = artwork.to_dict()
             work_data['rating'] = rating.to_dict()
+            
+            # ✅ AJOUTER ICI : Vérifier si l'œuvre est en favori
+            favorite = Favorite.query.filter_by(
+                user_id=session['user_id'],
+                artwork_id=artwork.id
+            ).first()
+            work_data['is_favorite'] = favorite is not None
+            
             works.append(work_data)
     
     return render_template('my_works.html', works=works)
-
 
 @app.route('/api/artwork/stats/<artwork_id>')
 def artwork_stats(artwork_id):
