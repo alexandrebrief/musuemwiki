@@ -88,7 +88,14 @@
             opacity: 0.7;
         }
 
-        /* Badge statut */
+        /* Badge statut - maintenant à gauche */
+        .status-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -97,7 +104,6 @@
             border-radius: 30px;
             font-size: 0.75rem;
             font-weight: 500;
-            margin-left: auto;
         }
 
         .status-badge.verified {
@@ -150,38 +156,25 @@
             border: 1px solid transparent;
         }
 
-        .btn-primary {
+        .btn-primary, .btn-logout {
             background: #2c3e50;
             color: #e6d8c3;
             border: 1px solid #2c3e50;
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover, .btn-logout:hover {
             background: #1e2b3a;
             transform: scale(1.02);
         }
 
         .btn-danger {
-            background: transparent;
-            color: #dc3545;
+            background: #dc3545;
+            color: white;
             border: 1px solid #dc3545;
         }
 
         .btn-danger:hover {
-            background: #dc3545;
-            color: white;
-            transform: scale(1.02);
-        }
-
-        .btn-logout {
-            background: transparent;
-            color: #5d6d7e;
-            border: 1px solid #e0d6c8;
-        }
-
-        .btn-logout:hover {
-            background: #f5f0e8;
-            border-color: #5d6d7e;
+            background: #bb2d3b;
             transform: scale(1.02);
         }
 
@@ -290,14 +283,22 @@
             display: flex;
             gap: 0.5rem;
             align-items: center;
+            flex-wrap: wrap;
         }
         
         .edit-username input {
             flex: 1;
+            min-width: 150px;
             padding: 0.5rem;
             border: 1px solid #e0d6c8;
             border-radius: 8px;
             font-size: 0.9rem;
+        }
+        
+        .edit-username .button-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
         
         .edit-username button {
@@ -309,6 +310,7 @@
             font-size: 0.8rem;
             cursor: pointer;
             transition: all 0.2s;
+            white-space: nowrap;
         }
         
         .edit-username button:hover {
@@ -346,6 +348,23 @@
             .profile-card {
                 padding: 1.5rem;
             }
+            
+            .edit-username {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .edit-username input {
+                width: 100%;
+            }
+            
+            .edit-username .button-group {
+                justify-content: space-between;
+            }
+            
+            .edit-username button {
+                flex: 1;
+            }
         }
     </style>
 </head>
@@ -378,8 +397,10 @@
                 <div id="edit-username-form" style="display: none;" class="mt-2">
                     <div class="edit-username">
                         <input type="text" id="new-username" value="{{ user.username }}" maxlength="80">
-                        <button onclick="saveUsername()">Enregistrer</button>
-                        <button class="cancel" onclick="cancelUsernameEdit()">Annuler</button>
+                        <div class="button-group">
+                            <button onclick="saveUsername()">Enregistrer</button>
+                            <button class="cancel" onclick="cancelUsernameEdit()">Annuler</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -404,15 +425,17 @@
                 <div class="profile-label">Statut</div>
                 <div class="profile-value">
                     <i class="fas fa-shield-alt"></i>
-                    {% if user.email_verified %}
-                        <span class="status-badge verified">
-                            <i class="fas fa-check-circle"></i> Email vérifié
-                        </span>
-                    {% else %}
-                        <span class="status-badge pending">
-                            <i class="fas fa-clock"></i> En attente
-                        </span>
-                    {% endif %}
+                    <div class="status-wrapper">
+                        {% if user.email_verified %}
+                            <span class="status-badge verified">
+                                <i class="fas fa-check-circle"></i> Email vérifié
+                            </span>
+                        {% else %}
+                            <span class="status-badge pending">
+                                <i class="fas fa-clock"></i> En attente
+                            </span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             
@@ -432,7 +455,7 @@
                     </button>
                     
                     <!-- Déconnexion -->
-                    <a href="/logout" class="btn-action btn-logout">
+                    <a href="/logout" class="btn-action btn-primary">
                         <i class="fas fa-sign-out-alt"></i> Se déconnecter
                     </a>
                 </div>
@@ -455,13 +478,13 @@
                     <div class="warning-icon">
                         <i class="fas fa-exclamation-circle"></i>
                     </div>
-                    <p class="text-danger"><strong>Action irréversible !</strong></p>
+    
                     <p>Toutes vos données seront supprimées :</p>
                     
                     <ul class="danger-list">
-                        <li><i class="fas fa-heart"></i> Favoris</li>
-                        <li><i class="fas fa-star"></i> Notes et commentaires</li>
-                        <li><i class="fas fa-user"></i> Profil</li>
+                        <li><i class="fas fa-user"></i> Votre compte</li>
+                        <li><i class="fas fa-star"></i> Vos notes et commentaires</li>
+                        <li><i class="fas fa-heart"></i> Vos favoris</li>
                     </ul>
                     
                     <form method="POST" action="/delete-account" id="delete-form">
@@ -564,10 +587,6 @@ async function saveUsername() {
         alert('Erreur de connexion');
     }
 }
-
-
-
-
 
         // Auto-fermeture des alertes après 5 secondes
         setTimeout(function() {

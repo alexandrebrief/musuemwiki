@@ -76,6 +76,25 @@
             font-weight: 600;
         }
         
+        /* NOUVEAU STYLE POUR LE MESSAGE SPAM */
+        .spam-warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .spam-warning i {
+            font-size: 1.1rem;
+        }
+        
         .code-input {
             max-width: 250px;
             margin: 0 auto 1.5rem;
@@ -208,6 +227,13 @@
             <div class="verify-icon">
                 <i class="fas fa-envelope-open-text"></i>
             </div>
+            
+            <!-- ✅ MESSAGE SPAM AJOUTÉ ICI -->
+            <div class="spam-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Si vous ne voyez pas l'email, vérifiez vos spams / indésirables</span>
+            </div>
+            
             <p class="verify-text">
                 Un email a été envoyé à <strong>{{ request.args.get('email', 'votre adresse') }}</strong><br>
                 Entrez le code à 6 chiffres reçu.

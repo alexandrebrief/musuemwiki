@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">  <!-- ← AJOUTEZ CETTE LIGNE -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ site_name }} - Connexion</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -30,7 +31,18 @@
             font-weight: 500;
             color: #1e2b3a;
         }
-        
+.forgot-password-link {
+    text-align: center;
+    margin-top: 0.8rem;
+}
+
+.forgot-password-link a {
+    color: #8e9aab;
+    font-size: 0.8rem;
+    text-decoration: none;
+    display: inline-block;  /* ← Changé de inline à inline-block */
+    margin: 0 auto;         /* ← Ajouté pour centrer */
+}        
         /* ===== STYLES SPÉCIFIQUES À LOGIN ===== */
         .login-container {
             max-width: 450px;
@@ -232,9 +244,9 @@
                 Pas encore de compte ? <a href="/register">S'inscrire</a>
             </div>
             
-            <!-- Lien mot de passe oublié -->
-<div class="forgot-password-link" style="text-align: center; margin-top: 0.8rem;">
-    <a href="#" onclick="showForgotPasswordModal(); return false;" style="color: #8e9aab; font-size: 0.8rem; text-decoration: none;">
+<!-- Lien mot de passe oublié -->
+<div class="forgot-password-link">
+    <a href="#" onclick="showForgotPasswordModal(); return false;">
         <i class="fas fa-key me-1"></i>Mot de passe oublié ?
     </a>
 </div>
@@ -276,7 +288,7 @@
                 
                 <div class="text-center mt-3">
                     <p style="font-size: 0.75rem; color: #8e9aab;">
-                        Vous recevrez un email avec les instructions.
+                        Si vous ne recevez pas d'email, regardez vos spams.
                     </p>
                 </div>
             </div>

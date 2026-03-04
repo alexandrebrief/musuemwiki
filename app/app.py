@@ -144,106 +144,176 @@ def send_reset_email(user_email, username, reset_link):
     """Envoie un email de réinitialisation de mot de passe"""
     
     html_content = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <style>
-            body {{
-                font-family: 'Inter', sans-serif;
-                background-color: #f5f0e8;
-                margin: 0;
-                padding: 20px;
-            }}
-            .container {{
-                max-width: 600px;
-                margin: 0 auto;
-                background: white;
-                border-radius: 16px;
-                padding: 30px;
-                box-shadow: 0 4px 12px rgba(44,62,80,0.05);
-            }}
-            h1 {{
-                font-family: 'Playfair Display', serif;
-                color: #2c3e50;
-                font-size: 24px;
-                margin-bottom: 20px;
-            }}
-            .button {{
-                background: #2c3e50;
-                color: #e6d8c3;
-                padding: 12px 24px;
-                text-decoration: none;
-                border-radius: 8px;
-                display: inline-block;
-                margin: 20px 0;
-            }}
-            .footer {{
-                margin-top: 30px;
-                color: #5d6d7e;
-                font-size: 12px;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Réinitialisation de votre mot de passe</h1>
-            <p>Bonjour {username},</p>
-            <p>Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous pour créer un nouveau mot de passe :</p>
-            
-            <a href="{reset_link}" class="button">Réinitialiser mon mot de passe</a>
-            
-            <p>Ce lien expirera dans 24 heures.</p>
-            
-            <div class="footer">
-                <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
-                <p>© 2025 MuseumWiki · Collection d'œuvres d'art · Données Wikidata</p>
-            </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réinitialisation de mot de passe - Bluetocus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {{
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f0e8;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }}
+        .container {{
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 35px 30px;
+            box-shadow: 0 4px 12px rgba(44,62,80,0.05);
+        }}
+        h1 {{
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #1e2b3a;
+            font-size: 1.8rem;
+            margin: 0 0 10px 0;
+            text-align: center;
+        }}
+        .greeting {{
+            color: #5d6d7e;
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 25px;
+        }}
+        .message {{
+            color: #5d6d7e;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }}
+        .button-container {{
+            text-align: center;
+            margin: 30px 0;
+        }}
+        .button {{
+            display: inline-block;
+            background: #2c3e50;
+            color: #e6d8c3;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.1);
+            border: none;
+            cursor: pointer;
+        }}
+       .button:visited {{
+    color: #e6d8c3 !important;
+}}
+
+       
+       .button:hover {{
+            background: #1e2b3a;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(44,62,80,0.15);
+        }}
+        .expiry {{
+            color: #8e9aab;
+            font-size: 0.8rem;
+            text-align: center;
+            margin: 25px 0 5px;
+            padding-top: 15px;
+            border-top: 1px solid #e6d8c3;
+        }}
+        .footer-note {{
+            color: #8e9aab;
+            font-size: 0.75rem;
+            text-align: center;
+            margin-top: 20px;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Réinitialisation de votre mot de passe</h1>
+        
+        <div class="greeting">
+            Bonjour {username},
         </div>
-    </body>
-    </html>
+        
+        <div class="message">
+            Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe.
+        </div>
+        
+        <div class="button-container">
+            <a href="{reset_link}" class="button">
+                Réinitialiser mon mot de passe
+            </a>
+        </div>
+        
+        <div class="expiry">
+            Ce lien expirera dans 24 heures.
+        </div>
+        
+    </div>
+</body>
+</html>
     """
     
     message = Mail(
         from_email=FROM_EMAIL,
         to_emails=user_email,
-        subject='Bluetocus - Confirmation de votre email',
+        subject='Bluetocus - Réinitialisation de votre mot de passe',
         html_content=html_content
     )
     
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)
         response = sg.send(message)
-        logger.info(f"Email envoyé à {user_email}, statut: {response.status_code}")
+        logger.info(f"Email de réinitialisation envoyé à {user_email}, statut: {response.status_code}")
         return True
     except Exception as e:
-        logger.error(f"Erreur d'envoi d'email: {e}")
+        logger.error(f"Erreur d'envoi d'email de réinitialisation: {e}")
         return False
 
-
-# Route API pour mot de passe oublié
 @app.route('/api/forgot-password', methods=['POST'])
 def forgot_password():
     """Demande de réinitialisation de mot de passe"""
-    data = request.get_json()
-    email = data.get('email', '').strip().lower()
+    print("\n" + "="*50)
+    print("🔵 Route /api/forgot-password appelée")
+    print(f"Méthode: {request.method}")
+    print(f"Headers: {dict(request.headers)}")
+    
+    try:
+        data = request.get_json()
+        print(f"Data reçue: {data}")
+    except Exception as e:
+        print(f"❌ Erreur parsing JSON: {e}")
+        return jsonify({'error': 'Format JSON invalide'}), 400
+    
+    email = data.get('email', '').strip().lower() if data else ''
+    print(f"Email extrait: '{email}'")
     
     if not email:
+        print("❌ Email manquant")
         return jsonify({'error': 'Email requis'}), 400
     
     user = User.query.filter_by(email=email).first()
+    print(f"Utilisateur trouvé: {user is not None}")
     
-    # Toujours répondre de la même façon pour éviter de révéler si l'email existe
     if not user:
+        print("✅ Réponse: email non trouvé (message générique)")
         return jsonify({'message': 'Si cet email existe, un lien de réinitialisation a été envoyé'}), 200
     
     # Désactiver les anciens tokens
     old_resets = PasswordReset.query.filter_by(user_id=user.id, used=False).all()
+    print(f"Anciens tokens désactivés: {len(old_resets)}")
     for r in old_resets:
         r.used = True
     
     # Créer un nouveau token
     token = PasswordReset.generate_token()
     expires_at = datetime.utcnow() + timedelta(hours=24)
+    print(f"Nouveau token généré: {token[:20]}...")
     
     reset = PasswordReset(
         user_id=user.id,
@@ -252,16 +322,40 @@ def forgot_password():
     )
     db.session.add(reset)
     db.session.commit()
+    print("✅ Token sauvegardé en base")
     
     # Créer le lien de réinitialisation
     reset_link = f"{BASE_URL}/reset-password?token={token}"
+    print(f"Lien généré: {reset_link}")
     
     # Envoyer l'email
+    print("📧 Tentative d'envoi d'email...")
     if send_reset_email(email, user.username, reset_link):
+        print("✅ Email envoyé avec succès")
         return jsonify({'message': 'Un email de réinitialisation a été envoyé'}), 200
     else:
+        print("❌ Échec de l'envoi de l'email")
         return jsonify({'error': "Erreur lors de l'envoi de l'email"}), 500
-
+        
+        
+@app.route('/test-reset-email')
+def test_reset_email():
+    """Route de test pour vérifier l'envoi d'email de réinitialisation"""
+    try:
+        test_email = "votre-email@gmail.com"  # Mettez votre email ici
+        test_username = "TestUser"
+        test_token = "test-token-123"
+        test_link = f"{BASE_URL}/reset-password?token={test_token}"
+        
+        result = send_reset_email(test_email, test_username, test_link)
+        
+        if result:
+            return "✅ Email de test envoyé avec succès ! Vérifie ta boîte de réception."
+        else:
+            return "❌ Échec de l'envoi. Vérifie les logs."
+            
+    except Exception as e:
+        return f"❌ Erreur: {str(e)}"
 
 # Page de réinitialisation de mot de passe
 @app.route('/reset-password', methods=['GET', 'POST'])
@@ -581,99 +675,155 @@ class Rating(db.Model):
 # 4. FONCTIONS UTILITAIRES
 # ============================================
 
+
 def send_verification_email(user_email, username, code, token):
     """Envoie un email de vérification avec code et lien"""
     
     verification_link = f"{BASE_URL}/verify-email?token={token}"
     
     html_content = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <style>
-            body {{
-                font-family: 'Inter', sans-serif;
-                background-color: #f5f0e8;
-                margin: 0;
-                padding: 20px;
-            }}
-            .container {{
-                max-width: 600px;
-                margin: 0 auto;
-                background: white;
-                border-radius: 16px;
-                padding: 30px;
-                box-shadow: 0 4px 12px rgba(44,62,80,0.05);
-            }}
-            h1 {{
-                font-family: 'Playfair Display', serif;
-                color: #2c3e50;
-                font-size: 24px;
-                margin-bottom: 20px;
-            }}
-            .code {{
-                font-size: 32px;
-                font-weight: bold;
-                color: #2c3e50;
-                background: #f5f0e8;
-                padding: 15px;
-                border-radius: 8px;
-                text-align: center;
-                letter-spacing: 5px;
-                margin: 20px 0;
-            }}
-            .button {{
-                background: #2c3e50;
-                color: #e6d8c3;
-                padding: 12px 24px;
-                text-decoration: none;
-                border-radius: 8px;
-                display: inline-block;
-                margin: 20px 0;
-            }}
-            .footer {{
-                margin-top: 30px;
-                color: #5d6d7e;
-                font-size: 12px;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Bienvenue sur Bluetocus, {username} !</h1>
-            <p>Veuillez utiliser le code de vérification ci-dessous :</p>
-            
-            <div class="code">{code}</div>
-            
-            <p>Le lien de vérification:</p>
-            <a href="{verification_link}" class="button">Vérifier mon email</a>
-            
-            <p>Ce code et ce lien expireront dans 24 heures.</p>
-            
-            <div class="footer">
-                <p>Si vous n'avez pas créé de compte sur Bluetocus, ignorez cet email.</p>
-                <p>© 2026 Bluetocus</p>
-            </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification de votre email - Bluetocus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {{
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f0e8;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }}
+        .container {{
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 35px 30px;
+            box-shadow: 0 4px 12px rgba(44,62,80,0.05);
+        }}
+        h1 {{
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #1e2b3a;
+            font-size: 1.8rem;
+            margin: 0 0 10px 0;
+            text-align: center;
+        }}
+        .greeting {{
+            color: #5d6d7e;
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 25px;
+        }}
+        .code-container {{
+            background: #f5f0e8;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            border: 1px solid #e0d6c8;
+        }}
+        .code-label {{
+            color: #5d6d7e;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }}
+        .code {{
+            font-family: 'Inter', monospace;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            letter-spacing: 8px;
+        }}
+        .button-container {{
+            text-align: center;
+            margin: 30px 0;
+        }}
+        .button {{
+            display: inline-block;
+            background: #2c3e50;
+            color: #e6d8c3;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.1);
+            border: none;
+            cursor: pointer;
+        }}
+        .button:hover {{
+            background: #1e2b3a;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(44,62,80,0.15);
+        }}
+        .expiry {{
+            color: #8e9aab;
+            font-size: 0.8rem;
+            text-align: center;
+            margin: 25px 0 5px;
+            padding-top: 15px;
+            border-top: 1px solid #e6d8c3;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenue {username} sur Bluetocus !</h1>
+        
+        <div class="greeting">
+            Voici votre code de vérification.
         </div>
-    </body>
-    </html>
+        
+        <div class="code-container">
+            <div class="code-label">Code de vérification</div>
+            <div class="code">{code}</div>
+        </div>
+        
+        <div class="button-container">
+            <a href="{verification_link}" class="button">
+                Lien de vérification
+            </a>
+        </div>
+        
+        <div class="expiry">
+            Code et lien valables 24 heures.
+        </div>
+    </div>
+</body>
+</html>
     """
     
     message = Mail(
         from_email=FROM_EMAIL,
         to_emails=user_email,
-        subject='Bluetocus - Confirmation de votre email',
+        subject='Bluetocus - Vérification de votre email',
         html_content=html_content
     )
     
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)
         response = sg.send(message)
-        logger.info(f"Email envoyé à {user_email}, statut: {response.status_code}")
+        logger.info(f"Email de vérification envoyé à {user_email}, statut: {response.status_code}")
         return True
     except Exception as e:
         logger.error(f"Erreur d'envoi d'email: {e}")
         return False
+
+
+
+
+
+
+
 
 
 def get_filtered_query(query, artists, museums, movements, types=None, genres=None, copyrights=None):
@@ -1740,7 +1890,7 @@ def login():
             db.session.commit()
             
             print(f"✅ Connexion réussie pour {user.username}")
-            flash(f'Bienvenue {user.username} !', 'success')
+           # flash(f'Bienvenue {user.username} !', 'success')
             
             # 👇 3. REDIRECTION INTELLIGENTE
             if next_url and next_url.startswith('/'):
@@ -1764,7 +1914,7 @@ def logout():
     
     # Déconnexion
     session.clear()
-    flash('Vous avez été déconnecté', 'info')
+   # flash('Vous avez été déconnecté', 'info')
     
     # 👇 REDIRECTION
     if next_url and next_url.startswith('/'):
@@ -1776,7 +1926,7 @@ def logout():
 def profile():
     """Page de profil utilisateur"""
     if 'user_id' not in session:
-        flash('Veuillez vous connecter pour accéder à cette page', 'warning')
+       # flash('Veuillez vous connecter pour accéder à cette page', 'warning')
         return redirect(url_for('login'))
     
     user = User.query.get(session['user_id'])
@@ -1922,7 +2072,7 @@ def delete_account():
         
         # Déconnecter
         session.clear()
-        flash('Votre compte a été supprimé', 'info')
+       # flash('Votre compte a été supprimé', 'info')
         return redirect(url_for('index'))
         
     except Exception as e:
@@ -1965,7 +2115,7 @@ def verify_email():
     user.last_login = datetime.utcnow()
     db.session.commit()
     
-    flash(f'Bienvenue {user.username} ! Votre email a été vérifié.', 'success')
+    #flash(f'Bienvenue {user.username} ! Votre email a été vérifié.', 'success')
     return redirect(url_for('index'))
 
 @app.route('/verify-code', methods=['POST'])
@@ -1998,7 +2148,7 @@ def verify_code():
     user.last_login = datetime.utcnow()
     db.session.commit()
     
-    flash(f'Bienvenue {user.username} ! Votre email a été vérifié.', 'success')
+   # flash(f'Bienvenue {user.username} ! Votre email a été vérifié.', 'success')
     return redirect(url_for('index'))
 
 @app.route('/resend-verification', methods=['POST'])
