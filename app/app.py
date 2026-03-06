@@ -1563,17 +1563,20 @@ def api_movements():
 
 @app.route('/api/suggestions')
 def suggestions():
-    """API pour l'autocomplete - résultats dans la langue de la session"""
+    """API pour l'autocomplete - recherche améliorée"""
     query = request.args.get('q', '').strip()
     if len(query) < 2:
         return jsonify([])
     
     search = f"%{query}%"
-    lang = session.get('language', 'fr')  # Langue de la session (défaut: fr)
+    # Recherche aussi avec le mot seul
+    word_search = f"%{query}%"
+    
+    lang = session.get('language', 'fr')
     
     suggestions_list = []
     
-    # 1. RECHERCHE PAR ID (toujours affiché)
+    # 1. RECHERCHE PAR ID (toujours)
     id_results = db.session.query(Artwork.id).filter(
         Artwork.id.ilike(search)
     ).distinct().limit(2).all()
@@ -1581,63 +1584,65 @@ def suggestions():
     for id_result in id_results:
         suggestions_list.append({'texte': id_result[0], 'categorie': 'id'})
     
-    # 2. ARTISTES - selon la langue
+    # 2. ARTISTES - recherche large
     if lang == 'fr':
         artists = db.session.query(Artwork.creator_fallback_fr).filter(
-            Artwork.creator_fallback_fr.ilike(search),
+            (Artwork.creator_fallback_fr.ilike(search)) |  # recherche normale
+            (Artwork.creator_fallback_fr.ilike(f"%{query}%")),  # même chose mais explicite
             Artwork.creator_fallback_fr != 'Artiste inconnu',
-            Artwork.creator_fallback_fr != ''
-        ).distinct().limit(4).all()
-        artist_field = 'creator_fallback_fr'
+            Artwork.creator_fallback_fr != '',
+            Artwork.creator_fallback_fr.isnot(None)
+        ).distinct().limit(8).all()
     else:
         artists = db.session.query(Artwork.creator_fallback_en).filter(
             Artwork.creator_fallback_en.ilike(search),
             Artwork.creator_fallback_en != 'Unknown artist',
-            Artwork.creator_fallback_en != ''
-        ).distinct().limit(4).all()
-        artist_field = 'creator_fallback_en'
+            Artwork.creator_fallback_en != '',
+            Artwork.creator_fallback_en.isnot(None)
+        ).distinct().limit(8).all()
     
     for artist in artists:
         suggestions_list.append({'texte': artist[0], 'categorie': 'artiste'})
-
-    # 4. MUSÉES - selon la langue
+    
+    # 3. MUSÉES
     if lang == 'fr':
         museums = db.session.query(Artwork.collection_fr).filter(
             Artwork.collection_fr.ilike(search),
             Artwork.collection_fr != 'Inconnu',
-            Artwork.collection_fr != ''
-        ).distinct().limit(4).all()
+            Artwork.collection_fr != '',
+            Artwork.collection_fr.isnot(None)
+        ).distinct().limit(8).all()
     else:
         museums = db.session.query(Artwork.collection_en).filter(
             Artwork.collection_en.ilike(search),
             Artwork.collection_en != 'Unknown',
-            Artwork.collection_en != ''
-        ).distinct().limit(4).all()
+            Artwork.collection_en != '',
+            Artwork.collection_en.isnot(None)
+        ).distinct().limit(8).all()
     
     for museum in museums:
         suggestions_list.append({'texte': museum[0], 'categorie': 'musée'})
-
-    # 3. TITRES - selon la langue
+    
+    # 4. TITRES
     if lang == 'fr':
         titles = db.session.query(Artwork.label_fallback_fr).filter(
             Artwork.label_fallback_fr.ilike(search),
             Artwork.label_fallback_fr != 'Titre inconnu',
-            Artwork.label_fallback_fr != ''
+            Artwork.label_fallback_fr != '',
+            Artwork.label_fallback_fr.isnot(None)
         ).distinct().limit(4).all()
     else:
         titles = db.session.query(Artwork.label_fallback_en).filter(
             Artwork.label_fallback_en.ilike(search),
             Artwork.label_fallback_en != 'Unknown title',
-            Artwork.label_fallback_en != ''
+            Artwork.label_fallback_en != '',
+            Artwork.label_fallback_en.isnot(None)
         ).distinct().limit(4).all()
     
     for title in titles:
         suggestions_list.append({'texte': title[0], 'categorie': 'œuvre'})
     
-
-    
-    return jsonify(suggestions_list[:12])
-
+    return jsonify(suggestions_list[:22])
 
 
 # ============================================
