@@ -30,25 +30,28 @@ from flask_wtf.csrf import CSRFProtect
 # 2. CONFIGURATION DE L'APPLICATION
 # ============================================
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'une-cle-secrete-tres-longue-et-difficile-a-deviner-123!'
 
-# Configuration de la base de données
-DB_USER = 'superadmin'
-DB_PASSWORD = 'Lahess!2'
-DB_HOST = 'localhost'
-DB_NAME = 'museumwiki'
+# Configuration de la clé secrète - OBLIGATOIRE
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+if not app.config['SECRET_KEY']:
+    raise ValueError("La variable d'environnement SECRET_KEY n'est pas définie")
+
+# Configuration de la base de données - OBLIGATOIRE
+DB_USER = os.environ.get('DB_USER')
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
+DB_HOST = os.environ.get('DB_HOST')
+DB_NAME = os.environ.get('DB_NAME')
+
+if not all([DB_USER, DB_PASSWORD, DB_HOST, DB_NAME]):
+    raise ValueError("Les variables d'environnement de la base de données ne sont pas toutes définies")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Configuration SendGrid
-try:
-    from config import SENDGRID_API_KEY, FROM_EMAIL, BASE_URL
-except ImportError:
-    # Fallback pour le développement
-    SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY', '')
-    FROM_EMAIL = 'alexandre.brief2.0@gmail.com'
-    BASE_URL = 'http://localhost:5000'
+# Configuration SendGrid - OPTIONNEL (avec fallback pour dev)
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY', '')
+FROM_EMAIL = os.environ.get('FROM_EMAIL', 'alexandre.brief2.0@gmail.com')
+BASE_URL = os.environ.get('BASE_URL', 'http://localhost:5000')
 
 # Configuration logging
 logging.basicConfig(level=logging.INFO)
