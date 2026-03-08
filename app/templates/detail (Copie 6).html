@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ oeuvre.titre }} - {{ site_name }}</title>
+    
+    <!-- ============================================
+         PARTIE 1: STYLES EXTERNES
+         ============================================ -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- ============================================
+         PARTIE 2: STYLES MINIMALISTES ET PROFESSIONNELS
+         ============================================ -->
+    <style>
+        /* --------------------------------------------
+           2.1 VARIABLES - Palette sobre et élégante
+           -------------------------------------------- */
+        :root {
+            --bg: #ffffff;
+            --bg-alt: #f8f9fa;
+            --text: #1a1a1a;
+            --text-light: #6c757d;
+            --text-muted: #adb5bd;
+            --border: #e9ecef;
+            --border-dark: #dee2e6;
+            --accent: #0d6efd;
+            --accent-light: #e7f1ff;
+            --rating: #ffc107;
+            --shadow: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
+            --radius: 0px;  /* Bords carrés pour un look plus institutionnel */
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --------------------------------------------
+           2.2 LAYOUT - Focus sur l'image
+           -------------------------------------------- */
+        .detail-wrapper {
+            flex: 1;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0;
+            width: 100%;
+        }
+
+        /* Hero section avec image en grand */
+        .artwork-hero {
+            width: 100%;
+            background: var(--bg-alt);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 2rem 0 2rem;
+        }
+
+        .artwork-image-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .artwork-image {
+            max-width: 100%;
+            max-height: 70vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            box-shadow: var(--shadow);
+            background: white;
+            transition: opacity 0.3s;
+        }
+
+        .artwork-image:hover {
+            opacity: 0.98;
+        }
+
+        .image-caption {
+            text-align: right;
+            padding: 0.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-bottom: 1px solid var(--border);
+            margin-top: 0.5rem;
+        }
+
+        .image-caption i {
+            margin-right: 0.3rem;
+        }
+
+        /* --------------------------------------------
+           2.3 EN-TÊTE DE L'ŒUVRE - Épuré
+           -------------------------------------------- */
+        .artwork-header {
+            max-width: 800px;
+            margin: 2rem auto 2rem auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .artwork-title {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .artwork-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        .artwork-metadata {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+        }
+
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metadata-item i {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            width: 16px;
+        }
+
+        /* --------------------------------------------
+           2.4 ACTIONS - Discrets et élégants
+           -------------------------------------------- */
+        .artwork-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            background: transparent;
+            border: 1px solid var(--border-dark);
+            color: var(--text);
+            font-size: 0.9rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            border-radius: 30px;
+        }
+
+        .action-btn:hover {
+            background: var(--bg-alt);
+            border-color: var(--text-light);
+        }
+
+        .action-btn i {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        .action-btn.favorite.active {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .action-btn.favorite.active i {
+            color: #dc3545;
+        }
+
+        .action-btn.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .action-btn.primary i {
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: #0b5ed7;
+        }
+
+        /* --------------------------------------------
+           2.5 STATISTIQUES - Discrètes mais claires
+           -------------------------------------------- */
+        .rating-summary {
+            max-width: 400px;
+            margin: 2rem auto;
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+        }
+
+        .rating-number {
+            font-size: 3rem;
+            font-weight: 300;
+            color: var(--text);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-number small {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 300;
+        }
+
+        .rating-stars {
+            color: var(--rating);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-count {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Distribution discrète */
+        .rating-distribution {
+            max-width: 400px;
+            margin: 1rem auto 0;
+            padding: 1rem 0 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .distribution-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .distribution-label {
+            min-width: 35px;
+            color: var(--text-light);
+        }
+
+        .distribution-bar-container {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 0;
+        }
+
+        .distribution-bar {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 0;
+        }
+
+        .distribution-count {
+            min-width: 35px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        /* --------------------------------------------
+           2.6 CONTENU PRINCIPAL - 2 COLONNES ÉLÉGANTES
+           -------------------------------------------- */
+        .content-grid {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 3rem;
+        }
+
+        /* Colonne principale */
+        .main-column {
+            min-width: 0;
+        }
+
+        .info-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .description {
+            color: var(--text);
+            line-height: 1.8;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Fiche technique */
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            background: var(--bg-alt);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .spec-item {
+            font-size: 0.9rem;
+        }
+
+        .spec-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.2rem;
+        }
+
+        .spec-value {
+            color: var(--text);
+            font-weight: 400;
+        }
+
+        .wikidata-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            border-bottom: 1px dotted var(--border);
+            padding-bottom: 0.2rem;
+        }
+
+        .wikidata-link:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Commentaires */
+        .comment-item {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .comment-date {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .comment-content {
+            color: var(--text);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-notes {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .comment-notes i {
+            color: var(--rating);
+            margin-right: 0.2rem;
+        }
+
+        /* Formulaire de commentaire */
+        .comment-form {
+            margin: 2rem 0;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            resize: vertical;
+            background: var(--bg);
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--text-light);
+        }
+
+        .comment-form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .privacy-options {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .privacy-options label {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            background: var(--text);
+            color: white;
+            border: none;
+            padding: 0.6rem 2rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-radius: 30px;
+        }
+
+        .btn-submit:hover {
+            background: #000;
+        }
+
+        /* Colonne latérale */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .sidebar-block {
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            background: var(--bg);
+        }
+
+        .sidebar-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 1.2rem;
+        }
+
+        /* Votre note */
+        .user-rating {
+            text-align: center;
+        }
+
+        .user-stars {
+            display: flex;
+            justify-content: center;
+            gap: 0.3rem;
+            font-size: 1.8rem;
+            color: var(--border-dark);
+            cursor: pointer;
+            margin: 1rem 0;
+        }
+
+        .user-stars .star {
+            transition: color 0.2s;
+        }
+
+        .user-stars .star:hover,
+        .user-stars .star.selected {
+            color: var(--rating);
+        }
+
+        .user-sliders {
+            margin: 1.5rem 0;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .slider-label {
+            min-width: 80px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            text-align: left;
+        }
+
+        .slider {
+            flex: 1;
+            height: 2px;
+            -webkit-appearance: none;
+            background: var(--border);
+            border-radius: 0;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--text);
+            border-radius: 0;
+            cursor: pointer;
+        }
+
+        .slider-value {
+            min-width: 35px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Liste d'œuvres similaires */
+        .similar-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            text-decoration: none;
+            color: inherit;
+            padding: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        .similar-item:hover {
+            background: var(--bg-alt);
+        }
+
+        .similar-image {
+            width: 50px;
+            height: 70px;
+            object-fit: cover;
+            background: var(--bg-alt);
+        }
+
+        .similar-info {
+            flex: 1;
+        }
+
+        .similar-title {
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .similar-artist {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .similar-rating {
+            color: var(--rating);
+            font-size: 0.75rem;
+            margin-top: 0.2rem;
+        }
+
+        /* Login prompt */
+        .login-prompt {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+        }
+
+        .login-prompt i {
+            font-size: 2rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .login-prompt h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-prompt p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .login-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-login {
+            background: var(--text);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+            border-radius: 30px;
+        }
+
+        .btn-login:hover {
+            background: #000;
+        }
+
+        .btn-register {
+            background: transparent;
+            color: var(--text);
+            padding: 0.5rem 1.5rem;
+            text-decoration: none;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+            border-radius: 30px;
+        }
+
+        .btn-register:hover {
+            border-color: var(--text);
+        }
+
+        /* --------------------------------------------
+           2.7 RESPONSIVE
+           -------------------------------------------- */
+        @media (max-width: 992px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .artwork-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .artwork-hero {
+                padding: 1rem 1rem 0 1rem;
+            }
+            
+            .artwork-metadata {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            
+            .tech-specs {
+                grid-template-columns: 1fr;
+            }
+            
+            .login-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         PARTIE 3: NAVBAR (À ADAPTER)
+         ============================================ -->
+    {% include 'navbar.html' %}
+
+    <!-- ============================================
+         PARTIE 4: CONTENU PRINCIPAL - VERSION MUSÉE
+         ============================================ -->
+    <div class="detail-wrapper">
+        
+        <!-- HERO IMAGE - Pleine largeur, focus sur l'œuvre -->
+        <div class="artwork-hero">
+            <div class="artwork-image-container">
+                {% if oeuvre.image_url %}
+                <img src="{{ oeuvre.image_url }}" alt="{{ oeuvre.titre }}" class="artwork-image">
+                <div class="image-caption">
+                    <i class="fas fa-expand"></i> Cliquer sur l'image pour zoomer
+                </div>
+                {% else %}
+                <div style="height: 400px; display: flex; align-items: center; justify-content: center; background: var(--bg-alt); color: var(--text-muted);">
+                    <i class="fas fa-image fa-3x"></i>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- EN-TÊTE TITRE ET MÉTADONNÉES -->
+        <div class="artwork-header">
+            <h1 class="artwork-title">{{ oeuvre.titre or 'Sans titre' }}</h1>
+            <div class="artwork-subtitle">
+                {{ oeuvre.createur or 'Artiste inconnu' }} · {{ oeuvre.inception[:4] if oeuvre.inception else 'Date inconnue' }}
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="artwork-actions">
+                {% if session.user_id %}
+                <div class="action-btn favorite" id="favorite-btn" onclick="toggleFavorite()">
+                    <i class="far fa-heart" id="favorite-icon"></i>
+                    <span>Favori</span>
+                </div>
+                {% endif %}
+                <a href="#" class="action-btn">
+                    <i class="fas fa-share-alt"></i>
+                    <span>Partager</span>
+                </a>
+                {% if oeuvre.url_wikidata %}
+                <a href="{{ oeuvre.url_wikidata }}" target="_blank" class="action-btn">
+                    <i class="fab fa-wikipedia-w"></i>
+                    <span>Wikidata</span>
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- MÉTADONNÉES -->
+            <div class="artwork-metadata">
+                <span class="metadata-item">
+                    <i class="fas fa-calendar"></i> {{ oeuvre.inception[:4] if oeuvre.inception else 'Date inconnue' }}
+                </span>
+                <span class="metadata-item">
+                    <i class="fas fa-building"></i> {{ oeuvre.lieu or 'Lieu inconnu' }}
+                </span>
+                <span class="metadata-item">
+                    <i class="fas fa-tag"></i> {{ oeuvre.instance_of or 'Type inconnu' }}
+                </span>
+                {% if oeuvre.dimensions %}
+                <span class="metadata-item">
+                    <i class="fas fa-ruler"></i> {{ oeuvre.dimensions }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- STATISTIQUES (discrètes) -->
+        <div class="rating-summary">
+            <div class="rating-number" id="avg-rating">— <small>/5</small></div>
+            <div class="rating-stars" id="avg-stars">☆☆☆☆☆</div>
+            <div class="rating-count" id="total-ratings">0 avis</div>
+            
+            <div class="rating-distribution" id="distribution-bars">
+                <!-- Distribution chargée dynamiquement -->
+            </div>
+        </div>
+
+        <!-- GRILLE DE CONTENU -->
+        <div class="content-grid">
+            <!-- COLONNE PRINCIPALE -->
+            <div class="main-column">
+                <!-- Description -->
+                <div class="info-section">
+                    <h2 class="section-title">Description</h2>
+                    <div class="description">
+                        {{ oeuvre.description or 'Aucune description disponible pour cette œuvre.' }}
+                    </div>
+                </div>
+
+                <!-- Fiche technique -->
+                <div class="info-section">
+                    <h2 class="section-title">Détails</h2>
+                    <div class="tech-specs">
+                        <div class="spec-item">
+                            <div class="spec-label">Artiste</div>
+                            <div class="spec-value">{{ oeuvre.createur or 'Inconnu' }}</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Date</div>
+                            <div class="spec-value">{{ oeuvre.inception[:4] if oeuvre.inception else 'Inconnue' }}</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Musée / Lieu</div>
+                            <div class="spec-value">{{ oeuvre.lieu or 'Inconnu' }}</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Type</div>
+                            <div class="spec-value">{{ oeuvre.instance_of or 'Non spécifié' }}</div>
+                        </div>
+                        {% if oeuvre.materiau %}
+                        <div class="spec-item">
+                            <div class="spec-label">Matériau</div>
+                            <div class="spec-value">{{ oeuvre.materiau }}</div>
+                        </div>
+                        {% endif %}
+                        {% if oeuvre.dimensions %}
+                        <div class="spec-item">
+                            <div class="spec-label">Dimensions</div>
+                            <div class="spec-value">{{ oeuvre.dimensions }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Commentaires -->
+                <div class="info-section">
+                    <h2 class="section-title">Commentaires</h2>
+                    
+                    {% if session.user_id %}
+                    <!-- Formulaire de commentaire -->
+                    <div class="comment-form">
+                        <textarea id="commentaire" rows="3" placeholder="Écrire un commentaire..."></textarea>
+                        <div class="comment-form-footer">
+                            <div class="privacy-options">
+                                <label>
+                                    <input type="radio" name="visibility" value="public" checked> 
+                                    <span>Public</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="visibility" value="private"> 
+                                    <span>Privé</span>
+                                </label>
+                            </div>
+                            <button class="btn-submit" onclick="saveComment()">Publier</button>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Liste des commentaires -->
+                    <div id="comments-container">
+                        <!-- Chargé dynamiquement -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLONNE LATÉRALE -->
+            <div class="sidebar">
+                
+                {% if session.user_id %}
+                <!-- Votre avis -->
+                <div class="sidebar-block">
+                    <div class="sidebar-title">Votre note</div>
+                    <div class="user-rating">
+                        <div class="user-stars" id="user-stars">
+                            <span class="star" data-value="5">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="1">★</span>
+                        </div>
+                        <input type="hidden" id="note-globale" value="0">
+                        
+                        <div class="user-sliders">
+                            <div class="slider-row">
+                                <span class="slider-label">Technique</span>
+                                <input type="range" id="note-technique" class="slider" min="0" max="5" step="0.5" value="0">
+                                <span class="slider-value" id="technique-value">0</span>
+                            </div>
+                            <div class="slider-row">
+                                <span class="slider-label">Originalité</span>
+                                <input type="range" id="note-originalite" class="slider" min="0" max="5" step="0.5" value="0">
+                                <span class="slider-value" id="originalite-value">0</span>
+                            </div>
+                            <div class="slider-row">
+                                <span class="slider-label">Émotion</span>
+                                <input type="range" id="note-emotion" class="slider" min="0" max="5" step="0.5" value="0">
+                                <span class="slider-value" id="emotion-value">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Œuvres similaires -->
+                <div class="sidebar-block">
+                    <div class="sidebar-title">Œuvres similaires</div>
+                    <div class="similar-list">
+                        <a href="#" class="similar-item">
+                            <img src="https://via.placeholder.com/50x70" alt="" class="similar-image">
+                            <div class="similar-info">
+                                <div class="similar-title">Les Nymphéas</div>
+                                <div class="similar-artist">Claude Monet</div>
+                                <div class="similar-rating">★★★★☆</div>
+                            </div>
+                        </a>
+                        <a href="#" class="similar-item">
+                            <img src="https://via.placeholder.com/50x70" alt="" class="similar-image">
+                            <div class="similar-info">
+                                <div class="similar-title">Le Déjeuner des canotiers</div>
+                                <div class="similar-artist">Pierre-Auguste Renoir</div>
+                                <div class="similar-rating">★★★★★</div>
+                            </div>
+                        </a>
+                        <a href="#" class="similar-item">
+                            <img src="https://via.placeholder.com/50x70" alt="" class="similar-image">
+                            <div class="similar-info">
+                                <div class="similar-title">La Nuit étoilée</div>
+                                <div class="similar-artist">Vincent van Gogh</div>
+                                <div class="similar-rating">★★★★★</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if not session.user_id %}
+        <!-- CONNEXION (si non connecté) -->
+        <div style="max-width: 1200px; margin: 2rem auto; padding: 0 2rem;">
+            <div class="login-prompt">
+                <i class="far fa-comment"></i>
+                <h3>Participer à la discussion</h3>
+                <p>Connectez-vous pour noter et commenter cette œuvre</p>
+                <div class="login-buttons">
+                    <a href="/login?next={{ request.path }}" class="btn-login">Se connecter</a>
+                    <a href="/register?next={{ request.path }}" class="btn-register">Créer un compte</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ============================================
+         PARTIE 5: FOOTER
+         ============================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ============================================
+         PARTIE 6: SCRIPTS (simplifiés)
+         ============================================ -->
+    <script>
+        const artworkId = '{{ oeuvre.id or oeuvre.id_q }}';
+        let saveTimeout;
+
+        // Favoris
+        async function checkFavorite() {
+            {% if session.user_id %}
+            try {
+                const res = await fetch(`/api/favorite/check/${artworkId}`);
+                const data = await res.json();
+                const btn = document.getElementById('favorite-btn');
+                const icon = document.getElementById('favorite-icon');
+                if (data.favorite) {
+                    btn.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                }
+            } catch (e) { console.error(e); }
+            {% endif %}
+        }
+
+        async function toggleFavorite() {
+            {% if not session.user_id %} return; {% endif %}
+            const btn = document.getElementById('favorite-btn');
+            try {
+                const res = await fetch('/api/favorite/toggle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ artwork_id: artworkId })
+                });
+                const data = await res.json();
+                const icon = document.getElementById('favorite-icon');
+                if (data.favorite) {
+                    btn.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                } else {
+                    btn.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        // Étoiles utilisateur
+        function initUserStars() {
+            const stars = document.querySelectorAll('#user-stars .star');
+            const hidden = document.getElementById('note-globale');
+            if (!stars.length || !hidden) return;
+            
+            stars.forEach(s => {
+                s.addEventListener('click', function() {
+                    const val = parseFloat(this.dataset.value);
+                    if (val === parseFloat(hidden.value)) {
+                        hidden.value = 0;
+                        stars.forEach(ss => ss.classList.remove('selected'));
+                    } else {
+                        hidden.value = val;
+                        stars.forEach(ss => {
+                            ss.classList.toggle('selected', parseFloat(ss.dataset.value) <= val);
+                        });
+                    }
+                    autoSaveRating();
+                });
+            });
+        }
+
+        // Sliders
+        function initSliders() {
+            const sliders = [
+                { id: 'note-technique', display: 'technique-value' },
+                { id: 'note-originalite', display: 'originalite-value' },
+                { id: 'note-emotion', display: 'emotion-value' }
+            ];
+            
+            sliders.forEach(s => {
+                const slider = document.getElementById(s.id);
+                const disp = document.getElementById(s.display);
+                if (!slider || !disp) return;
+                
+                const update = () => {
+                    let val = parseFloat(slider.value);
+                    disp.textContent = val;
+                    const percent = (val / 5) * 100;
+                    slider.style.background = `linear-gradient(90deg, var(--text) 0%, var(--text) ${percent}%, var(--border) ${percent}%, var(--border) 100%)`;
+                };
+                
+                update();
+                slider.addEventListener('input', update);
+                slider.addEventListener('change', autoSaveRating);
+            });
+        }
+
+        function autoSaveRating() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveRating, 800);
+        }
+
+        async function saveRating() {
+            {% if not session.user_id %} return; {% endif %}
+            try {
+                await fetch('/api/rating/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        artwork_id: artworkId,
+                        note_globale: parseFloat(document.getElementById('note-globale').value),
+                        note_technique: parseFloat(document.getElementById('note-technique').value),
+                        note_originalite: parseFloat(document.getElementById('note-originalite').value),
+                        note_emotion: parseFloat(document.getElementById('note-emotion').value)
+                    })
+                });
+                loadStats();
+            } catch (e) { console.error(e); }
+        }
+
+        async function saveComment() {
+            {% if not session.user_id %} return; {% endif %}
+            const comment = document.getElementById('commentaire').value;
+            if (!comment.trim()) return;
+            
+            const visibility = document.querySelector('input[name="visibility"]:checked').value;
+            
+            try {
+                await fetch('/api/rating/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        artwork_id: artworkId,
+                        note_globale: parseFloat(document.getElementById('note-globale').value),
+                        note_technique: parseFloat(document.getElementById('note-technique').value),
+                        note_originalite: parseFloat(document.getElementById('note-originalite').value),
+                        note_emotion: parseFloat(document.getElementById('note-emotion').value),
+                        commentaire: visibility === 'public' ? comment : ''
+                    })
+                });
+                document.getElementById('commentaire').value = '';
+                loadComments();
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadUserRating() {
+            {% if session.user_id %}
+            try {
+                const res = await fetch(`/api/rating/get/${artworkId}`);
+                const data = await res.json();
+                if (!data.has_rating) return;
+                
+                const r = data.rating;
+                document.getElementById('note-globale').value = r.note_globale;
+                
+                document.querySelectorAll('#user-stars .star').forEach(s => {
+                    s.classList.toggle('selected', parseFloat(s.dataset.value) <= r.note_globale);
+                });
+                
+                document.getElementById('note-technique').value = r.note_technique;
+                document.getElementById('technique-value').textContent = r.note_technique;
+                document.getElementById('note-originalite').value = r.note_originalite;
+                document.getElementById('originalite-value').textContent = r.note_originalite;
+                document.getElementById('note-emotion').value = r.note_emotion;
+                document.getElementById('emotion-value').textContent = r.note_emotion;
+            } catch (e) { console.error(e); }
+            {% endif %}
+        }
+
+        async function loadStats() {
+            try {
+                const res = await fetch(`/api/artwork/stats/${artworkId}`);
+                const stats = await res.json();
+                
+                document.getElementById('avg-rating').innerHTML = stats.moyenne_globale.toFixed(1) + ' <small>/5</small>';
+                document.getElementById('total-ratings').textContent = stats.total_notes + ' avis';
+                
+                const stars = document.getElementById('avg-stars');
+                const avg = stats.moyenne_globale;
+                let html = '';
+                for (let i = 0; i < 5; i++) {
+                    if (avg >= i + 1) html += '★';
+                    else if (avg >= i + 0.5) html += '½';
+                    else html += '☆';
+                }
+                stars.textContent = html;
+
+                // Distribution
+                const distContainer = document.getElementById('distribution-bars');
+                if (stats.distribution) {
+                    let distHtml = '';
+                    for (let i = 5; i >= 1; i--) {
+                        const count = stats.distribution[i] || 0;
+                        const percentage = stats.total_notes > 0 ? (count / stats.total_notes * 100) : 0;
+                        distHtml += `
+                            <div class="distribution-row">
+                                <span class="distribution-label">${i}★</span>
+                                <div class="distribution-bar-container">
+                                    <div class="distribution-bar" style="width: ${percentage}%"></div>
+                                </div>
+                                <span class="distribution-count">${count}</span>
+                            </div>
+                        `;
+                    }
+                    distContainer.innerHTML = distHtml;
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadComments() {
+            try {
+                const res = await fetch(`/api/comments/${artworkId}`);
+                const comments = await res.json();
+                const container = document.getElementById('comments-container');
+                
+                if (!comments.length) {
+                    container.innerHTML = '<div style="color: var(--text-muted); padding: 2rem 0; text-align: center;">Aucun commentaire pour le moment.</div>';
+                    return;
+                }
+                
+                container.innerHTML = comments.map(c => `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <span class="comment-author">${c.username}</span>
+                            <span class="comment-date">${c.created_at}</span>
+                        </div>
+                        <div class="comment-content">${c.commentaire}</div>
+                        <div class="comment-notes">
+                            <span><i class="fas fa-star"></i> ${c.note_globale}</span>
+                            <span><i class="fas fa-paint-brush"></i> ${c.notes.technique}</span>
+                            <span><i class="fas fa-lightbulb"></i> ${c.notes.originalite}</span>
+                            <span><i class="fas fa-heart"></i> ${c.notes.emotion}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initUserStars();
+            initSliders();
+            checkFavorite();
+            loadUserRating();
+            loadStats();
+            loadComments();
+        });
+    </script>
+</body>
+</html>

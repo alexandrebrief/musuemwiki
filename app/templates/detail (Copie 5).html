@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ oeuvre.titre }} - {{ site_name }}</title>
+    
+    <!-- ============================================
+         PARTIE 1: STYLES EXTERNES
+         ============================================ -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- ============================================
+         PARTIE 2: STYLES INSPIRÉS DE GOODREADS/BACKLOGGD/RYM
+         ============================================ -->
+    <style>
+        /* --------------------------------------------
+           2.1 VARIABLES - Design system moderne
+           -------------------------------------------- */
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --bg-hover: #2d3a4f;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-soft: rgba(59, 130, 246, 0.1);
+            --rating: #fbbf24;
+            --rating-bg: rgba(251, 191, 36, 0.1);
+            --success: #10b981;
+            --border: rgba(148, 163, 184, 0.1);
+            --border-hover: rgba(148, 163, 184, 0.2);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 16px;
+            --radius-sm: 12px;
+            --radius-lg: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --------------------------------------------
+           2.2 LAYOUT PRINCIPAL - À LA GOODREADS
+           -------------------------------------------- */
+        .detail-wrapper {
+            flex: 1;
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
+        /* Navigation secondaire (comme sur RYM) */
+        .secondary-nav {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .secondary-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .secondary-nav a:hover {
+            color: var(--text-primary);
+        }
+
+        .secondary-nav a.active {
+            color: var(--accent);
+        }
+
+        .secondary-nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        /* --------------------------------------------
+           2.3 EN-TÊTE DE L'ŒUVRE
+           -------------------------------------------- */
+        .artwork-header {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        /* Couverture (comme Goodreads) */
+        .cover-container {
+            position: relative;
+        }
+
+        .cover-image {
+            width: 100%;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.2s;
+            background: var(--bg-hover);
+            aspect-ratio: 2/3;
+            object-fit: cover;
+        }
+
+        .cover-image:hover {
+            transform: translateY(-4px);
+        }
+
+        .cover-placeholder {
+            width: 100%;
+            aspect-ratio: 2/3;
+            background: linear-gradient(145deg, var(--bg-hover), var(--bg-secondary));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 3rem;
+        }
+
+        /* Badges sur la couverture */
+        .cover-badges {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .badge-format {
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Infos principales */
+        .artwork-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .artwork-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .artwork-metadata {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .metadata-item i {
+            color: var(--accent);
+            font-size: 0.8rem;
+        }
+
+        .metadata-item a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .metadata-item a:hover {
+            color: var(--accent);
+        }
+
+        /* Actions rapides (comme sur Backloggd) */
+        .quick-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .action-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .action-btn.favorite {
+            color: #f43f5e;
+        }
+
+        .action-btn.favorite.active {
+            background: rgba(244, 63, 94, 0.1);
+            border-color: #f43f5e;
+        }
+
+        /* --------------------------------------------
+           2.4 STATISTIQUES DE NOTES (COMME RYM)
+           -------------------------------------------- */
+        .rating-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .rating-distribution {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .rating-distribution h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .distribution-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .distribution-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .distribution-label {
+            min-width: 35px;
+            color: var(--text-secondary);
+        }
+
+        .distribution-bar-container {
+            flex: 1;
+            height: 8px;
+            background: var(--bg-hover);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .distribution-bar {
+            height: 100%;
+            background: var(--rating);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .distribution-count {
+            min-width: 40px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .rating-summary {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .average-rating {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--rating);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-stars-large {
+            color: var(--rating);
+            font-size: 1.5rem;
+            letter-spacing: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-count {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* --------------------------------------------
+           2.5 SECTION PRINCIPALE (2 COLONNES)
+           -------------------------------------------- */
+        .main-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Colonne principale - Description et commentaires */
+        .description-block {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .description-block h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .description-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* Commentaires (comme sur Goodreads) */
+        .comments-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .comments-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .comments-header span {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .comment-form {
+            margin-bottom: 2rem;
+            background: var(--bg-hover);
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .comment-form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .comment-privacy {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .comment-privacy label {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .comment-item {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.2rem;
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-user {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comment-user i {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .comment-user span {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .comment-date {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .comment-content {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-ratings {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .comment-ratings i {
+            color: var(--rating);
+            margin-right: 0.2rem;
+        }
+
+        /* Colonne latérale - Infos et actions */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-block {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.2rem;
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-block h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Liste des critiques (comme sur Backloggd) */
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .review-item {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .review-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+        .review-info {
+            flex: 1;
+        }
+
+        .review-user {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .review-rating {
+            color: var(--rating);
+            font-size: 0.75rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .review-preview {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        /* Tags et catégories */
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background: var(--bg-hover);
+            color: var(--text-secondary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .tag:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Artworks similaires (comme sur RYM) */
+        .similar-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .similar-item {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+            transition: background 0.2s;
+        }
+
+        .similar-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .similar-image {
+            width: 40px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            background: var(--bg-hover);
+        }
+
+        .similar-info {
+            flex: 1;
+        }
+
+        .similar-title {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .similar-artist {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .similar-rating {
+            color: var(--rating);
+            font-size: 0.7rem;
+        }
+
+        /* --------------------------------------------
+           2.6 VOTRE AVIS (QUAND CONNECTÉ)
+           -------------------------------------------- */
+        .user-rating-block {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1.2rem;
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .user-rating-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .user-rating-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-stars {
+            display: flex;
+            gap: 0.3rem;
+            font-size: 1.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .user-stars .star {
+            transition: all 0.2s;
+        }
+
+        .user-stars .star:hover,
+        .user-stars .star.selected {
+            color: var(--rating);
+            transform: scale(1.1);
+        }
+
+        .user-sliders {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        .user-slider-row {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .user-slider-label {
+            min-width: 80px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .user-slider {
+            flex: 1;
+            height: 4px;
+            -webkit-appearance: none;
+            background: linear-gradient(90deg, var(--rating) 0%, var(--rating) var(--value-percent, 0%), var(--bg-hover) var(--value-percent, 0%), var(--bg-hover) 100%);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .user-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--rating);
+            cursor: pointer;
+            border: 2px solid var(--bg-secondary);
+        }
+
+        .user-slider-value {
+            min-width: 35px;
+            font-size: 0.8rem;
+            color: var(--rating);
+            font-weight: 600;
+        }
+
+        /* --------------------------------------------
+           2.7 LOGIN PROMPT (COMME SUR GOODREADS)
+           -------------------------------------------- */
+        .login-prompt-card {
+            background: linear-gradient(145deg, var(--bg-secondary), var(--bg-hover));
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+
+        .login-prompt-card i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .login-prompt-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-prompt-card p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .login-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-login {
+            background: var(--accent);
+            color: white;
+            padding: 0.6rem 2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-login:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-register {
+            background: transparent;
+            color: var(--text-primary);
+            padding: 0.6rem 2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .btn-register:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+        }
+
+        /* --------------------------------------------
+           2.8 RESPONSIVE
+           -------------------------------------------- */
+        @media (max-width: 1024px) {
+            .main-content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .rating-stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .artwork-header {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .cover-container {
+                max-width: 200px;
+                margin: 0 auto;
+            }
+            
+            .artwork-metadata {
+                justify-content: center;
+            }
+            
+            .quick-actions {
+                justify-content: center;
+            }
+            
+            .login-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         PARTIE 3: NAVBAR
+         ============================================ -->
+    {% include 'navbar.html' %}
+
+    <!-- ============================================
+         PARTIE 4: CONTENU PRINCIPAL
+         ============================================ -->
+    <div class="detail-wrapper">
+        <!-- Navigation secondaire (comme sur RYM) -->
+        <div class="secondary-nav">
+            <a href="#" class="active">À propos</a>
+            <a href="#">Critiques</a>
+            <a href="#">Œuvres similaires</a>
+            <a href="#">Collections</a>
+            <a href="#">Historique</a>
+        </div>
+
+        <!-- EN-TÊTE AVEC COUVERTURE (COMME GOODREADS) -->
+        <div class="artwork-header">
+            <div class="cover-container">
+                {% if oeuvre.image_url %}
+                <img src="{{ oeuvre.image_url }}" alt="{{ oeuvre.titre }}" class="cover-image">
+                <div class="cover-badges">
+                    <span class="badge-format">
+                        <i class="fas fa-palette"></i> Peinture
+                    </span>
+                </div>
+                {% else %}
+                <div class="cover-placeholder">
+                    <i class="fas fa-image"></i>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="artwork-info">
+                <h1 class="artwork-title">{{ oeuvre.titre or 'Sans titre' }}</h1>
+                
+                <div class="artwork-metadata">
+                    <span class="metadata-item">
+                        <i class="fas fa-user"></i>
+                        <a href="#">{{ oeuvre.createur or 'Artiste inconnu' }}</a>
+                    </span>
+                    <span class="metadata-item">
+                        <i class="fas fa-calendar"></i>
+                        {{ oeuvre.inception[:4] if oeuvre.inception else 'Date inconnue' }}
+                    </span>
+                    <span class="metadata-item">
+                        <i class="fas fa-building"></i>
+                        {{ oeuvre.lieu or 'Lieu inconnu' }}
+                    </span>
+                    <span class="metadata-item">
+                        <i class="fas fa-tag"></i>
+                        {{ oeuvre.instance_of or 'Type inconnu' }}
+                    </span>
+                </div>
+
+                <!-- Actions rapides (comme sur Backloggd) -->
+                <div class="quick-actions">
+                    {% if session.user_id %}
+                    <div class="action-btn favorite" id="favorite-btn" onclick="toggleFavorite()">
+                        <i class="far fa-heart" id="favorite-icon"></i>
+                        <span>Favori</span>
+                    </div>
+                    <div class="action-btn" onclick="document.getElementById('review-form').scrollIntoView({behavior: 'smooth'})">
+                        <i class="fas fa-pen"></i>
+                        <span>Écrire une critique</span>
+                    </div>
+                    <div class="action-btn">
+                        <i class="fas fa-share"></i>
+                        <span>Partager</span>
+                    </div>
+                    {% else %}
+                    <a href="/login?next={{ request.path }}" class="action-btn primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Se connecter pour noter</span>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- STATISTIQUES DE NOTES (COMME RYM) -->
+        <div class="rating-stats-grid">
+            <div class="rating-distribution">
+                <h3>Distribution des notes</h3>
+                <div class="distribution-bars" id="distribution-bars">
+                    <!-- Chargé dynamiquement -->
+                </div>
+            </div>
+
+            <div class="rating-summary">
+                <div class="average-rating" id="avg-rating">-</div>
+                <div class="rating-stars-large" id="avg-stars">☆☆☆☆☆</div>
+                <div class="rating-count" id="total-ratings">Basé sur 0 notes</div>
+            </div>
+        </div>
+
+        <!-- GRILLE PRINCIPALE 2 COLONNES -->
+        <div class="main-content-grid">
+            <!-- COLONNE PRINCIPALE -->
+            <div>
+                <!-- Description de l'œuvre -->
+                <div class="description-block">
+                    <h2>À propos de cette œuvre</h2>
+                    <div class="description-content">
+                        {{ oeuvre.description or 'Aucune description disponible pour cette œuvre.' }}
+                    </div>
+                    {% if oeuvre.url_wikidata %}
+                    <a href="{{ oeuvre.url_wikidata }}" target="_blank" style="display: inline-block; margin-top: 1rem; color: var(--accent); text-decoration: none; font-size: 0.9rem;">
+                        <i class="fab fa-wikipedia-w"></i> Voir sur Wikidata
+                    </a>
+                    {% endif %}
+                </div>
+
+                {% if session.user_id %}
+                <!-- SECTION VOTRE AVIS -->
+                <div class="user-rating-block" id="review-form">
+                    <div class="user-rating-header">
+                        <h3>Votre avis</h3>
+                        <div class="user-stars" id="user-stars">
+                            <span class="star" data-value="5">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="1">★</span>
+                        </div>
+                    </div>
+
+                    <div class="user-sliders">
+                        <div class="user-slider-row">
+                            <span class="user-slider-label">Technique</span>
+                            <input type="range" id="note-technique" class="user-slider" min="0" max="5" step="0.5" value="0">
+                            <span class="user-slider-value" id="technique-value">0/5</span>
+                        </div>
+                        <div class="user-slider-row">
+                            <span class="user-slider-label">Originalité</span>
+                            <input type="range" id="note-originalite" class="user-slider" min="0" max="5" step="0.5" value="0">
+                            <span class="user-slider-value" id="originalite-value">0/5</span>
+                        </div>
+                        <div class="user-slider-row">
+                            <span class="user-slider-label">Émotion</span>
+                            <input type="range" id="note-emotion" class="user-slider" min="0" max="5" step="0.5" value="0">
+                            <span class="user-slider-value" id="emotion-value">0/5</span>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="note-globale" value="0">
+                </div>
+                {% endif %}
+
+                <!-- SECTION COMMENTAIRES (COMME GOODREADS) -->
+                <div class="comments-section">
+                    <div class="comments-header">
+                        <h2>Commentaires</h2>
+                        <span id="comments-count">0 commentaires</span>
+                    </div>
+
+                    {% if session.user_id %}
+                    <!-- Formulaire de commentaire -->
+                    <div class="comment-form">
+                        <textarea id="commentaire" rows="3" placeholder="Partagez votre ressenti sur cette œuvre..."></textarea>
+                        <div class="comment-form-footer">
+                            <div class="comment-privacy">
+                                <label>
+                                    <input type="radio" name="visibility" value="public" checked> 
+                                    <i class="fas fa-globe"></i> Public
+                                </label>
+                                <label>
+                                    <input type="radio" name="visibility" value="private"> 
+                                    <i class="fas fa-lock"></i> Privé
+                                </label>
+                            </div>
+                            <button class="btn-submit" onclick="saveComment()">Publier</button>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Liste des commentaires -->
+                    <div class="comments-list" id="comments-container">
+                        <!-- Chargé dynamiquement -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLONNE LATÉRALE -->
+            <div class="sidebar">
+                <!-- Dernières critiques (comme sur Backloggd) -->
+                <div class="sidebar-block">
+                    <h3>Dernières critiques</h3>
+                    <div class="review-list" id="recent-reviews">
+                        <!-- Chargé dynamiquement -->
+                    </div>
+                </div>
+
+                <!-- Tags / Catégories -->
+                <div class="sidebar-block">
+                    <h3>Tags</h3>
+                    <div class="tags-list">
+                        <a href="#" class="tag">Peinture</a>
+                        <a href="#" class="tag">Classique</a>
+                        <a href="#" class="tag">Musée</a>
+                        <a href="#" class="tag">XIXe siècle</a>
+                        <a href="#" class="tag">Impressionnisme</a>
+                    </div>
+                </div>
+
+                <!-- Œuvres similaires (comme sur RYM) -->
+                <div class="sidebar-block">
+                    <h3>Œuvres similaires</h3>
+                    <div class="similar-list">
+                        <a href="#" class="similar-item">
+                            <img src="https://via.placeholder.com/40x60" alt="" class="similar-image">
+                            <div class="similar-info">
+                                <div class="similar-title">Les Nymphéas</div>
+                                <div class="similar-artist">Claude Monet</div>
+                                <div class="similar-rating">★★★★☆</div>
+                            </div>
+                        </a>
+                        <a href="#" class="similar-item">
+                            <img src="https://via.placeholder.com/40x60" alt="" class="similar-image">
+                            <div class="similar-info">
+                                <div class="similar-title">Le Déjeuner des canotiers</div>
+                                <div class="similar-artist">Pierre-Auguste Renoir</div>
+                                <div class="similar-rating">★★★★★</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if not session.user_id %}
+        <!-- BLOC CONNEXION (COMME GOODREADS) -->
+        <div class="login-prompt-card">
+            <i class="far fa-comment-dots"></i>
+            <h3>Rejoignez la communauté</h3>
+            <p>Connectez-vous pour noter, commenter et partager vos découvertes</p>
+            <div class="login-buttons">
+                <a href="/login?next={{ request.path }}" class="btn-login">Se connecter</a>
+                <a href="/register?next={{ request.path }}" class="btn-register">Créer un compte</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ============================================
+         PARTIE 5: FOOTER
+         ============================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ============================================
+         PARTIE 6: SCRIPTS
+         ============================================ -->
+    <script>
+        // --------------------------------------------
+        // VARIABLES GLOBALES
+        // --------------------------------------------
+        const artworkId = '{{ oeuvre.id or oeuvre.id_q }}';
+        let saveTimeout;
+
+        // --------------------------------------------
+        // FAVORIS
+        // --------------------------------------------
+        async function checkFavorite() {
+            {% if session.user_id %}
+            try {
+                const res = await fetch(`/api/favorite/check/${artworkId}`);
+                const data = await res.json();
+                const btn = document.getElementById('favorite-btn');
+                const icon = document.getElementById('favorite-icon');
+                if (data.favorite) {
+                    btn.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                }
+            } catch (e) { console.error(e); }
+            {% endif %}
+        }
+
+        async function toggleFavorite() {
+            {% if not session.user_id %} return; {% endif %}
+            
+            const btn = document.getElementById('favorite-btn');
+            btn.style.opacity = '0.5';
+            
+            try {
+                const res = await fetch('/api/favorite/toggle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ artwork_id: artworkId })
+                });
+                const data = await res.json();
+                const icon = document.getElementById('favorite-icon');
+                
+                if (data.favorite) {
+                    btn.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                } else {
+                    btn.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                }
+            } catch (e) { console.error(e); } finally {
+                btn.style.opacity = '1';
+            }
+        }
+
+        // --------------------------------------------
+        // ÉTOILES UTILISATEUR
+        // --------------------------------------------
+        function initUserStars() {
+            const stars = document.querySelectorAll('#user-stars .star');
+            const hidden = document.getElementById('note-globale');
+            if (!stars.length || !hidden) return;
+            
+            stars.forEach(s => {
+                s.addEventListener('click', function() {
+                    const val = parseFloat(this.dataset.value);
+                    if (val === parseFloat(hidden.value)) {
+                        hidden.value = 0;
+                        stars.forEach(ss => ss.classList.remove('selected'));
+                    } else {
+                        hidden.value = val;
+                        stars.forEach(ss => {
+                            ss.classList.toggle('selected', parseFloat(ss.dataset.value) <= val);
+                        });
+                    }
+                    autoSaveRating();
+                });
+            });
+        }
+
+        // --------------------------------------------
+        // CURSEURS
+        // --------------------------------------------
+        function initSliders() {
+            const sliders = [
+                { id: 'note-technique', display: 'technique-value' },
+                { id: 'note-originalite', display: 'originalite-value' },
+                { id: 'note-emotion', display: 'emotion-value' }
+            ];
+            
+            sliders.forEach(s => {
+                const slider = document.getElementById(s.id);
+                const disp = document.getElementById(s.display);
+                if (!slider || !disp) return;
+                
+                const update = () => {
+                    let val = parseFloat(slider.value);
+                    disp.textContent = val === Math.floor(val) ? val + '/5' : val.toFixed(1) + '/5';
+                    
+                    const percent = (val / 5) * 100;
+                    slider.style.setProperty('--value-percent', percent + '%');
+                };
+                
+                update();
+                slider.addEventListener('input', update);
+                slider.addEventListener('change', autoSaveRating);
+            });
+        }
+
+        function autoSaveRating() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveRating, 800);
+        }
+
+        async function saveRating() {
+            {% if not session.user_id %} return; {% endif %}
+            try {
+                await fetch('/api/rating/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        artwork_id: artworkId,
+                        note_globale: parseFloat(document.getElementById('note-globale').value),
+                        note_technique: parseFloat(document.getElementById('note-technique').value),
+                        note_originalite: parseFloat(document.getElementById('note-originalite').value),
+                        note_emotion: parseFloat(document.getElementById('note-emotion').value),
+                        commentaire: document.getElementById('commentaire')?.value || ''
+                    })
+                });
+                loadStats();
+                loadComments();
+            } catch (e) { console.error(e); }
+        }
+
+        // --------------------------------------------
+        // COMMENTAIRES
+        // --------------------------------------------
+        async function saveComment() {
+            {% if not session.user_id %} return; {% endif %}
+            
+            const comment = document.getElementById('commentaire').value;
+            if (!comment.trim()) { alert('Écrivez un commentaire.'); return; }
+            
+            const visibility = document.querySelector('input[name="visibility"]:checked').value;
+            
+            try {
+                const res = await fetch('/api/rating/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        artwork_id: artworkId,
+                        note_globale: parseFloat(document.getElementById('note-globale').value),
+                        note_technique: parseFloat(document.getElementById('note-technique').value),
+                        note_originalite: parseFloat(document.getElementById('note-originalite').value),
+                        note_emotion: parseFloat(document.getElementById('note-emotion').value),
+                        commentaire: visibility === 'public' ? comment : ''
+                    })
+                });
+                
+                if (res.ok) {
+                    document.getElementById('commentaire').value = '';
+                    loadComments();
+                    loadStats();
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        // --------------------------------------------
+        // CHARGEMENT DES DONNÉES
+        // --------------------------------------------
+        async function loadUserRating() {
+            {% if session.user_id %}
+            try {
+                const res = await fetch(`/api/rating/get/${artworkId}`);
+                const data = await res.json();
+                if (!data.has_rating) return;
+                
+                const r = data.rating;
+                document.getElementById('note-globale').value = r.note_globale;
+                
+                document.querySelectorAll('#user-stars .star').forEach(s => {
+                    s.classList.toggle('selected', parseFloat(s.dataset.value) <= r.note_globale);
+                });
+                
+                document.getElementById('note-technique').value = r.note_technique;
+                document.getElementById('technique-value').textContent = r.note_technique === Math.floor(r.note_technique) ? r.note_technique + '/5' : r.note_technique.toFixed(1) + '/5';
+                
+                document.getElementById('note-originalite').value = r.note_originalite;
+                document.getElementById('originalite-value').textContent = r.note_originalite === Math.floor(r.note_originalite) ? r.note_originalite + '/5' : r.note_originalite.toFixed(1) + '/5';
+                
+                document.getElementById('note-emotion').value = r.note_emotion;
+                document.getElementById('emotion-value').textContent = r.note_emotion === Math.floor(r.note_emotion) ? r.note_emotion + '/5' : r.note_emotion.toFixed(1) + '/5';
+            } catch (e) { console.error(e); }
+            {% endif %}
+        }
+
+        async function loadStats() {
+            try {
+                const res = await fetch(`/api/artwork/stats/${artworkId}`);
+                const stats = await res.json();
+                
+                document.getElementById('avg-rating').textContent = stats.moyenne_globale.toFixed(1);
+                document.getElementById('total-ratings').textContent = `Basé sur ${stats.total_notes} note${stats.total_notes > 1 ? 's' : ''}`;
+                
+                const stars = document.getElementById('avg-stars');
+                const avg = stats.moyenne_globale;
+                let html = '';
+                for (let i = 0; i < 5; i++) {
+                    if (avg >= i + 1) html += '★';
+                    else if (avg >= i + 0.5) html += '½';
+                    else html += '☆';
+                }
+                stars.textContent = html;
+
+                // Distribution
+                const distContainer = document.getElementById('distribution-bars');
+                if (stats.distribution) {
+                    let distHtml = '';
+                    for (let i = 5; i >= 1; i--) {
+                        const count = stats.distribution[i] || 0;
+                        const percentage = stats.total_notes > 0 ? (count / stats.total_notes * 100) : 0;
+                        distHtml += `
+                            <div class="distribution-row">
+                                <span class="distribution-label">${i}★</span>
+                                <div class="distribution-bar-container">
+                                    <div class="distribution-bar" style="width: ${percentage}%"></div>
+                                </div>
+                                <span class="distribution-count">${count}</span>
+                            </div>
+                        `;
+                    }
+                    distContainer.innerHTML = distHtml;
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadComments() {
+            try {
+                const res = await fetch(`/api/comments/${artworkId}`);
+                const comments = await res.json();
+                const container = document.getElementById('comments-container');
+                const countSpan = document.getElementById('comments-count');
+                
+                if (countSpan) {
+                    countSpan.textContent = `${comments.length} commentaire${comments.length > 1 ? 's' : ''}`;
+                }
+                
+                if (!comments.length) {
+                    container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 2rem;">Aucun commentaire pour le moment. Soyez le premier à donner votre avis !</div>';
+                    return;
+                }
+                
+                container.innerHTML = comments.map(c => `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <div class="comment-user">
+                                <i class="fas fa-user-circle"></i>
+                                <span>${c.username}</span>
+                            </div>
+                            <span class="comment-date">${c.created_at}</span>
+                        </div>
+                        <div class="comment-content">${c.commentaire}</div>
+                        <div class="comment-ratings">
+                            <span><i class="fas fa-star"></i> ${c.note_globale}</span>
+                            <span><i class="fas fa-paint-brush"></i> ${c.notes.technique}</span>
+                            <span><i class="fas fa-lightbulb"></i> ${c.notes.originalite}</span>
+                            <span><i class="fas fa-heart"></i> ${c.notes.emotion}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadRecentReviews() {
+            try {
+                const res = await fetch(`/api/comments/${artworkId}?limit=3`);
+                const comments = await res.json();
+                const container = document.getElementById('recent-reviews');
+                
+                if (!container) return;
+                
+                if (!comments.length) {
+                    container.innerHTML = '<div style="color: var(--text-muted); text-align: center;">Aucune critique récente</div>';
+                    return;
+                }
+                
+                container.innerHTML = comments.map(c => `
+                    <div class="review-item">
+                        <div class="review-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="review-info">
+                            <div class="review-user">${c.username}</div>
+                            <div class="review-rating">${'★'.repeat(Math.floor(c.note_globale))}${c.note_globale % 1 ? '½' : ''}</div>
+                            <div class="review-preview">${c.commentaire.substring(0, 50)}${c.commentaire.length > 50 ? '...' : ''}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        // --------------------------------------------
+        // INITIALISATION
+        // --------------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
+            initUserStars();
+            initSliders();
+            checkFavorite();
+            loadUserRating();
+            loadStats();
+            loadComments();
+            loadRecentReviews();
+        });
+    </script>
+</body>
+</html>

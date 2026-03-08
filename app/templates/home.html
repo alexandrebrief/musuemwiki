@@ -11,7 +11,6 @@
     <title>{{ site_name }} - Votre musée idéal</title>
     
     <!-- Fonts premium -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -99,6 +98,8 @@ body {
     width: 100%;
     padding: 0 2rem;
 }
+
+
 
         /* ===== HERO CINÉMATIQUE ===== */
         .hero-cinema {
@@ -216,7 +217,7 @@ body {
 .hero-search-card {
     display: flex;
     align-items: center;
-    background: rgba(10, 18, 26, 0.5);
+    background: rgba(10, 18, 26, 0.15);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(212, 175, 55, 0.15);
@@ -235,7 +236,7 @@ body {
 
 .hero-search-card:focus-within {
     border-color: var(--nav-gold, #d4af37);
-    background: rgba(212, 175, 55, 0.08);
+    background: rgba(212, 175, 55, 0.04);
     box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
 }
 
@@ -323,7 +324,7 @@ body {
 }
 
 .hero-suggestion-item:hover {
-    background: rgba(212, 175, 55, 0.1);
+    background: rgba(212, 175, 55, 0.04);
     color: white;
     padding-left: 1.8rem;
 }
@@ -694,7 +695,7 @@ body.light-theme .hero-suggestion-item:hover {
     display: flex;
     align-items: center;
     gap: 0.2rem;
-    background: rgba(212,175,55,0.1);
+    background: rgba(212, 175, 55, 0.04);
     padding: 0.2rem 0.5rem;
     border-radius: 30px;
     color: var(--gold);
@@ -881,7 +882,9 @@ body.light-theme .hero-suggestion-item:hover {
     box-sizing: border-box;
     max-width: 100vw;
 }
-        
+
+
+
     </style>
 </head>
 <body class="theme-dark">
@@ -890,10 +893,10 @@ body.light-theme .hero-suggestion-item:hover {
 <!-- HERO CINÉMATIQUE -->
 <div class="hero-cinema" id="hero">
     {% if mosaic_artworks and mosaic_artworks|length > 0 %}
-    <div class="hero-backdrop" id="heroBackdrop" 
-         style="background-image: url('{{ mosaic_artworks[0].image_url }}');">
-    </div>
-    {% endif %}
+<div class="hero-backdrop" id="heroBackdrop" 
+     style="background-image: url('https://images.weserv.nl/?url={{ mosaic_artworks[0].image_url|urlencode }}&w=1200&h=800&output=jpg&q=50');">
+</div>
+{% endif %}
     
     <div class="hero-content">
         <div class="hero-eyebrow">Bienvenue sur</div>
@@ -939,12 +942,7 @@ body.light-theme .hero-suggestion-item:hover {
     </div>
 </div>
                 
-                {% if not session.user_id %}
-                <!-- BOUTON CRÉER UN COMPTE -->
-                <a href="/register" class="hero-register-btn">
-                    <i class="fas fa-user-plus"></i> Créer un compte
-                </a>
-                {% endif %}
+
             </div>
         </div>
     </div>
@@ -998,12 +996,12 @@ body.light-theme .hero-suggestion-item:hover {
                     {% set displayed = displayed + 1 %}
                     <a href="/oeuvre/{{ artwork.id }}" class="top-rated-item">
                         <div class="top-rated-image-container">
-                            <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=200&h=200&fit=cover&a=attention&output=jpg&q=80" 
-                                 alt="{{ artwork.titre if artwork.titre else 'Sans titre' }}" 
-                                 loading="lazy"
-                                 onerror="this.onerror=null; this.src='{{ artwork.image_url }}';">
-                            
-                            {% if artwork.avg_rating %}
+<img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=200&h=200&fit=cover&a=attention&output=jpg&q=80" 
+     alt="{{ artwork.titre if artwork.titre else 'Sans titre' }}" 
+     loading="lazy"
+     onerror="this.onerror=null; this.style.display='none'; this.parentElement.querySelector('.mosaic-placeholder') && (this.parentElement.querySelector('.mosaic-placeholder').style.display='flex');">
+
+{% if artwork.avg_rating %}
                             <div class="top-rated-badge">
                                 <i class="fas fa-star"></i> {{ artwork.avg_rating|round(1) }}
                             </div>
@@ -1029,11 +1027,7 @@ body.light-theme .hero-suggestion-item:hover {
                 {% endif %}
             {% endfor %}
             
-            {% if displayed == 0 %}
-                <div style="color: var(--text-muted); padding: 2rem; text-align: center; width: 100%;">
-                    Aucune œuvre avec image pour le moment.
-                </div>
-            {% endif %}
+
         </div>
 
         <!-- SECTION FAVORIS POPULAIRES - SANS DATE -->
@@ -1052,7 +1046,7 @@ body.light-theme .hero-suggestion-item:hover {
                             <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=200&h=200&fit=cover&a=attention&output=jpg&q=80" 
                                  alt="{{ artwork.titre if artwork.titre else 'Sans titre' }}" 
                                  loading="lazy"
-                                 onerror="this.onerror=null; this.src='{{ artwork.image_url }}';">
+                                 onerror="this.onerror=null; this.style.display='none'; this.parentElement.querySelector('.mosaic-placeholder') && (this.parentElement.querySelector('.mosaic-placeholder').style.display='flex');">
                             
                             {% if artwork.favorites_count %}
                             <div class="top-rated-badge" style="background: var(--accent);">
@@ -1080,11 +1074,6 @@ body.light-theme .hero-suggestion-item:hover {
                 {% endif %}
             {% endfor %}
             
-            {% if displayed == 0 %}
-                <div style="color: var(--text-muted); padding: 2rem; text-align: center; width: 100%;">
-                    Aucune œuvre avec image pour le moment.
-                </div>
-            {% endif %}
         </div>
 
         <!-- SECTION DERNIÈRES CRITIQUES (gardée) -->

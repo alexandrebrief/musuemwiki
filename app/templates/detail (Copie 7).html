@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ oeuvre.titre }} - {{ site_name }}</title>
+    
+    <!-- ============================================
+         PARTIE 1: STYLES EXTERNES
+         ============================================ -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- ============================================
+         PARTIE 2: STYLES CONTEMPORAINS AVEC THÈME SOMBRE/CLAIR
+         ============================================ -->
+    <style>
+        /* --------------------------------------------
+           2.1 VARIABLES - Système de thème dynamique
+           -------------------------------------------- */
+        :root {
+            /* Thème clair (défaut) */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-tertiary: #eeeeee;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --border: #e0e0e0;
+            --border-focus: #1a1a1a;
+            --accent: #1a1a1a;
+            --accent-hover: #333333;
+            --overlay: rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px rgba(0,0,0,0.02);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.04);
+            --rating: #1a1a1a;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: 'Space Grotesk', sans-serif;
+            --font-serif: 'DM Serif Display', serif;
+        }
+
+        /* Thème sombre */
+        [data-theme="dark"] {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #808080;
+            --border: #2d2d2d;
+            --border-focus: #ffffff;
+            --accent: #ffffff;
+            --accent-hover: #e0e0e0;
+            --overlay: rgba(255, 255, 255, 0.05);
+            --shadow: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.5);
+            --rating: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* --------------------------------------------
+           2.2 BOUTON THÈME SOMBRE/CLAIR
+           -------------------------------------------- */
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            border-color: var(--border-focus);
+        }
+
+        .theme-toggle i {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --------------------------------------------
+           2.3 LAYOUT - Design épuré
+           -------------------------------------------- */
+        .detail-wrapper {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        /* Navigation minimaliste */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-left {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-left a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-left a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* --------------------------------------------
+           2.4 GRILLE PRINCIPALE - Design asymétrique
+           -------------------------------------------- */
+        .artwork-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Colonne image */
+        .image-column {
+            position: sticky;
+            top: 2rem;
+            align-self: start;
+        }
+
+        .image-container {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-in;
+            transition: var(--transition);
+        }
+
+        .image-container:hover {
+            border-color: var(--border-focus);
+        }
+
+        .artwork-image {
+            max-width: 100%;
+            max-height: 70vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+        .image-container:hover .artwork-image {
+            transform: scale(1.02);
+        }
+
+        .image-caption {
+            margin-top: 1rem;
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .zoom-hint i {
+            margin-right: 0.3rem;
+        }
+
+        /* Colonne info */
+        .info-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* En-tête */
+        .title-block {
+            margin-bottom: 1rem;
+        }
+
+        .artwork-title {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .artwork-artist {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .artwork-year {
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+        }
+
+        /* Actions */
+        .action-row {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .action-btn {
+            padding: 0.6rem 1.2rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 40px;
+        }
+
+        .action-btn:hover {
+            border-color: var(--border-focus);
+            background: var(--overlay);
+        }
+
+        .action-btn.favorite.active {
+            border-color: var(--text-primary);
+            background: var(--overlay);
+        }
+
+        .action-btn.favorite.active i {
+            color: var(--text-primary);
+        }
+
+        /* Stats épurées */
+        .stats-minimal {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 300;
+            line-height: 1;
+        }
+
+        .stats-label {
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+        }
+
+        .stats-stars {
+            margin-left: auto;
+            color: var(--rating);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        /* Distribution minimaliste */
+        .distribution-mini {
+            display: flex;
+            gap: 0.3rem;
+            height: 4px;
+            margin-top: 1rem;
+        }
+
+        .dist-bar {
+            flex: 1;
+            height: 100%;
+            background: var(--border);
+            position: relative;
+        }
+
+        .dist-bar-fill {
+            height: 100%;
+            background: var(--text-primary);
+            width: 0%;
+        }
+
+        /* Description */
+        .description-block {
+            line-height: 1.8;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            padding: 1rem 0;
+        }
+
+        /* Métadonnées en grille */
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .meta-label {
+            color: var(--text-tertiary);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-value {
+            font-weight: 400;
+            color: var(--text-primary);
+        }
+
+        /* Tags */
+        .tags-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 1rem 0;
+        }
+
+        .tag {
+            padding: 0.3rem 1rem;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: var(--transition);
+            border-radius: 40px;
+        }
+
+        .tag:hover {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+
+        /* --------------------------------------------
+           2.5 SECTION COMMENTAIRES - Design aéré
+           -------------------------------------------- */
+        .comments-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .comments-header h2 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 400;
+        }
+
+        .comments-count {
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+        }
+
+        /* Formulaire */
+        .comment-form {
+            margin-bottom: 3rem;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            resize: vertical;
+            transition: var(--transition);
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background: var(--bg-primary);
+        }
+
+        .comment-form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .privacy-toggle {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+        }
+
+        .privacy-toggle label {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            cursor: pointer;
+        }
+
+        .privacy-toggle input[type="radio"] {
+            accent-color: var(--text-primary);
+        }
+
+        .btn-submit {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 2rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 40px;
+        }
+
+        .btn-submit:hover {
+            border-color: var(--border-focus);
+            background: var(--overlay);
+        }
+
+        /* Liste des commentaires */
+        .comment-item {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comment-author i {
+            color: var(--text-tertiary);
+            font-size: 1rem;
+        }
+
+        .comment-date {
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+        }
+
+        .comment-content {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .comment-ratings {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+        }
+
+        .comment-ratings span i {
+            margin-right: 0.3rem;
+            color: var(--text-primary);
+        }
+
+        /* --------------------------------------------
+           2.6 VOTRE NOTE - Design flottant
+           -------------------------------------------- */
+        .user-rating-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .user-rating-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .user-rating-header h3 {
+            font-weight: 400;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .user-stars {
+            display: flex;
+            gap: 0.3rem;
+            font-size: 2rem;
+            color: var(--border);
+            cursor: pointer;
+        }
+
+        .user-stars .star {
+            transition: var(--transition);
+        }
+
+        .user-stars .star:hover,
+        .user-stars .star.selected {
+            color: var(--text-primary);
+        }
+
+        .sliders-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .slider-item {
+            text-align: center;
+        }
+
+        .slider-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider {
+            width: 100%;
+            height: 2px;
+            -webkit-appearance: none;
+            background: var(--border);
+            border-radius: 0;
+            margin: 0.5rem 0;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--text-primary);
+            border-radius: 0;
+            cursor: pointer;
+        }
+
+        .slider-value {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+        }
+
+        /* --------------------------------------------
+           2.7 ŒUVRES SIMILAIRES - Design galerie
+           -------------------------------------------- */
+        .similar-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .similar-item {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        .similar-item:hover {
+            opacity: 0.8;
+        }
+
+        .similar-image {
+            width: 100%;
+            aspect-ratio: 2/3;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            margin-bottom: 0.5rem;
+            object-fit: cover;
+        }
+
+        .similar-title {
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .similar-artist {
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+        }
+
+        .similar-rating {
+            color: var(--rating);
+            font-size: 0.75rem;
+            margin-top: 0.2rem;
+        }
+
+        /* --------------------------------------------
+           2.8 LOGIN PROMPT - Design minimal
+           -------------------------------------------- */
+        .login-minimal {
+            text-align: center;
+            padding: 3rem;
+            border: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+
+        .login-minimal i {
+            font-size: 2rem;
+            color: var(--text-tertiary);
+            margin-bottom: 1rem;
+        }
+
+        .login-minimal h3 {
+            font-weight: 400;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-minimal p {
+            color: var(--text-tertiary);
+            margin-bottom: 1.5rem;
+        }
+
+        .login-minimal .login-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-login, .btn-register {
+            padding: 0.5rem 2rem;
+            text-decoration: none;
+            transition: var(--transition);
+            border-radius: 40px;
+        }
+
+        .btn-login {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-login:hover {
+            opacity: 0.8;
+        }
+
+        .btn-register {
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-register:hover {
+            border-color: var(--border-focus);
+            background: var(--overlay);
+        }
+
+        /* --------------------------------------------
+           2.9 MODALE IMAGE
+           -------------------------------------------- */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+
+        .image-modal.active {
+            display: flex;
+        }
+
+        .modal-image {
+            max-width: 95vw;
+            max-height: 95vh;
+            object-fit: contain;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+
+        /* --------------------------------------------
+           2.10 RESPONSIVE
+           -------------------------------------------- */
+        @media (max-width: 1024px) {
+            .artwork-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-column {
+                position: static;
+            }
+            
+            .artwork-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .detail-wrapper {
+                padding: 1rem;
+            }
+            
+            .sliders-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .similar-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .login-minimal .login-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- ============================================
+         PARTIE 3: NAVBAR
+         ============================================ -->
+    {% include 'navbar.html' %}
+
+    <!-- ============================================
+         PARTIE 4: BOUTON THÈME SOMBRE/CLAIR
+         ============================================ -->
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </div>
+
+    <!-- ============================================
+         PARTIE 5: MODALE IMAGE
+         ============================================ -->
+    <div class="image-modal" id="imageModal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <img src="" alt="" class="modal-image" id="modalImage">
+    </div>
+
+    <!-- ============================================
+         PARTIE 6: CONTENU PRINCIPAL
+         ============================================ -->
+    <div class="detail-wrapper">
+        <!-- Navigation supérieure -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="/">← Retour</a>
+                <a href="#">Collection</a>
+                <a href="#">Artiste</a>
+            </div>
+            <div class="nav-right">
+                <span class="action-btn" onclick="window.print()">
+                    <i class="fas fa-share-alt"></i>
+                </span>
+            </div>
+        </div>
+
+        <!-- GRILLE PRINCIPALE -->
+        <div class="artwork-grid">
+            <!-- COLONNE IMAGE -->
+            <div class="image-column">
+                <div class="image-container" onclick="openImageModal('{{ oeuvre.image_url }}')">
+                    {% if oeuvre.image_url %}
+                    <img src="{{ oeuvre.image_url }}" alt="{{ oeuvre.titre }}" class="artwork-image">
+                    {% else %}
+                    <div style="height: 400px; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary);">
+                        <i class="fas fa-image fa-3x"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="image-caption">
+                    <span class="zoom-hint"><i class="fas fa-search-plus"></i> Cliquer pour zoomer</span>
+                    {% if oeuvre.image_rights %}
+                    <span>{{ oeuvre.image_rights }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- COLONNE INFORMATIONS -->
+            <div class="info-column">
+                <!-- Titre et artiste -->
+                <div class="title-block">
+                    <h1 class="artwork-title">{{ oeuvre.titre or 'Sans titre' }}</h1>
+                    <div class="artwork-artist">{{ oeuvre.createur or 'Artiste inconnu' }}</div>
+                    <div class="artwork-year">{{ oeuvre.inception[:4] if oeuvre.inception else 'Date inconnue' }}</div>
+                </div>
+
+                <!-- Actions -->
+                <div class="action-row">
+                    {% if session.user_id %}
+                    <div class="action-btn favorite" id="favorite-btn" onclick="toggleFavorite()">
+                        <i class="far fa-heart" id="favorite-icon"></i>
+                        <span>Favori</span>
+                    </div>
+                    {% endif %}
+                    {% if oeuvre.url_wikidata %}
+                    <a href="{{ oeuvre.url_wikidata }}" target="_blank" class="action-btn">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Wikidata</span>
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- Statistiques minimales -->
+                <div class="stats-minimal">
+                    <span class="stats-number" id="avg-rating">—</span>
+                    <span class="stats-label">moyenne</span>
+                    <span class="stats-stars" id="avg-stars">☆☆☆☆☆</span>
+                </div>
+
+                <!-- Distribution compacte -->
+                <div class="distribution-mini" id="distribution-mini">
+                    <!-- Chargée dynamiquement -->
+                </div>
+                <div style="text-align: right; margin-top: 0.3rem; color: var(--text-tertiary); font-size: 0.7rem;" id="total-ratings">
+                    0 avis
+                </div>
+
+                <!-- Description -->
+                {% if oeuvre.description %}
+                <div class="description-block">
+                    {{ oeuvre.description }}
+                </div>
+                {% endif %}
+
+                <!-- Métadonnées -->
+                <div class="meta-grid">
+                    <div class="meta-item">
+                        <span class="meta-label">Lieu</span>
+                        <span class="meta-value">{{ oeuvre.lieu or 'Inconnu' }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Type</span>
+                        <span class="meta-value">{{ oeuvre.instance_of or 'Non spécifié' }}</span>
+                    </div>
+                    {% if oeuvre.materiau %}
+                    <div class="meta-item">
+                        <span class="meta-label">Matériau</span>
+                        <span class="meta-value">{{ oeuvre.materiau }}</span>
+                    </div>
+                    {% endif %}
+                    {% if oeuvre.dimensions %}
+                    <div class="meta-item">
+                        <span class="meta-label">Dimensions</span>
+                        <span class="meta-value">{{ oeuvre.dimensions }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Tags -->
+                <div class="tags-row">
+                    <a href="#" class="tag">Peinture</a>
+                    <a href="#" class="tag">XIXe siècle</a>
+                    <a href="#" class="tag">Impressionnisme</a>
+                </div>
+
+                {% if session.user_id %}
+                <!-- Votre note -->
+                <div class="user-rating-card">
+                    <div class="user-rating-header">
+                        <h3>Votre avis</h3>
+                        <div class="user-stars" id="user-stars">
+                            <span class="star" data-value="5">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="1">★</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="note-globale" value="0">
+
+                    <div class="sliders-grid">
+                        <div class="slider-item">
+                            <div class="slider-label">Technique</div>
+                            <input type="range" id="note-technique" class="slider" min="0" max="5" step="0.5" value="0">
+                            <div class="slider-value" id="technique-value">0</div>
+                        </div>
+                        <div class="slider-item">
+                            <div class="slider-label">Originalité</div>
+                            <input type="range" id="note-originalite" class="slider" min="0" max="5" step="0.5" value="0">
+                            <div class="slider-value" id="originalite-value">0</div>
+                        </div>
+                        <div class="slider-item">
+                            <div class="slider-label">Émotion</div>
+                            <input type="range" id="note-emotion" class="slider" min="0" max="5" step="0.5" value="0">
+                            <div class="slider-value" id="emotion-value">0</div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- SECTION COMMENTAIRES -->
+        <div class="comments-section">
+            <div class="comments-header">
+                <h2>Commentaires</h2>
+                <span class="comments-count" id="comments-count">0</span>
+            </div>
+
+            {% if session.user_id %}
+            <!-- Formulaire -->
+            <div class="comment-form">
+                <textarea id="commentaire" rows="3" placeholder="Partager votre ressenti..."></textarea>
+                <div class="comment-form-footer">
+                    <div class="privacy-toggle">
+                        <label>
+                            <input type="radio" name="visibility" value="public" checked> 
+                            <i class="fas fa-globe"></i> Public
+                        </label>
+                        <label>
+                            <input type="radio" name="visibility" value="private"> 
+                            <i class="fas fa-lock"></i> Privé
+                        </label>
+                    </div>
+                    <button class="btn-submit" onclick="saveComment()">Publier</button>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Liste -->
+            <div id="comments-container">
+                <!-- Chargée dynamiquement -->
+            </div>
+        </div>
+
+        {% if not session.user_id %}
+        <!-- Connexion -->
+        <div class="login-minimal">
+            <i class="far fa-comment"></i>
+            <h3>Participer à la discussion</h3>
+            <p>Connectez-vous pour noter et commenter</p>
+            <div class="login-buttons">
+                <a href="/login?next={{ request.path }}" class="btn-login">Se connecter</a>
+                <a href="/register?next={{ request.path }}" class="btn-register">Créer un compte</a>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Œuvres similaires -->
+        <div style="margin-top: 4rem;">
+            <h2 style="font-family: var(--font-serif); font-weight: 400; margin-bottom: 1.5rem;">Œuvres similaires</h2>
+            <div class="similar-grid">
+                <a href="#" class="similar-item">
+                    <img src="https://via.placeholder.com/200x300" alt="" class="similar-image">
+                    <div class="similar-title">Les Nymphéas</div>
+                    <div class="similar-artist">Claude Monet</div>
+                    <div class="similar-rating">★★★★☆</div>
+                </a>
+                <a href="#" class="similar-item">
+                    <img src="https://via.placeholder.com/200x300" alt="" class="similar-image">
+                    <div class="similar-title">Le Déjeuner des canotiers</div>
+                    <div class="similar-artist">Pierre-Auguste Renoir</div>
+                    <div class="similar-rating">★★★★★</div>
+                </a>
+                <a href="#" class="similar-item">
+                    <img src="https://via.placeholder.com/200x300" alt="" class="similar-image">
+                    <div class="similar-title">La Nuit étoilée</div>
+                    <div class="similar-artist">Vincent van Gogh</div>
+                    <div class="similar-rating">★★★★★</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         PARTIE 7: FOOTER
+         ============================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ============================================
+         PARTIE 8: SCRIPTS
+         ============================================ -->
+    <script>
+        // --------------------------------------------
+        // VARIABLES
+        // --------------------------------------------
+        const artworkId = '{{ oeuvre.id or oeuvre.id_q }}';
+        let saveTimeout;
+
+        // --------------------------------------------
+        // THÈME SOMBRE/CLAIR
+        // --------------------------------------------
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            
+            const icon = document.getElementById('theme-icon');
+            icon.className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Charger le thème sauvegardé
+        (function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const icon = document.getElementById('theme-icon');
+            if (icon) {
+                icon.className = savedTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        })();
+
+        // --------------------------------------------
+        // MODALE IMAGE
+        // --------------------------------------------
+        function openImageModal(url) {
+            if (!url) return;
+            document.getElementById('modalImage').src = url;
+            document.getElementById('imageModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Fermer avec Echap
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // --------------------------------------------
+        // FAVORIS
+        // --------------------------------------------
+        async function checkFavorite() {
+            {% if session.user_id %}
+            try {
+                const res = await fetch(`/api/favorite/check/${artworkId}`);
+                const data = await res.json();
+                const btn = document.getElementById('favorite-btn');
+                const icon = document.getElementById('favorite-icon');
+                if (data.favorite) {
+                    btn.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                }
+            } catch (e) { console.error(e); }
+            {% endif %}
+        }
+
+        async function toggleFavorite() {
+            {% if not session.user_id %} return; {% endif %}
+            try {
+                const res = await fetch('/api/favorite/toggle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ artwork_id: artworkId })
+                });
+                const data = await res.json();
+                const btn = document.getElementById('favorite-btn');
+                const icon = document.getElementById('favorite-icon');
+                
+                if (data.favorite) {
+                    btn.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                } else {
+                    btn.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        // --------------------------------------------
+        // ÉTOILES
+        // --------------------------------------------
+        function initUserStars() {
+            const stars = document.querySelectorAll('#user-stars .star');
+            const hidden = document.getElementById('note-globale');
+            if (!stars.length || !hidden) return;
+            
+            stars.forEach(s => {
+                s.addEventListener('click', function() {
+                    const val = parseFloat(this.dataset.value);
+                    if (val === parseFloat(hidden.value)) {
+                        hidden.value = 0;
+                        stars.forEach(ss => ss.classList.remove('selected'));
+                    } else {
+                        hidden.value = val;
+                        stars.forEach(ss => {
+                            ss.classList.toggle('selected', parseFloat(ss.dataset.value) <= val);
+                        });
+                    }
+                    autoSaveRating();
+                });
+            });
+        }
+
+        // --------------------------------------------
+        // CURSEURS
+        // --------------------------------------------
+        function initSliders() {
+            const sliders = [
+                { id: 'note-technique', display: 'technique-value' },
+                { id: 'note-originalite', display: 'originalite-value' },
+                { id: 'note-emotion', display: 'emotion-value' }
+            ];
+            
+            sliders.forEach(s => {
+                const slider = document.getElementById(s.id);
+                const disp = document.getElementById(s.display);
+                if (!slider || !disp) return;
+                
+                const update = () => {
+                    let val = parseFloat(slider.value);
+                    disp.textContent = val;
+                };
+                
+                update();
+                slider.addEventListener('input', update);
+                slider.addEventListener('change', autoSaveRating);
+            });
+        }
+
+        function autoSaveRating() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveRating, 800);
+        }
+
+        async function saveRating() {
+            {% if not session.user_id %} return; {% endif %}
+            try {
+                await fetch('/api/rating/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        artwork_id: artworkId,
+                        note_globale: parseFloat(document.getElementById('note-globale').value),
+                        note_technique: parseFloat(document.getElementById('note-technique').value),
+                        note_originalite: parseFloat(document.getElementById('note-originalite').value),
+                        note_emotion: parseFloat(document.getElementById('note-emotion').value)
+                    })
+                });
+                loadStats();
+            } catch (e) { console.error(e); }
+        }
+
+        async function saveComment() {
+            {% if not session.user_id %} return; {% endif %}
+            const comment = document.getElementById('commentaire').value;
+            if (!comment.trim()) return;
+            
+            const visibility = document.querySelector('input[name="visibility"]:checked').value;
+            
+            try {
+                await fetch('/api/rating/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        artwork_id: artworkId,
+                        note_globale: parseFloat(document.getElementById('note-globale').value),
+                        note_technique: parseFloat(document.getElementById('note-technique').value),
+                        note_originalite: parseFloat(document.getElementById('note-originalite').value),
+                        note_emotion: parseFloat(document.getElementById('note-emotion').value),
+                        commentaire: visibility === 'public' ? comment : ''
+                    })
+                });
+                document.getElementById('commentaire').value = '';
+                loadComments();
+                loadStats();
+            } catch (e) { console.error(e); }
+        }
+
+        // --------------------------------------------
+        // CHARGEMENT DES DONNÉES
+        // --------------------------------------------
+        async function loadUserRating() {
+            {% if session.user_id %}
+            try {
+                const res = await fetch(`/api/rating/get/${artworkId}`);
+                const data = await res.json();
+                if (!data.has_rating) return;
+                
+                const r = data.rating;
+                document.getElementById('note-globale').value = r.note_globale;
+                
+                document.querySelectorAll('#user-stars .star').forEach(s => {
+                    s.classList.toggle('selected', parseFloat(s.dataset.value) <= r.note_globale);
+                });
+                
+                document.getElementById('note-technique').value = r.note_technique;
+                document.getElementById('technique-value').textContent = r.note_technique;
+                document.getElementById('note-originalite').value = r.note_originalite;
+                document.getElementById('originalite-value').textContent = r.note_originalite;
+                document.getElementById('note-emotion').value = r.note_emotion;
+                document.getElementById('emotion-value').textContent = r.note_emotion;
+            } catch (e) { console.error(e); }
+            {% endif %}
+        }
+
+        async function loadStats() {
+            try {
+                const res = await fetch(`/api/artwork/stats/${artworkId}`);
+                const stats = await res.json();
+                
+                document.getElementById('avg-rating').textContent = stats.moyenne_globale.toFixed(1);
+                document.getElementById('total-ratings').textContent = stats.total_notes + ' avis';
+                
+                const stars = document.getElementById('avg-stars');
+                const avg = stats.moyenne_globale;
+                let html = '';
+                for (let i = 0; i < 5; i++) {
+                    if (avg >= i + 1) html += '★';
+                    else if (avg >= i + 0.5) html += '½';
+                    else html += '☆';
+                }
+                stars.textContent = html;
+
+                // Distribution mini
+                const distContainer = document.getElementById('distribution-mini');
+                if (stats.distribution) {
+                    let distHtml = '';
+                    for (let i = 5; i >= 1; i--) {
+                        const count = stats.distribution[i] || 0;
+                        const percentage = stats.total_notes > 0 ? (count / stats.total_notes * 100) : 0;
+                        distHtml += `
+                            <div class="dist-bar">
+                                <div class="dist-bar-fill" style="width: ${percentage}%"></div>
+                            </div>
+                        `;
+                    }
+                    distContainer.innerHTML = distHtml;
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadComments() {
+            try {
+                const res = await fetch(`/api/comments/${artworkId}`);
+                const comments = await res.json();
+                const container = document.getElementById('comments-container');
+                const countSpan = document.getElementById('comments-count');
+                
+                if (countSpan) {
+                    countSpan.textContent = comments.length + ' commentaire' + (comments.length > 1 ? 's' : '');
+                }
+                
+                if (!comments.length) {
+                    container.innerHTML = '<div style="color: var(--text-tertiary); text-align: center; padding: 3rem;">Aucun commentaire pour le moment.</div>';
+                    return;
+                }
+                
+                container.innerHTML = comments.map(c => `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <span class="comment-author">
+                                <i class="fas fa-user-circle"></i> ${c.username}
+                            </span>
+                            <span class="comment-date">${c.created_at}</span>
+                        </div>
+                        <div class="comment-content">${c.commentaire}</div>
+                        <div class="comment-ratings">
+                            <span><i class="fas fa-star"></i> ${c.note_globale}</span>
+                            <span><i class="fas fa-paint-brush"></i> ${c.notes.technique}</span>
+                            <span><i class="fas fa-lightbulb"></i> ${c.notes.originalite}</span>
+                            <span><i class="fas fa-heart"></i> ${c.notes.emotion}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        // --------------------------------------------
+        // INITIALISATION
+        // --------------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
+            initUserStars();
+            initSliders();
+            checkFavorite();
+            loadUserRating();
+            loadStats();
+            loadComments();
+        });
+    </script>
+</body>
+</html>

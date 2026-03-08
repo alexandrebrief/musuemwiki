@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+{% if session.language == 'en' %}
+<html lang="en">
+{% else %}
+<html lang="fr">
+{% endif %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ oeuvre.titre }} - {{ site_name }}</title>
+    
+    <!-- Fonts premium -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== REPRISE EXACTE DES STYLES DE LA HOME ===== */
+        :root {
+            /* Thème sombre (défaut) */
+            --primary-dark: #2c3e50;
+            --primary-darker: #1a2634;
+            --secondary-dark: #e6d8c3;
+            --bg-dark: #0f1a24;
+            --surface-dark: #1e2a36;
+            --text-dark: #e6d8c3;
+            --text-light-dark: #b8a99a;
+            
+            /* Thème clair */
+            --primary-light: #4a6b8a;
+            --primary-lighter: #e6f0fa;
+            --secondary-light: #f5ebe0;
+            --bg-light: #f8f5f0;
+            --surface-light: #ffffff;
+            --text-light: #2c3e50;
+            --text-lighter: #5d6d7e;
+            
+            /* Couleurs communes */
+            --accent: #c44545;
+            --gold: #d4af37;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-hover: 0 8px 20px rgba(0,0,0,0.15);
+            --border: rgba(0,0,0,0.1);
+        }
+
+        /* Application du thème via les classes */
+        body.theme-dark {
+            --primary: var(--primary-dark);
+            --primary-hover: var(--primary-darker);
+            --secondary: var(--secondary-dark);
+            --background: var(--bg-dark);
+            --surface: var(--surface-dark);
+            --text: var(--text-dark);
+            --text-muted: var(--text-light-dark);
+            --border-color: rgba(230,216,195,0.15);
+            --shadow: 0 4px 12px rgba(0,0,0,0.3);
+            --shadow-hover: 0 8px 20px rgba(0,0,0,0.5);
+            --input-bg: rgba(255,255,255,0.1);
+        }
+
+        body.theme-light {
+            --primary: var(--primary-light);
+            --primary-hover: var(--primary-dark);
+            --secondary: var(--secondary-light);
+            --background: var(--bg-light);
+            --surface: var(--surface-light);
+            --text: var(--text-light);
+            --text-muted: var(--text-lighter);
+            --border-color: #e0d6c8;
+            --shadow: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-hover: 0 8px 20px rgba(0,0,0,0.1);
+            --input-bg: #f0e8e0;
+        }
+
+        body {
+            background-color: var(--background);
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+            transition: color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .container-fluid {
+            width: 100%;
+            padding: 0 2rem;
+        }
+
+        /* ===== BOUTON THÈME (COMME DANS LA HOME) ===== */
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            background: var(--surface);
+            border: 1px solid var(--gold);
+            border-radius: 50px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            background: var(--gold);
+            color: var(--background);
+        }
+
+        /* ===== SECTION HEADER (COMME DANS LA HOME) ===== */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 2rem 0 1.5rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 0.8rem;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+        
+        .section-link {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.2s;
+            font-weight: 500;
+        }
+        
+        .section-link:hover {
+            color: var(--primary);
+        }
+        
+        .section-link i {
+            margin-left: 0.3rem;
+            transition: transform 0.2s;
+        }
+        
+        .section-link:hover i {
+            transform: translateX(5px);
+        }
+
+        /* ===== BREADCRUMB ===== */
+        .breadcrumb {
+            margin: 2rem 0 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--gold);
+        }
+
+        .breadcrumb i {
+            margin: 0 0.5rem;
+            font-size: 0.6rem;
+            color: var(--gold);
+        }
+
+        /* ===== GRILLE PRINCIPALE ===== */
+        .artwork-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 2rem 0 3rem;
+        }
+
+        /* ===== COLONNE IMAGE ===== */
+        .artwork-image-section {
+            position: sticky;
+            top: 2rem;
+            align-self: start;
+        }
+
+        .artwork-image-container {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-in;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+
+        .artwork-image-container:hover {
+            border-color: var(--gold);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .artwork-image {
+            max-width: 100%;
+            max-height: 70vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+        .artwork-image-container:hover .artwork-image {
+            transform: scale(1.02);
+        }
+
+        .image-caption {
+            margin-top: 1rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .zoom-hint {
+            color: var(--gold);
+        }
+
+        .zoom-hint i {
+            margin-right: 0.3rem;
+        }
+
+        /* ===== COLONNE INFOS ===== */
+        .artwork-info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* En-tête */
+        .artwork-header {
+            margin-bottom: 0.5rem;
+        }
+
+        .artwork-category {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .artwork-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .artwork-artist {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .artwork-artist a {
+            color: var(--gold);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--gold);
+        }
+
+        .artwork-artist a:hover {
+            border-bottom: 1px solid var(--gold);
+        }
+
+        /* Barre d'actions */
+        .action-bar {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.7rem 1.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            color: var(--text);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border-radius: 40px;
+        }
+
+        .action-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .action-btn i {
+            color: var(--gold);
+        }
+
+        .action-btn.favorite.active {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .action-btn.favorite.active i {
+            color: var(--accent);
+        }
+
+        .action-btn.primary {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--background);
+        }
+
+        .action-btn.primary i {
+            color: var(--background);
+        }
+
+        .action-btn.primary:hover {
+            background: transparent;
+            color: var(--gold);
+        }
+
+        /* Stats à la home */
+        .artwork-stats {
+            display: flex;
+            gap: 2.5rem;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            text-align: left;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gold);
+            line-height: 1;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        .stat-stars {
+            color: var(--gold);
+            font-size: 1rem;
+            letter-spacing: 3px;
+            margin-top: 0.3rem;
+        }
+
+        /* Distribution compacte */
+        .rating-distribution {
+            margin: 1rem 0;
+        }
+
+        .dist-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .dist-label {
+            min-width: 30px;
+            color: var(--text-muted);
+        }
+
+        .dist-bar-container {
+            flex: 1;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .dist-bar {
+            height: 100%;
+            background: var(--gold);
+            width: 0%;
+            border-radius: 3px;
+        }
+
+        .dist-count {
+            min-width: 35px;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        /* Description */
+        .artwork-description {
+            line-height: 1.8;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Fiche technique */
+        .tech-specs {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .spec-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .spec-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+        }
+
+        .spec-value {
+            font-size: 0.9rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .wikidata-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 0.8rem;
+            border-bottom: 1px dotted var(--gold);
+            padding-bottom: 0.2rem;
+        }
+
+        /* Tags */
+        .tags-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .tag {
+            padding: 0.3rem 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-radius: 30px;
+        }
+
+        .tag:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* ===== VOTRE AVIS (COMME DANS LA HOME) ===== */
+        .user-rating-card {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .user-rating-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .user-rating-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .user-stars {
+            display: flex;
+            gap: 0.3rem;
+            font-size: 2rem;
+            color: var(--border-color);
+            cursor: pointer;
+        }
+
+        .user-stars .star {
+            transition: all 0.2s;
+        }
+
+        .user-stars .star:hover,
+        .user-stars .star.selected {
+            color: var(--gold);
+            transform: scale(1.1);
+        }
+
+        .sliders-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .slider-item {
+            text-align: center;
+        }
+
+        .slider-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            background: var(--border-color);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--gold);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid var(--background);
+        }
+
+        .slider-value {
+            font-size: 0.8rem;
+            color: var(--gold);
+            margin-top: 0.3rem;
+        }
+
+        /* ===== COMMENTAIRES ===== */
+        .comments-section {
+            margin-top: 2rem;
+        }
+
+        .comment-form {
+            margin-bottom: 2rem;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            resize: vertical;
+            transition: all 0.3s;
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .comment-form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .privacy-options {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .privacy-options label {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            cursor: pointer;
+        }
+
+        .privacy-options input[type="radio"] {
+            accent-color: var(--gold);
+        }
+
+        .btn-submit {
+            background: var(--gold);
+            border: none;
+            color: var(--background);
+            padding: 0.5rem 2rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+
+        .btn-submit:hover {
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 0.5rem 2rem;
+        }
+
+        /* Liste des commentaires */
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .comment-item {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .comment-author i {
+            margin-right: 0.3rem;
+            color: var(--text-muted);
+        }
+
+        .comment-date {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .comment-content {
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .comment-ratings {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .comment-ratings i {
+            color: var(--gold);
+            margin-right: 0.2rem;
+        }
+
+        /* ===== LOGIN PROMPT (COMME DANS LA HOME) ===== */
+        .login-prompt {
+            text-align: center;
+            padding: 3rem;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            margin: 2rem 0;
+        }
+
+        .login-prompt i {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .login-prompt h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-prompt p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .login-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-login {
+            background: var(--gold);
+            color: var(--background);
+            padding: 0.6rem 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-radius: 40px;
+        }
+
+        .btn-login:hover {
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 0.6rem 2rem;
+        }
+
+        .btn-register {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.6rem 2rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-radius: 40px;
+        }
+
+        .btn-register:hover {
+            background: var(--gold);
+            color: var(--background);
+        }
+
+        /* ===== ŒUVRES SIMILAIRES (COMME DANS LA HOME) ===== */
+        .similar-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0 3rem;
+        }
+
+        .similar-item {
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s;
+        }
+
+        .similar-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .similar-image {
+            width: 100%;
+            aspect-ratio: 2/3;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            object-fit: cover;
+            transition: border-color 0.3s;
+        }
+
+        .similar-item:hover .similar-image {
+            border-color: var(--gold);
+        }
+
+        .similar-info {
+            padding: 0.8rem 0;
+        }
+
+        .similar-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .similar-artist {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .similar-rating {
+            color: var(--gold);
+            font-size: 0.7rem;
+            margin-top: 0.3rem;
+        }
+
+        /* ===== MODALE IMAGE ===== */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.98);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+
+        .image-modal.active {
+            display: flex;
+        }
+
+        .modal-image {
+            max-width: 95vw;
+            max-height: 95vh;
+            object-fit: contain;
+            border: 1px solid var(--gold);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: var(--gold);
+            font-size: 2.5rem;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .artwork-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .artwork-image-section {
+                position: static;
+            }
+            
+            .artwork-title {
+                font-size: 2.5rem;
+            }
+            
+            .similar-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding: 0 1rem;
+            }
+            
+            .artwork-title {
+                font-size: 2rem;
+            }
+            
+            .artwork-stats {
+                flex-wrap: wrap;
+                gap: 1.5rem;
+            }
+            
+            .tech-specs {
+                grid-template-columns: 1fr;
+            }
+            
+            .sliders-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .similar-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .login-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="theme-dark">
+    <!-- La navbar est déjà incluse séparément -->
+    
+    <!-- ===== BOUTON THÈME ===== -->
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </div>
+
+    <!-- ===== MODALE IMAGE ===== -->
+    <div class="image-modal" id="imageModal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <img src="" alt="" class="modal-image" id="modalImage">
+    </div>
+
+    <!-- ===== CONTENU PRINCIPAL ===== -->
+    <div class="container-fluid">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="/">Accueil</a>
+            <i class="fas fa-chevron-right"></i>
+            {% if oeuvre.instance_of %}
+            <a href="/?type={{ oeuvre.instance_of|urlencode }}">{{ oeuvre.instance_of }}</a>
+            <i class="fas fa-chevron-right"></i>
+            {% endif %}
+            <span>{{ oeuvre.titre|truncate(50) }}</span>
+        </div>
+
+        <!-- GRILLE PRINCIPALE -->
+        <div class="artwork-grid">
+            <!-- COLONNE IMAGE -->
+            <div class="artwork-image-section">
+                <div class="artwork-image-container" onclick="openImageModal('{{ oeuvre.image_url }}')">
+                    {% if oeuvre.image_url %}
+                    <img src="https://images.weserv.nl/?url={{ oeuvre.image_url|urlencode }}&w=800&h=800&fit=contain&output=jpg&q=90" 
+                         alt="{{ oeuvre.titre }}" 
+                         class="artwork-image">
+                    {% else %}
+                    <div style="width: 100%; height: 400px; display: flex; align-items: center; justify-content: center; background: var(--surface); color: var(--text-muted);">
+                        <i class="fas fa-image fa-3x"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="image-caption">
+                    <span class="zoom-hint"><i class="fas fa-search-plus"></i> Cliquer pour zoomer</span>
+                    {% if oeuvre.image_rights %}
+                    <span>{{ oeuvre.image_rights }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- COLONNE INFOS -->
+            <div class="artwork-info-section">
+                <!-- En-tête -->
+                <div class="artwork-header">
+                    <div class="artwork-category">{{ oeuvre.instance_of or 'Œuvre d\'art' }}</div>
+                    <h1 class="artwork-title">{{ oeuvre.titre or 'Sans titre' }}</h1>
+                    <div class="artwork-artist">
+                        par {% if oeuvre.createur %}
+                            <a href="/?artist={{ oeuvre.createur|urlencode }}">{{ oeuvre.createur }}</a>
+                        {% else %}
+                            Artiste inconnu
+                        {% endif %}
+                    </div>
+                    {% if oeuvre.inception %}
+                    <div style="color: var(--text-muted); margin-top: 0.2rem;">{{ oeuvre.inception[:4] }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Barre d'actions -->
+                <div class="action-bar">
+                    {% if session.user_id %}
+                    <div class="action-btn favorite" id="favorite-btn" onclick="toggleFavorite()">
+                        <i class="far fa-heart" id="favorite-icon"></i>
+                        <span>Favori</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if oeuvre.url_wikidata %}
+                    <a href="{{ oeuvre.url_wikidata }}" target="_blank" class="action-btn">
+                        <i class="fab fa-wikipedia-w"></i>
+                        <span>Wikidata</span>
+                    </a>
+                    {% endif %}
+                    
+                    <div class="action-btn" onclick="document.getElementById('comment-form').scrollIntoView({behavior: 'smooth'})">
+                        <i class="fas fa-pen"></i>
+                        <span>Commenter</span>
+                    </div>
+                </div>
+
+                <!-- Statistiques à la home -->
+                <div class="artwork-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="avg-rating">—</div>
+                        <div class="stat-label">Moyenne</div>
+                        <div class="stat-stars" id="avg-stars">☆☆☆☆☆</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-ratings">0</div>
+                        <div class="stat-label">Notes</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-favorites">0</div>
+                        <div class="stat-label">Favoris</div>
+                    </div>
+                </div>
+
+                <!-- Distribution des notes -->
+                <div class="rating-distribution" id="distribution-container">
+                    <!-- Chargée dynamiquement -->
+                </div>
+
+                <!-- Description -->
+                {% if oeuvre.description %}
+                <div class="artwork-description">
+                    {{ oeuvre.description }}
+                </div>
+                {% endif %}
+
+                <!-- Fiche technique -->
+                <div class="tech-specs">
+                    <div class="spec-item">
+                        <span class="spec-label">Artiste</span>
+                        <span class="spec-value">{{ oeuvre.createur or 'Inconnu' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Date</span>
+                        <span class="spec-value">{{ oeuvre.inception[:4] if oeuvre.inception else 'Inconnue' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Lieu</span>
+                        <span class="spec-value">{{ oeuvre.lieu or 'Inconnu' }}</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Type</span>
+                        <span class="spec-value">{{ oeuvre.instance_of or 'Non spécifié' }}</span>
+                    </div>
+                    {% if oeuvre.materiau %}
+                    <div class="spec-item">
+                        <span class="spec-label">Matériau</span>
+                        <span class="spec-value">{{ oeuvre.materiau }}</span>
+                    </div>
+                    {% endif %}
+                    {% if oeuvre.dimensions %}
+                    <div class="spec-item">
+                        <span class="spec-label">Dimensions</span>
+                        <span class="spec-value">{{ oeuvre.dimensions }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Tags -->
+                <div class="tags-cloud">
+                    <a href="#" class="tag">Peinture</a>
+                    <a href="#" class="tag">XIXe siècle</a>
+                    <a href="#" class="tag">Impressionnisme</a>
+                </div>
+
+                {% if session.user_id %}
+                <!-- Votre avis -->
+                <div class="user-rating-card">
+                    <div class="user-rating-header">
+                        <h3>Votre avis</h3>
+                        <div class="user-stars" id="user-stars">
+                            <span class="star" data-value="5">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="1">★</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="note-globale" value="0">
+
+                    <div class="sliders-grid">
+                        <div class="slider-item">
+                            <div class="slider-label">Technique</div>
+                            <input type="range" id="note-technique" class="slider" min="0" max="5" step="0.5" value="0">
+                            <div class="slider-value" id="technique-value">0</div>
+                        </div>
+                        <div class="slider-item">
+                            <div class="slider-label">Originalité</div>
+                            <input type="range" id="note-originalite" class="slider" min="0" max="5" step="0.5" value="0">
+                            <div class="slider-value" id="originalite-value">0</div>
+                        </div>
+                        <div class="slider-item">
+                            <div class="slider-label">Émotion</div>
+                            <input type="range" id="note-emotion" class="slider" min="0" max="5" step="0.5" value="0">
+                            <div class="slider-value" id="emotion-value">0</div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Section commentaires -->
+                <div class="comments-section" id="comment-form">
+                    <div class="section-header" style="margin-top: 0;">
+                        <h2 class="section-title">Commentaires</h2>
+                        <span class="section-link" id="comments-count">0</span>
+                    </div>
+
+                    {% if session.user_id %}
+                    <!-- Formulaire -->
+                    <div class="comment-form">
+                        <textarea id="commentaire" rows="3" placeholder="Partagez votre ressenti..."></textarea>
+                        <div class="comment-form-footer">
+                            <div class="privacy-options">
+                                <label>
+                                    <input type="radio" name="visibility" value="public" checked> 
+                                    <i class="fas fa-globe"></i> Public
+                                </label>
+                                <label>
+                                    <input type="radio" name="visibility" value="private"> 
+                                    <i class="fas fa-lock"></i> Privé
+                                </label>
+                            </div>
+                            <button class="btn-submit" onclick="saveComment()">Publier</button>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Liste des commentaires -->
+                    <div class="comments-list" id="comments-container">
+                        <!-- Chargée dynamiquement -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if not session.user_id %}
+        <!-- Login prompt -->
+        <div class="login-prompt">
+            <i class="far fa-comment-dots"></i>
+            <h3>Rejoignez la conversation</h3>
+            <p>Connectez-vous pour noter, commenter et partager</p>
+            <div class="login-buttons">
+                <a href="/login?next={{ request.path }}" class="btn-login">Se connecter</a>
+                <a href="/register?next={{ request.path }}" class="btn-register">Créer un compte</a>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Œuvres similaires (comme la mosaïque home) -->
+        <div class="section-header">
+            <h2 class="section-title">Œuvres similaires</h2>
+            <a href="/research" class="section-link">Explorer <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="similar-grid">
+            <!-- Placeholder - à remplacer par des vraies données -->
+            <a href="#" class="similar-item">
+                <img src="https://via.placeholder.com/300x450" alt="" class="similar-image">
+                <div class="similar-info">
+                    <div class="similar-title">Les Nymphéas</div>
+                    <div class="similar-artist">Claude Monet</div>
+                    <div class="similar-rating">★★★★☆</div>
+                </div>
+            </a>
+            <a href="#" class="similar-item">
+                <img src="https://via.placeholder.com/300x450" alt="" class="similar-image">
+                <div class="similar-info">
+                    <div class="similar-title">Le Déjeuner des canotiers</div>
+                    <div class="similar-artist">Pierre-Auguste Renoir</div>
+                    <div class="similar-rating">★★★★★</div>
+                </div>
+            </a>
+            <a href="#" class="similar-item">
+                <img src="https://via.placeholder.com/300x450" alt="" class="similar-image">
+                <div class="similar-info">
+                    <div class="similar-title">La Nuit étoilée</div>
+                    <div class="similar-artist">Vincent van Gogh</div>
+                    <div class="similar-rating">★★★★★</div>
+                </div>
+            </a>
+            <a href="#" class="similar-item">
+                <img src="https://via.placeholder.com/300x450" alt="" class="similar-image">
+                <div class="similar-info">
+                    <div class="similar-title">L'Origine du monde</div>
+                    <div class="similar-artist">Gustave Courbet</div>
+                    <div class="similar-rating">★★★★☆</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    {% include 'footer.html' %}
+
+    <script>
+        // ===== VARIABLES =====
+        const artworkId = '{{ oeuvre.id or oeuvre.id_q }}';
+        let saveTimeout;
+
+        // ===== THÈME =====
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            
+            if (body.classList.contains('theme-dark')) {
+                body.classList.remove('theme-dark');
+                body.classList.add('theme-light');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.remove('theme-light');
+                body.classList.add('theme-dark');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Charger le thème sauvegardé
+        (function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            
+            body.classList.remove('theme-dark', 'theme-light');
+            body.classList.add(`theme-${savedTheme}`);
+            icon.className = savedTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        })();
+
+        // ===== MODALE IMAGE =====
+        function openImageModal(url) {
+            if (!url) return;
+            document.getElementById('modalImage').src = url;
+            document.getElementById('imageModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ===== FAVORIS =====
+        async function checkFavorite() {
+            {% if session.user_id %}
+            try {
+                const res = await fetch(`/api/favorite/check/${artworkId}`);
+                const data = await res.json();
+                const btn = document.getElementById('favorite-btn');
+                const icon = document.getElementById('favorite-icon');
+                if (data.favorite) {
+                    btn.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                }
+            } catch (e) { console.error(e); }
+            {% endif %}
+        }
+
+        async function toggleFavorite() {
+            {% if not session.user_id %} return; {% endif %}
+            try {
+                const res = await fetch('/api/favorite/toggle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ artwork_id: artworkId })
+                });
+                const data = await res.json();
+                const btn = document.getElementById('favorite-btn');
+                const icon = document.getElementById('favorite-icon');
+                
+                if (data.favorite) {
+                    btn.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                } else {
+                    btn.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                }
+                
+                loadStats();
+            } catch (e) { console.error(e); }
+        }
+
+        // ===== ÉTOILES =====
+        function initUserStars() {
+            const stars = document.querySelectorAll('#user-stars .star');
+            const hidden = document.getElementById('note-globale');
+            if (!stars.length || !hidden) return;
+            
+            stars.forEach(s => {
+                s.addEventListener('click', function() {
+                    const val = parseFloat(this.dataset.value);
+                    if (val === parseFloat(hidden.value)) {
+                        hidden.value = 0;
+                        stars.forEach(ss => ss.classList.remove('selected'));
+                    } else {
+                        hidden.value = val;
+                        stars.forEach(ss => {
+                            ss.classList.toggle('selected', parseFloat(ss.dataset.value) <= val);
+                        });
+                    }
+                    autoSaveRating();
+                });
+            });
+        }
+
+        // ===== CURSEURS =====
+        function initSliders() {
+            const sliders = [
+                { id: 'note-technique', display: 'technique-value' },
+                { id: 'note-originalite', display: 'originalite-value' },
+                { id: 'note-emotion', display: 'emotion-value' }
+            ];
+            
+            sliders.forEach(s => {
+                const slider = document.getElementById(s.id);
+                const disp = document.getElementById(s.display);
+                if (!slider || !disp) return;
+                
+                const update = () => {
+                    let val = parseFloat(slider.value);
+                    disp.textContent = val.toFixed(1);
+                };
+                
+                update();
+                slider.addEventListener('input', update);
+                slider.addEventListener('change', autoSaveRating);
+            });
+        }
+
+        function autoSaveRating() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveRating, 800);
+        }
+
+        async function saveRating() {
+            {% if not session.user_id %} return; {% endif %}
+            try {
+                await fetch('/api/rating/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        artwork_id: artworkId,
+                        note_globale: parseFloat(document.getElementById('note-globale').value),
+                        note_technique: parseFloat(document.getElementById('note-technique').value),
+                        note_originalite: parseFloat(document.getElementById('note-originalite').value),
+                        note_emotion: parseFloat(document.getElementById('note-emotion').value)
+                    })
+                });
+                loadStats();
+            } catch (e) { console.error(e); }
+        }
+
+        async function saveComment() {
+            {% if not session.user_id %} return; {% endif %}
+            const comment = document.getElementById('commentaire').value;
+            if (!comment.trim()) return;
+            
+            const visibility = document.querySelector('input[name="visibility"]:checked').value;
+            
+            try {
+                await fetch('/api/rating/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        artwork_id: artworkId,
+                        note_globale: parseFloat(document.getElementById('note-globale').value),
+                        note_technique: parseFloat(document.getElementById('note-technique').value),
+                        note_originalite: parseFloat(document.getElementById('note-originalite').value),
+                        note_emotion: parseFloat(document.getElementById('note-emotion').value),
+                        commentaire: visibility === 'public' ? comment : ''
+                    })
+                });
+                document.getElementById('commentaire').value = '';
+                loadComments();
+                loadStats();
+            } catch (e) { console.error(e); }
+        }
+
+        // ===== CHARGEMENT DES DONNÉES =====
+        async function loadUserRating() {
+            {% if session.user_id %}
+            try {
+                const res = await fetch(`/api/rating/get/${artworkId}`);
+                const data = await res.json();
+                if (!data.has_rating) return;
+                
+                const r = data.rating;
+                document.getElementById('note-globale').value = r.note_globale;
+                
+                document.querySelectorAll('#user-stars .star').forEach(s => {
+                    s.classList.toggle('selected', parseFloat(s.dataset.value) <= r.note_globale);
+                });
+                
+                document.getElementById('note-technique').value = r.note_technique;
+                document.getElementById('technique-value').textContent = r.note_technique.toFixed(1);
+                document.getElementById('note-originalite').value = r.note_originalite;
+                document.getElementById('originalite-value').textContent = r.note_originalite.toFixed(1);
+                document.getElementById('note-emotion').value = r.note_emotion;
+                document.getElementById('emotion-value').textContent = r.note_emotion.toFixed(1);
+            } catch (e) { console.error(e); }
+            {% endif %}
+        }
+
+        async function loadStats() {
+            try {
+                const res = await fetch(`/api/artwork/stats/${artworkId}`);
+                const stats = await res.json();
+                
+                document.getElementById('avg-rating').textContent = stats.moyenne_globale.toFixed(1);
+                document.getElementById('total-ratings').textContent = stats.total_notes;
+                document.getElementById('total-favorites').textContent = stats.favorites_count || 0;
+                
+                const stars = document.getElementById('avg-stars');
+                const avg = stats.moyenne_globale;
+                let html = '';
+                for (let i = 0; i < 5; i++) {
+                    if (avg >= i + 1) html += '★';
+                    else if (avg >= i + 0.5) html += '½';
+                    else html += '☆';
+                }
+                stars.textContent = html;
+
+                // Distribution
+                const distContainer = document.getElementById('distribution-container');
+                if (stats.distribution) {
+                    let distHtml = '';
+                    for (let i = 5; i >= 1; i--) {
+                        const count = stats.distribution[i] || 0;
+                        const percentage = stats.total_notes > 0 ? (count / stats.total_notes * 100) : 0;
+                        distHtml += `
+                            <div class="dist-row">
+                                <span class="dist-label">${i}★</span>
+                                <div class="dist-bar-container">
+                                    <div class="dist-bar" style="width: ${percentage}%"></div>
+                                </div>
+                                <span class="dist-count">${count}</span>
+                            </div>
+                        `;
+                    }
+                    distContainer.innerHTML = distHtml;
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadComments() {
+            try {
+                const res = await fetch(`/api/comments/${artworkId}`);
+                const comments = await res.json();
+                const container = document.getElementById('comments-container');
+                const countSpan = document.getElementById('comments-count');
+                
+                if (countSpan) {
+                    countSpan.textContent = comments.length;
+                }
+                
+                if (!comments.length) {
+                    container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 2rem;">Aucun commentaire pour le moment.</div>';
+                    return;
+                }
+                
+                container.innerHTML = comments.map(c => `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <span class="comment-author">
+                                <i class="fas fa-user-circle"></i> ${c.username}
+                            </span>
+                            <span class="comment-date">${c.created_at}</span>
+                        </div>
+                        <div class="comment-content">${c.commentaire}</div>
+                        <div class="comment-ratings">
+                            <span><i class="fas fa-star"></i> ${c.note_globale}</span>
+                            <span><i class="fas fa-paint-brush"></i> ${c.notes.technique}</span>
+                            <span><i class="fas fa-lightbulb"></i> ${c.notes.originalite}</span>
+                            <span><i class="fas fa-heart"></i> ${c.notes.emotion}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        // ===== INITIALISATION =====
+        document.addEventListener('DOMContentLoaded', () => {
+            initUserStars();
+            initSliders();
+            checkFavorite();
+            loadUserRating();
+            loadStats();
+            loadComments();
+        });
+    </script>
+</body>
+</html>
