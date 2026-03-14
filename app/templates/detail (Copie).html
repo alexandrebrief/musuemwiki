@@ -86,7 +86,8 @@
         /* ===== GALLERY VIEW - SANS CADRE ===== */
         .gallery-view {
             display: grid;
-            grid-template-columns: 0.8fr 0.8fr;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 4rem;
             margin-bottom: 3rem;
         }
 
@@ -94,17 +95,17 @@
         .image-panel {
             background: transparent;
             display: flex;
-            align-items: flex-start;  /* ← Changé de 'center' à 'flex-start' */
+            align-items: center;
             justify-content: center;
             position: relative;
-            min-height: 600px;
+            min-height: 500px;
             cursor: zoom-in;
             background: transparent;
         }
 
         .artwork-image {
             max-width: 100%;
-            max-height: 85vh;
+            max-height: 70vh;
             width: auto;
             height: auto;
             object-fit: contain;
@@ -133,7 +134,25 @@
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
+        .zoom-hint {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
 
+        .image-panel:hover .zoom-hint {
+            opacity: 1;
+        }
+
+        .zoom-hint i {
+            margin-right: 0.3rem;
+            color: var(--accent);
+        }
 
         /* INFO PANEL */
         .info-panel {
@@ -774,6 +793,7 @@
         @media (max-width: 1024px) {
             .gallery-view {
                 grid-template-columns: 1fr;
+                gap: 2rem;
             }
             
             .artwork-title {
@@ -835,13 +855,15 @@
                 <div class="image-loader" id="imageLoader">
                     <i class="fas fa-spinner fa-spin"></i>
                 </div>
-                <img src="https://images.weserv.nl/?url={{ oeuvre.image_url|urlencode }}&w=1000&h=1000&fit=contain&output=jpg&q=85&we"
+                <img src="https://images.weserv.nl/?url={{ oeuvre.image_url|urlencode }}&w=800&h=800&fit=contain&output=jpg&q=85&we"
                      alt="{{ oeuvre.titre }}" 
                      class="artwork-image" 
                      id="mainImage"
                      style="background: transparent;"
                      onload="this.classList.add('loaded'); document.getElementById('imageLoader').style.display='none';">
-
+                <div class="zoom-hint">
+                    <i class="fas fa-search-plus"></i> ZOOM
+                </div>
                 {% else %}
                 <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--text-muted); background: transparent;">
                     <i class="fas fa-image fa-3x"></i>

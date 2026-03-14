@@ -527,62 +527,6 @@ def _(text):
 # ============================================================
 # ROUTES — GÉNÉRALES
 # ============================================================
-@app.route('/test-musee')
-def test_musee():
-    """Page de test pour le musée Q726781"""
-    
-    # Récupérer les œuvres du musée Q726781
-    works = db.session.query(Artwork).join(
-        ArtworkCollection, Artwork.id == ArtworkCollection.artwork_id
-    ).filter(
-        ArtworkCollection.collection_id == 'Q726781',
-        Artwork.image_url.isnot(None),
-        Artwork.image_url != ''
-    ).limit(50).all()  # Limite au cas où
-    
-    # Convertir en dictionnaires pour le template
-    works_list = [{
-        'id': w.id,
-        'titre': w.titre,
-        'createur': w.createur,
-        'image_url': w.image_url
-    } for w in works]
-    
-    return render_template('test.html', works=works_list)
-
-
-
-
-@app.route('/test-musee-weserv')
-def test_musee_weserv():
-    """Page de test AVEC Weserv - images traitées"""
-    try:
-        # Même requête que pour test-musee
-        works = db.session.query(Artwork).join(
-            ArtworkCollection, Artwork.id == ArtworkCollection.artwork_id
-        ).filter(
-            ArtworkCollection.collection_id == 'Q726781',
-            Artwork.image_url.isnot(None),
-            Artwork.image_url != ''
-        ).limit(50).all()
-        
-        works_list = []
-        for w in works:
-            d = w.to_dict()
-            works_list.append({
-                'id': w.id,
-                'titre': d['titre'],
-                'createur': d['createur'],
-                'image_url': w.image_url
-            })
-        
-        print(f"✅ Test musée weserv: {len(works_list)} œuvres trouvées")
-        return render_template('test_weserv.html', works=works_list)
-        
-    except Exception as e:
-        print(f"❌ Erreur test-musee-weserv: {e}")
-        return f"Erreur: {e}", 500
-
 
 @app.route('/')
 def index():
@@ -1656,7 +1600,7 @@ def api_filter_countries():
         # Exécuter la requête
         countries = query.group_by(country_field).order_by(
             func.count(ArtworkCollection.artwork_id).desc()
-        ).limit(4).all()
+        ).limit(50).all()
         
         # Pays sélectionné dans l'URL
         selected_country = request.args.get('country', '')
@@ -2047,7 +1991,7 @@ def _apply_sort(query, sort):
 @app.route('/research')
 def research():
     page    = request.args.get('page', 1, type=int)
-    limit   = min(request.args.get('limit', 12, type=int), 40)  # Changé à 24
+    limit   = min(request.args.get('limit', 24, type=int), 40)  # Changé à 24
     artists = request.args.getlist('artist')
     country = request.args.get('country', '')
     cities  = request.args.getlist('city')
@@ -2074,7 +2018,7 @@ def research():
 @app.route('/api/works')
 def api_works():
     page    = request.args.get('page', 1, type=int)
-    limit   = min(request.args.get('limit', 12, type=int), 40)  # Changé à 24
+    limit   = min(request.args.get('limit', 24, type=int), 40)  # Changé à 24
     artists = request.args.getlist('artist')
     country = request.args.get('country', '')
     cities  = request.args.getlist('city')

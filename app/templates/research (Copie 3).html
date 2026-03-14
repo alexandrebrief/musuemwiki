@@ -18,6 +18,7 @@
     <style>
         /* ===== DESIGN CONTEMPORAIN - INSPIRÉ HOME ===== */
         :root {
+            /* Palette monochrome sophistiquée */
             --bg-dark: #0a0a0a;
             --bg-light: #ffffff;
             --surface-dark: #141414;
@@ -373,6 +374,33 @@
             border-color: var(--accent);
         }
 
+        .dropdown-item input[type="radio"] { 
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--text-muted);
+            border-radius: 3px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .dropdown-item input[type="radio"]:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .dropdown-item input[type="radio"]:checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
         .dropdown-item .count { 
             color: var(--text-muted); 
             font-size: 0.7rem; 
@@ -443,29 +471,22 @@
         }
 
         /* ===== GRILLE DES ŒUVRES ===== */
-        img {
-            content-visibility: auto;
-            contain-intrinsic-size: 300px;
-        }
-
         .works-grid { 
             display: grid; 
-            gap: 0.5rem;
+            gap: 1px; 
             margin: 0 auto 2rem; 
             background: transparent;
             border: none;
-            content-visibility: auto;
-            contain-intrinsic-size: 1000px;
         }
 
         .works-grid.grid-4 { 
             grid-template-columns: repeat(4, 1fr); 
-            gap: 0.5rem;
+            gap: 1px;
         }
 
         .works-grid.grid-6 { 
             grid-template-columns: repeat(6, 1fr); 
-            gap: 0.5rem;
+            gap: 1px;
         }
 
         .work-item {
@@ -479,6 +500,7 @@
             outline: none;
         }
 
+        /* MODE 4 PAR LIGNE */
         .works-grid.grid-4 .work-item {
             aspect-ratio: 1/1;
             background: transparent;
@@ -490,11 +512,17 @@
         
         .works-grid.grid-4 .work-item img {
             width: 100%;
-            height: 100%;
+            height: auto;
             object-fit: contain;
             display: block;
             background: transparent;
             transition: opacity 0.4s ease;
+            max-height: 600px;
+        }
+
+        /* MODE 6 PAR LIGNE */
+        .works-grid.grid-6 {
+            gap: 0;
         }
 
         .works-grid.grid-6 .work-item {
@@ -618,6 +646,7 @@
             color: var(--accent); 
         }
 
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 1200px) { 
             .works-grid.grid-6 { grid-template-columns: repeat(5, 1fr); } 
             .hero-title { font-size: 3rem; }
@@ -628,10 +657,7 @@
         }
         
         @media (max-width: 768px) {
-            .works-grid.grid-4 { 
-                grid-template-columns: repeat(3, 1fr); 
-            }
-            .works-grid.grid-6 { 
+            .works-grid.grid-4, .works-grid.grid-6 { 
                 grid-template-columns: repeat(3, 1fr); 
             }
             .toolbar { 
@@ -663,9 +689,11 @@
     </style>
 </head>
 <body class="theme-dark">
+    <!-- Inclusion de la navbar -->
     {% include 'navbar.html' %}
 
     <div class="container main-content">
+        <!-- Hero section -->
         <div class="hero-collection">
             <h1 class="hero-title">LA COLLECTION</h1>
             <p class="hero-subtitle">Parcourez les œuvres, filtrez par artiste, lieu ou musée.</p>
@@ -686,6 +714,7 @@
             </div>
         </div>
 
+        <!-- BARRE D'OUTILS -->
         <div class="toolbar">
             <div class="works-counter">
                 <i class="fas fa-image"></i>
@@ -839,7 +868,7 @@
                 </button>
 
                 <!-- Vue 4 -->
-                <button class="icon-button view-btn" id="view-4" onclick="setViewMode(4)" title="Vue normale - œuvre entière">
+                <button class="icon-button view-btn" id="view-4" onclick="setViewMode(4)" title="Vue normale">
                     <i class="fas fa-th-large"></i>
                 </button>
 
@@ -859,13 +888,13 @@
             <a href="/oeuvre/{{ artwork.id }}" class="work-item" data-id="{{ artwork.id }}">
                 <div class="work-image-container">
                     {% if artwork.image_url and artwork.image_url != '' %}
-                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=250&h=250&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=webp&q=50"
+                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=jpg&q=80"
                          alt="{{ artwork.titre }}"
                          data-original="{{ artwork.image_url }}"
-                         data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=250&h=250&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=webp&q=50"
+                         data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=jpg&q=80"
+                         data-fallback2="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=jpg"
                          data-fallback3="{{ artwork.image_url }}"
                          data-current-service="weserv"
-                         data-error-count="0"
                          loading="lazy"
                          style="background: transparent; opacity: 0; transition: opacity 0.3s;"
                          onload="this.style.opacity='1'"
@@ -904,6 +933,7 @@
         <i class="fas fa-arrow-up"></i>
     </div>
 
+    <!-- Inclusion du footer -->
     {% include 'footer.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -922,9 +952,6 @@
         let totalOeuvres = {{ total_oeuvres }};
 
         const _loadedDropdowns = new Set();
-        
-        // ===== CACHE POUR LES APPELS API =====
-        const apiCache = {};
 
         try {
             const saved = localStorage.getItem('viewMode');
@@ -932,28 +959,39 @@
         } catch (e) {}
 
         // ================================================
-        // GESTIONNAIRE D'IMAGES - VERSION OPTIMISÉE
+        // GESTIONNAIRE D'IMAGES MULTI-SERVICES
         // ================================================
         window.handleImageError = function(img) {
-            const errorCount = parseInt(img.dataset.errorCount || '0');
+            const currentService = img.dataset.currentService;
+            const fallback1 = img.dataset.fallback1;
+            const fallback2 = img.dataset.fallback2;
+            const fallback3 = img.dataset.fallback3;
             
-            // Un seul fallback maximum
-            if (errorCount >= 1) {
-                img.style.display = 'none';
-                const placeholder = img.nextElementSibling;
-                if (placeholder) placeholder.style.display = 'flex';
-                return;
-            }
+            console.log(`❌ Échec ${currentService} pour:`, img.dataset.original);
             
-            img.dataset.errorCount = '1';
-            
-            if (img.dataset.currentService === 'weserv' && img.dataset.fallback1) {
+            if (currentService === 'weserv' && fallback1) {
+                // Essayer wsrv.nl
                 img.dataset.currentService = 'wsrv';
-                img.src = img.dataset.fallback1;
-            } else {
+                img.src = fallback1;
+            } 
+            else if (currentService === 'wsrv' && fallback2) {
+                // Essayer weserv sans paramètres
+                img.dataset.currentService = 'weserv-simple';
+                img.src = fallback2;
+            }
+            else if (currentService === 'weserv-simple' && fallback3) {
+                // Dernier recours : URL directe
+                img.dataset.currentService = 'direct';
+                img.src = fallback3;
+            }
+            else {
+                // Échec définitif
+                console.log('💀 Échec définitif pour:', img.dataset.original);
                 img.style.display = 'none';
                 const placeholder = img.nextElementSibling;
-                if (placeholder) placeholder.style.display = 'flex';
+                if (placeholder) {
+                    placeholder.style.display = 'flex';
+                }
             }
         };
 
@@ -987,6 +1025,7 @@
                 if (id === 'geo-dropdown')     { loadCountries(); loadCities(); initCountrySearch(); initCitySearch(); }
                 if (id === 'museum-dropdown')  { loadMuseums();  initMuseumSearch(); }
                 if (id === 'sort-dropdown')    { loadSortOptions(); }
+                if (id === 'type-dropdown')    { /* Pas de chargement nécessaire pour le type */ }
             }
 
             const dropdown = document.getElementById(id);
@@ -1013,21 +1052,12 @@
             document.getElementById('filter-indicator').style.display = hasFilters ? 'inline' : 'none';
         }
 
-        // ===== FONCTION API AVEC CACHE =====
         async function fetchAPI(url, params = {}) {
-            const cacheKey = url + JSON.stringify(params);
-            
-            if (apiCache[cacheKey]) {
-                return apiCache[cacheKey];
-            }
-            
             try {
                 const qs = new URLSearchParams(params).toString();
                 const res = await fetch(qs ? `${url}?${qs}` : url);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-                apiCache[cacheKey] = data;
-                return data;
+                return await res.json();
             } catch (e) {
                 console.error(`Erreur API ${url}:`, e);
                 return null;
@@ -1043,14 +1073,15 @@
             document.getElementById(`view-${mode}`).classList.add('active');
             try { localStorage.setItem('viewMode', mode); } catch (e) {}
             
+            // Mettre à jour les images existantes
             const images = grid.querySelectorAll('img');
             images.forEach(img => {
-                img.style.objectFit = mode === 6 ? 'cover' : 'contain';
+                if (mode === 6) {
+                    img.style.objectFit = 'cover';
+                } else {
+                    img.style.objectFit = 'contain';
+                }
             });
-            
-            const url = new URL(window.location);
-            url.searchParams.set('view', mode);
-            window.history.replaceState({}, '', url);
         };
 
         window.clearAllFilters = function () {
@@ -1162,7 +1193,7 @@
                 </label></div>`;
 
                 if (data && data.length) {
-                    html += data.slice(0, 4).map(c => `
+                    html += data.slice(0, 15).map(c => `
                         <div class="dropdown-item"><label>
                             <input type="radio" name="country" value="${escHtml(c.id)}" ${c.selected ? 'checked' : ''}>
                             <span class="name">${escHtml(c.name)}</span>
@@ -1199,7 +1230,7 @@
                         <span class="name">Tous les pays</span>
                     </label></div>`;
                     if (data.length) {
-                        html += data.slice(0, 4).map(c => `
+                        html += data.slice(0, 15).map(c => `
                             <div class="dropdown-item"><label>
                                 <input type="radio" name="country" value="${escHtml(c.nom)}" ${selectedCountry === c.nom ? 'checked' : ''}>
                                 <span class="name">${escHtml(c.nom)}</span>
@@ -1437,72 +1468,9 @@
             window.location.href = `/research?${params}`;
         };
 
-        // ================================================
-        // SCROLL INFINI
-        // ================================================
+        // SCROLL INFINI (désactivé)
         function initInfiniteScroll() {
-            if (document.getElementById('scroll-sentinel')) return;
-            
-            const sentinel = document.createElement('div');
-            sentinel.id = 'scroll-sentinel';
-            sentinel.style.cssText = 'height:10px;width:100%;margin-top:20px;';
-            
-            const grid = document.getElementById('works-grid');
-            if (grid && grid.parentNode) {
-                grid.parentNode.insertBefore(sentinel, grid.nextSibling);
-            }
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && hasMore && !isLoading && !scrollTriggered) {
-                        scrollTriggered = true;
-                        loadMoreWorks();
-                    }
-                });
-            }, { rootMargin: '200px', threshold: 0.1 });
-            
-            observer.observe(sentinel);
-        }
-
-        async function loadMoreWorks() {
-            if (isLoading || !hasMore) { 
-                scrollTriggered = false; 
-                return; 
-            }
-            
-            isLoading = true;
-            document.getElementById('loading-indicator').style.display = 'block';
-
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                urlParams.set('page', currentPage + 1);
-                urlParams.set('limit', 12);
-
-                const res = await fetch(`/api/works?${urlParams}`);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                
-                const data = await res.json();
-
-                if (!data.works || !data.works.length) {
-                    hasMore = false;
-                    document.getElementById('end-message').style.display = 'block';
-                    return;
-                }
-
-                appendWorks(data.works);
-                currentPage++;
-                displayedCount += data.works.length;
-                hasMore = data.has_more;
-                if (data.total) totalOeuvres = data.total;
-                updateCounter();
-
-            } catch (e) {
-                console.error('Erreur scroll infini:', e);
-            } finally {
-                isLoading = false;
-                scrollTriggered = false;
-                document.getElementById('loading-indicator').style.display = 'none';
-            }
+            return; // Désactivé
         }
 
         function appendWorks(works) {
@@ -1522,34 +1490,18 @@
                     const img = document.createElement('img');
                     const encodedUrl = encodeURIComponent(artwork.image_url);
                     
-                    img.src = `https://images.weserv.nl/?url=${encodedUrl}&w=250&h=250&fit=${fit}&output=webp&q=50`;
+                    img.src = `https://images.weserv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=jpg&q=80`;
                     img.alt = artwork.titre || '';
                     img.loading = 'lazy';
                     img.style.background = 'transparent';
-                    img.style.opacity = '0';
-                    img.style.transition = 'opacity 0.3s';
-                    
                     img.dataset.original = artwork.image_url;
-                    img.dataset.fallback1 = `https://wsrv.nl/?url=${encodedUrl}&w=250&h=250&fit=${fit}&output=webp&q=50`;
+                    img.dataset.fallback1 = `https://wsrv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=jpg&q=80`;
+                    img.dataset.fallback2 = `https://images.weserv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=jpg`;
                     img.dataset.fallback3 = artwork.image_url;
                     img.dataset.currentService = 'weserv';
-                    img.dataset.errorCount = '0';
                     
-                    const timeoutId = setTimeout(() => {
-                        if (img.style.opacity === '0') {
-                            handleImageError(img);
-                        }
-                    }, 5000);
-                    
-                    img.onload = function() { 
-                        clearTimeout(timeoutId);
-                        this.style.opacity = '1'; 
-                    };
-                    
-                    img.onerror = function() { 
-                        clearTimeout(timeoutId);
-                        handleImageError(this); 
-                    };
+                    img.onload = function() { this.style.opacity = '1'; };
+                    img.onerror = function() { handleImageError(this); };
 
                     const ph = document.createElement('div');
                     ph.className = 'image-placeholder';
@@ -1598,22 +1550,6 @@
         }
 
         // ================================================
-        // PRIORISATION DES IMAGES
-        // ================================================
-        function prioritizeImages() {
-            setTimeout(() => {
-                const priorityImages = document.querySelectorAll('.work-item:nth-child(-n+4) img');
-                priorityImages.forEach(img => {
-                    img.setAttribute('fetchpriority', 'high');
-                    img.setAttribute('loading', 'eager');
-                });
-                
-                const otherImages = document.querySelectorAll('.work-item:nth-child(n+5) img');
-                otherImages.forEach(img => img.setAttribute('loading', 'lazy'));
-            }, 100);
-        }
-
-        // ================================================
         // INITIALISATION
         // ================================================
         document.addEventListener('DOMContentLoaded', function () {
@@ -1623,7 +1559,6 @@
             updateActiveTags();
             initInfiniteScroll();
             initScrollToTop();
-            prioritizeImages();
 
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.getAll('artist').length > 0) {

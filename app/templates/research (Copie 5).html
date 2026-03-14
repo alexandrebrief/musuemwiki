@@ -18,6 +18,7 @@
     <style>
         /* ===== DESIGN CONTEMPORAIN - INSPIRÉ HOME ===== */
         :root {
+            /* Palette monochrome sophistiquée */
             --bg-dark: #0a0a0a;
             --bg-light: #ffffff;
             --surface-dark: #141414;
@@ -373,6 +374,33 @@
             border-color: var(--accent);
         }
 
+        .dropdown-item input[type="radio"] { 
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--text-muted);
+            border-radius: 3px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .dropdown-item input[type="radio"]:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .dropdown-item input[type="radio"]:checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
         .dropdown-item .count { 
             color: var(--text-muted); 
             font-size: 0.7rem; 
@@ -443,14 +471,16 @@
         }
 
         /* ===== GRILLE DES ŒUVRES ===== */
-        img {
-            content-visibility: auto;
-            contain-intrinsic-size: 300px;
-        }
+img {
+    content-visibility: auto;  /* Ne charge que les images visibles */
+    contain-intrinsic-size: 300px;  /* Réserve l'espace */
+}
 
+
+        
         .works-grid { 
             display: grid; 
-            gap: 0.5rem;
+            gap: 0.5rem; /* Espace entre les images */
             margin: 0 auto 2rem; 
             background: transparent;
             border: none;
@@ -465,7 +495,7 @@
 
         .works-grid.grid-6 { 
             grid-template-columns: repeat(6, 1fr); 
-            gap: 0.5rem;
+            gap: 0.5rem; /* Espace entre les images en mode 6 aussi */
         }
 
         .work-item {
@@ -479,6 +509,7 @@
             outline: none;
         }
 
+        /* MODE 4 PAR LIGNE - Œuvre entière visible */
         .works-grid.grid-4 .work-item {
             aspect-ratio: 1/1;
             background: transparent;
@@ -491,12 +522,13 @@
         .works-grid.grid-4 .work-item img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: contain; /* Œuvre entière visible */
             display: block;
             background: transparent;
             transition: opacity 0.4s ease;
         }
 
+        /* MODE 6 PAR LIGNE - Œuvre coupée (inchangé) */
         .works-grid.grid-6 .work-item {
             aspect-ratio: 2/3;
             background: transparent;
@@ -506,7 +538,7 @@
         .works-grid.grid-6 .work-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: cover; /* Couvre tout le cadre */
             display: block;
             background: transparent;
             transition: opacity 0.4s ease;
@@ -618,6 +650,7 @@
             color: var(--accent); 
         }
 
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 1200px) { 
             .works-grid.grid-6 { grid-template-columns: repeat(5, 1fr); } 
             .hero-title { font-size: 3rem; }
@@ -663,9 +696,11 @@
     </style>
 </head>
 <body class="theme-dark">
+    <!-- Inclusion de la navbar -->
     {% include 'navbar.html' %}
 
     <div class="container main-content">
+        <!-- Hero section -->
         <div class="hero-collection">
             <h1 class="hero-title">LA COLLECTION</h1>
             <p class="hero-subtitle">Parcourez les œuvres, filtrez par artiste, lieu ou musée.</p>
@@ -686,6 +721,7 @@
             </div>
         </div>
 
+        <!-- BARRE D'OUTILS -->
         <div class="toolbar">
             <div class="works-counter">
                 <i class="fas fa-image"></i>
@@ -859,13 +895,13 @@
             <a href="/oeuvre/{{ artwork.id }}" class="work-item" data-id="{{ artwork.id }}">
                 <div class="work-image-container">
                     {% if artwork.image_url and artwork.image_url != '' %}
-                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=250&h=250&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=webp&q=50"
+                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=300&h=300&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=jpg&q=60"
                          alt="{{ artwork.titre }}"
                          data-original="{{ artwork.image_url }}"
-                         data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=250&h=250&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=webp&q=50"
+                         data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=300&h=300&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=jpg&q=60"
+                         data-fallback2="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=300&h=300&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=jpg"
                          data-fallback3="{{ artwork.image_url }}"
                          data-current-service="weserv"
-                         data-error-count="0"
                          loading="lazy"
                          style="background: transparent; opacity: 0; transition: opacity 0.3s;"
                          onload="this.style.opacity='1'"
@@ -904,6 +940,7 @@
         <i class="fas fa-arrow-up"></i>
     </div>
 
+    <!-- Inclusion du footer -->
     {% include 'footer.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -922,38 +959,74 @@
         let totalOeuvres = {{ total_oeuvres }};
 
         const _loadedDropdowns = new Set();
+
+// ===== CACHE POUR LES APPELS API =====
+const apiCache = {};
+
+async function fetchAPI(url, params = {}) {
+    const cacheKey = url + JSON.stringify(params);
+    
+    // Retourner la réponse en cache si elle existe
+    if (apiCache[cacheKey]) {
+        return apiCache[cacheKey];
+    }
+    
+    try {
+        const qs = new URLSearchParams(params).toString();
+        const res = await fetch(qs ? `${url}?${qs}` : url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
         
-        // ===== CACHE POUR LES APPELS API =====
-        const apiCache = {};
+        // Mettre en cache pour les prochaines fois
+        apiCache[cacheKey] = data;
+        return data;
+    } catch (e) {
+        console.error(`Erreur API ${url}:`, e);
+        return null;
+    }
+}
+
 
         try {
             const saved = localStorage.getItem('viewMode');
             if (saved && [4, 6].includes(parseInt(saved))) currentView = parseInt(saved);
         } catch (e) {}
 
+
         // ================================================
-        // GESTIONNAIRE D'IMAGES - VERSION OPTIMISÉE
+        // GESTIONNAIRE D'IMAGES MULTI-SERVICES
         // ================================================
         window.handleImageError = function(img) {
-            const errorCount = parseInt(img.dataset.errorCount || '0');
+            const currentService = img.dataset.currentService;
+            const fallback1 = img.dataset.fallback1;
+            const fallback2 = img.dataset.fallback2;
+            const fallback3 = img.dataset.fallback3;
             
-            // Un seul fallback maximum
-            if (errorCount >= 1) {
-                img.style.display = 'none';
-                const placeholder = img.nextElementSibling;
-                if (placeholder) placeholder.style.display = 'flex';
-                return;
-            }
+            console.log(`❌ Échec ${currentService} pour:`, img.dataset.original);
             
-            img.dataset.errorCount = '1';
-            
-            if (img.dataset.currentService === 'weserv' && img.dataset.fallback1) {
+            if (currentService === 'weserv' && fallback1) {
+                // Essayer wsrv.nl
                 img.dataset.currentService = 'wsrv';
-                img.src = img.dataset.fallback1;
-            } else {
+                img.src = fallback1;
+            } 
+            else if (currentService === 'wsrv' && fallback2) {
+                // Essayer weserv sans paramètres
+                img.dataset.currentService = 'weserv-simple';
+                img.src = fallback2;
+            }
+            else if (currentService === 'weserv-simple' && fallback3) {
+                // Dernier recours : URL directe
+                img.dataset.currentService = 'direct';
+                img.src = fallback3;
+            }
+            else {
+                // Échec définitif
+                console.log('💀 Échec définitif pour:', img.dataset.original);
                 img.style.display = 'none';
                 const placeholder = img.nextElementSibling;
-                if (placeholder) placeholder.style.display = 'flex';
+                if (placeholder) {
+                    placeholder.style.display = 'flex';
+                }
             }
         };
 
@@ -987,6 +1060,7 @@
                 if (id === 'geo-dropdown')     { loadCountries(); loadCities(); initCountrySearch(); initCitySearch(); }
                 if (id === 'museum-dropdown')  { loadMuseums();  initMuseumSearch(); }
                 if (id === 'sort-dropdown')    { loadSortOptions(); }
+                if (id === 'type-dropdown')    { /* Pas de chargement nécessaire pour le type */ }
             }
 
             const dropdown = document.getElementById(id);
@@ -1013,27 +1087,28 @@
             document.getElementById('filter-indicator').style.display = hasFilters ? 'inline' : 'none';
         }
 
-        // ===== FONCTION API AVEC CACHE =====
-        async function fetchAPI(url, params = {}) {
-            const cacheKey = url + JSON.stringify(params);
-            
-            if (apiCache[cacheKey]) {
-                return apiCache[cacheKey];
-            }
-            
-            try {
-                const qs = new URLSearchParams(params).toString();
-                const res = await fetch(qs ? `${url}?${qs}` : url);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-                apiCache[cacheKey] = data;
-                return data;
-            } catch (e) {
-                console.error(`Erreur API ${url}:`, e);
-                return null;
-            }
-        }
-
+// REMPLACEZ VOTRE FONCTION fetchAPI EXISTANTE PAR CELLE-CI
+async function fetchAPI(url, params = {}) {
+    const cacheKey = url + JSON.stringify(params);
+    
+    if (apiCache[cacheKey]) {
+        console.log('✅ [CACHE] Réponse depuis le cache:', url);
+        return apiCache[cacheKey];
+    }
+    
+    try {
+        const qs = new URLSearchParams(params).toString();
+        const res = await fetch(qs ? `${url}?${qs}` : url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        apiCache[cacheKey] = data;
+        console.log('📦 [API] Nouvelle donnée mise en cache:', url);
+        return data;
+    } catch (e) {
+        console.error(`Erreur API ${url}:`, e);
+        return null;
+    }
+}
         window.setViewMode = function (mode) {
             currentView = mode;
             const grid = document.getElementById('works-grid');
@@ -1043,11 +1118,17 @@
             document.getElementById(`view-${mode}`).classList.add('active');
             try { localStorage.setItem('viewMode', mode); } catch (e) {}
             
+            // Mettre à jour les images existantes
             const images = grid.querySelectorAll('img');
             images.forEach(img => {
-                img.style.objectFit = mode === 6 ? 'cover' : 'contain';
+                if (mode === 6) {
+                    img.style.objectFit = 'cover';
+                } else {
+                    img.style.objectFit = 'contain';
+                }
             });
             
+            // Mettre à jour l'URL sans recharger
             const url = new URL(window.location);
             url.searchParams.set('view', mode);
             window.history.replaceState({}, '', url);
@@ -1438,7 +1519,7 @@
         };
 
         // ================================================
-        // SCROLL INFINI
+        // SCROLL INFINI RÉACTIVÉ
         // ================================================
         function initInfiniteScroll() {
             if (document.getElementById('scroll-sentinel')) return;
@@ -1522,7 +1603,7 @@
                     const img = document.createElement('img');
                     const encodedUrl = encodeURIComponent(artwork.image_url);
                     
-                    img.src = `https://images.weserv.nl/?url=${encodedUrl}&w=250&h=250&fit=${fit}&output=webp&q=50`;
+                    img.src = `https://images.weserv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=jpg&q=80`;
                     img.alt = artwork.titre || '';
                     img.loading = 'lazy';
                     img.style.background = 'transparent';
@@ -1530,26 +1611,13 @@
                     img.style.transition = 'opacity 0.3s';
                     
                     img.dataset.original = artwork.image_url;
-                    img.dataset.fallback1 = `https://wsrv.nl/?url=${encodedUrl}&w=250&h=250&fit=${fit}&output=webp&q=50`;
+                    img.dataset.fallback1 = `https://wsrv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=jpg&q=80`;
+                    img.dataset.fallback2 = `https://images.weserv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=jpg`;
                     img.dataset.fallback3 = artwork.image_url;
                     img.dataset.currentService = 'weserv';
-                    img.dataset.errorCount = '0';
                     
-                    const timeoutId = setTimeout(() => {
-                        if (img.style.opacity === '0') {
-                            handleImageError(img);
-                        }
-                    }, 5000);
-                    
-                    img.onload = function() { 
-                        clearTimeout(timeoutId);
-                        this.style.opacity = '1'; 
-                    };
-                    
-                    img.onerror = function() { 
-                        clearTimeout(timeoutId);
-                        handleImageError(this); 
-                    };
+                    img.onload = function() { this.style.opacity = '1'; };
+                    img.onerror = function() { handleImageError(this); };
 
                     const ph = document.createElement('div');
                     ph.className = 'image-placeholder';
@@ -1598,22 +1666,6 @@
         }
 
         // ================================================
-        // PRIORISATION DES IMAGES
-        // ================================================
-        function prioritizeImages() {
-            setTimeout(() => {
-                const priorityImages = document.querySelectorAll('.work-item:nth-child(-n+4) img');
-                priorityImages.forEach(img => {
-                    img.setAttribute('fetchpriority', 'high');
-                    img.setAttribute('loading', 'eager');
-                });
-                
-                const otherImages = document.querySelectorAll('.work-item:nth-child(n+5) img');
-                otherImages.forEach(img => img.setAttribute('loading', 'lazy'));
-            }, 100);
-        }
-
-        // ================================================
         // INITIALISATION
         // ================================================
         document.addEventListener('DOMContentLoaded', function () {
@@ -1623,7 +1675,20 @@
             updateActiveTags();
             initInfiniteScroll();
             initScrollToTop();
-            prioritizeImages();
+
+    // === AJOUTEZ ICI LE CODE DE PRIORISATION ===
+    // Prioriser les 4 premières images
+    setTimeout(() => {
+        const priorityImages = document.querySelectorAll('.work-item:nth-child(-n+4) img');
+        priorityImages.forEach(img => img.setAttribute('fetchpriority', 'high'));
+        
+        const otherImages = document.querySelectorAll('.work-item:nth-child(n+5) img');
+        otherImages.forEach(img => img.setAttribute('loading', 'lazy'));
+        
+        console.log('🚀 Prioritisation des images appliquée');
+    }, 100);
+    // ============================================
+
 
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.getAll('artist').length > 0) {
