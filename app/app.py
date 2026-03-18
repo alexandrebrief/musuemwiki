@@ -321,6 +321,7 @@ class Rating(db.Model):
     note_originalite = db.Column(db.Float, nullable=False)
     note_emotion     = db.Column(db.Float, nullable=False)
     commentaire      = db.Column(db.Text, nullable=True)
+    is_public        = db.Column(db.Boolean, default=True)  
     created_at       = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at       = db.Column(db.DateTime, default=datetime.utcnow,
                                  onupdate=datetime.utcnow)
@@ -337,6 +338,7 @@ class Rating(db.Model):
             'note_originalite': self.note_originalite,
             'note_emotion': self.note_emotion,
             'commentaire': self.commentaire,
+            'is_public':   self.is_public,  # ← AJOUTER
             'created_at': self.created_at.strftime('%d/%m/%Y'),
         }
 
@@ -788,8 +790,8 @@ def oeuvre_detail(oeuvre_id):
     if not artwork:
         return "Œuvre non trouvée", 404
     
-    # Récupérer les infos de collection (musée, ville, pays)
-    collection_info = db.session.query(
+# Récupérer les infos de collection (musée, ville, pays)
+    collections_info = db.session.query(
         Collection.collection_fr,
         Collection.collection_en,
         Collection.city_fr,
@@ -800,19 +802,27 @@ def oeuvre_detail(oeuvre_id):
         ArtworkCollection, Collection.id == ArtworkCollection.collection_id
     ).filter(
         ArtworkCollection.artwork_id == oeuvre_id
-    ).first()
-    
-    # Créer un dictionnaire avec toutes les infos
+    ).all()
+
     oeuvre_dict = artwork.to_dict()
-    
-    # Ajouter les infos de collection si disponibles
-    if collection_info:
-        oeuvre_dict['collection_fr'] = collection_info[0] or oeuvre_dict.get('collection_fr')
-        oeuvre_dict['collection_en'] = collection_info[1] or oeuvre_dict.get('collection_en')
-        oeuvre_dict['city_fr'] = collection_info[2]
-        oeuvre_dict['city_en'] = collection_info[3]
-        oeuvre_dict['country_fr'] = collection_info[4]
-        oeuvre_dict['country_en'] = collection_info[5]
+
+    if collections_info:
+        oeuvre_dict['collections'] = [{
+            'collection_fr': c[0],
+            'collection_en': c[1],
+            'city_fr':       c[2],
+            'city_en':       c[3],
+            'country_fr':    c[4],
+            'country_en':    c[5],
+        } for c in collections_info]
+        oeuvre_dict['collection_fr'] = collections_info[0][0] or oeuvre_dict.get('collection_fr')
+        oeuvre_dict['collection_en'] = collections_info[0][1] or oeuvre_dict.get('collection_en')
+        oeuvre_dict['city_fr']       = collections_info[0][2]
+        oeuvre_dict['city_en']       = collections_info[0][3]
+        oeuvre_dict['country_fr']    = collections_info[0][4]
+        oeuvre_dict['country_en']    = collections_info[0][5]
+    else:
+        oeuvre_dict['collections'] = []
     
     # Récupérer les stats pour cette œuvre
     stats = get_artwork_stats(artwork.id)
@@ -1332,7 +1342,11 @@ def save_rating():
     rating.note_technique   = float(data.get('note_technique', 0))
     rating.note_originalite = float(data.get('note_originalite', 0))
     rating.note_emotion     = float(data.get('note_emotion', 0))
-    rating.commentaire      = data.get('commentaire', '')
+    rating.is_public        = data.get('is_public', True)
+
+    # Ne mettre à jour le commentaire que s'il est explicitement envoyé
+    if 'commentaire' in data and data['commentaire'] != '':
+        rating.commentaire = data['commentaire']
 
     if is_new:
         db.session.add(rating)
@@ -1371,7 +1385,9 @@ def get_rating(artwork_id):
 @app.route('/api/comments/<artwork_id>')
 def get_comments(artwork_id):
     ratings = Rating.query.filter_by(artwork_id=artwork_id).filter(
-        Rating.commentaire.isnot(None), Rating.commentaire != ''
+        Rating.commentaire.isnot(None),
+        Rating.commentaire != '',
+        Rating.is_public == True   # ← AJOUTER
     ).order_by(Rating.created_at.desc()).all()
     
     comments = []
@@ -1654,6 +1670,15 @@ def api_filter_artists():
                 artist_field.ilike(f"%{search}%"),
                 func.unaccent(artist_field).ilike(f"%{search}%")
             ))
+        q = request.args.get('q', '')
+        if q:
+            s = f"%{q}%"
+            query = query.filter(db.or_(
+                Artwork.label_fallback_fr.ilike(s),
+                Artwork.label_fallback_en.ilike(s),
+                Artwork.creator_fallback_fr.ilike(s),
+                Artwork.creator_fallback_en.ilike(s),
+            ))
 
         artists = query.group_by(artist_field).order_by(
             func.count(Artwork.id).desc()
@@ -1724,6 +1749,19 @@ def api_filter_countries():
                     Collection.collection_en.ilike(f"%{m}%")
                 ) for m in selected_museums
             ]))
+
+        q = request.args.get('q', '')
+        if q:
+            s = f"%{q}%"
+            query = query.filter(db.or_(
+                Artwork.label_fallback_fr.ilike(s),
+                Artwork.label_fallback_en.ilike(s),
+                Artwork.creator_fallback_fr.ilike(s),
+                Artwork.creator_fallback_en.ilike(s),
+            ))
+
+
+
 
         countries = query.group_by(country_field).order_by(
             func.count(ArtworkCollection.artwork_id).desc()

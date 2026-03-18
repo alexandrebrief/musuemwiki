@@ -1,7 +1,7 @@
 <!-- navbar.html -->
 <nav class="navbar-contemporary {% if request.path == '/' or request.path == '/home' %}navbar-home{% else %}navbar-other{% endif %}" id="navbar">
     <div class="navbar-content">
-        <a href="/" class="navbar-logo"><span>/</span>BAZARDESQUE<span>/</span></a>
+        <a href="/" class="navbar-logo"><span>/</span>CLARTESQUE<span>/</span></a>
         
         <div class="navbar-links">
             <a href="/research">EXPLORER</a>
@@ -12,7 +12,7 @@
             <div class="navbar-search">
                 <i class="fas fa-search navbar-search-icon" style="color: var(--accent);"></i>
                 <input type="text" id="navbar-search-input" class="navbar-search-input" 
-                       placeholder="Rechercher Van Gogh, Louvres..." autocomplete="off">
+                       placeholder="Rechercher un pays, artiste, musée..." autocomplete="off">
                 <button class="navbar-search-btn" onclick="performSearch()">RECHERCHER</button>
                 <div id="navbar-suggestions" class="navbar-suggestions"></div>
             </div>
@@ -63,7 +63,7 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    padding: 1rem 1rem;
+    padding: 0.6rem 1rem;
     transition: all 0.3s ease;
 }
 
@@ -74,7 +74,7 @@
 
 .navbar-home.scrolled {
     background: var(--surface);  /* Fond au scroll uniquement sur home */
-    padding: 0.8rem 2rem;
+    padding: 0.6rem 1rem;
     border-bottom: 1px solid var(--border);
 }
 

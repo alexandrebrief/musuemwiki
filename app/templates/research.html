@@ -191,6 +191,30 @@
             color: white;
         }
 
+
+
+
+.work-fav {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 30px;
+    height: 30px;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.work-item:hover .work-fav { opacity: 1; }
+.work-fav.active { opacity: 1; background: transparent; }
+.work-fav i { color: white; font-size: 0.75rem; }
+.work-fav.active i { color: var(--favorite, #e03131); }
+
         /* ===== DROPDOWNS ===== */
         .filter-dropdown { 
             position: relative; 
@@ -804,7 +828,13 @@
         <div class="works-grid grid-4" id="works-grid">
             {% for artwork in works %}
             <a href="/oeuvre/{{ artwork.id }}" class="work-item" data-id="{{ artwork.id }}">
-                <div class="work-image-container">
+
+
+
+<div class="work-image-container">
+    <div class="work-fav" onclick="toggleFav(event, '{{ artwork.id }}', this)">
+        <i class="far fa-heart"></i>
+    </div>
                     {% if artwork.image_url and artwork.image_url != '' %}
                     <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=webp&q=75"
                          alt="{{ artwork.titre }}"
@@ -875,7 +905,7 @@
         let currentView     = 4;
         let museumNames     = {};
         let totalOeuvres = {{ total_oeuvres }};
-
+        const isLoggedIn = {{ 'true' if session.user_id else 'false' }};
         const _loadedDropdowns = new Set();
         
         // ===== CACHE POUR LES APPELS API =====
@@ -1074,6 +1104,7 @@ async function fetchAPI(url, params = {}) {
                 if (artists.length) params.artist = artists;
                 if (country)        params.country = country;
                 if (cities.length)  params.city    = cities;
+                if (museums.length) params.museum  = museums;
 
                 const data = await fetchAPI('/api/filter-artists', params);
 
@@ -1376,6 +1407,10 @@ window.applyMuseumFilter = function () {
             window.location.href = `/research?${params}`;
         };
 
+
+
+
+
         // TAGS ACTIFS
         function updateActiveTags() {
             const container = document.getElementById('active-tags');
@@ -1496,69 +1531,88 @@ window.loadMoreWorks = async function() {
     }
 }
 
+window.toggleFav = async function(e, artworkId, el) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isLoggedIn) {
+        window.location.href = `/login?next=/research`;
+        return;
+    }
+    try {
+        const res = await fetch('/api/favorite/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ artwork_id: artworkId })
+        });
+        const data = await res.json();
+        el.classList.toggle('active', data.favorite);
+        el.querySelector('i').className = data.favorite ? 'fas fa-heart' : 'far fa-heart';
+    } catch(e) {}
+};
 
+function appendWorks(works) {
+    const grid = document.getElementById('works-grid');
+    const fragment = document.createDocumentFragment();
+    const fit = currentView === 4 ? 'contain' : 'cover';
 
-        function appendWorks(works) {
-            const grid = document.getElementById('works-grid');
-            const fragment = document.createDocumentFragment();
-            const fit = currentView === 4 ? 'contain' : 'cover';
+    works.forEach((artwork) => {
+        const a = document.createElement('a');
+        a.href = `/oeuvre/${artwork.id}`;
+        a.className = 'work-item';
 
-            works.forEach((artwork) => {
-                const a = document.createElement('a');
-                a.href = `/oeuvre/${artwork.id}`;
-                a.className = 'work-item';
+        const wrap = document.createElement('div');
+        wrap.className = 'work-image-container';
 
-                const wrap = document.createElement('div');
-                wrap.className = 'work-image-container';
+        if (artwork.image_url) {
+            const img = document.createElement('img');
+            const encodedUrl = encodeURIComponent(artwork.image_url);
+            img.src = `https://images.weserv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=webp&q=75`;
+            img.alt = artwork.titre || '';
+            img.loading = 'lazy';
+            img.style.background = 'transparent';
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.3s';
+            img.dataset.original = artwork.image_url;
+            img.dataset.fallback1 = `https://wsrv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=webp&q=75`;
+            img.dataset.fallback3 = artwork.image_url;
+            img.dataset.currentService = 'weserv';
+            img.dataset.errorCount = '0';
+            img.onload = function() { this.style.opacity = '1'; };
+            img.onerror = function() { handleImageError(this); };
 
-                if (artwork.image_url) {
-                    const img = document.createElement('img');
-                    const encodedUrl = encodeURIComponent(artwork.image_url);
-                    
-                    img.src = `https://images.weserv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=webp&q=75`;
-                    img.alt = artwork.titre || '';
-                    img.loading = 'lazy';
-                    img.style.background = 'transparent';
-                    img.style.opacity = '0';
-                    img.style.transition = 'opacity 0.3s';
-                    
-                    img.dataset.original = artwork.image_url;
-                    img.dataset.fallback1 = `https://wsrv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=webp&q=75`;
-                    img.dataset.fallback3 = artwork.image_url;
-                    img.dataset.currentService = 'weserv';
-                    img.dataset.errorCount = '0';
-                    img.onload = function() { this.style.opacity = '1'; };
-                    img.onerror = function() { handleImageError(this); };
-                    
+            const ph = document.createElement('div');
+            ph.className = 'image-placeholder';
+            ph.style.display = 'none';
+            ph.innerHTML = '<i class="fas fa-image"></i>';
 
-
-                    const ph = document.createElement('div');
-                    ph.className = 'image-placeholder';
-                    ph.style.display = 'none';
-                    ph.innerHTML = '<i class="fas fa-image"></i>';
-
-                    wrap.appendChild(img);
-                    wrap.appendChild(ph);
-                } else {
-                    const ph = document.createElement('div');
-                    ph.className = 'image-placeholder';
-                    ph.innerHTML = '<i class="fas fa-image"></i>';
-                    wrap.appendChild(ph);
-                }
-
-                const ov = document.createElement('div');
-                ov.className = 'work-overlay';
-                ov.innerHTML = `
-                    <div class="work-title">${escHtml((artwork.titre || 'Sans titre').substring(0,40))}</div>
-                    <div class="work-artist">${escHtml((artwork.createur || 'Artiste inconnu').substring(0,30))}</div>`;
-
-                wrap.appendChild(ov);
-                a.appendChild(wrap);
-                fragment.appendChild(a);
-            });
-
-            grid.appendChild(fragment);
+            wrap.appendChild(img);
+            wrap.appendChild(ph);
+        } else {
+            const ph = document.createElement('div');
+            ph.className = 'image-placeholder';
+            ph.innerHTML = '<i class="fas fa-image"></i>';
+            wrap.appendChild(ph);
         }
+
+        const fav = document.createElement('div');
+        fav.className = 'work-fav';
+        fav.innerHTML = '<i class="far fa-heart"></i>';
+        fav.addEventListener('click', (e) => toggleFav(e, artwork.id, fav));
+        wrap.appendChild(fav);
+
+        const ov = document.createElement('div');
+        ov.className = 'work-overlay';
+        ov.innerHTML = `
+            <div class="work-title">${escHtml((artwork.titre || 'Sans titre').substring(0,40))}</div>
+            <div class="work-artist">${escHtml((artwork.createur || 'Artiste inconnu').substring(0,30))}</div>`;
+
+        wrap.appendChild(ov);
+        a.appendChild(wrap);
+        fragment.appendChild(a);
+    });
+
+    grid.appendChild(fragment);
+}
 
         function initScrollToTop() {
             const btn = document.getElementById('scroll-top');
@@ -1627,8 +1681,10 @@ if (hasAnyFilter) {
     _loadedDropdowns.add('type-dropdown');
     loadArtists(); initArtistSearch();
     loadCountries(); loadCities(); initCountrySearch(); initCitySearch();
-    loadMuseums(); initMuseumSearch();
+    loadMuseums().then(() => updateActiveTags()); 
     loadTypes();
+} else {
+    updateActiveTags();
 }
         });
 
