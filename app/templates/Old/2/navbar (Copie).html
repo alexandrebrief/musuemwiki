@@ -1,7 +1,7 @@
 <!-- navbar.html -->
-<nav class="navbar-contemporary {% if request.path == '/' or request.path == '/home' %}navbar-home{% else %}navbar-other{% endif %}" id="navbar">
+<nav class="navbar-contemporary" id="navbar">
     <div class="navbar-content">
-        <a href="/" class="navbar-logo"><span>/</span>BAZARDESQUE<span>/</span></a>
+        <a href="/" class="navbar-logo"><span>/</span>BLUEGREENCLIFF<span>/</span></a>
         
         <div class="navbar-links">
             <a href="/research">EXPLORER</a>
@@ -12,7 +12,7 @@
             <div class="navbar-search">
                 <i class="fas fa-search navbar-search-icon" style="color: var(--accent);"></i>
                 <input type="text" id="navbar-search-input" class="navbar-search-input" 
-                       placeholder="Rechercher Van Gogh, Louvres..." autocomplete="off">
+                       placeholder="Van Gogh, Louvres, Japon..." autocomplete="off">
                 <button class="navbar-search-btn" onclick="performSearch()">RECHERCHER</button>
                 <div id="navbar-suggestions" class="navbar-suggestions"></div>
             </div>
@@ -62,136 +62,88 @@
     top: 0;
     left: 0;
     right: 0;
+    background: transparent;
     z-index: 1000;
-    padding: 1rem 1rem;
+    padding: 1rem 2rem;
     transition: all 0.3s ease;
 }
 
-/* ===== PAGE HOME - COMPORTEMENT SPÉCIAL ===== */
-.navbar-home {
-    background: transparent;  /* Transparent par défaut sur home */
-}
-
-.navbar-home.scrolled {
-    background: var(--surface);  /* Fond au scroll uniquement sur home */
+/* Navbar avec fond quand on scroll - version par défaut (sombre) */
+.navbar-contemporary.scrolled {
+    background: var(--surface);
     padding: 0.8rem 2rem;
-    border-bottom: 1px solid var(--border);
-}
-
-/* ===== AUTRES PAGES - JAMAIS TRANSPARENT ===== */
-.navbar-other {
-    background: var(--surface);  /* Fond direct sur les autres pages */
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border); /* ← --border et non --border-color */
 }
 
 /* ===== MODE CLAIR ===== */
-body.theme-light .navbar-home.scrolled {
+body.theme-light .navbar-contemporary.scrolled {
     background: white;
     border-bottom: 1px solid var(--border);
 }
 
-body.theme-light .navbar-other {
-    background: white;
-    border-bottom: 1px solid var(--border);
-}
-
-/* Phase transparente (non scrollée) → texte blanc */
-body.theme-light .navbar-home:not(.scrolled) .navbar-logo,
-body.theme-light .navbar-home:not(.scrolled) .navbar-links a,
-body.theme-light .navbar-home:not(.scrolled) .navbar-action,
-body.theme-light .navbar-home:not(.scrolled) .login-link,
-body.theme-light .navbar-home:not(.scrolled) .navbar-search-input {
-    color: #ffffff !important;
-    background: transparent !important;
-}
-
-/* Phase scrollée → texte noir */
-body.theme-light .navbar-home.scrolled .navbar-logo,
-body.theme-light .navbar-home.scrolled .navbar-links a,
-body.theme-light .navbar-home.scrolled .navbar-action,
-body.theme-light .navbar-home.scrolled .login-link,
-body.theme-light .navbar-home.scrolled .navbar-search-input {
+body.theme-light .navbar-contemporary .navbar-logo,
+body.theme-light .navbar-contemporary .navbar-links a,
+body.theme-light .navbar-contemporary .navbar-action,
+body.theme-light .navbar-contemporary .login-link,
+body.theme-light .navbar-contemporary .navbar-search-input {
     color: #000000 !important;
     background: transparent !important;
 }
 
-body.theme-light .navbar-other .navbar-logo,
-body.theme-light .navbar-other .navbar-links a,
-body.theme-light .navbar-other .navbar-action,
-body.theme-light .navbar-other .login-link,
-body.theme-light .navbar-other .navbar-search-input {
-    color: #000000 !important;
-    background: transparent !important;
-}
-
-body.theme-light .navbar-home .navbar-search,
-body.theme-light .navbar-other .navbar-search {
+body.theme-light .navbar-contemporary .navbar-search {
     border-color: rgba(0,0,0,0.2);
 }
 
-body.theme-light .navbar-home .navbar-search-btn,
-body.theme-light .navbar-other .navbar-search-btn {
+body.theme-light .navbar-contemporary .navbar-search-btn {
     border-left-color: rgba(0,0,0,0.2);
 }
 
-body.theme-light .navbar-home .navbar-search-input::placeholder,
-body.theme-light .navbar-other .navbar-search-input::placeholder {
+body.theme-light .navbar-contemporary .navbar-search-input::placeholder {
     color: rgba(0,0,0,0.5);
 }
 
-body.theme-light .navbar-home .navbar-action:hover,
-body.theme-light .navbar-other .navbar-action:hover {
+body.theme-light .navbar-contemporary .navbar-action:hover {
     color: var(--accent) !important;
 }
 
+/* Navbar scrollée en mode clair */
+body.theme-dark .navbar-contemporary.scrolled {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
 /* ===== MODE SOMBRE ===== */
-body.theme-dark .navbar-home {
+body.theme-dark .navbar-contemporary {
     color: white !important;
 }
 
-body.theme-dark .navbar-home .navbar-logo,
-body.theme-dark .navbar-home .navbar-links a,
-body.theme-dark .navbar-home .navbar-action,
-body.theme-dark .navbar-home .login-link,
-body.theme-dark .navbar-home .navbar-search-input {
+body.theme-dark .navbar-contemporary .navbar-logo,
+body.theme-dark .navbar-contemporary .navbar-links a,
+body.theme-dark .navbar-contemporary .navbar-action,
+body.theme-dark .navbar-contemporary .login-link,
+body.theme-dark .navbar-contemporary .navbar-search-input {
     color: white !important;
 }
 
-body.theme-dark .navbar-other .navbar-logo,
-body.theme-dark .navbar-other .navbar-links a,
-body.theme-dark .navbar-other .navbar-action,
-body.theme-dark .navbar-other .login-link,
-body.theme-dark .navbar-other .navbar-search-input {
-    color: white !important;
-}
-
-body.theme-dark .navbar-home .navbar-search,
-body.theme-dark .navbar-other .navbar-search {
+body.theme-dark .navbar-contemporary .navbar-search {
     border-color: rgba(255,255,255,0.3);
 }
 
-body.theme-dark .navbar-home .navbar-search-btn,
-body.theme-dark .navbar-other .navbar-search-btn {
+body.theme-dark .navbar-contemporary .navbar-search-btn {
     border-left-color: rgba(255,255,255,0.3);
 }
 
-body.theme-dark .navbar-home .navbar-search-input::placeholder,
-body.theme-dark .navbar-other .navbar-search-input::placeholder {
+body.theme-dark .navbar-contemporary .navbar-search-input::placeholder {
     color: rgba(255,255,255,0.6);
 }
 
 /* Navbar scrollée en mode sombre */
-body.theme-dark .navbar-home.scrolled {
+body.theme-dark .navbar-contemporary.scrolled {
     background: var(--surface) !important;
     border-bottom: 1px solid var(--border-color);
 }
 
-body.theme-dark .navbar-other {
-    background: var(--surface) !important;
-    border-bottom: 1px solid var(--border-color);
-}
-
-/* ===== LAYOUT (inchangé) ===== */
+/* ===== LAYOUT ===== */
 .navbar-content {
     max-width: 1400px;
     margin: 0 auto;
@@ -213,7 +165,7 @@ body.theme-dark .navbar-other {
 }
 
 .navbar-logo span {
-    color: var(--accent);
+    color: var(--accent);  /* var(--accent) est déjà violet (#6c5ce7) */
     margin: 0 0.2rem;
 }
 
@@ -240,7 +192,7 @@ body.theme-dark .navbar-other {
     color: var(--accent);
 }
 
-/* ===== BARRE DE RECHERCHE (inchangée) ===== */
+/* ===== BARRE DE RECHERCHE ===== */
 .navbar-search-wrapper {
     flex: 0 1 450px;
     margin-left: auto;
@@ -306,7 +258,7 @@ body.theme-dark .navbar-other {
     background: var(--accent-hover);
 }
 
-/* Suggestions (inchangé) */
+/* Suggestions */
 .navbar-suggestions {
     position: absolute;
     top: 100%;
@@ -388,7 +340,7 @@ body.theme-dark .navbar-other {
     margin-top: 0.2rem;
 }
 
-/* ===== ACTIONS (inchangé) ===== */
+/* ===== ACTIONS ===== */
 .navbar-actions {
     display: flex;
     align-items: center;
@@ -425,7 +377,7 @@ body.theme-dark .navbar-other {
     color: var(--accent);
 }
 
-/* ===== MENU UTILISATEUR (inchangé) ===== */
+/* ===== MENU UTILISATEUR ===== */
 .navbar-user {
     position: relative;
     display: flex;
@@ -470,19 +422,8 @@ body.theme-dark .navbar-other {
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-.navbar-user .user-menu {
-    display: block;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s, visibility 0.2s;
-    /* Le padding crée un pont entre l'avatar et le menu */
-    padding-top: 10px;
-    margin-top: -10px;
-}
-
 .navbar-user:hover .user-menu {
-    opacity: 1;
-    visibility: visible;
+    display: block;
 }
 
 .user-menu-item {
@@ -550,22 +491,20 @@ body.theme-dark .navbar-other {
     let currentSuggestionIndex = -1;
     let suggestionsList = [];
     
-    // ===== GESTION DU SCROLL POUR NAVBAR =====
-    const navbar = document.getElementById('navbar');
+// ===== GESTION DU SCROLL POUR NAVBAR =====
+const navbar = document.getElementById('navbar');
 
-    window.addEventListener('scroll', function() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        // Si c'est la page home (classe navbar-home), on applique l'effet de scroll
-        if (navbar.classList.contains('navbar-home')) {
-            if (scrollTop <= 50) {
-                navbar.classList.remove('scrolled');
-            } else {
-                navbar.classList.add('scrolled');
-            }
-        }
-        // Pour les autres pages, on ne fait rien (déjà avec fond)
-    });
+window.addEventListener('scroll', function() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Si on est tout en haut (scroll <= 50px), navbar transparente
+    if (scrollTop <= 50) {
+        navbar.classList.remove('scrolled');
+    } else {
+        // Dès qu'on descend, navbar prend son fond
+        navbar.classList.add('scrolled');
+    }
+});
 
     // Initialiser le thème
     (function initTheme() {
@@ -577,6 +516,7 @@ body.theme-dark .navbar-other {
         body.classList.add(`theme-${savedTheme}`);
         if (icon) icon.className = savedTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
     })();
+
 
     // ===== GESTION DU THÈME =====
     function toggleTheme() {
@@ -597,12 +537,12 @@ body.theme-dark .navbar-other {
         
         // Mettre à jour la navbar
         const navbar = document.getElementById('navbar');
-        if (navbar.classList.contains('navbar-home') && window.scrollY <= 50) {
+        if (window.scrollY <= 50) {
             navbar.classList.remove('scrolled');
         }
     }
 
-    // ===== RECHERCHE DANS LA NAVBAR (inchangé) =====
+    // ===== RECHERCHE DANS LA NAVBAR =====
     const searchInput = document.getElementById('navbar-search-input');
     const suggestionsContainer = document.getElementById('navbar-suggestions');
     let searchTimeout;
@@ -643,12 +583,16 @@ body.theme-dark .navbar-other {
         });
 
         function updateSelectedSuggestion() {
+            // Retirer la classe selected de tous
             document.querySelectorAll('.navbar-suggestion-item').forEach(item => {
                 item.classList.remove('selected');
             });
             
+            // Ajouter la classe selected à l'index courant
             if (currentSuggestionIndex >= 0 && suggestionsList[currentSuggestionIndex]) {
                 suggestionsList[currentSuggestionIndex].classList.add('selected');
+                
+                // Scroll automatique pour voir l'élément sélectionné
                 suggestionsList[currentSuggestionIndex].scrollIntoView({
                     block: 'nearest',
                     behavior: 'smooth'
@@ -703,18 +647,21 @@ body.theme-dark .navbar-other {
             suggestionsList = [];
             currentSuggestionIndex = -1;
             
+            // Artistes (max 6)
             if (data.artistes && data.artistes.length > 0) {
                 data.artistes.slice(0, 6).forEach(item => {
                     addSuggestionItem(item.nom, 'ARTISTE', 'fa-user', `${item.oeuvres_count || 0} œuvre(s)`, null, item.nom);
                 });
             }
             
+            // Œuvres (max 6)
             if (data.oeuvres && data.oeuvres.length > 0) {
                 data.oeuvres.slice(0, 6).forEach(item => {
                     addSuggestionItem(item.titre, 'ŒUVRE', 'fa-paint-brush', null, item.id, null, item.titre);
                 });
             }
             
+            // Musées (max 6)
             if (data.musees && data.musees.length > 0) {
                 data.musees.slice(0, 6).forEach(item => {
                     const subtitle = item.ville ? `${item.ville} • ${item.oeuvres_count || 0} œuvre(s)` : `${item.oeuvres_count || 0} œuvre(s)`;
@@ -722,6 +669,7 @@ body.theme-dark .navbar-other {
                 });
             }
             
+            // Villes (max 6)
             if (data.villes && data.villes.length > 0) {
                 data.villes.slice(0, 6).forEach(item => {
                     const subtitle = `${item.musees_count || 0} musée(s) • ${item.oeuvres_count || 0} œuvre(s)`;
@@ -729,6 +677,7 @@ body.theme-dark .navbar-other {
                 });
             }
             
+            // Pays (max 6)
             if (data.pays && data.pays.length > 0) {
                 data.pays.slice(0, 6).forEach(item => {
                     const subtitle = `${item.musees_count || 0} musée(s) • ${item.oeuvres_count || 0} œuvre(s)`;
@@ -764,6 +713,7 @@ body.theme-dark .navbar-other {
             
             div.innerHTML = html;
             
+            // Stocker les données pour la navigation
             div.dataset.category = category;
             div.dataset.text = text;
             if (id) div.dataset.id = id;
@@ -773,13 +723,17 @@ body.theme-dark .navbar-other {
             div.addEventListener('click', () => {
                 if (category === 'ŒUVRE' && id) {
                     window.location.href = `/oeuvre/${id}`;
-                } else if (category === 'MUSÉE') {
-                    window.location.href = `/research?museum=${encodeURIComponent(filterValue || text)}`;
+                } else if (category === 'MUSÉE' && museumId) {
+                    // Rediriger vers research avec filtre musée
+                    window.location.href = `/research?museum=${encodeURIComponent(museumId)}`;
                 } else if (category === 'ARTISTE') {
+                    // Rediriger vers research avec filtre artiste
                     window.location.href = `/research?artist=${encodeURIComponent(filterValue || text)}`;
                 } else if (category === 'VILLE') {
+                    // Rediriger vers research avec filtre ville
                     window.location.href = `/research?city=${encodeURIComponent(filterValue || text)}`;
                 } else if (category === 'PAYS') {
+                    // Rediriger vers research avec filtre pays
                     window.location.href = `/research?country=${encodeURIComponent(filterValue || text)}`;
                 } else {
                     searchInput.value = text;

@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ oeuvre.titre }} · Collection {{ site_name }}</title>
+    <title> Bazardesque{{ site_name }}</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -84,35 +84,35 @@
         }
 
         /* ===== GALLERY VIEW - SANS CADRE ===== */
-        .gallery-view {
-            display: grid;
-            grid-template-columns: 0.8fr 0.8fr;
-            margin-bottom: 3rem;
-        }
-
+.gallery-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-bottom: 3rem;
+}
         /* IMAGE PANEL - OPTIMISÉ CHARGEMENT */
-        .image-panel {
-            background: transparent;
-            display: flex;
-            align-items: flex-start;  /* ← Changé de 'center' à 'flex-start' */
-            justify-content: center;
-            position: relative;
-            min-height: 600px;
-            cursor: zoom-in;
-            background: transparent;
-        }
+.image-panel {
+    background: transparent;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+    min-height: 600px;
+    cursor: default;
+}
 
-        .artwork-image {
-            max-width: 100%;
-            max-height: 85vh;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            display: block;
-            background: transparent;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+.artwork-image {
+    max-width: 100%;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    background: transparent;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: zoom-in;
+}
 
         .artwork-image.loaded {
             opacity: 1;
@@ -162,7 +162,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
-            margin: 2rem 0;
+            margin: 1rem 0;
             padding: 2rem 0;
             border-top: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
@@ -215,12 +215,12 @@
         }
 
         /* ACTIONS */
-        .actions-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-            margin: 2rem 0;
-        }
+.actions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    margin: 2rem 0;
+}
 
         .action-btn {
             background: transparent;
@@ -263,7 +263,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
-            margin: 2rem 0;
+            margin: 1rem 0;
         }
 
         .stat-card {
@@ -342,69 +342,6 @@
             letter-spacing: 2px;
         }
 
-        /* ===== SUGGESTIONS SOUS L'IMAGE ===== */
-        .suggestions-section {
-            margin: 2rem 0 4rem;
-        }
-
-        .horizontal-scroll {
-            display: flex;
-            gap: 1rem;
-            overflow-x: auto;
-            padding: 0.5rem 0 1.5rem;
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent) var(--border-color);
-        }
-
-        .horizontal-scroll::-webkit-scrollbar {
-            height: 2px;
-        }
-
-        .horizontal-scroll::-webkit-scrollbar-track {
-            background: var(--border-color);
-        }
-
-        .horizontal-scroll::-webkit-scrollbar-thumb {
-            background: var(--accent);
-        }
-
-        .scroll-item {
-            flex: 0 0 200px;
-            text-decoration: none;
-            color: inherit;
-            transition: opacity 0.2s;
-        }
-
-        .scroll-item:hover {
-            opacity: 0.8;
-        }
-
-        .scroll-item img {
-            width: 100%;
-            aspect-ratio: 2/3;
-            object-fit: cover;
-            border: 1px solid var(--border-color);
-        }
-
-        .scroll-item-info {
-            padding: 0.5rem 0;
-        }
-
-        .scroll-item-title {
-            font-size: 0.8rem;
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .scroll-item-artist {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
 
         /* ===== DESIGN COMMUNAUTÉ - 2 COLONNES ===== */
         .community-panel {
@@ -761,14 +698,14 @@
         }
 
         /* ===== FOOTER ===== */
-        .footer {
-            margin-top: 4rem;
-            padding: 2rem;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.7rem;
-        }
+.footer {
+    margin-top: 0;
+    padding: 2rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+}
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
@@ -830,17 +767,18 @@
         <!-- Gallery View - image + infos -->
         <div class="gallery-view">
             <!-- Image Panel - avec loader -->
-            <div class="image-panel" onclick="openImageModal('{{ oeuvre.image_url }}')">
+            <div class="image-panel">
                 {% if oeuvre.image_url %}
                 <div class="image-loader" id="imageLoader">
                     <i class="fas fa-spinner fa-spin"></i>
                 </div>
-                <img src="https://images.weserv.nl/?url={{ oeuvre.image_url|urlencode }}&w=1000&h=1000&fit=contain&output=jpg&q=85&we"
-                     alt="{{ oeuvre.titre }}" 
-                     class="artwork-image" 
-                     id="mainImage"
-                     style="background: transparent;"
-                     onload="this.classList.add('loaded'); document.getElementById('imageLoader').style.display='none';">
+<img src="https://images.weserv.nl/?url={{ oeuvre.image_url|urlencode }}&w=1000&h=1000&fit=contain&output=png&q=85&we"
+     alt="{{ oeuvre.titre }}" 
+     class="artwork-image" 
+     id="mainImage"
+     style="background: transparent;"
+     onclick="openImageModal('{{ oeuvre.image_url }}')"
+     onload="this.classList.add('loaded'); document.getElementById('imageLoader').style.display='none';">
 
                 {% else %}
                 <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--text-muted); background: transparent;">
@@ -954,10 +892,6 @@
                     </div>
                     {% endif %}
                     
-                    <div class="action-btn" onclick="share()">
-                        <i class="fas fa-share-alt"></i>
-                        <span>PARTAGER</span>
-                    </div>
                     
                     {% if oeuvre.url_wikidata %}
                     <a href="{{ oeuvre.url_wikidata }}" target="_blank" class="action-btn">
@@ -986,24 +920,7 @@
             </div>
         </div>
 
-        <!-- SUGGESTIONS SOUS L'IMAGE -->
-        <div class="suggestions-section">
-            <div class="section-header">
-                <h2 class="section-title">SUGGESTIONS</h2>
-                <a href="/research" class="section-link">VOIR TOUT →</a>
-            </div>
 
-            <div class="horizontal-scroll" id="similar-works">
-                <!-- Suggestions dynamiques à implémenter -->
-            </div>
-        </div>
-
-        <!-- COMMUNAUTÉ - 2 COLONNES -->
-        <div class="content-section">
-            <div class="section-header">
-                <h2 class="section-title">COMMUNAUTÉ</h2>
-                <span class="section-link" style="opacity:0.5;">{{ stats.total_notes if stats else 0 }} AVIS</span>
-            </div>
 
             <div class="community-panel">
                 <!-- COLONNE GAUCHE - STATISTIQUES + VOTRE NOTE -->
@@ -1084,10 +1001,9 @@
         </div>
 
         <!-- Footer -->
-        <footer class="footer">
-            <p>© {{ site_name }} · Collection numérique</p>
-        </footer>
     </div>
+
+    {% include 'footer.html' %}
 
     <script>
         // ===== VARIABLES =====
@@ -1325,18 +1241,6 @@
             } catch (e) { console.error(e); }
         }
 
-        function share() {
-            if (navigator.share) {
-                navigator.share({
-                    title: '{{ oeuvre.titre }}',
-                    text: '{{ oeuvre.createur }}',
-                    url: window.location.href
-                });
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                alert('Lien copié !');
-            }
-        }
 
         // ===== INIT =====
         document.addEventListener('DOMContentLoaded', () => {

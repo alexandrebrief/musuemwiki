@@ -527,6 +527,74 @@ def _(text):
 # ============================================================
 # ROUTES — GÉNÉRALES
 # ============================================================
+@app.route('/api/filter-types')
+def api_filter_types():
+    try:
+        lang = session.get('language', 'fr')
+        type_field = Artwork.instance_of_fr if lang == 'fr' else Artwork.instance_of_en
+
+        selected_artists = request.args.getlist('artist')
+        selected_country = request.args.get('country', '')
+        selected_cities  = request.args.getlist('city')
+        selected_museums = request.args.getlist('museum')
+        selected_types   = request.args.getlist('type')
+
+        query = db.session.query(
+            type_field.label('name'),
+            func.count(func.distinct(Artwork.id)).label('count')
+        ).filter(
+            type_field.isnot(None),
+            type_field != '',
+            Artwork.image_url.isnot(None),
+            Artwork.image_url != ''
+        )
+
+        if selected_artists:
+            query = query.filter(db.or_(*[
+                db.or_(
+                    Artwork.creator_fallback_fr.ilike(f"%{a}%"),
+                    Artwork.creator_fallback_en.ilike(f"%{a}%")
+                ) for a in selected_artists
+            ]))
+
+        if selected_country or selected_cities or selected_museums:
+            query = query.join(ArtworkCollection).join(Collection)
+            if selected_country:
+                query = query.filter(db.or_(
+                    Collection.country_fr.ilike(f"%{selected_country}%"),
+                    Collection.country_en.ilike(f"%{selected_country}%")
+                ))
+            if selected_cities:
+                query = query.filter(db.or_(*[
+                    db.or_(
+                        Collection.city_fr.ilike(f"%{c}%"),
+                        Collection.city_en.ilike(f"%{c}%")
+                    ) for c in selected_cities
+                ]))
+            if selected_museums:
+                query = query.filter(db.or_(*[
+                    db.or_(
+                        Collection.id == m,
+                        Collection.collection_fr.ilike(f"%{m}%"),
+                        Collection.collection_en.ilike(f"%{m}%")
+                    ) for m in selected_museums
+                ]))
+
+        types = query.group_by(type_field).order_by(
+            func.count(func.distinct(Artwork.id)).desc()
+        ).limit(20).all()
+
+        return jsonify([{
+            'name':     t.name,
+            'count':    t.count,
+            'selected': t.name in selected_types
+        } for t in types])
+
+    except Exception as e:
+        print(f"Erreur filter-types: {e}")
+        return jsonify([])
+
+
 @app.route('/test-musee')
 def test_musee():
     """Page de test pour le musée Q726781"""
@@ -551,7 +619,13 @@ def test_musee():
     return render_template('test.html', works=works_list)
 
 
+@app.route('/28012003')
+def pour_kathy():
+    return render_template('28012003.html')
 
+@app.route('/easteregg')
+def easter_egg():
+    return render_template('easteregg.html')
 
 @app.route('/test-musee-weserv')
 def test_musee_weserv():
@@ -1529,26 +1603,19 @@ def api_search_artists():
         return jsonify([])
 
 
-
-
-
-
 @app.route('/api/filter-artists')
 def api_filter_artists():
     """Liste des artistes pour les filtres, en tenant compte des filtres existants"""
     try:
         lang = session.get('language', 'fr')
         artist_field = Artwork.creator_fallback_fr if lang == 'fr' else Artwork.creator_fallback_en
-        
-        # Récupérer les filtres déjà appliqués
+
         selected_artists = request.args.getlist('artist')
         selected_country = request.args.get('country', '')
-        selected_cities = request.args.getlist('city')
-        search = request.args.get('search', '')
-        museums = request.args.getlist('museum')
-        sort = request.args.get('sort', 'relevance')
-        
-        # Construire la requête de base
+        selected_cities  = request.args.getlist('city')
+        selected_museums = request.args.getlist('museum')
+        search           = request.args.get('search', '')
+
         query = db.session.query(
             artist_field.label('name'),
             func.count(Artwork.id).label('count')
@@ -1558,54 +1625,50 @@ def api_filter_artists():
             artist_field != 'Artiste inconnu',
             artist_field != 'Unknown artist'
         )
-        
-        # Si un pays est sélectionné, filtrer par pays
-        if selected_country:
-            query = query.join(ArtworkCollection).join(Collection).filter(
-                db.or_(
+
+        if selected_country or selected_cities or selected_museums:
+            query = query.join(ArtworkCollection).join(Collection)
+            if selected_country:
+                query = query.filter(db.or_(
                     Collection.country_fr.ilike(f"%{selected_country}%"),
                     Collection.country_en.ilike(f"%{selected_country}%")
-                )
-            )
-        
-        # Si des villes sont sélectionnées, filtrer par villes
-        if selected_cities:
-            city_filters = []
-            for city in selected_cities:
-                city_filters.append(Collection.city_fr.ilike(f"%{city}%"))
-                city_filters.append(Collection.city_en.ilike(f"%{city}%"))
-            query = query.join(ArtworkCollection).join(Collection).filter(db.or_(*city_filters))
-        
-        # Recherche optionnelle
+                ))
+            if selected_cities:
+                query = query.filter(db.or_(*[
+                    db.or_(
+                        Collection.city_fr.ilike(f"%{c}%"),
+                        Collection.city_en.ilike(f"%{c}%")
+                    ) for c in selected_cities
+                ]))
+            if selected_museums:
+                query = query.filter(db.or_(*[
+                    db.or_(
+                        Collection.id == m,
+                        Collection.collection_fr.ilike(f"%{m}%"),
+                        Collection.collection_en.ilike(f"%{m}%")
+                    ) for m in selected_museums
+                ]))
+
         if search:
-            search_pattern = f"%{search}%"
-            query = query.filter(
-                db.or_(
-                    artist_field.ilike(search_pattern),
-                    func.unaccent(artist_field).ilike(f"%{search}%")
-                )
-            )
-        
+            query = query.filter(db.or_(
+                artist_field.ilike(f"%{search}%"),
+                func.unaccent(artist_field).ilike(f"%{search}%")
+            ))
+
         artists = query.group_by(artist_field).order_by(
             func.count(Artwork.id).desc()
         ).limit(100).all()
-        
-        result = []
-        for artist in artists:
-            result.append({
-                'id': artist.name,
-                'name': artist.name,
-                'count': artist.count,
-                'selected': artist.name in selected_artists
-            })
-        
-        return jsonify(result)
+
+        return jsonify([{
+            'id':       a.name,
+            'name':     a.name,
+            'count':    a.count,
+            'selected': a.name in selected_artists
+        } for a in artists])
+
     except Exception as e:
         print(f"Erreur filter-artists: {e}")
         return jsonify([])
-
-
-
 
 
 
@@ -1617,12 +1680,12 @@ def api_filter_countries():
     try:
         lang = session.get('language', 'fr')
         country_field = Collection.country_fr if lang == 'fr' else Collection.country_en
-        
-        # Récupérer les filtres déjà appliqués
+
         selected_artists = request.args.getlist('artist')
-        selected_cities = request.args.getlist('city')
-        
-        # Construire la requête de base
+        selected_cities  = request.args.getlist('city')
+        selected_museums = request.args.getlist('museum')
+        selected_country = request.args.get('country', '')
+
         query = db.session.query(
             country_field.label('name'),
             func.count(ArtworkCollection.artwork_id).label('count')
@@ -1636,59 +1699,61 @@ def api_filter_countries():
             country_field != 'Pays inconnu',
             country_field != 'Unknown country'
         )
-        
-        # Si des artistes sont sélectionnés
+
         if selected_artists:
-            artist_filters = []
-            for artist in selected_artists:
-                artist_filters.append(Artwork.creator_fallback_fr.ilike(f"%{artist}%"))
-                artist_filters.append(Artwork.creator_fallback_en.ilike(f"%{artist}%"))
-            query = query.filter(db.or_(*artist_filters))
-        
-        # Si des villes sont sélectionnées
+            query = query.filter(db.or_(*[
+                db.or_(
+                    Artwork.creator_fallback_fr.ilike(f"%{a}%"),
+                    Artwork.creator_fallback_en.ilike(f"%{a}%")
+                ) for a in selected_artists
+            ]))
+
         if selected_cities:
-            city_filters = []
-            for city in selected_cities:
-                city_filters.append(Collection.city_fr.ilike(f"%{city}%"))
-                city_filters.append(Collection.city_en.ilike(f"%{city}%"))
-            query = query.filter(db.or_(*city_filters))
-        
-        # Exécuter la requête
+            query = query.filter(db.or_(*[
+                db.or_(
+                    Collection.city_fr.ilike(f"%{c}%"),
+                    Collection.city_en.ilike(f"%{c}%")
+                ) for c in selected_cities
+            ]))
+
+        if selected_museums:
+            query = query.filter(db.or_(*[
+                db.or_(
+                    Collection.id == m,
+                    Collection.collection_fr.ilike(f"%{m}%"),
+                    Collection.collection_en.ilike(f"%{m}%")
+                ) for m in selected_museums
+            ]))
+
         countries = query.group_by(country_field).order_by(
             func.count(ArtworkCollection.artwork_id).desc()
         ).limit(4).all()
-        
-        # Pays sélectionné dans l'URL
-        selected_country = request.args.get('country', '')
-        
-        result = []
-        for country in countries:
-            result.append({
-                'id': country.name,
-                'name': country.name,
-                'count': country.count,
-                'selected': country.name == selected_country
-            })
-        
-        return jsonify(result)
+
+        return jsonify([{
+            'id':       c.name,
+            'name':     c.name,
+            'count':    c.count,
+            'selected': c.name == selected_country
+        } for c in countries])
+
     except Exception as e:
         print(f"Erreur filter-countries: {e}")
         return jsonify([])
 
+
 @app.route('/api/filter-cities')
 def api_filter_cities():
-    """Retourne la liste des villes pour les filtres, en tenant compte des filtres existants"""
+    """Retourne la liste des villes pour les filtres"""
     try:
         lang = session.get('language', 'fr')
-        city_field = Collection.city_fr if lang == 'fr' else Collection.city_en
+        city_field    = Collection.city_fr    if lang == 'fr' else Collection.city_en
         country_field = Collection.country_fr if lang == 'fr' else Collection.country_en
-        
-        # Récupérer les filtres déjà appliqués
+
         selected_artists = request.args.getlist('artist')
         selected_country = request.args.get('country', '')
-        selected_cities = request.args.getlist('city')
-        
-        # Construire la requête de base pour les villes
+        selected_cities  = request.args.getlist('city')
+        selected_museums = request.args.getlist('museum')
+
         query = db.session.query(
             city_field.label('name'),
             func.count(ArtworkCollection.artwork_id).label('count')
@@ -1702,45 +1767,45 @@ def api_filter_cities():
             city_field != 'Ville inconnue',
             city_field != 'Unknown city'
         )
-        
-        # Si des artistes sont sélectionnés, filtrer les œuvres par ces artistes
+
         if selected_artists:
-            artist_filters = []
-            for artist in selected_artists:
-                artist_filters.append(Artwork.creator_fallback_fr.ilike(f"%{artist}%"))
-                artist_filters.append(Artwork.creator_fallback_en.ilike(f"%{artist}%"))
-            query = query.filter(db.or_(*artist_filters))
-        
-        # Si un pays est sélectionné, filtrer les villes de ce pays
-        if selected_country:
-            query = query.filter(
+            query = query.filter(db.or_(*[
                 db.or_(
-                    country_field.ilike(f"%{selected_country}%"),
-                    func.unaccent(country_field).ilike(f"%{selected_country}%")
-                )
-            )
-        
-        # Exécuter la requête
+                    Artwork.creator_fallback_fr.ilike(f"%{a}%"),
+                    Artwork.creator_fallback_en.ilike(f"%{a}%")
+                ) for a in selected_artists
+            ]))
+
+        if selected_country:
+            query = query.filter(db.or_(
+                country_field.ilike(f"%{selected_country}%"),
+                func.unaccent(country_field).ilike(f"%{selected_country}%")
+            ))
+
+        if selected_museums:
+            query = query.filter(db.or_(*[
+                db.or_(
+                    Collection.id == m,
+                    Collection.collection_fr.ilike(f"%{m}%"),
+                    Collection.collection_en.ilike(f"%{m}%")
+                ) for m in selected_museums
+            ]))
+
         cities = query.group_by(city_field).order_by(
             func.count(ArtworkCollection.artwork_id).desc()
-        ).limit(50).all()
-        
-        result = []
-        for city in cities:
-            result.append({
-                'id': city.name,
-                'name': city.name,
-                'count': city.count,
-                'selected': city.name in selected_cities
-            })
-        
-        return jsonify(result)
+        ).limit(6).all()
+
+        return jsonify([{
+            'id':       c.name,
+            'name':     c.name,
+            'count':    c.count,
+            'selected': c.name in selected_cities
+        } for c in cities])
+
     except Exception as e:
         print(f"Erreur filter-cities: {e}")
         return jsonify([])
-        
-        
-        
+
         
 @app.route('/api/search-cities')
 def api_search_cities():
@@ -1835,23 +1900,23 @@ def api_search_countries():
         print(f"Erreur search-countries: {e}")
         return jsonify([])
 
+
 @app.route('/api/filter-museums')
 def api_filter_museums():
     """Retourne la liste des musées pour les filtres"""
     try:
         lang = session.get('language', 'fr')
         museum_field = Collection.collection_fr if lang == 'fr' else Collection.collection_en
-        
-        # Récupérer les filtres déjà appliqués
+
         selected_artists = request.args.getlist('artist')
         selected_country = request.args.get('country', '')
-        selected_cities = request.args.getlist('city')
-        
-        # Construire la requête de base
+        selected_cities  = request.args.getlist('city')
+        selected_museums = request.args.getlist('museum')
+
         query = db.session.query(
             Collection.id,
             museum_field.label('name'),
-            func.count(ArtworkCollection.artwork_id).label('count')
+            func.count(func.distinct(ArtworkCollection.artwork_id)).label('count')
         ).join(
             ArtworkCollection, Collection.id == ArtworkCollection.collection_id
         ).join(
@@ -1860,56 +1925,47 @@ def api_filter_museums():
             museum_field.isnot(None),
             museum_field != '',
             museum_field != 'Musée inconnu',
-            museum_field != 'Unknown museum'
+            museum_field != 'Unknown museum',
+            Artwork.image_url.isnot(None),
+            Artwork.image_url != ''
         )
-        
-        # Si des artistes sont sélectionnés
+
         if selected_artists:
-            artist_filters = []
-            for artist in selected_artists:
-                artist_filters.append(Artwork.creator_fallback_fr.ilike(f"%{artist}%"))
-                artist_filters.append(Artwork.creator_fallback_en.ilike(f"%{artist}%"))
-            query = query.filter(db.or_(*artist_filters))
-        
-        # Si un pays est sélectionné
-        if selected_country:
-            query = query.filter(
+            query = query.filter(db.or_(*[
                 db.or_(
-                    Collection.country_fr.ilike(f"%{selected_country}%"),
-                    Collection.country_en.ilike(f"%{selected_country}%")
-                )
-            )
-        
-        # Si des villes sont sélectionnées
+                    Artwork.creator_fallback_fr.ilike(f"%{a}%"),
+                    Artwork.creator_fallback_en.ilike(f"%{a}%")
+                ) for a in selected_artists
+            ]))
+
+        if selected_country:
+            query = query.filter(db.or_(
+                Collection.country_fr.ilike(f"%{selected_country}%"),
+                Collection.country_en.ilike(f"%{selected_country}%")
+            ))
+
         if selected_cities:
-            city_filters = []
-            for city in selected_cities:
-                city_filters.append(Collection.city_fr.ilike(f"%{city}%"))
-                city_filters.append(Collection.city_en.ilike(f"%{city}%"))
-            query = query.filter(db.or_(*city_filters))
-        
-        # Exécuter la requête
+            query = query.filter(db.or_(*[
+                db.or_(
+                    Collection.city_fr.ilike(f"%{c}%"),
+                    Collection.city_en.ilike(f"%{c}%")
+                ) for c in selected_cities
+            ]))
+
         museums = query.group_by(Collection.id, museum_field).order_by(
-            func.count(ArtworkCollection.artwork_id).desc()
-        ).limit(50).all()
-        
-        # Musées sélectionnés dans l'URL
-        selected_museums = request.args.getlist('museum')
-        
-        result = []
-        for museum in museums:
-            result.append({
-                'id': museum.id,
-                'name': museum.name,
-                'count': museum.count,
-                'selected': museum.id in selected_museums or museum.name in selected_museums
-            })
-        
-        return jsonify(result)
+            func.count(func.distinct(ArtworkCollection.artwork_id)).desc()
+        ).limit(40).all()
+
+        return jsonify([{
+            'id':       m.id,
+            'name':     m.name,
+            'count':    m.count,
+            'selected': m.id in selected_museums or m.name in selected_museums
+        } for m in museums])
+
     except Exception as e:
         print(f"Erreur filter-museums: {e}")
         return jsonify([])
-
 
 @app.route('/api/search-museums')
 def api_search_museums():
@@ -2040,6 +2096,16 @@ def _apply_sort(query, sort):
     elif sort == 'artist_asc':
         col = Artwork.creator_fallback_fr if session.get('language') == 'fr' else Artwork.creator_fallback_en
         return query.order_by(col)
+    elif sort in ('rating_desc', 'rating_asc'):
+        avg_subquery = db.session.query(
+            Rating.artwork_id,
+            func.avg(Rating.note_globale).label('avg_rating')
+        ).group_by(Rating.artwork_id).subquery()
+        query = query.outerjoin(avg_subquery, Artwork.id == avg_subquery.c.artwork_id)
+        if sort == 'rating_desc':
+            return query.order_by(avg_subquery.c.avg_rating.desc().nullslast())
+        else:
+            return query.order_by(avg_subquery.c.avg_rating.asc().nullslast())
     else:
         return query.order_by(func.random())
 

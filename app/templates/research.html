@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ site_name }} Explorer la collection</title>
+    <title>{{ site_name }} Bazardesque</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -85,53 +85,7 @@
             min-height: calc(100vh - 100px);
         }
 
-        /* ===== HERO SECTION ===== */
-        .hero-collection {
-            margin: 2rem 0 3rem;
-            position: relative;
-        }
-
-        .hero-title {
-            font-size: 4rem;
-            font-weight: 600;
-            line-height: 0.9;
-            margin-bottom: 1rem;
-            letter-spacing: -0.03em;
-        }
-
-        .hero-subtitle {
-            font-size: 1rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin-bottom: 2rem;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 3rem;
-            margin: 2rem 0;
-        }
-
-        .hero-stat {
-            text-align: left;
-        }
-
-        .hero-stat-number {
-            font-family: var(--font-display);
-            font-size: 2rem;
-            font-weight: 500;
-            color: var(--accent);
-            line-height: 1;
-            margin-bottom: 0.3rem;
-        }
-
-        .hero-stat-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-        }
-
+  
         /* ===== BARRE D'OUTILS ===== */
         .toolbar {
             display: flex;
@@ -170,6 +124,46 @@
             gap: 0.4rem;
             flex-wrap: wrap;
         }
+
+
+/* ===== BOUTON CHARGER PLUS ===== */
+#load-more-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.9rem 3.5rem;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+#load-more-btn:hover {
+    background: var(--accent);
+    color: white;
+}
+
+#load-more-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#load-more-btn:disabled:hover {
+    background: transparent;
+    color: var(--accent);
+}
+
+.btn-count {
+    font-size: 0.65rem;
+    opacity: 0.6;
+    border-left: 1px solid currentColor;
+    padding-left: 0.8rem;
+}
 
         /* ===== BOUTONS ICÔNES ===== */
         .icon-button {
@@ -666,25 +660,7 @@
     {% include 'navbar.html' %}
 
     <div class="container main-content">
-        <div class="hero-collection">
-            <h1 class="hero-title">LA COLLECTION</h1>
-            <p class="hero-subtitle">Parcourez les œuvres, filtrez par artiste, lieu ou musée.</p>
-            
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <div class="hero-stat-number">{{ total_oeuvres }}</div>
-                    <div class="hero-stat-label">ŒUVRES</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-number">{{ stats_artistes if stats_artistes else '—' }}</div>
-                    <div class="hero-stat-label">ARTISTES</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-number">{{ stats_musees if stats_musees else '—' }}</div>
-                    <div class="hero-stat-label">LIEUX</div>
-                </div>
-            </div>
-        </div>
+
 
         <div class="toolbar">
             <div class="works-counter">
@@ -726,7 +702,6 @@
                     </button>
                     <div class="dropdown-menu" id="geo-dropdown">
                         <div class="dropdown-section">
-                            <div class="dropdown-subtitle">Pays</div>
                             <div class="dropdown-search">
                                 <i class="fas fa-search"></i>
                                 <input type="text" placeholder="Rechercher un pays..." id="country-search-filter">
@@ -738,7 +713,6 @@
                             </div>
                         </div>
                         <div class="dropdown-section">
-                            <div class="dropdown-subtitle">Villes</div>
                             <div class="dropdown-search">
                                 <i class="fas fa-search"></i>
                                 <input type="text" placeholder="Rechercher une ville..." id="city-search-filter">
@@ -776,49 +750,22 @@
                     </div>
                 </div>
 
-                <!-- Type d'œuvre -->
-                <div class="filter-dropdown">
-                    <button class="icon-button" onclick="toggleDropdown('type-dropdown', event)" title="Filtrer par type d'œuvre">
-                        <i class="fas fa-paint-brush"></i>
-                    </button>
-                    <div class="dropdown-menu" id="type-dropdown">
-                        <div class="dropdown-items" id="type-items">
-                            <div class="dropdown-item">
-                                <label>
-                                    <input type="checkbox" value="peinture">
-                                    <span class="name">Peinture</span>
-                                </label>
-                            </div>
-                            <div class="dropdown-item">
-                                <label>
-                                    <input type="checkbox" value="sculpture">
-                                    <span class="name">Sculpture</span>
-                                </label>
-                            </div>
-                            <div class="dropdown-item">
-                                <label>
-                                    <input type="checkbox" value="dessin">
-                                    <span class="name">Dessin</span>
-                                </label>
-                            </div>
-                            <div class="dropdown-item">
-                                <label>
-                                    <input type="checkbox" value="photographie">
-                                    <span class="name">Photographie</span>
-                                </label>
-                            </div>
-                            <div class="dropdown-item">
-                                <label>
-                                    <input type="checkbox" value="estampe">
-                                    <span class="name">Estampe</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="dropdown-actions">
-                            <button onclick="applyTypeFilter()" class="apply-btn">Appliquer</button>
-                        </div>
-                    </div>
-                </div>
+<!-- Type d'œuvre -->
+<div class="filter-dropdown">
+    <button class="icon-button" onclick="toggleDropdown('type-dropdown', event)" title="Filtrer par type d'œuvre">
+        <i class="fas fa-paint-brush"></i>
+    </button>
+    <div class="dropdown-menu" id="type-dropdown">
+        <div class="dropdown-items" id="type-items">
+            <div style="padding:1rem;color:var(--text-muted);text-align:center;">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+        </div>
+        <div class="dropdown-actions">
+            <button onclick="applyTypeFilter()" class="apply-btn">Appliquer</button>
+        </div>
+    </div>
+</div>
 
                 <!-- Tri -->
                 <div class="filter-dropdown">
@@ -859,10 +806,10 @@
             <a href="/oeuvre/{{ artwork.id }}" class="work-item" data-id="{{ artwork.id }}">
                 <div class="work-image-container">
                     {% if artwork.image_url and artwork.image_url != '' %}
-                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=250&h=250&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=webp&q=50"
+                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=webp&q=75"
                          alt="{{ artwork.titre }}"
                          data-original="{{ artwork.image_url }}"
-                         data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=250&h=250&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=webp&q=50"
+                         data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit={% if current_view == 4 %}contain{% else %}cover{% endif %}&output=webp&q=75"
                          data-fallback3="{{ artwork.image_url }}"
                          data-current-service="weserv"
                          data-error-count="0"
@@ -883,21 +830,29 @@
             {% endfor %}
         </div>
 
-        <!-- États -->
-        <div class="loading-indicator" id="loading-indicator" style="display:none;">
-            <i class="fas fa-spinner fa-spin"></i> Chargement...
-        </div>
-        
-        <div class="end-message" id="end-message" style="display:none;">
-            <i class="fas fa-check"></i> Fin de la collection
-        </div>
-        
+<!-- États -->
+<div class="loading-indicator" id="loading-indicator" style="display:none;">
+    <i class="fas fa-spinner fa-spin"></i> Chargement...
+</div>
+
+<div id="load-more-container" style="text-align:center; padding: 3rem 0 4rem;">
+    <button id="load-more-btn" onclick="loadMoreWorks()">
+        <span class="btn-text">Voir plus</span>
+
+    </button>
+</div>
+
+<div class="end-message" id="end-message" style="display:none;">
+    <i class="fas fa-check"></i> Fin de la collection
+</div>
+
         <div class="no-results" id="no-results" style="display:none;">
             <i class="fas fa-search"></i>
             <h4>Aucune œuvre trouvée</h4>
             <p>Essayez de modifier vos filtres</p>
         </div>
-    </div>
+
+    </div><!-- fin .container / .main-content -->
 
     <!-- Scroll to top -->
     <div class="scroll-top" id="scroll-top">
@@ -934,28 +889,26 @@
         // ================================================
         // GESTIONNAIRE D'IMAGES - VERSION OPTIMISÉE
         // ================================================
-        window.handleImageError = function(img) {
-            const errorCount = parseInt(img.dataset.errorCount || '0');
-            
-            // Un seul fallback maximum
-            if (errorCount >= 1) {
-                img.style.display = 'none';
-                const placeholder = img.nextElementSibling;
-                if (placeholder) placeholder.style.display = 'flex';
-                return;
-            }
-            
-            img.dataset.errorCount = '1';
-            
-            if (img.dataset.currentService === 'weserv' && img.dataset.fallback1) {
-                img.dataset.currentService = 'wsrv';
-                img.src = img.dataset.fallback1;
-            } else {
-                img.style.display = 'none';
-                const placeholder = img.nextElementSibling;
-                if (placeholder) placeholder.style.display = 'flex';
-            }
-        };
+window.handleImageError = function(img) {
+    const errorCount = parseInt(img.dataset.errorCount || '0');
+    
+    if (errorCount === 0) {
+        // Essai 1 : wsrv.nl
+        img.dataset.errorCount = '1';
+        img.dataset.currentService = 'wsrv';
+        img.src = img.dataset.fallback1;
+    } else if (errorCount === 1) {
+        // Essai 2 : URL Wikipedia directe
+        img.dataset.errorCount = '2';
+        img.dataset.currentService = 'direct';
+        img.src = img.dataset.fallback3;
+    } else {
+        // Abandon → placeholder
+        img.style.display = 'none';
+        const placeholder = img.nextElementSibling;
+        if (placeholder) placeholder.style.display = 'flex';
+    }
+};
 
         // ================================================
         // GESTION DU THEME
@@ -987,6 +940,7 @@
                 if (id === 'geo-dropdown')     { loadCountries(); loadCities(); initCountrySearch(); initCitySearch(); }
                 if (id === 'museum-dropdown')  { loadMuseums();  initMuseumSearch(); }
                 if (id === 'sort-dropdown')    { loadSortOptions(); }
+                if (id === 'type-dropdown')    { loadTypes(); }
             }
 
             const dropdown = document.getElementById(id);
@@ -1003,6 +957,38 @@
             }
         });
 
+
+
+
+async function loadTypes() {
+    const container = document.getElementById('type-items');
+    if (!container) return;
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = {};
+        if (urlParams.getAll('artist').length) params.artist  = urlParams.getAll('artist');
+        if (urlParams.get('country'))          params.country = urlParams.get('country');
+        if (urlParams.getAll('city').length)   params.city    = urlParams.getAll('city');
+        if (urlParams.getAll('museum').length) params.museum  = urlParams.getAll('museum');
+
+        const data = await fetchAPI('/api/filter-types', params);
+        if (!data || !data.length) {
+            container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun type trouvé</div>';
+            return;
+        }
+        container.innerHTML = data.map(t => `
+            <div class="dropdown-item"><label>
+                <input type="checkbox" value="${escHtml(t.name)}" ${t.selected ? 'checked' : ''}>
+                <span class="name">${escHtml(t.name)}</span>
+                <span class="count">${t.count}</span>
+            </label></div>`).join('');
+    } catch (e) {
+        container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Erreur de chargement</div>';
+    }
+}
+
+
+
         // ================================================
         // UTILITAIRES
         // ================================================
@@ -1014,25 +1000,32 @@
         }
 
         // ===== FONCTION API AVEC CACHE =====
-        async function fetchAPI(url, params = {}) {
-            const cacheKey = url + JSON.stringify(params);
-            
-            if (apiCache[cacheKey]) {
-                return apiCache[cacheKey];
-            }
-            
-            try {
-                const qs = new URLSearchParams(params).toString();
-                const res = await fetch(qs ? `${url}?${qs}` : url);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-                apiCache[cacheKey] = data;
-                return data;
-            } catch (e) {
-                console.error(`Erreur API ${url}:`, e);
-                return null;
+async function fetchAPI(url, params = {}) {
+    const cacheKey = url + JSON.stringify(params);
+    
+    if (apiCache[cacheKey]) {
+        return apiCache[cacheKey];
+    }
+    
+    try {
+        const qs = new URLSearchParams();
+        for (const [key, val] of Object.entries(params)) {
+            if (Array.isArray(val)) {
+                val.forEach(v => qs.append(key, v));
+            } else if (val) {
+                qs.append(key, val);
             }
         }
+        const res = await fetch(qs.toString() ? `${url}?${qs}` : url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        apiCache[cacheKey] = data;
+        return data;
+    } catch (e) {
+        console.error(`Erreur API ${url}:`, e);
+        return null;
+    }
+}
 
         window.setViewMode = function (mode) {
             currentView = mode;
@@ -1077,6 +1070,7 @@
                 const artists = urlParams.getAll('artist');
                 const country = urlParams.get('country');
                 const cities  = urlParams.getAll('city');
+                const museums = urlParams.getAll('museum');
                 if (artists.length) params.artist = artists;
                 if (country)        params.country = country;
                 if (cities.length)  params.city    = cities;
@@ -1154,6 +1148,7 @@
                 const data = await fetchAPI('/api/filter-countries', {
                     ...(urlParams.getAll('artist').length ? { artist: urlParams.getAll('artist') } : {}),
                     ...(urlParams.getAll('city').length   ? { city:   urlParams.getAll('city')   } : {}),
+                    ...(urlParams.getAll('museum').length ? { museum: urlParams.getAll('museum') } : {}),   
                 });
 
                 let html = `<div class="dropdown-item"><label>
@@ -1224,6 +1219,7 @@
                 if (urlParams.getAll('artist').length) params.artist  = urlParams.getAll('artist');
                 if (urlParams.get('country'))          params.country = urlParams.get('country');
                 if (selectedCities.length)             params.city    = selectedCities;
+                if (urlParams.getAll('museum').length) params.museum  = urlParams.getAll('museum');
 
                 const data = await fetchAPI('/api/filter-cities', params);
 
@@ -1276,6 +1272,7 @@
                 if (urlParams.getAll('artist').length) params.artist  = urlParams.getAll('artist');
                 if (urlParams.get('country'))          params.country = urlParams.get('country');
                 if (urlParams.getAll('city').length)   params.city    = urlParams.getAll('city');
+                if (urlParams.getAll('museum').length) params.museum  = urlParams.getAll('museum');
 
                 const data = await fetchAPI('/api/filter-museums', params);
 
@@ -1293,12 +1290,12 @@
                     return;
                 }
                 
-                container.innerHTML = data.map(m => `
-                    <div class="dropdown-item"><label>
-                        <input type="checkbox" value="${escHtml(m.id)}" ${m.selected ? 'checked' : ''}>
-                        <span class="name">${escHtml(m.name)}</span>
-                        <span class="count">${m.count}</span>
-                    </label></div>`).join('');
+container.innerHTML = data.map(m => `
+    <div class="dropdown-item"><label>
+        <input type="checkbox" value="${escHtml(m.id)}" ${m.selected ? 'checked' : ''}>
+        <span class="name" title="${escHtml(m.name)}">${escHtml(m.name.length > 30 ? m.name.substring(0, 30) + '…' : m.name)}</span>
+        <span class="count">${m.count}</span>
+    </label></div>`).join('');
                     
             } catch (e) {
                 console.error('Erreur loadMuseums:', e);
@@ -1339,12 +1336,10 @@
             });
         }
 
-        window.applyMuseumFilter = function () {
-            const selected = Array.from(document.querySelectorAll('#museum-items input:checked')).map(c => {
-                const label = c.closest('.dropdown-item')?.querySelector('.name')?.textContent;
-                return label || c.value;
-            });
-            
+window.applyMuseumFilter = function () {
+    const selected = Array.from(document.querySelectorAll('#museum-items input:checked')).map(c => {
+        return c.value;
+    });
             const params = new URLSearchParams(window.location.search);
             params.delete('museum');
             selected.forEach(m => params.append('museum', m));
@@ -1359,6 +1354,8 @@
             const current = new URLSearchParams(window.location.search).get('sort') || 'relevance';
             const options = [
                 { value: 'relevance', label: 'Pertinence' },
+                { value: 'rating_desc', label: 'Mieux notées' },
+                { value: 'rating_asc', label: 'Moins bien notées' },
                 { value: 'date_desc', label: 'Plus récent' },
                 { value: 'date_asc',  label: 'Plus ancien' },
                 { value: 'title_asc', label: 'Titre A-Z'   },
@@ -1385,6 +1382,8 @@
             if (!container) return;
             const params = new URLSearchParams(window.location.search);
             const tags   = [];
+            const q = params.get('q');
+            if (q) tags.push({ type: 'q', label: `"${q}"`, value: q });
 
             params.getAll('artist').forEach(a => tags.push({ type: 'artist',  label: a, value: a }));
 
@@ -1415,95 +1414,89 @@
             updateCounter();
         }
 
-        window.removeTag = function (type, value) {
-            const params = new URLSearchParams(window.location.search);
-            if (type === 'artist') {
-                const list = params.getAll('artist').filter(a => a !== value);
-                params.delete('artist'); list.forEach(a => params.append('artist', a));
-            } else if (type === 'country') {
-                params.delete('country');
-            } else if (type === 'city') {
-                const list = params.getAll('city').filter(c => c !== value);
-                params.delete('city'); list.forEach(c => params.append('city', c));
-            } else if (type === 'museum') {
-                const list = params.getAll('museum').filter(m => m !== value);
-                params.delete('museum'); list.forEach(m => params.append('museum', m));
-            } else if (type === 'type') {
-                const list = params.getAll('type').filter(t => t !== value);
-                params.delete('type'); list.forEach(t => params.append('type', t));
-            } else if (type === 'sort') {
-                params.delete('sort');
-            }
-            window.location.href = `/research?${params}`;
-        };
+window.removeTag = function (type, value) {
+    const params = new URLSearchParams(window.location.search);
+    if (type === 'artist') {
+        const list = params.getAll('artist').filter(a => a !== value);
+        params.delete('artist'); list.forEach(a => params.append('artist', a));
+    } else if (type === 'country') {
+        params.delete('country');
+    } else if (type === 'city') {
+        const list = params.getAll('city').filter(c => c !== value);
+        params.delete('city'); list.forEach(c => params.append('city', c));
+    } else if (type === 'museum') {
+        const list = params.getAll('museum').filter(m => m !== value);
+        params.delete('museum'); list.forEach(m => params.append('museum', m));
+    } else if (type === 'type') {
+        const list = params.getAll('type').filter(t => t !== value);
+        params.delete('type'); list.forEach(t => params.append('type', t));
+    } else if (type === 'sort') {
+        params.delete('sort');
+    } else if (type === 'q') {
+        params.delete('q');
+    }
+    window.location.href = `/research?${params}`;
+};
 
         // ================================================
         // SCROLL INFINI
         // ================================================
-        function initInfiniteScroll() {
-            if (document.getElementById('scroll-sentinel')) return;
-            
-            const sentinel = document.createElement('div');
-            sentinel.id = 'scroll-sentinel';
-            sentinel.style.cssText = 'height:10px;width:100%;margin-top:20px;';
-            
-            const grid = document.getElementById('works-grid');
-            if (grid && grid.parentNode) {
-                grid.parentNode.insertBefore(sentinel, grid.nextSibling);
-            }
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && hasMore && !isLoading && !scrollTriggered) {
-                        scrollTriggered = true;
-                        loadMoreWorks();
-                    }
-                });
-            }, { rootMargin: '200px', threshold: 0.1 });
-            
-            observer.observe(sentinel);
+
+window.loadMoreWorks = async function() {
+    if (isLoading || !hasMore) return;
+    
+    const btn = document.getElementById('load-more-btn');
+    const btnText = document.querySelector('.btn-text');
+    isLoading = true;
+    
+    if (btn) btn.disabled = true;
+    if (btnText) btnText.textContent = 'Chargement...';
+
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('page', currentPage + 1);
+        urlParams.set('limit', 12);
+
+        const res = await fetch(`/api/works?${urlParams}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        const data = await res.json();
+
+        if (!data.works || !data.works.length) {
+            hasMore = false;
+            document.getElementById('load-more-container').style.display = 'none';
+            document.getElementById('end-message').style.display = 'block';
+            return;
         }
 
-        async function loadMoreWorks() {
-            if (isLoading || !hasMore) { 
-                scrollTriggered = false; 
-                return; 
-            }
-            
-            isLoading = true;
-            document.getElementById('loading-indicator').style.display = 'block';
+        appendWorks(data.works);
+        currentPage++;
+        displayedCount += data.works.length;
+        hasMore = data.has_more;
+        if (data.total) totalOeuvres = data.total;
+        updateCounter();
 
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                urlParams.set('page', currentPage + 1);
-                urlParams.set('limit', 12);
+        // Mettre à jour le compteur restant
+        const remaining = totalOeuvres - displayedCount;
+        const countEl = document.getElementById('remaining-count');
+        if (countEl && remaining > 0) countEl.textContent = `${remaining} restantes`;
 
-                const res = await fetch(`/api/works?${urlParams}`);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                
-                const data = await res.json();
-
-                if (!data.works || !data.works.length) {
-                    hasMore = false;
-                    document.getElementById('end-message').style.display = 'block';
-                    return;
-                }
-
-                appendWorks(data.works);
-                currentPage++;
-                displayedCount += data.works.length;
-                hasMore = data.has_more;
-                if (data.total) totalOeuvres = data.total;
-                updateCounter();
-
-            } catch (e) {
-                console.error('Erreur scroll infini:', e);
-            } finally {
-                isLoading = false;
-                scrollTriggered = false;
-                document.getElementById('loading-indicator').style.display = 'none';
-            }
+        if (!hasMore) {
+            document.getElementById('load-more-container').style.display = 'none';
+            document.getElementById('end-message').style.display = 'block';
         }
+
+    } catch (e) {
+        console.error('Erreur chargement:', e);
+    } finally {
+        isLoading = false;
+        if (btn) btn.disabled = false;
+        if (btnText) btnText.textContent = 'Voir plus';
+    }
+}
+
+
 
         function appendWorks(works) {
             const grid = document.getElementById('works-grid');
@@ -1522,7 +1515,7 @@
                     const img = document.createElement('img');
                     const encodedUrl = encodeURIComponent(artwork.image_url);
                     
-                    img.src = `https://images.weserv.nl/?url=${encodedUrl}&w=250&h=250&fit=${fit}&output=webp&q=50`;
+                    img.src = `https://images.weserv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=webp&q=75`;
                     img.alt = artwork.titre || '';
                     img.loading = 'lazy';
                     img.style.background = 'transparent';
@@ -1530,26 +1523,14 @@
                     img.style.transition = 'opacity 0.3s';
                     
                     img.dataset.original = artwork.image_url;
-                    img.dataset.fallback1 = `https://wsrv.nl/?url=${encodedUrl}&w=250&h=250&fit=${fit}&output=webp&q=50`;
+                    img.dataset.fallback1 = `https://wsrv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=webp&q=75`;
                     img.dataset.fallback3 = artwork.image_url;
                     img.dataset.currentService = 'weserv';
                     img.dataset.errorCount = '0';
+                    img.onload = function() { this.style.opacity = '1'; };
+                    img.onerror = function() { handleImageError(this); };
                     
-                    const timeoutId = setTimeout(() => {
-                        if (img.style.opacity === '0') {
-                            handleImageError(img);
-                        }
-                    }, 15000);
-                    
-                    img.onload = function() { 
-                        clearTimeout(timeoutId);
-                        this.style.opacity = '1'; 
-                    };
-                    
-                    img.onerror = function() { 
-                        clearTimeout(timeoutId);
-                        handleImageError(this); 
-                    };
+
 
                     const ph = document.createElement('div');
                     ph.className = 'image-placeholder';
@@ -1621,23 +1602,34 @@
             setViewMode(currentView);
             loadSortOptions();
             updateActiveTags();
-            initInfiniteScroll();
+//            initInfiniteScroll();
             initScrollToTop();
             prioritizeImages();
 
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.getAll('artist').length > 0) {
-                _loadedDropdowns.add('artist-dropdown');
-                loadArtists(); initArtistSearch();
-            }
-            if (urlParams.get('country') || urlParams.getAll('city').length > 0) {
-                _loadedDropdowns.add('geo-dropdown');
-                loadCountries(); loadCities(); initCountrySearch(); initCitySearch();
-            }
-            if (urlParams.getAll('museum').length > 0) {
-                _loadedDropdowns.add('museum-dropdown');
-                loadMuseums(); initMuseumSearch();
-            }
+            const remaining = totalOeuvres - displayedCount;
+            const countEl = document.getElementById('remaining-count');
+            if (countEl && remaining > 0) countEl.textContent = `${remaining} restantes`;
+
+const urlParams = new URLSearchParams(window.location.search);
+
+// Toujours charger tous les filtres si n'importe quel filtre est actif
+const hasAnyFilter = urlParams.getAll('artist').length > 0
+    || urlParams.get('country')
+    || urlParams.getAll('city').length > 0
+    || urlParams.getAll('museum').length > 0
+    || urlParams.getAll('type').length > 0
+    || urlParams.get('q');
+
+if (hasAnyFilter) {
+    _loadedDropdowns.add('artist-dropdown');
+    _loadedDropdowns.add('geo-dropdown');
+    _loadedDropdowns.add('museum-dropdown');
+    _loadedDropdowns.add('type-dropdown');
+    loadArtists(); initArtistSearch();
+    loadCountries(); loadCities(); initCountrySearch(); initCitySearch();
+    loadMuseums(); initMuseumSearch();
+    loadTypes();
+}
         });
 
     })();

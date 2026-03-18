@@ -3,80 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ site_name }} Bazardesque</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">  <!-- ← AJOUTÉ pour le modal plus tard -->
+    <title>{{ site_name }} - Inscription</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== VARIABLES CSS (sync avec research/home) ===== */
-        :root {
-            --bg-dark: #0a0a0a;
-            --bg-light: #f5f0e8;
-            --surface-dark: #141414;
-            --surface-light: #ffffff;
-            --text-dark: #ffffff;
-            --text-light: #2c3e50;
-            --text-muted-dark: #7a7a7a;
-            --text-muted-light: #5d6d7e;
-            --border-dark: #2a2a2a;
-            --border-light: #e0d6c8;
-            --accent: #6c5ce7;
-    --font-display: 'Space Grotesk', sans-serif;
-    --font-text: 'Inter', sans-serif;
-    --surface: var(--surface-dark);
-    --border-color: var(--border-dark);
-    --text-muted: var(--text-muted-dark);
-    --accent-hover: #5a4bcf;
-        }
-
-        body.theme-dark {
-            --bg: var(--bg-dark);
-            --surface: var(--surface-dark);
-            --text: var(--text-dark);
-            --text-muted: var(--text-muted-dark);
-            --border: var(--border-dark);
-            --input-bg: #1e1e1e;
-            --input-border: #3a3a3a;
-            --card-shadow: 0 4px 24px rgba(0,0,0,0.4);
-        }
-
-        body.theme-light {
-            --bg: var(--bg-light);
-            --surface: var(--surface-light);
-            --text: var(--text-light);
-            --text-muted: var(--text-muted-light);
-            --border: var(--border-light);
-            --input-bg: #ffffff;
-            --input-border: #e0d6c8;
-            --card-shadow: 0 4px 12px rgba(44,62,80,0.05);
-        }
-
         /* ===== STYLES GÉNÉRAUX ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+            color: #2c3e50;
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
-
+        
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Playfair Display', serif;
             font-weight: 500;
-            color: var(--text);
+            color: #1e2b3a;
         }
-
-        /* ===== REGISTER ===== */
+        
+        /* ===== STYLES SPÉCIFIQUES À REGISTER ===== */
         .register-container {
             max-width: 450px;
             margin: 0 auto;
@@ -87,64 +44,54 @@
             min-height: calc(100vh - 150px);
             padding: 1rem;
         }
-
+        
         .register-card {
-            background: var(--surface);
+            background: var(--surface, white);
             border-radius: 16px;
             padding: 2rem;
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 4px 12px rgba(44,62,80,0.05);
             width: 100%;
-            border: 1px solid var(--border);
         }
-
+        
         .register-title {
             font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
             text-align: center;
-            color: var(--text);
+            color: #2c3e50;
         }
-
+        
         .form-control {
-            border: 1px solid var(--input-border);
+            border: 1px solid #e0d6c8;
             border-radius: 8px;
             padding: 0.6rem 1rem;
             font-family: 'Inter', sans-serif;
             font-size: 0.9rem;
-            background-color: var(--input-bg);
-            color: var(--text);
-            transition: border-color 0.2s, background-color 0.3s, color 0.3s;
         }
-
-        .form-control::placeholder {
-            color: var(--text-muted);
-        }
-
+        
         .form-control:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 0.2rem rgba(108,92,231,0.15);
+            border-color: #2c3e50;
+            box-shadow: 0 0 0 0.2rem rgba(44,62,80,0.1);
             outline: none;
-            background-color: var(--input-bg);
-            color: var(--text);
         }
-
-        /* Œil mot de passe */
+        
+        /* Style pour l'œil */
         .password-input-group {
             position: relative;
             display: flex;
             align-items: center;
         }
-
+        
         .password-input-group .form-control {
             padding-right: 2.5rem;
         }
-
+        
         .password-toggle {
             position: absolute;
             right: 10px;
             background: transparent;
             border: none;
-            color: var(--text-muted);
+            color: #5d6d7e;
             cursor: pointer;
             padding: 0;
             font-size: 1rem;
@@ -156,16 +103,15 @@
             width: 24px;
             height: 24px;
         }
-
+        
         .password-toggle:hover {
-            color: var(--text);
+            color: #2c3e50;
         }
-
+        
         .password-toggle:focus {
             outline: none;
         }
-
-        /* Bouton S'inscrire */
+        
         .btn-register {
             background: #2c3e50;
             color: #e6d8c3;
@@ -179,45 +125,45 @@
             margin: 1.5rem auto 0;
             transition: all 0.2s;
         }
-
+        
         .btn-register:hover {
             background: #1e2b3a;
             color: #e6d8c3;
             transform: scale(1.02);
         }
+        
+        /* ===== CORRECTION : Lien vers connexion ===== */
+.register-card .login-redirect-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #5d6d7e;
+    font-size: 0.85rem;
+}
 
-        /* Lien connexion */
-        .register-card .login-redirect-link {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
+.register-card .login-redirect-link a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
 
-        .register-card .login-redirect-link a {
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.85rem;
-        }
-
-        .register-card .login-redirect-link a:hover {
-            text-decoration: underline;
-        }
-
-        /* Exigences mot de passe */
+.register-card .login-redirect-link a:hover {
+    text-decoration: underline;
+}
+        
+        /* Exigences du mot de passe */
         .password-requirements {
-            font-size: 0.7rem;
+            font-size: 0.7rem;  /* Réduit de 0.75rem à 0.7rem */
             margin-top: 0.5rem;
             margin-bottom: 0;
             display: flex;
             flex-wrap: wrap;
-            gap: 0.8rem;
-            color: var(--text-muted);
+            gap: 0.8rem;  /* Réduit de 1rem à 0.8rem */
+            color: #5d6d7e;
             padding-left: 0;
             list-style: none;
         }
-
+        
         .password-requirements li {
             display: inline-flex;
             align-items: center;
@@ -225,16 +171,21 @@
             transition: color 0.2s;
             font-size: 0.7rem;
         }
-
+        
         .password-requirements li i {
             font-size: 0.7rem;
             margin-right: 0.3rem;
         }
-
-        .password-requirements li.valid  { color: #28a745; }
-        .password-requirements li.invalid { color: #dc3545; }
-
-        /* Alertes */
+        
+        .password-requirements li.valid {
+            color: #28a745;
+        }
+        
+        .password-requirements li.invalid {
+            color: #dc3545;
+        }
+        
+        /* Alertes centrées */
         .alert {
             border-radius: 8px;
             margin: 0 0 1.5rem 0;
@@ -245,37 +196,37 @@
             justify-content: center;
             gap: 0.5rem;
         }
-
+        
         .alert-success {
             background: #d4edda;
             color: #155724;
             border-left: 4px solid #28a745;
         }
-
+        
         .alert-danger {
             background: #f8d7da;
             color: #721c24;
             border-left: 4px solid #dc3545;
         }
-
+        
         .alert ul {
             margin-bottom: 0;
             padding-left: 1.2rem;
             text-align: left;
         }
-
+        
         .alert-dismissible .btn-close {
             padding: 0.75rem;
         }
     </style>
 </head>
-<body class="theme-dark">
+<body>
     {% include 'navbar.html' %}
 
     <div class="container register-container">
         <div class="register-card">
             <h2 class="register-title">Créer un compte</h2>
-
+            
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -287,7 +238,7 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-
+            
             {% if errors %}
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="fas fa-exclamation-circle"></i>
@@ -299,44 +250,45 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endif %}
-
+            
             <form method="POST" action="/register">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
+                
                 <div class="mb-3">
-                    <input type="text" class="form-control" id="username" name="username"
+                    <input type="text" class="form-control" id="username" name="username" 
                            placeholder="Nom d'utilisateur"
                            value="{{ username or '' }}" required autofocus>
                 </div>
-
+                
                 <div class="mb-3">
-                    <input type="email" class="form-control" id="email" name="email"
+                    <input type="email" class="form-control" id="email" name="email" 
                            placeholder="Email"
                            value="{{ email or '' }}" required>
                 </div>
-
+                
                 <div class="mb-3">
                     <div class="password-input-group">
-                        <input type="password" class="form-control" id="password" name="password"
+                        <input type="password" class="form-control" id="password" name="password" 
                                placeholder="Mot de passe" required>
                         <button type="button" class="password-toggle" onclick="togglePasswordVisibility()">
                             <i class="far fa-eye" id="toggleIcon"></i>
                         </button>
                     </div>
                     <ul class="password-requirements" id="password-requirements">
-                        <li id="req-length"><i class="fas fa-circle" style="font-size:0.4rem;"></i> 8 caractères</li>
-                        <li id="req-uppercase"><i class="fas fa-circle" style="font-size:0.4rem;"></i> 1 majuscule</li>
-                        <li id="req-lowercase"><i class="fas fa-circle" style="font-size:0.4rem;"></i> 1 minuscule</li>
-                        <li id="req-number"><i class="fas fa-circle" style="font-size:0.4rem;"></i> 1 chiffre</li>
+                        <li id="req-length"><i class="fas fa-circle" style="font-size: 0.4rem;"></i> 8 caractères</li>
+                        <li id="req-uppercase"><i class="fas fa-circle" style="font-size: 0.4rem;"></i> 1 majuscule</li>
+                        <li id="req-lowercase"><i class="fas fa-circle" style="font-size: 0.4rem;"></i> 1 minuscule</li>
+                        <li id="req-number"><i class="fas fa-circle" style="font-size: 0.4rem;"></i> 1 chiffre</li>
                     </ul>
                 </div>
-
+                
                 <button type="submit" class="btn-register">S'inscrire</button>
             </form>
-
-            <div class="login-redirect-link">
-                Déjà un compte ? <a href="/login">Se connecter</a>
-            </div>
+            
+            <!-- CORRECTION : Lien vers connexion plus petit -->
+<div class="login-redirect-link">
+    Déjà un compte ? <a href="/login">Se connecter</a>
+</div>
         </div>
     </div>
 
@@ -344,24 +296,20 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Sync thème au chargement (même logique que navbar)
-        (function() {
-            const saved = localStorage.getItem('theme') || 'dark';
-            document.body.classList.remove('theme-dark', 'theme-light');
-            document.body.classList.add('theme-' + saved);
-        })();
-
-        // Afficher/masquer le mot de passe
+        // Fonction pour afficher/masquer le mot de passe
         function togglePasswordVisibility() {
             const passwordInput = document.getElementById('password');
             const toggleIcon = document.getElementById('toggleIcon');
+            
             if (passwordInput && toggleIcon) {
                 if (passwordInput.type === 'password') {
                     passwordInput.type = 'text';
-                    toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
                 } else {
                     passwordInput.type = 'password';
-                    toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
                 }
             }
         }
@@ -369,30 +317,66 @@
         // Validation en temps réel du mot de passe
         document.addEventListener('DOMContentLoaded', function() {
             const passwordInput = document.getElementById('password');
-            if (!passwordInput) return;
-
-            passwordInput.addEventListener('input', function(e) {
-                const password = e.target.value;
-
-                function update(id, valid, label) {
-                    const el = document.getElementById(id);
-                    if (!el) return;
-                    el.classList.toggle('valid', valid);
-                    el.classList.toggle('invalid', !valid);
-                    el.innerHTML = `<i class="fas fa-${valid ? 'check' : 'times'}-circle"></i> ${label}`;
-                }
-
-                update('req-length',    password.length >= 8,    '8 caractères');
-                update('req-uppercase', /[A-Z]/.test(password),  '1 majuscule');
-                update('req-lowercase', /[a-z]/.test(password),  '1 minuscule');
-                update('req-number',    /[0-9]/.test(password),  '1 chiffre');
-            });
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function(e) {
+                    const password = e.target.value;
+                    
+                    // Longueur
+                    const lengthReq = document.getElementById('req-length');
+                    if (password.length >= 8) {
+                        lengthReq.classList.add('valid');
+                        lengthReq.classList.remove('invalid');
+                        lengthReq.innerHTML = '<i class="fas fa-check-circle"></i> 8 caractères';
+                    } else {
+                        lengthReq.classList.add('invalid');
+                        lengthReq.classList.remove('valid');
+                        lengthReq.innerHTML = '<i class="fas fa-times-circle"></i> 8 caractères';
+                    }
+                    
+                    // Majuscule
+                    const upperReq = document.getElementById('req-uppercase');
+                    if (/[A-Z]/.test(password)) {
+                        upperReq.classList.add('valid');
+                        upperReq.classList.remove('invalid');
+                        upperReq.innerHTML = '<i class="fas fa-check-circle"></i> 1 majuscule';
+                    } else {
+                        upperReq.classList.add('invalid');
+                        upperReq.classList.remove('valid');
+                        upperReq.innerHTML = '<i class="fas fa-times-circle"></i> 1 majuscule';
+                    }
+                    
+                    // Minuscule
+                    const lowerReq = document.getElementById('req-lowercase');
+                    if (/[a-z]/.test(password)) {
+                        lowerReq.classList.add('valid');
+                        lowerReq.classList.remove('invalid');
+                        lowerReq.innerHTML = '<i class="fas fa-check-circle"></i> 1 minuscule';
+                    } else {
+                        lowerReq.classList.add('invalid');
+                        lowerReq.classList.remove('valid');
+                        lowerReq.innerHTML = '<i class="fas fa-times-circle"></i> 1 minuscule';
+                    }
+                    
+                    // Chiffre
+                    const numberReq = document.getElementById('req-number');
+                    if (/[0-9]/.test(password)) {
+                        numberReq.classList.add('valid');
+                        numberReq.classList.remove('invalid');
+                        numberReq.innerHTML = '<i class="fas fa-check-circle"></i> 1 chiffre';
+                    } else {
+                        numberReq.classList.add('invalid');
+                        numberReq.classList.remove('valid');
+                        numberReq.innerHTML = '<i class="fas fa-times-circle"></i> 1 chiffre';
+                    }
+                });
+            }
         });
 
         // Auto-fermeture des alertes après 5 secondes
         setTimeout(function() {
             document.querySelectorAll('.alert').forEach(function(alert) {
-                new bootstrap.Alert(alert).close();
+                let bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
             });
         }, 5000);
     </script>
