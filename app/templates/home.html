@@ -48,8 +48,7 @@
             font-weight: 300;
             transition: background-color 0.3s ease, color 0.3s ease;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+
         }
 
         body.theme-light {
@@ -83,12 +82,12 @@
 
         .container-fluid {
             width: 100%;
-            padding: 0 2rem;
+            padding: 0 0.75rem;
         }
 
         /* ===== Ajustement pour navbar fixe ===== */
         main {
-            flex: 1;
+            flex: 0 0 auto;
         }
 
         /* ===== HERO GALERIE ===== */
@@ -97,7 +96,7 @@
             position: relative;
             display: flex;
             align-items: center;
-            margin-bottom: 4rem;
+            margin-bottom: 0rem;
             overflow: hidden;
         }
 
@@ -330,14 +329,14 @@
 
         /* ===== SECTION GALERIE ===== */
         .section-gallery {
-            margin: 6rem 0;
+            margin: 4rem 0;
         }
 
         .section-header-gallery {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 3rem;
+            margin-bottom: 0.25rem;
         }
         
         .section-title-gallery {
@@ -432,6 +431,26 @@
             justify-content: center;
             color: var(--text-muted);
         }
+
+
+.mosaic-fav {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+.mosaic-fav.active { opacity: 1; }
+.mosaic-fav i { color: white; font-size: 1rem; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+.mosaic-fav.active i { color: var(--favorite, #e03131); }
 
         /* ===== SCROLL HORIZONTAL ===== */
         .horizontal-scroll {
@@ -791,50 +810,56 @@
             </div>
         </div>
 
-        <!-- ===== CONTENU PRINCIPAL ===== -->
-        <div class="container-fluid">
-            <!-- MOSAÏQUE -->
-            <div class="section-gallery">
-                <div class="section-header-gallery">
-                    <h2 class="section-title-gallery">EXPLORER</h2>
-                    <a href="/research" class="section-link-gallery">VOIR TOUT →</a>
-                </div>
-                
-                <div class="mosaic-grid">
-                    {% set count = namespace(value=0) %}
-                    {% for artwork in mosaic_artworks %}
-                        {% if count.value < 12 %}
-                            {% if artwork.image_url and artwork.image_url != '' %}
-                            <a href="/oeuvre/{{ artwork.id }}" class="mosaic-item">
-<img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=600&h=900&fit=cover&a=attention&output=jpg&q=80" 
-     alt="{{ artwork.titre if artwork.titre else 'Sans titre' }}" 
-     loading="lazy"
-     data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=600&h=900&fit=cover&a=attention&output=jpg&q=80"
-     data-fallback3="{{ artwork.image_url }}"
-     data-error-count="0"
-     style="opacity:0; transition: opacity 0.3s;"
-     onload="this.style.opacity='1'"
-     onerror="handleImageError(this)">
-                                <div class="mosaic-overlay">
-                                    <div class="mosaic-overlay-title">{{ artwork.titre|truncate(30) if artwork.titre else 'SANS TITRE' }}</div>
-                                    <div class="mosaic-overlay-artist">{{ artwork.createur|truncate(25) if artwork.createur else 'ARTISTE INCONNU' }}</div>
-                                </div>
-                            </a>
-                            {% set count.value = count.value + 1 %}
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                    
-                    <!-- Placeholders -->
-                    {% for i in range(12 - count.value) %}
-                    <div class="mosaic-item">
-                        <div class="mosaic-placeholder">
-                            <i class="fas fa-image fa-2x"></i>
+
+
+<!-- ===== CONTENU PRINCIPAL ===== -->
+<div class="container-fluid">
+    <!-- MOSAÏQUE -->
+    <div class="section-gallery">
+        <div class="section-header-gallery">
+            <h2 class="section-title-gallery">EXPLORER</h2>
+            <a href="/research" class="section-link-gallery">VOIR TOUT →</a>
+        </div>
+        
+        <div class="mosaic-grid">
+            {% set count = namespace(value=0) %}
+            {% for artwork in mosaic_artworks %}
+                {% if count.value < 12 %}
+                    {% if artwork.image_url and artwork.image_url != '' %}
+                    <a href="/oeuvre/{{ artwork.id }}" class="mosaic-item">
+                        <div class="mosaic-fav" onclick="toggleMosaicFav(event, '{{ artwork.id }}', this)">
+                            <i class="far fa-heart"></i>
                         </div>
-                    </div>
-                    {% endfor %}
+                        <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=600&h=900&fit=cover&a=attention&output=jpg&q=80"
+                             alt="{{ artwork.titre if artwork.titre else 'Sans titre' }}"
+                             loading="lazy"
+                             data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=600&h=900&fit=cover&a=attention&output=jpg&q=80"
+                             data-fallback3="{{ artwork.image_url }}"
+                             data-error-count="0"
+                             style="opacity:0; transition: opacity 0.3s;"
+                             onload="this.style.opacity='1'"
+                             onerror="handleImageError(this)">
+                        <div class="mosaic-overlay">
+                            <div class="mosaic-overlay-title">{{ artwork.titre|truncate(30) if artwork.titre else 'SANS TITRE' }}</div>
+                            <div class="mosaic-overlay-artist">{{ artwork.createur|truncate(25) if artwork.createur else 'ARTISTE INCONNU' }}</div>
+                        </div>
+                    </a>
+                    {% set count.value = count.value + 1 %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            
+            <!-- Placeholders -->
+            {% for i in range(12 - count.value) %}
+            <div class="mosaic-item">
+                <div class="mosaic-placeholder">
+                    <i class="fas fa-image fa-2x"></i>
                 </div>
             </div>
+            {% endfor %}
+        </div>
+    </div>
+
 
             <!-- MIEUX NOTÉES -->
             <div class="section-gallery">
@@ -849,7 +874,10 @@
                         {% if artwork.image_url and artwork.image_url != '' and displayed < 10 %}
                             {% set displayed = displayed + 1 %}
                             <a href="/oeuvre/{{ artwork.id }}" class="top-rated-item">
-                                <div class="top-rated-image">
+<div class="top-rated-image">
+    <div class="mosaic-fav" onclick="toggleMosaicFav(event, '{{ artwork.id }}', this)">
+        <i class="far fa-heart"></i>
+    </div>
 <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit=cover&a=attention&output=jpg&q=80" 
      alt="{{ artwork.titre if artwork.titre else 'Sans titre' }}" 
      loading="lazy"
@@ -860,11 +888,6 @@
      onload="this.style.opacity='1'"
      onerror="handleImageError(this)">
 
-                                    {% if artwork.avg_rating %}
-                                    <div class="top-rated-badge">
-                                        <i class="fas fa-star"></i> {{ artwork.avg_rating|round(1) }}
-                                    </div>
-                                    {% endif %}
                                     
                                     <div class="top-rated-rank">{{ loop.index }}</div>
                                 </div>
@@ -896,6 +919,9 @@
                             {% set displayed = displayed + 1 %}
                             <a href="/oeuvre/{{ artwork.id }}" class="top-rated-item">
                                 <div class="top-rated-image">
+    <div class="mosaic-fav" onclick="toggleMosaicFav(event, '{{ artwork.id }}', this)">
+        <i class="far fa-heart"></i>
+    </div>
 <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit=cover&a=attention&output=jpg&q=80" 
      alt="{{ artwork.titre if artwork.titre else 'Sans titre' }}" 
      loading="lazy"
@@ -927,48 +953,54 @@
                 </div>
             </div>
 
-            <!-- CRITIQUES COMPACTES - PLUS PETITES ET PLUS NOMBREUSES -->
-            <div class="section-gallery">
-                <div class="section-header-gallery">
-                    <h2 class="section-title-gallery">DERNIÈRES CRITIQUES</h2>
-                    <a href="/research" class="section-link-gallery">TOUTES LES CRITIQUES →</a>
-                </div>
-                
-                <div class="reviews-grid">
-                    {% if recent_reviews %}
-                        {% for review in recent_reviews[:8] %}
-                            {% if review and review.username and review.artwork %}
-                            <div class="review-card">
-                                <div class="review-header">
-                                    <div class="review-avatar">{{ review.username[0]|upper if review.username else '?' }}</div>
-                                    <div class="review-meta">
-                                        <div class="review-user">{{ review.username if review.username else 'ANONYME' }}</div>
-                                        {% if review.artwork and review.artwork.id %}
-                                        <a href="/oeuvre/{{ review.artwork.id }}" class="review-work">
-                                            {{ review.artwork.titre|truncate(45) if review.artwork.titre else 'ŒUVRE SANS TITRE' }}
-                                        </a>
-                                        {% endif %}
-                                        <div class="review-rating">
-                                            <i class="fas fa-star"></i> {{ review.note_globale|round(1) if review.note_globale else '?' }}/5
-                                        </div>
-                                    </div>
-                                </div>
-                                {% if review.commentaire %}
-                                <div class="review-comment">
-                                    {{ review.commentaire|truncate(80) }}
-                                </div>
-                                {% endif %}
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted); border: 1px solid var(--border-color);">
-                            Aucune critique pour le moment.<br>
-                            <a href="/research" style="color: var(--accent); text-decoration: none; margin-top: 0.5rem; display: inline-block;">EXPLORER LES ŒUVRES →</a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+
+
+<!-- CRITIQUES COMPACTES -->
+<div class="section-gallery">
+    <div class="section-header-gallery">
+        <h2 class="section-title-gallery">DERNIÈRES CRITIQUES</h2>
+        <a href="/research" class="section-link-gallery">TOUTES LES CRITIQUES →</a>
+    </div>
+    
+    <div class="horizontal-scroll">
+        {% if recent_reviews %}
+            {% for review in recent_reviews[:10] %}
+                {% if review and review.username and review.artwork and review.artwork.image_url %}
+<a href="/oeuvre/{{ review.artwork.id }}" class="top-rated-item" style="text-decoration:none;">
+    <div class="top-rated-image">
+        <div class="mosaic-fav" onclick="toggleMosaicFav(event, '{{ review.artwork.id }}', this)">
+            <i class="far fa-heart"></i>
+        </div>
+                        <img src="https://images.weserv.nl/?url={{ review.artwork.image_url|urlencode }}&w=400&h=400&fit=cover&a=attention&output=jpg&q=80"
+                             alt="{{ review.artwork.titre if review.artwork.titre else 'Sans titre' }}"
+                             loading="lazy"
+                             data-fallback1="https://wsrv.nl/?url={{ review.artwork.image_url|urlencode }}&w=400&h=400&fit=cover&output=jpg&q=80"
+                             data-fallback3="{{ review.artwork.image_url }}"
+                             data-error-count="0"
+                             style="opacity:0; transition: opacity 0.3s;"
+                             onload="this.style.opacity='1'"
+                             onerror="handleImageError(this)">
+                    </div>
+
+
+<div class="top-rated-info">
+    {% if review.commentaire %}
+    <div style="font-size:1rem; color:currentColor; margin-bottom:0.6rem; font-style:italic; overflow:hidden; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; line-height:1.5;">
+        "{{ review.commentaire|truncate(80) }}"
+    </div>
+    {% endif %}
+    <div style="font-size:0.75rem; color:var(--text-muted);">par <span style="color:var(--accent);">{{ review.username }}</span></div>
+</div>
+
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div style="color:var(--text-muted); padding:2rem;">Aucune critique pour le moment.</div>
+        {% endif %}
+    </div>
+</div>
+
+
         </div>
     </main>
 
@@ -1051,6 +1083,27 @@ window.handleImageError = function(img) {
                 observer.observe(el);
             });
         });
+        
+async function toggleMosaicFav(e, artworkId, el) {
+    e.preventDefault();
+    e.stopPropagation();
+    {% if not session.user_id %}
+    window.location.href = '/login?next=/home';
+    return;
+    {% endif %}
+    try {
+        const res = await fetch('/api/favorite/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ artwork_id: artworkId })
+        });
+        const data = await res.json();
+        el.classList.toggle('active', data.favorite);
+        el.querySelector('i').className = data.favorite ? 'fas fa-heart' : 'far fa-heart';
+    } catch(e) {}
+}        
+        
+        
     </script>
 </body>
 </html>

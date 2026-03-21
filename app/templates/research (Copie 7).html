@@ -97,30 +97,26 @@ w<!DOCTYPE html>
             border-bottom: 1px solid var(--border-color);
         }
 
-.works-counter {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-}
+        .works-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
 
-#displayed-count {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--accent);
-    line-height: 1;
-    background: none;
-    padding: 0;
-}
+        .works-counter i {
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
 
-.works-counter-label {
-    font-family: var(--font-display);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--text-muted);
-    font-weight: 400;
-}
+        .works-counter span {
+            color: var(--accent);
+            font-weight: 500;
+            background: var(--surface);
+            padding: 0.2rem 0.6rem;
+            font-size: 0.85rem;
+        }
 
         .filter-tools {
             display: flex;
@@ -527,7 +523,7 @@ input[type="radio"]:focus {
         .works-grid.grid-4 .work-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             display: block;
             background: transparent;
             transition: opacity 0.4s ease;
@@ -687,12 +683,17 @@ input[type="radio"]:focus {
     }
 }
 
+
 /* ===== SEARCH RESULTS PANEL ===== */
 .srp {
     margin: 0 0 1.5rem;
+    border-top: 2px solid var(--accent);
+    border-bottom: 1px solid var(--border-color);
     animation: fadeIn 0.25s ease;
     overflow: hidden;
 }
+
+body.theme-dark .srp { border-bottom-color: #2a2a2a; }
 
 /* Onglets */
 .srp-tabs {
@@ -722,7 +723,7 @@ body.theme-dark .srp-tabs { border-color: #2a2a2a; }
 }
 
 .srp-tab i { font-size: 0.85rem; }
-
+.srp-tab:hover { color: currentColor; opacity: 0.8; }
 .srp-tab.active {
     color: var(--accent);
     border-bottom-color: var(--accent);
@@ -767,16 +768,15 @@ body.theme-dark .srp-tabs { border-color: #2a2a2a; }
     padding: 0.55rem 1.4rem;
     text-decoration: none;
     color: inherit;
-    cursor: pointer;
+    transition: background 0.1s, padding-left 0.15s;
 }
 
-@media (hover: hover) {
-    .srp-tab:hover { color: currentColor; opacity: 0.8; }
-    .srp-row:hover { background: rgba(108, 92, 231, 0.06); padding-left: 1.9rem; }
-    body.theme-dark .srp-row:hover { background: rgba(108, 92, 231, 0.1); }
-    .srp-row:hover .srp-row-name { color: var(--accent); }
-    .srp-row:hover .srp-row-chevron { opacity: 1; color: var(--accent); transform: translateX(3px); }
+.srp-row:hover {
+    background: rgba(108, 92, 231, 0.06);
+    padding-left: 1.9rem;
 }
+
+body.theme-dark .srp-row:hover { background: rgba(108, 92, 231, 0.1); }
 
 .srp-row-name {
     font-family: var(--font-text);
@@ -790,6 +790,7 @@ body.theme-dark .srp-tabs { border-color: #2a2a2a; }
 }
 
 body.theme-dark .srp-row-name { color: #d0d0d0; }
+.srp-row:hover .srp-row-name { color: var(--accent); }
 
 /* Lieux : plus grand */
 #srp-lieux-main .srp-row-name,
@@ -809,14 +810,6 @@ body.theme-dark .srp-row-name { color: #d0d0d0; }
     color: var(--text-muted);
     flex-shrink: 0;
     white-space: nowrap;
-}
-
-.srp-row-chevron {
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    opacity: 0.4;
-    flex-shrink: 0;
-    transition: transform 0.15s, opacity 0.15s;
 }
 
 /* Footer */
@@ -840,11 +833,69 @@ body.theme-dark .srp-footer { border-color: #2a2a2a; }
     transition: color 0.2s, gap 0.2s;
 }
 
-@media (hover: hover) {
-    .srp-footer-link:hover { color: var(--accent); gap: 0.8rem; }
-    .srp-detail-all:hover { gap: 0.8rem; }
-    .srp-back:hover { color: var(--accent); }
-    .srp-show-more:hover { color: var(--accent); }
+.srp-footer-link:hover {
+    color: var(--accent);
+    gap: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .srp-tab { font-size: 1.1rem; padding: 0.9rem 1.2rem; }
+    .srp-row { padding: 0.7rem 1rem; }
+    .srp-row-name { font-size: 0.88rem; }
+    .srp-row-count { font-size: 0.75rem; }
+}
+.srp-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.55rem 1.4rem;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: background 0.1s, padding-left 0.15s;
+}
+
+.srp-row:hover {
+    background: rgba(108, 92, 231, 0.06);
+    padding-left: 1.9rem;
+}
+
+body.theme-dark .srp-row:hover { background: rgba(108, 92, 231, 0.1); }
+
+.srp-row-name {
+    font-family: var(--font-text);
+    font-size: 0.82rem;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+}
+
+body.theme-dark .srp-row-name { color: #d0d0d0; }
+.srp-row:hover .srp-row-name { color: var(--accent); }
+
+.srp-row-count {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.srp-row-chevron {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    opacity: 0.4;
+    flex-shrink: 0;
+    transition: transform 0.15s, opacity 0.15s;
+}
+
+.srp-row:hover .srp-row-chevron {
+    opacity: 1;
+    color: var(--accent);
+    transform: translateX(3px);
 }
 
 /* Drill down */
@@ -871,8 +922,10 @@ body.theme-dark .srp-footer { border-color: #2a2a2a; }
     transition: color 0.15s;
 }
 
+.srp-back:hover { color: var(--accent); }
 body.theme-dark .srp-back { border-color: #2a2a2a; }
 
+/* Nom du lieu en gros dans le detail */
 #srp-back-label {
     font-size: 1.1rem;
     font-weight: 600;
@@ -898,6 +951,14 @@ body.theme-dark .srp-back { border-color: #2a2a2a; }
 }
 
 body.theme-dark .srp-detail-all { border-color: #2a2a2a; }
+.srp-detail-all:hover { gap: 0.8rem; }
+
+@media (max-width: 768px) {
+    .srp-tab { font-size: 1.1rem; padding: 0.9rem 1.2rem; }
+    .srp-row { padding: 0.7rem 1rem; }
+    .srp-row-name { font-size: 0.88rem; }
+    .srp-row-count { font-size: 0.75rem; }
+}
 
 .srp-show-more {
     display: flex;
@@ -919,120 +980,29 @@ body.theme-dark .srp-detail-all { border-color: #2a2a2a; }
 }
 
 .srp-show-more span { color: var(--accent); }
+.srp-show-more:hover { color: var(--accent); }
 body.theme-dark .srp-show-more { border-color: #2a2a2a; }
-
-.srp-divider {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    margin: 1.5rem 0 1rem;
-    color: var(--text-muted);
-    font-family: var(--font-display);
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.srp-divider::before,
-.srp-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border-color);
-    opacity: 0.5;
-}
-
-.srp-header-section {
-    margin: 0 0 1rem;
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.srp-header-title {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-}
-
-.srp-header-num {
-    font-family: var(--font-display);
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--accent);
-    line-height: 1;
-}
-
-.srp-header-label {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: currentColor;
-}
-
-.srp-header-sub {
-    font-family: var(--font-display);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-muted);
-}
-
-.srp-header-sub em {
-    font-style: normal;
-    color: var(--accent);
-}
-
-.srp-results-line {
-    margin: 1.5rem 0 0.8rem;
-    padding-top: 0;
-    border-top: none;
-}
-
-.srp-results-line-top {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    margin-bottom: 0.6rem;
-}
-
-@media (max-width: 768px) {
-    .srp-tab { font-size: 1.1rem; padding: 0.9rem 1.2rem; }
-    .srp-row { padding: 0.7rem 1rem; }
-    .srp-row-name { font-size: 0.88rem; }
-    .srp-row-count { font-size: 0.75rem; }
-}
-
-
 
 
     </style>
 </head>
-<body class="theme-dark" style="visibility:hidden">
-<script>
-    (function() {
-        const t = localStorage.getItem('theme') || 'dark';
-        document.body.classList.remove('theme-dark', 'theme-light');
-        document.body.classList.add('theme-' + t);
-        document.body.style.visibility = '';
-    })();
-</script>
-
-
+<body class="theme-dark">
     {% include 'navbar.html' %}
 
     <div class="container main-content">
 
 
         <div class="toolbar">
-<div class="works-counter">
-    <span id="displayed-count" style="display:none;"></span>
-    <span id="filter-indicator" style="display:none;"></span>
-</div>
+            <div class="works-counter">
+                <i class="fas fa-image"></i>
+                <span id="displayed-count">{{ works|length }}</span>
+                <span style="color:var(--text-muted);">/</span>
+                <span id="total-count" style="color:var(--text-muted);">{{ total_oeuvres }}</span>
+                <span id="filter-indicator" style="display:none;">
+                    <i class="fas fa-sliders-h"></i>
+                </span>
+            </div>
+
             <div class="filter-tools">
                 <!-- Artistes -->
                 <div class="filter-dropdown">
@@ -1157,22 +1127,11 @@ body.theme-dark .srp-show-more { border-color: #2a2a2a; }
             </div>
         </div>
 
-
-
         <!-- Tags actifs -->
         <div class="active-tags" id="active-tags"></div>
         
         
-{% if q %}
-<div class="srp-header-section">
-    <div class="srp-header-title">
-        <span class="srp-header-num">{{ (search_results.artists|length) + (search_results.museums|length) + (search_results.cities|length) + (search_results.countries|length) }}</span>
-        <span class="srp-header-label">Suggestions</span>
-        <span class="srp-header-label">« {{ q }} »</span>
-    </div>
-</div>
-
-
+{% if search_results %}
 <div class="srp" id="search-results-panel">
 
     <div class="srp-tabs">
@@ -1206,13 +1165,7 @@ body.theme-dark .srp-show-more { border-color: #2a2a2a; }
             {% for c in all_lieux[:5] %}
             <a class="srp-row" onclick="srpDrillDown(event, '{% if c in search_results.cities %}city{% else %}country{% endif %}', '{{ c.nom|e }}')">
                 <span class="srp-row-name">{{ c.nom }}</span>
-<span class="srp-row-count">
-    {% if c in search_results.countries %}
-        {{ c.count }} ville{% if c.count > 1 %}s{% endif %}
-    {% else %}
-        {{ c.count }} musée{% if c.count > 1 %}s{% endif %}
-    {% endif %}
-</span>
+                <span class="srp-row-count">{{ c.count }} musée{% if c.count > 1 %}s{% endif %}</span>
                 <i class="fas fa-chevron-right srp-row-chevron"></i>
             </a>
             {% endfor %}
@@ -1242,49 +1195,49 @@ body.theme-dark .srp-show-more { border-color: #2a2a2a; }
 </div>
 {% endif %}
 
-{% if search_results.museums %}
-<div class="srp-slide">
-    <div id="srp-museums-list">
-        {% for m in search_results.museums[:5] %}
-        <a class="srp-row" onclick="srpApplyFilter('museum', '{{ m.id|e }}')">
-            <span class="srp-row-name">{{ m.nom }}</span>
-            <span class="srp-row-count">{{ m.count }} œuvres</span>
-        </a>
-        {% endfor %}
-    </div>
-    {% if search_results.museums|length > 5 %}
-    <button class="srp-show-more" id="srp-museums-more" onclick="srpShowMore('museums')">
-        Voir tout <span>(+{{ search_results.museums|length - 5 }})</span>
-    </button>
-    <div id="srp-museums-extra" style="display:none;">
-        {% for m in search_results.museums[5:] %}
-        <a class="srp-row" onclick="srpApplyFilter('museum', '{{ m.id|e }}')">
-            <span class="srp-row-name">{{ m.nom }}</span>
-            <span class="srp-row-count">{{ m.count }} œuvres</span>
-        </a>
-        {% endfor %}
-    </div>
-    {% endif %}
-</div>
-{% endif %}
+            {% if search_results.museums %}
+            <div class="srp-slide">
+                <div id="srp-museums-list">
+                    {% for m in search_results.museums[:5] %}
+                    <a href="/research?museum={{ m.id|urlencode }}&q={{ q|urlencode }}" class="srp-row">
+                        <span class="srp-row-name">{{ m.nom }}</span>
+                        <span class="srp-row-count">{{ m.count }} œuvres</span>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% if search_results.museums|length > 5 %}
+                <button class="srp-show-more" id="srp-museums-more" onclick="srpShowMore('museums')">
+                    Voir tout <span>({{ search_results.museums|length }})</span>
+                </button>
+                <div id="srp-museums-extra" style="display:none;">
+                    {% for m in search_results.museums[5:] %}
+                    <a href="/research?museum={{ m.id|urlencode }}&q={{ q|urlencode }}" class="srp-row">
+                        <span class="srp-row-name">{{ m.nom }}</span>
+                        <span class="srp-row-count">{{ m.count }} œuvres</span>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
 
-{% if search_results.artists %}
-<div class="srp-slide">
-    <div id="srp-artists-list">
-        {% for a in search_results.artists[:5] %}
-        <a class="srp-row" onclick="srpApplyFilter('artist', '{{ a.nom|e }}')">
-            <span class="srp-row-name">{{ a.nom }}</span>
-            <span class="srp-row-count">{{ a.count }} œuvres</span>
-        </a>
-        {% endfor %}
-    </div>
+            {% if search_results.artists %}
+            <div class="srp-slide">
+                <div id="srp-artists-list">
+                    {% for a in search_results.artists[:5] %}
+                    <a href="/research?artist={{ a.nom|urlencode }}&q={{ q|urlencode }}" class="srp-row">
+                        <span class="srp-row-name">{{ a.nom }}</span>
+                        <span class="srp-row-count">{{ a.count }} œuvres</span>
+                    </a>
+                    {% endfor %}
+                </div>
                 {% if search_results.artists|length > 5 %}
                 <button class="srp-show-more" id="srp-artists-more" onclick="srpShowMore('artists')">
-                    Voir tout <span>(+{{ search_results.artists|length - 5 }})</span>
+                    Voir tout <span>({{ search_results.artists|length }})</span>
                 </button>
                 <div id="srp-artists-extra" style="display:none;">
                     {% for a in search_results.artists[5:] %}
-                    <a class="srp-row" onclick="srpApplyFilter('artist', '{{ a.nom|e }}')">
+                    <a href="/research?artist={{ a.nom|urlencode }}&q={{ q|urlencode }}" class="srp-row">
                         <span class="srp-row-name">{{ a.nom }}</span>
                         <span class="srp-row-count">{{ a.count }} œuvres</span>
                     </a>
@@ -1294,26 +1247,16 @@ body.theme-dark .srp-show-more { border-color: #2a2a2a; }
             </div>
             {% endif %}
 
-        </div><!-- fin .srp-slider -->
-    </div><!-- fin .srp-slider-wrap -->
-
-</div><!-- fin .srp -->
-{% endif %}
-
-{% if q %}
-<div class="srp-results-line">
-    <div class="srp-results-line-top">
-        <span class="srp-header-num">{{ total_oeuvres }}</span>
-        <span class="srp-header-label">résultat{% if total_oeuvres > 1 %}s{% endif %}</span>
-        <span class="srp-header-label">« {{ q }} »</span>
+        </div>
     </div>
+
 </div>
-
-
 {% endif %}
 
-<!-- Grille des œuvres -->
-<div class="works-grid grid-4" id="works-grid">
+
+
+        <!-- Grille des œuvres -->
+        <div class="works-grid grid-4" id="works-grid">
             {% for artwork in works %}
             <a href="/oeuvre/{{ artwork.id }}" class="work-item" data-id="{{ artwork.id }}">
 
@@ -1391,7 +1334,7 @@ body.theme-dark .srp-show-more { border-color: #2a2a2a; }
         let scrollTriggered = false;
         let displayedCount  = {{ works|length }};
         let currentView     = 6;
-        let museumNames = {{ museum_names | tojson }};
+        let museumNames     = {};
         let totalOeuvres = {{ total_oeuvres }};
         const isLoggedIn = {{ 'true' if session.user_id else 'false' }};
         const _loadedDropdowns = new Set();
@@ -1417,29 +1360,23 @@ window.switchTab = function(index, btn) {
     }
 };
 
-window.srpApplyFilter = function(type, value) {
-    const params = new URLSearchParams(window.location.search);
-    params.set(type, value);
-    window.location.href = `/research?${params}`;
-};
-
-
-
 window.srpDrillDown = async function(e, type, name) {
     e.preventDefault();
-    const main      = document.getElementById('srp-lieux-main');
-    const detail    = document.getElementById('srp-lieux-detail');
-    const content   = document.getElementById('srp-detail-content');
+    const main    = document.getElementById('srp-lieux-main');
+    const detail  = document.getElementById('srp-lieux-detail');
+    const content = document.getElementById('srp-detail-content');
     const backLabel = document.getElementById('srp-back-label');
+    const q = new URLSearchParams(window.location.search).get('q') || '';
 
     backLabel.textContent = name;
-    content.innerHTML = '<div style="padding:1rem 1.4rem;color:var(--text-muted);font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i></div>';
-    main.style.display   = 'none';
-    detail.style.display = 'block';
 
     const param = type === 'city'
         ? `city=${encodeURIComponent(name)}`
         : `country=${encodeURIComponent(name)}`;
+
+    content.innerHTML = '<div style="padding:1rem 1.4rem;color:var(--text-muted);font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i></div>';
+    main.style.display = 'none';
+    detail.style.display = 'block';
 
     try {
         const res  = await fetch(`/api/srp-detail?${param}`);
@@ -1450,9 +1387,11 @@ window.srpDrillDown = async function(e, type, name) {
             return;
         }
 
-        const limit   = 6;
-        const visible = data.items.slice(0, limit);
-        const hidden  = data.items.slice(limit);
+        const limit = 6;
+        const items = data.items;
+        const visible = items.slice(0, limit);
+        const hidden  = items.slice(limit);
+
         let html = '';
 
         if (data.type === 'cities') {
@@ -1463,16 +1402,12 @@ window.srpDrillDown = async function(e, type, name) {
                     <i class="fas fa-chevron-right srp-row-chevron"></i>
                 </a>
             `).join('');
+
             if (hidden.length) {
-                const extraId = `srp-drill-extra-cities-${Date.now()}`;
-                html += `
-                <button class="srp-show-more" onclick="
-                    const ex = document.getElementById('${extraId}');
-                    const shown = ex.style.display !== 'none';
-                    ex.style.display = shown ? 'none' : 'block';
-                    this.innerHTML = shown ? 'Voir tout <span>(+${hidden.length})</span>' : 'Voir moins <span></span>';
-                ">Voir tout <span>(+${hidden.length})</span></button>
-                <div id="${extraId}" style="display:none;">
+                html += `<button class="srp-show-more" onclick="srpExpandDetail(this, 'cities', '${escHtml(q)}')">
+                    Voir tout <span>(${items.length})</span>
+                </button>
+                <div class="srp-detail-extra" style="display:none;">
                     ${hidden.map(c => `
                         <a class="srp-row" onclick="srpDrillDown(event, 'city', '${escHtml(c.nom)}')">
                             <span class="srp-row-name">${escHtml(c.nom)}</span>
@@ -1484,23 +1419,19 @@ window.srpDrillDown = async function(e, type, name) {
             }
         } else {
             html += visible.map(m => `
-                <a class="srp-row" onclick="srpApplyFilter('museum', '${escHtml(m.id)}')">
+                <a href="/research?museum=${encodeURIComponent(m.id)}&q=${encodeURIComponent(q)}" class="srp-row">
                     <span class="srp-row-name">${escHtml(m.nom)}</span>
                     <span class="srp-row-count">${m.count} œuvres</span>
                 </a>
             `).join('');
+
             if (hidden.length) {
-                const extraId = `srp-drill-extra-museums-${Date.now()}`;
-                html += `
-                <button class="srp-show-more" onclick="
-                    const ex = document.getElementById('${extraId}');
-                    const shown = ex.style.display !== 'none';
-                    ex.style.display = shown ? 'none' : 'block';
-                    this.innerHTML = shown ? 'Voir tout <span>(+${hidden.length})</span>' : 'Voir moins <span></span>';
-                ">Voir tout <span>(+${hidden.length})</span></button>
-                <div id="${extraId}" style="display:none;">
+                html += `<button class="srp-show-more" onclick="srpExpandDetail(this, 'museums', '${escHtml(q)}')">
+                    Voir tout <span>(${items.length})</span>
+                </button>
+                <div class="srp-detail-extra" style="display:none;">
                     ${hidden.map(m => `
-                        <a class="srp-row" onclick="srpApplyFilter('museum', '${escHtml(m.id)}')">
+                        <a href="/research?museum=${encodeURIComponent(m.id)}&q=${encodeURIComponent(q)}" class="srp-row">
                             <span class="srp-row-name">${escHtml(m.nom)}</span>
                             <span class="srp-row-count">${m.count} œuvres</span>
                         </a>
@@ -1508,7 +1439,9 @@ window.srpDrillDown = async function(e, type, name) {
                 </div>`;
             }
         }
+
         content.innerHTML = html;
+
     } catch(err) {
         content.innerHTML = '<div style="padding:1rem 1.4rem;color:var(--text-muted);">Erreur</div>';
     }
@@ -1521,22 +1454,9 @@ window.srpDrillDown = async function(e, type, name) {
 window.srpExpandDetail = function(btn) {
     const extra = btn.nextElementSibling;
     if (extra) extra.style.display = 'block';
-    btn.style.display = 'none';
-    const moins = document.createElement('button');
-    moins.className = 'srp-show-more';
-    moins.innerHTML = 'Voir moins <span></span>';
-    moins.setAttribute('onclick', 'srpCollapseDetail(this)');
-    extra.insertAdjacentElement('afterend', moins);
-};
-
-window.srpCollapseDetail = function(btn) {
-    const extra = btn.previousElementSibling;
-    if (extra) extra.style.display = 'none';
-    btn.remove();
-    const showBtn = extra ? extra.previousElementSibling : null;
-    if (showBtn && showBtn.classList.contains('srp-show-more')) {
-        showBtn.style.display = 'flex';
-    }
+    const count = extra ? extra.querySelectorAll('.srp-row').length : '';
+    btn.innerHTML = `Voir moins <span></span>`;
+    btn.setAttribute('onclick', 'srpCollapseDetail(this)');
 };
 
 window.srpCollapseDetail = function(btn) {
@@ -1556,25 +1476,22 @@ window.srpShowMore = function(type) {
     const extra = document.getElementById(`srp-${type}-extra`);
     const btn   = document.getElementById(`srp-${type}-more`);
     if (extra) extra.style.display = 'block';
-    if (btn)   btn.style.display   = 'none';
-    // Évite les doublons
-    const existingLess = document.getElementById(`srp-${type}-less`);
-    if (existingLess) existingLess.remove();
-    const moins = document.createElement('button');
-    moins.className = 'srp-show-more';
-    moins.id = `srp-${type}-less`;
-    moins.innerHTML = 'Voir moins <span></span>';
-    moins.onclick = () => srpShowLess(type);
-    extra.insertAdjacentElement('afterend', moins);
+    if (btn) {
+        const count = extra ? extra.querySelectorAll('.srp-row').length : '';
+        btn.innerHTML = `Voir moins <span></span>`;
+        btn.setAttribute('onclick', `srpShowLess('${type}')`);
+    }
 };
 
 window.srpShowLess = function(type) {
     const extra = document.getElementById(`srp-${type}-extra`);
     const btn   = document.getElementById(`srp-${type}-more`);
-    const moins = document.getElementById(`srp-${type}-less`);
     if (extra) extra.style.display = 'none';
-    if (btn) { btn.style.display = ''; btn.style.removeProperty('display'); btn.style.display = 'flex'; }
-    if (moins) moins.remove();
+    if (btn) {
+        const count = extra ? extra.querySelectorAll('.srp-row').length : '';
+        btn.innerHTML = `Voir tout <span>(+${count})</span>`;
+        btn.setAttribute('onclick', `srpShowMore('${type}')`);
+    }
 };
 
 (function initSrpSwipe() {
@@ -1756,11 +1673,12 @@ async function loadTypes() {
         // ================================================
         // UTILITAIRES
         // ================================================
-function updateCounter() {
-    document.getElementById('displayed-count').textContent = totalOeuvres.toLocaleString('fr-FR');
-    const hasFilters = document.querySelectorAll('.filter-tag').length > 0;
-    document.getElementById('filter-indicator').style.display = hasFilters ? 'inline' : 'none';
-}
+        function updateCounter() {
+            document.getElementById('displayed-count').textContent = displayedCount;
+            document.getElementById('total-count').textContent = totalOeuvres.toLocaleString('fr-FR');
+            const hasFilters = document.querySelectorAll('.filter-tag').length > 0;
+            document.getElementById('filter-indicator').style.display = hasFilters ? 'inline' : 'none';
+        }
 
         // ===== FONCTION API AVEC CACHE =====
 async function fetchAPI(url, params = {}) {

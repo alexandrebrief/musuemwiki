@@ -97,30 +97,26 @@ w<!DOCTYPE html>
             border-bottom: 1px solid var(--border-color);
         }
 
-.works-counter {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-}
+        .works-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
 
-#displayed-count {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--accent);
-    line-height: 1;
-    background: none;
-    padding: 0;
-}
+        .works-counter i {
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
 
-.works-counter-label {
-    font-family: var(--font-display);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--text-muted);
-    font-weight: 400;
-}
+        .works-counter span {
+            color: var(--accent);
+            font-weight: 500;
+            background: var(--surface);
+            padding: 0.2rem 0.6rem;
+            font-size: 0.85rem;
+        }
 
         .filter-tools {
             display: flex;
@@ -527,7 +523,7 @@ input[type="radio"]:focus {
         .works-grid.grid-4 .work-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             display: block;
             background: transparent;
             transition: opacity 0.4s ease;
@@ -686,46 +682,188 @@ input[type="radio"]:focus {
         width: 300px; /* gardez juste la largeur réduite sur mobile */
     }
 }
-
 /* ===== SEARCH RESULTS PANEL ===== */
 .srp {
-    margin: 0 0 1.5rem;
+    margin: 0 0 2rem;
+    border: 1px solid var(--border-color);
+    background: var(--surface);
     animation: fadeIn 0.25s ease;
-    overflow: hidden;
 }
 
-/* Onglets */
-.srp-tabs {
-    display: flex;
-    align-items: stretch;
-    border-bottom: 1px solid var(--border-color);
+body.theme-dark .srp {
+    background: #111;
+    border-color: #2a2a2a;
 }
 
-body.theme-dark .srp-tabs { border-color: #2a2a2a; }
-
-.srp-tab {
+.srp-header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.9rem 1.8rem;
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    color: var(--text-muted);
-    font-family: var(--font-display);
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    cursor: pointer;
-    transition: color 0.15s;
+    padding: 0.8rem 1.2rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.srp-tab i { font-size: 0.85rem; }
-
-.srp-tab.active {
+.srp-query {
+    font-family: var(--font-display);
+    font-weight: 600;
     color: var(--accent);
-    border-bottom-color: var(--accent);
+    font-size: 0.95rem;
+}
+
+.srp-label {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.srp-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.4rem;
+    transition: color 0.2s;
+}
+.srp-close:hover { color: var(--accent); }
+
+/* Lignes par catégorie */
+.srp-body {
+    padding: 0.8rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.srp-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.srp-cat-label {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    white-space: nowrap;
+    padding-top: 0.35rem;
+    min-width: 80px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* Pills */
+.srp-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.srp-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: inherit;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.srp-pill:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(108, 92, 231, 0.06);
+}
+
+body.theme-dark .srp-pill {
+    border-color: #2a2a2a;
+    color: #e0e0e0;
+}
+
+body.theme-dark .srp-pill:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(108, 92, 231, 0.1);
+}
+
+.srp-pill-count {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    background: var(--surface-hover);
+    padding: 0.1rem 0.45rem;
+    border-radius: 2px;
+    transition: color 0.2s;
+}
+
+.srp-pill:hover .srp-pill-count {
+    color: var(--accent);
+}
+
+/* Footer */
+.srp-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 1.2rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.srp-see-all {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: gap 0.2s;
+}
+.srp-see-all:hover { gap: 0.7rem; }
+
+@media (max-width: 768px) {
+    .srp-row { flex-direction: column; gap: 0.4rem; }
+    .srp-cat-label { min-width: unset; }
+}
+
+/* ===== SEARCH RESULTS PANEL ===== */
+.search-results-panel {
+    margin: 0 0 2rem;
+    border: 1px solid var(--border-color);
+    background: var(--surface);
+    animation: fadeIn 0.3s ease;
+}
+
+body.theme-dark .search-results-panel {
+    background: #111;
+    border-color: #2a2a2a;
+}
+
+.srp-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.2rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.8rem;
+}
+
+.srp-query {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.85rem;
+}
+
+.srp-label {
+    color: var(--text-muted);
 }
 
 .srp-close {
@@ -735,276 +873,169 @@ body.theme-dark .srp-tabs { border-color: #2a2a2a; }
     color: var(--text-muted);
     cursor: pointer;
     font-size: 0.75rem;
-    padding: 0 1rem;
-    opacity: 0.4;
-    transition: opacity 0.15s;
+    padding: 0.2rem 0.5rem;
+    transition: color 0.2s;
 }
-.srp-close:hover { opacity: 1; }
+.srp-close:hover { color: var(--accent); }
 
-/* Slider */
-.srp-slider-wrap {
-    overflow: hidden;
-    touch-action: pan-y;
-}
-
-.srp-slider {
+.srp-grid {
     display: flex;
-    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    will-change: transform;
-}
-
-.srp-slide {
-    min-width: 100%;
-    padding: 0.4rem 0;
-}
-
-/* Lignes */
-.srp-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.55rem 1.4rem;
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-}
-
-@media (hover: hover) {
-    .srp-tab:hover { color: currentColor; opacity: 0.8; }
-    .srp-row:hover { background: rgba(108, 92, 231, 0.06); padding-left: 1.9rem; }
-    body.theme-dark .srp-row:hover { background: rgba(108, 92, 231, 0.1); }
-    .srp-row:hover .srp-row-name { color: var(--accent); }
-    .srp-row:hover .srp-row-chevron { opacity: 1; color: var(--accent); transform: translateX(3px); }
-}
-
-.srp-row-name {
-    font-family: var(--font-text);
-    font-size: 0.82rem;
-    font-weight: 400;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
-    min-width: 0;
-}
-
-body.theme-dark .srp-row-name { color: #d0d0d0; }
-
-/* Lieux : plus grand */
-#srp-lieux-main .srp-row-name,
-#srp-lieux-extra .srp-row-name {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 500;
-}
-
-#srp-lieux-main .srp-row-count,
-#srp-lieux-extra .srp-row-count {
-    font-size: 0.78rem;
-}
-
-.srp-row-count {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    flex-shrink: 0;
-    white-space: nowrap;
-}
-
-.srp-row-chevron {
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    opacity: 0.4;
-    flex-shrink: 0;
-    transition: transform 0.15s, opacity 0.15s;
-}
-
-/* Footer */
-.srp-footer {
-    padding: 0.7rem 1.4rem;
-    border-top: 1px solid var(--border-color);
-}
-
-body.theme-dark .srp-footer { border-color: #2a2a2a; }
-
-.srp-footer-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family: var(--font-display);
-    transition: color 0.2s, gap 0.2s;
-}
-
-@media (hover: hover) {
-    .srp-footer-link:hover { color: var(--accent); gap: 0.8rem; }
-    .srp-detail-all:hover { gap: 0.8rem; }
-    .srp-back:hover { color: var(--accent); }
-    .srp-show-more:hover { color: var(--accent); }
-}
-
-/* Drill down */
-.srp-detail {
-    animation: fadeIn 0.2s ease;
-}
-
-.srp-back {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: none;
-    border: none;
+    flex-wrap: wrap;
+    gap: 0;
     border-bottom: 1px solid var(--border-color);
-    width: 100%;
-    padding: 0.7rem 1.4rem;
-    cursor: pointer;
-    color: var(--text-muted);
-    font-family: var(--font-display);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: left;
-    transition: color 0.15s;
 }
 
-body.theme-dark .srp-back { border-color: #2a2a2a; }
+.srp-col {
+    flex: 1;
+    min-width: 160px;
+    padding: 1rem 1.2rem;
+    border-right: 1px solid var(--border-color);
+}
+.srp-col:last-child { border-right: none; }
 
-#srp-back-label {
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: currentColor;
-    font-family: var(--font-display);
+.srp-col-works {
+    flex: 2;
+    min-width: 280px;
 }
 
-.srp-detail-all {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.4rem;
-    font-size: 0.72rem;
-    color: var(--accent);
-    text-decoration: none;
-    font-family: var(--font-display);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-top: 1px solid var(--border-color);
-    transition: gap 0.2s;
-}
-
-body.theme-dark .srp-detail-all { border-color: #2a2a2a; }
-
-.srp-show-more {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    background: none;
-    border: none;
-    border-top: 1px solid var(--border-color);
-    width: 100%;
-    padding: 0.6rem 1.4rem;
-    color: var(--text-muted);
-    font-family: var(--font-display);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: color 0.15s;
-    text-align: left;
-}
-
-.srp-show-more span { color: var(--accent); }
-body.theme-dark .srp-show-more { border-color: #2a2a2a; }
-
-.srp-divider {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    margin: 1.5rem 0 1rem;
-    color: var(--text-muted);
+.srp-col-title {
     font-family: var(--font-display);
     font-size: 0.65rem;
     text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.srp-divider::before,
-.srp-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border-color);
-    opacity: 0.5;
-}
-
-.srp-header-section {
-    margin: 0 0 1rem;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
     display: flex;
-    align-items: baseline;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.srp-item {
+    display: flex;
+    align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+    padding: 0.35rem 0.5rem;
+    margin: 0 -0.5rem;
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.8rem;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
     gap: 0.5rem;
 }
 
-.srp-header-title {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-}
-
-.srp-header-num {
-    font-family: var(--font-display);
-    font-size: 2.2rem;
-    font-weight: 700;
+.srp-item:hover {
+    border-left-color: var(--accent);
+    background: var(--surface-hover);
     color: var(--accent);
-    line-height: 1;
+    padding-left: 0.8rem;
 }
 
-.srp-header-label {
+.srp-name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.srp-count {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    padding: 0.1rem 0.4rem;
+    flex-shrink: 0;
+}
+
+body.theme-dark .srp-count { background: #1a1a1a; }
+
+/* Œuvres en mini-cards */
+.srp-works-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.srp-work-card {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: inherit;
+    padding: 0.4rem;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s;
+    flex: 1;
+    min-width: 120px;
+    max-width: 180px;
+}
+
+.srp-work-card:hover {
+    border-color: var(--accent);
+    background: var(--surface-hover);
+}
+
+.srp-work-card img,
+.srp-work-placeholder {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    flex-shrink: 0;
+    background: var(--surface);
+}
+
+.srp-work-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.srp-work-title {
+    font-size: 0.72rem;
+    font-weight: 500;
     font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: currentColor;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.srp-header-sub {
-    font-family: var(--font-display);
+.srp-work-artist {
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.srp-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 1.2rem;
     font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
     color: var(--text-muted);
 }
 
-.srp-header-sub em {
-    font-style: normal;
+.srp-see-all {
     color: var(--accent);
-}
-
-.srp-results-line {
-    margin: 1.5rem 0 0.8rem;
-    padding-top: 0;
-    border-top: none;
-}
-
-.srp-results-line-top {
+    text-decoration: none;
+    font-size: 0.72rem;
     display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    margin-bottom: 0.6rem;
+    align-items: center;
+    gap: 0.4rem;
+    transition: gap 0.2s;
 }
+.srp-see-all:hover { gap: 0.7rem; }
 
 @media (max-width: 768px) {
-    .srp-tab { font-size: 1.1rem; padding: 0.9rem 1.2rem; }
-    .srp-row { padding: 0.7rem 1rem; }
-    .srp-row-name { font-size: 0.88rem; }
-    .srp-row-count { font-size: 0.75rem; }
+    .srp-grid { flex-direction: column; }
+    .srp-col { border-right: none; border-bottom: 1px solid var(--border-color); }
+    .srp-col:last-child { border-bottom: none; }
+    .srp-col-works { min-width: unset; }
 }
 
 
@@ -1012,27 +1043,23 @@ body.theme-dark .srp-show-more { border-color: #2a2a2a; }
 
     </style>
 </head>
-<body class="theme-dark" style="visibility:hidden">
-<script>
-    (function() {
-        const t = localStorage.getItem('theme') || 'dark';
-        document.body.classList.remove('theme-dark', 'theme-light');
-        document.body.classList.add('theme-' + t);
-        document.body.style.visibility = '';
-    })();
-</script>
-
-
+<body class="theme-dark">
     {% include 'navbar.html' %}
 
     <div class="container main-content">
 
 
         <div class="toolbar">
-<div class="works-counter">
-    <span id="displayed-count" style="display:none;"></span>
-    <span id="filter-indicator" style="display:none;"></span>
-</div>
+            <div class="works-counter">
+                <i class="fas fa-image"></i>
+                <span id="displayed-count">{{ works|length }}</span>
+                <span style="color:var(--text-muted);">/</span>
+                <span id="total-count" style="color:var(--text-muted);">{{ total_oeuvres }}</span>
+                <span id="filter-indicator" style="display:none;">
+                    <i class="fas fa-sliders-h"></i>
+                </span>
+            </div>
+
             <div class="filter-tools">
                 <!-- Artistes -->
                 <div class="filter-dropdown">
@@ -1157,163 +1184,99 @@ body.theme-dark .srp-show-more { border-color: #2a2a2a; }
             </div>
         </div>
 
-
-
         <!-- Tags actifs -->
         <div class="active-tags" id="active-tags"></div>
-        
-        
-{% if q %}
-<div class="srp-header-section">
-    <div class="srp-header-title">
-        <span class="srp-header-num">{{ (search_results.artists|length) + (search_results.museums|length) + (search_results.cities|length) + (search_results.countries|length) }}</span>
-        <span class="srp-header-label">Suggestions</span>
-        <span class="srp-header-label">« {{ q }} »</span>
-    </div>
-</div>
 
 
+
+
+{% if search_results %}
 <div class="srp" id="search-results-panel">
 
-    <div class="srp-tabs">
-        {% if search_results.cities or search_results.countries %}
-        <button class="srp-tab active" onclick="switchTab(0, this)">
-            <i class="fas fa-map-marker-alt"></i> Lieux
+    <div class="srp-header">
+        <span class="srp-query">« {{ search_results.query }} »</span>
+        <span class="srp-label">— résultats par catégorie</span>
+        <button class="srp-close" onclick="document.getElementById('search-results-panel').style.display='none'">
+            <i class="fas fa-times"></i>
         </button>
-        {% endif %}
+    </div>
+
+    <div class="srp-body">
+
         {% if search_results.museums %}
-        <button class="srp-tab {% if not search_results.cities and not search_results.countries %}active{% endif %}"
-            onclick="switchTab({% if search_results.cities or search_results.countries %}1{% else %}0{% endif %}, this)">
-            <i class="fas fa-landmark"></i> Musées
-        </button>
-        {% endif %}
-        {% if search_results.artists %}
-        <button class="srp-tab {% if not search_results.cities and not search_results.countries and not search_results.museums %}active{% endif %}"
-            onclick="switchTab({% if search_results.cities or search_results.countries %}{% if search_results.museums %}2{% else %}1{% endif %}{% else %}{% if search_results.museums %}1{% else %}0{% endif %}{% endif %}, this)">
-            <i class="fas fa-user"></i> Artistes
-        </button>
-        {% endif %}
-    </div>
-
-    <div class="srp-slider-wrap">
-        <div class="srp-slider" id="srp-slider">
-
-{% if search_results.cities or search_results.countries %}
-<div class="srp-slide">
-    <div class="srp-slide-main" id="srp-lieux-main">
-        <div id="srp-lieux-list">
-            {% set all_lieux = search_results.cities + search_results.countries %}
-            {% for c in all_lieux[:5] %}
-            <a class="srp-row" onclick="srpDrillDown(event, '{% if c in search_results.cities %}city{% else %}country{% endif %}', '{{ c.nom|e }}')">
-                <span class="srp-row-name">{{ c.nom }}</span>
-<span class="srp-row-count">
-    {% if c in search_results.countries %}
-        {{ c.count }} ville{% if c.count > 1 %}s{% endif %}
-    {% else %}
-        {{ c.count }} musée{% if c.count > 1 %}s{% endif %}
-    {% endif %}
-</span>
-                <i class="fas fa-chevron-right srp-row-chevron"></i>
-            </a>
-            {% endfor %}
-        </div>
-        {% if all_lieux|length > 5 %}
-        <button class="srp-show-more" id="srp-lieux-more" onclick="srpShowMore('lieux')">
-            Voir tout <span>({{ all_lieux|length }})</span>
-        </button>
-        <div id="srp-lieux-extra" style="display:none;">
-            {% for c in all_lieux[5:] %}
-            <a class="srp-row" onclick="srpDrillDown(event, '{% if c in search_results.cities %}city{% else %}country{% endif %}', '{{ c.nom|e }}')">
-                <span class="srp-row-name">{{ c.nom }}</span>
-                <span class="srp-row-count">{{ c.count }} musée{% if c.count > 1 %}s{% endif %}</span>
-                <i class="fas fa-chevron-right srp-row-chevron"></i>
-            </a>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
-    <div class="srp-detail" id="srp-lieux-detail" style="display:none;">
-        <button class="srp-back" onclick="srpBack()">
-            <i class="fas fa-arrow-left"></i>
-            <span id="srp-back-label"></span>
-        </button>
-        <div id="srp-detail-content"></div>
-    </div>
-</div>
-{% endif %}
-
-{% if search_results.museums %}
-<div class="srp-slide">
-    <div id="srp-museums-list">
-        {% for m in search_results.museums[:5] %}
-        <a class="srp-row" onclick="srpApplyFilter('museum', '{{ m.id|e }}')">
-            <span class="srp-row-name">{{ m.nom }}</span>
-            <span class="srp-row-count">{{ m.count }} œuvres</span>
-        </a>
-        {% endfor %}
-    </div>
-    {% if search_results.museums|length > 5 %}
-    <button class="srp-show-more" id="srp-museums-more" onclick="srpShowMore('museums')">
-        Voir tout <span>(+{{ search_results.museums|length - 5 }})</span>
-    </button>
-    <div id="srp-museums-extra" style="display:none;">
-        {% for m in search_results.museums[5:] %}
-        <a class="srp-row" onclick="srpApplyFilter('museum', '{{ m.id|e }}')">
-            <span class="srp-row-name">{{ m.nom }}</span>
-            <span class="srp-row-count">{{ m.count }} œuvres</span>
-        </a>
-        {% endfor %}
-    </div>
-    {% endif %}
-</div>
-{% endif %}
-
-{% if search_results.artists %}
-<div class="srp-slide">
-    <div id="srp-artists-list">
-        {% for a in search_results.artists[:5] %}
-        <a class="srp-row" onclick="srpApplyFilter('artist', '{{ a.nom|e }}')">
-            <span class="srp-row-name">{{ a.nom }}</span>
-            <span class="srp-row-count">{{ a.count }} œuvres</span>
-        </a>
-        {% endfor %}
-    </div>
-                {% if search_results.artists|length > 5 %}
-                <button class="srp-show-more" id="srp-artists-more" onclick="srpShowMore('artists')">
-                    Voir tout <span>(+{{ search_results.artists|length - 5 }})</span>
-                </button>
-                <div id="srp-artists-extra" style="display:none;">
-                    {% for a in search_results.artists[5:] %}
-                    <a class="srp-row" onclick="srpApplyFilter('artist', '{{ a.nom|e }}')">
-                        <span class="srp-row-name">{{ a.nom }}</span>
-                        <span class="srp-row-count">{{ a.count }} œuvres</span>
-                    </a>
-                    {% endfor %}
-                </div>
-                {% endif %}
+        <div class="srp-row">
+            <span class="srp-cat-label"><i class="fas fa-landmark"></i> Musées</span>
+            <div class="srp-pills">
+                {% for m in search_results.museums %}
+                <a href="/research?museum={{ m.id|urlencode }}" class="srp-pill">
+                    {{ m.nom }}
+                    <span class="srp-pill-count">{{ m.count }}</span>
+                </a>
+                {% endfor %}
             </div>
-            {% endif %}
+        </div>
+        {% endif %}
 
-        </div><!-- fin .srp-slider -->
-    </div><!-- fin .srp-slider-wrap -->
+        {% if search_results.cities %}
+        <div class="srp-row">
+            <span class="srp-cat-label"><i class="fas fa-city"></i> Villes</span>
+            <div class="srp-pills">
+                {% for c in search_results.cities %}
+                <a href="/research?city={{ c.nom|urlencode }}" class="srp-pill">
+                    {{ c.nom }}
+                    <span class="srp-pill-count">{{ c.count }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
 
-</div><!-- fin .srp -->
-{% endif %}
+        {% if search_results.countries %}
+        <div class="srp-row">
+            <span class="srp-cat-label"><i class="fas fa-flag"></i> Pays</span>
+            <div class="srp-pills">
+                {% for c in search_results.countries %}
+                <a href="/research?country={{ c.nom|urlencode }}" class="srp-pill">
+                    {{ c.nom }}
+                    <span class="srp-pill-count">{{ c.count }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
 
-{% if q %}
-<div class="srp-results-line">
-    <div class="srp-results-line-top">
-        <span class="srp-header-num">{{ total_oeuvres }}</span>
-        <span class="srp-header-label">résultat{% if total_oeuvres > 1 %}s{% endif %}</span>
-        <span class="srp-header-label">« {{ q }} »</span>
+        {% if search_results.artists %}
+        <div class="srp-row">
+            <span class="srp-cat-label"><i class="fas fa-user"></i> Artistes</span>
+            <div class="srp-pills">
+                {% for a in search_results.artists %}
+                <a href="/research?artist={{ a.nom|urlencode }}" class="srp-pill">
+                    {{ a.nom }}
+                    <span class="srp-pill-count">{{ a.count }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
     </div>
+
+    <div class="srp-footer">
+        <span>{{ total_oeuvres }} œuvre{% if total_oeuvres > 1 %}s{% endif %} dans la collection avec ce titre</span>
+        <a href="/research?q={{ q|urlencode }}" class="srp-see-all">
+            Voir toutes les œuvres <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+
 </div>
-
-
 {% endif %}
 
-<!-- Grille des œuvres -->
-<div class="works-grid grid-4" id="works-grid">
+
+
+
+
+        <!-- Grille des œuvres -->
+        <div class="works-grid grid-4" id="works-grid">
             {% for artwork in works %}
             <a href="/oeuvre/{{ artwork.id }}" class="work-item" data-id="{{ artwork.id }}">
 
@@ -1391,7 +1354,7 @@ body.theme-dark .srp-show-more { border-color: #2a2a2a; }
         let scrollTriggered = false;
         let displayedCount  = {{ works|length }};
         let currentView     = 6;
-        let museumNames = {{ museum_names | tojson }};
+        let museumNames     = {};
         let totalOeuvres = {{ total_oeuvres }};
         const isLoggedIn = {{ 'true' if session.user_id else 'false' }};
         const _loadedDropdowns = new Set();
@@ -1404,239 +1367,7 @@ body.theme-dark .srp-show-more { border-color: #2a2a2a; }
             if (saved && [4, 6].includes(parseInt(saved))) currentView = parseInt(saved);
         } catch (e) {}
 
-let _srpIndex = 0;
-
-window.switchTab = function(index, btn) {
-    _srpIndex = index;
-    document.querySelectorAll('.srp-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    const slider = document.getElementById('srp-slider');
-    if (slider) {
-        slider.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-        slider.style.transform = `translateX(-${index * 100}%)`;
-    }
-};
-
-window.srpApplyFilter = function(type, value) {
-    const params = new URLSearchParams(window.location.search);
-    params.set(type, value);
-    window.location.href = `/research?${params}`;
-};
-
-
-
-window.srpDrillDown = async function(e, type, name) {
-    e.preventDefault();
-    const main      = document.getElementById('srp-lieux-main');
-    const detail    = document.getElementById('srp-lieux-detail');
-    const content   = document.getElementById('srp-detail-content');
-    const backLabel = document.getElementById('srp-back-label');
-
-    backLabel.textContent = name;
-    content.innerHTML = '<div style="padding:1rem 1.4rem;color:var(--text-muted);font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i></div>';
-    main.style.display   = 'none';
-    detail.style.display = 'block';
-
-    const param = type === 'city'
-        ? `city=${encodeURIComponent(name)}`
-        : `country=${encodeURIComponent(name)}`;
-
-    try {
-        const res  = await fetch(`/api/srp-detail?${param}`);
-        const data = await res.json();
-
-        if (!data.items || !data.items.length) {
-            content.innerHTML = '<div style="padding:1rem 1.4rem;color:var(--text-muted);font-size:0.8rem;">Aucun résultat</div>';
-            return;
-        }
-
-        const limit   = 6;
-        const visible = data.items.slice(0, limit);
-        const hidden  = data.items.slice(limit);
-        let html = '';
-
-        if (data.type === 'cities') {
-            html += visible.map(c => `
-                <a class="srp-row" onclick="srpDrillDown(event, 'city', '${escHtml(c.nom)}')">
-                    <span class="srp-row-name">${escHtml(c.nom)}</span>
-                    <span class="srp-row-count">${c.count} musée${c.count > 1 ? 's' : ''}</span>
-                    <i class="fas fa-chevron-right srp-row-chevron"></i>
-                </a>
-            `).join('');
-            if (hidden.length) {
-                const extraId = `srp-drill-extra-cities-${Date.now()}`;
-                html += `
-                <button class="srp-show-more" onclick="
-                    const ex = document.getElementById('${extraId}');
-                    const shown = ex.style.display !== 'none';
-                    ex.style.display = shown ? 'none' : 'block';
-                    this.innerHTML = shown ? 'Voir tout <span>(+${hidden.length})</span>' : 'Voir moins <span></span>';
-                ">Voir tout <span>(+${hidden.length})</span></button>
-                <div id="${extraId}" style="display:none;">
-                    ${hidden.map(c => `
-                        <a class="srp-row" onclick="srpDrillDown(event, 'city', '${escHtml(c.nom)}')">
-                            <span class="srp-row-name">${escHtml(c.nom)}</span>
-                            <span class="srp-row-count">${c.count} musée${c.count > 1 ? 's' : ''}</span>
-                            <i class="fas fa-chevron-right srp-row-chevron"></i>
-                        </a>
-                    `).join('')}
-                </div>`;
-            }
-        } else {
-            html += visible.map(m => `
-                <a class="srp-row" onclick="srpApplyFilter('museum', '${escHtml(m.id)}')">
-                    <span class="srp-row-name">${escHtml(m.nom)}</span>
-                    <span class="srp-row-count">${m.count} œuvres</span>
-                </a>
-            `).join('');
-            if (hidden.length) {
-                const extraId = `srp-drill-extra-museums-${Date.now()}`;
-                html += `
-                <button class="srp-show-more" onclick="
-                    const ex = document.getElementById('${extraId}');
-                    const shown = ex.style.display !== 'none';
-                    ex.style.display = shown ? 'none' : 'block';
-                    this.innerHTML = shown ? 'Voir tout <span>(+${hidden.length})</span>' : 'Voir moins <span></span>';
-                ">Voir tout <span>(+${hidden.length})</span></button>
-                <div id="${extraId}" style="display:none;">
-                    ${hidden.map(m => `
-                        <a class="srp-row" onclick="srpApplyFilter('museum', '${escHtml(m.id)}')">
-                            <span class="srp-row-name">${escHtml(m.nom)}</span>
-                            <span class="srp-row-count">${m.count} œuvres</span>
-                        </a>
-                    `).join('')}
-                </div>`;
-            }
-        }
-        content.innerHTML = html;
-    } catch(err) {
-        content.innerHTML = '<div style="padding:1rem 1.4rem;color:var(--text-muted);">Erreur</div>';
-    }
-};
-
-
-
-
-
-window.srpExpandDetail = function(btn) {
-    const extra = btn.nextElementSibling;
-    if (extra) extra.style.display = 'block';
-    btn.style.display = 'none';
-    const moins = document.createElement('button');
-    moins.className = 'srp-show-more';
-    moins.innerHTML = 'Voir moins <span></span>';
-    moins.setAttribute('onclick', 'srpCollapseDetail(this)');
-    extra.insertAdjacentElement('afterend', moins);
-};
-
-window.srpCollapseDetail = function(btn) {
-    const extra = btn.previousElementSibling;
-    if (extra) extra.style.display = 'none';
-    btn.remove();
-    const showBtn = extra ? extra.previousElementSibling : null;
-    if (showBtn && showBtn.classList.contains('srp-show-more')) {
-        showBtn.style.display = 'flex';
-    }
-};
-
-window.srpCollapseDetail = function(btn) {
-    const extra = btn.nextElementSibling;
-    if (extra) extra.style.display = 'none';
-    const count = extra ? extra.querySelectorAll('.srp-row').length : '';
-    btn.innerHTML = `Voir tout <span>(+${count})</span>`;
-    btn.setAttribute('onclick', 'srpExpandDetail(this)');
-};
-
-window.srpBack = function() {
-    document.getElementById('srp-lieux-main').style.display  = 'block';
-    document.getElementById('srp-lieux-detail').style.display = 'none';
-};
-
-window.srpShowMore = function(type) {
-    const extra = document.getElementById(`srp-${type}-extra`);
-    const btn   = document.getElementById(`srp-${type}-more`);
-    if (extra) extra.style.display = 'block';
-    if (btn)   btn.style.display   = 'none';
-    // Évite les doublons
-    const existingLess = document.getElementById(`srp-${type}-less`);
-    if (existingLess) existingLess.remove();
-    const moins = document.createElement('button');
-    moins.className = 'srp-show-more';
-    moins.id = `srp-${type}-less`;
-    moins.innerHTML = 'Voir moins <span></span>';
-    moins.onclick = () => srpShowLess(type);
-    extra.insertAdjacentElement('afterend', moins);
-};
-
-window.srpShowLess = function(type) {
-    const extra = document.getElementById(`srp-${type}-extra`);
-    const btn   = document.getElementById(`srp-${type}-more`);
-    const moins = document.getElementById(`srp-${type}-less`);
-    if (extra) extra.style.display = 'none';
-    if (btn) { btn.style.display = ''; btn.style.removeProperty('display'); btn.style.display = 'flex'; }
-    if (moins) moins.remove();
-};
-
-(function initSrpSwipe() {
-    document.addEventListener('DOMContentLoaded', function() {
-        const wrap = document.querySelector('.srp-slider-wrap');
-        const slider = document.getElementById('srp-slider');
-        if (!wrap || !slider) return;
-
-        let startX = 0, startY = 0, isDragging = false, isHorizontal = null;
-
-        function getBase() { return -(_srpIndex * wrap.offsetWidth); }
-
-        function setPos(x, animated) {
-            slider.style.transition = animated
-                ? 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                : 'none';
-            slider.style.transform = `translateX(${x}px)`;
-        }
-
-        wrap.addEventListener('touchstart', e => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            isDragging = true;
-            isHorizontal = null;
-            slider.style.transition = 'none';
-        }, { passive: true });
-
-        wrap.addEventListener('touchmove', e => {
-            if (!isDragging) return;
-            const dx = e.touches[0].clientX - startX;
-            const dy = e.touches[0].clientY - startY;
-            if (isHorizontal === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
-                isHorizontal = Math.abs(dx) > Math.abs(dy);
-            }
-            if (!isHorizontal) return;
-            e.preventDefault();
-            const tabs = document.querySelectorAll('.srp-tab');
-            const minX = -((tabs.length - 1) * wrap.offsetWidth);
-            let newX = getBase() + dx;
-            if (newX > 0) newX = newX * 0.2;
-            if (newX < minX) newX = minX + (newX - minX) * 0.2;
-            slider.style.transform = `translateX(${newX}px)`;
-        }, { passive: false });
-
-        wrap.addEventListener('touchend', e => {
-            if (!isDragging || !isHorizontal) { isDragging = false; return; }
-            isDragging = false;
-            const dx = e.changedTouches[0].clientX - startX;
-            const tabs = document.querySelectorAll('.srp-tab');
-            const threshold = wrap.offsetWidth * 0.3;
-            if (dx < -threshold && _srpIndex < tabs.length - 1) _srpIndex++;
-            else if (dx > threshold && _srpIndex > 0) _srpIndex--;
-            tabs.forEach(t => t.classList.remove('active'));
-            tabs[_srpIndex].classList.add('active');
-            setPos(getBase(), true);
-        }, { passive: true });
-    });
-})();
-
-
-
-// ================================================
+        // ================================================
         // GESTIONNAIRE D'IMAGES - VERSION OPTIMISÉE
         // ================================================
 window.handleImageError = function(img) {
@@ -1756,11 +1487,12 @@ async function loadTypes() {
         // ================================================
         // UTILITAIRES
         // ================================================
-function updateCounter() {
-    document.getElementById('displayed-count').textContent = totalOeuvres.toLocaleString('fr-FR');
-    const hasFilters = document.querySelectorAll('.filter-tag').length > 0;
-    document.getElementById('filter-indicator').style.display = hasFilters ? 'inline' : 'none';
-}
+        function updateCounter() {
+            document.getElementById('displayed-count').textContent = displayedCount;
+            document.getElementById('total-count').textContent = totalOeuvres.toLocaleString('fr-FR');
+            const hasFilters = document.querySelectorAll('.filter-tag').length > 0;
+            document.getElementById('filter-indicator').style.display = hasFilters ? 'inline' : 'none';
+        }
 
         // ===== FONCTION API AVEC CACHE =====
 async function fetchAPI(url, params = {}) {
@@ -2145,44 +1877,42 @@ window.applyMuseumFilter = function () {
 
 
         // TAGS ACTIFS
-function updateActiveTags() {
-    const container = document.getElementById('active-tags');
-    if (!container) return;
-    const params = new URLSearchParams(window.location.search);
-    const tags   = [];
+        function updateActiveTags() {
+            const container = document.getElementById('active-tags');
+            if (!container) return;
+            const params = new URLSearchParams(window.location.search);
+            const tags   = [];
+            const q = params.get('q');
+            if (q) tags.push({ type: 'q', label: `"${q}"`, value: q });
 
-    // ← supprime le bloc q
-    // const q = params.get('q');
-    // if (q) tags.push({ type: 'q', label: `"${q}"`, value: q });
+            params.getAll('artist').forEach(a => tags.push({ type: 'artist',  label: a, value: a }));
 
-    params.getAll('artist').forEach(a => tags.push({ type: 'artist', label: a, value: a }));
+            const country = params.get('country');
+            if (country) tags.push({ type: 'country', label: country, value: country });
 
-    const country = params.get('country');
-    if (country) tags.push({ type: 'country', label: country, value: country });
+            params.getAll('city').forEach(c => tags.push({ type: 'city', label: c, value: c }));
 
-    params.getAll('city').forEach(c => tags.push({ type: 'city', label: c, value: c }));
+            params.getAll('museum').forEach(id => {
+                const label = museumNames[id] || id;
+                tags.push({ type: 'museum', label: label, value: id });
+            });
 
-    params.getAll('museum').forEach(id => {
-        const label = museumNames[id] || id;
-        tags.push({ type: 'museum', label: label, value: id });
-    });
+            params.getAll('type').forEach(t => tags.push({ type: 'type', label: t, value: t }));
 
-    params.getAll('type').forEach(t => tags.push({ type: 'type', label: t, value: t }));
+            const sort = params.get('sort');
+            if (sort && sort !== 'relevance') {
+                const labels = { date_desc: 'Plus récent', date_asc: 'Plus ancien', title_asc: 'A-Z', artist_asc: 'Artiste A-Z' };
+                tags.push({ type: 'sort', label: labels[sort] || sort, value: sort });
+            }
 
-    const sort = params.get('sort');
-    if (sort && sort !== 'relevance') {
-        const labels = { date_desc: 'Plus récent', date_asc: 'Plus ancien', title_asc: 'A-Z', artist_asc: 'Artiste A-Z' };
-        tags.push({ type: 'sort', label: labels[sort] || sort, value: sort });
-    }
+            container.innerHTML = tags.map(t => `
+                <div class="filter-tag">
+                    ${escHtml(t.label)}
+                    <i class="fas fa-times" onclick="removeTag('${t.type}','${escHtml(t.value)}')"></i>
+                </div>`).join('');
 
-    container.innerHTML = tags.map(t => `
-        <div class="filter-tag">
-            ${escHtml(t.label)}
-            <i class="fas fa-times" onclick="removeTag('${t.type}','${escHtml(t.value)}')"></i>
-        </div>`).join('');
-
-    updateCounter();
-}
+            updateCounter();
+        }
 
 window.removeTag = function (type, value) {
     const params = new URLSearchParams(window.location.search);

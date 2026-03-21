@@ -2328,20 +2328,22 @@ def set_language(lang):
     return redirect(request.referrer or url_for('index'))
 
 def _build_artwork_query(artists, country, cities, museums, types=None, q=''):
+    """Construit la requête de base partagée entre /research et /api/works"""
     query = Artwork.query.filter(
         Artwork.image_url.isnot(None),
         Artwork.image_url != ''
     )
 
-    # Recherche textuelle — seulement si pas d'autre filtre géo/musée
-    if q and not country and not cities and not museums and not artists:
+    # Recherche textuelle
+    if q:
         s = f"%{q}%"
-        lang = session.get('language', 'fr')
-        if lang == 'fr':
-            query = query.filter(Artwork.label_fallback_fr.ilike(s))
-        else:
-            query = query.filter(Artwork.label_fallback_en.ilike(s))
-
+        query = query.filter(db.or_(
+            Artwork.label_fallback_fr.ilike(s),
+            Artwork.label_fallback_en.ilike(s),
+            Artwork.creator_fallback_fr.ilike(s),
+            Artwork.creator_fallback_en.ilike(s),
+        ))
+    
     if artists:
         query = query.filter(db.or_(*[
             db.or_(
@@ -2349,7 +2351,7 @@ def _build_artwork_query(artists, country, cities, museums, types=None, q=''):
                 Artwork.creator_fallback_en.ilike(f"%{a}%")
             ) for a in artists
         ]))
-
+    
     if country or cities or museums:
         query = query.join(ArtworkCollection, isouter=False).join(Collection)
         if country:
@@ -2370,7 +2372,8 @@ def _build_artwork_query(artists, country, cities, museums, types=None, q=''):
                     Collection.collection_en.ilike(f"%{m}%")
                 ) for m in museums
             ]))
-
+    
+    # NOUVEAU : Filtre par type d'œuvre
     if types:
         type_filters = []
         for t in types:
@@ -2378,7 +2381,7 @@ def _build_artwork_query(artists, country, cities, museums, types=None, q=''):
             type_filters.append(Artwork.instance_of_en.ilike(f"%{t}%"))
         if type_filters:
             query = query.filter(db.or_(*type_filters))
-
+    
     return query
 
 
@@ -2407,20 +2410,19 @@ def _apply_sort(query, sort):
         return query.order_by(func.random())
 
 
-
 @app.route('/research')
 def research():
     page    = request.args.get('page', 1, type=int)
-    limit   = min(request.args.get('limit', 12, type=int), 40)
+    limit   = min(request.args.get('limit', 12, type=int), 40)  # Changé à 24
     artists = request.args.getlist('artist')
     country = request.args.get('country', '')
     cities  = request.args.getlist('city')
     museums = request.args.getlist('museum')
-    types   = request.args.getlist('type')
+    types   = request.args.getlist('type')  # NOUVEAU
     sort    = request.args.get('sort', 'relevance')
-    q       = request.args.get('q', '').strip()
-    view    = request.args.get('view', 4, type=int)
-
+    q       = request.args.get('q', '').strip() 
+    view    = request.args.get('view', 4, type=int)  # ← AJOUTER CETTE LIGNE
+    
     query = _build_artwork_query(artists, country, cities, museums, types, q=q)
     query = _apply_sort(query, sort)
 
@@ -2428,170 +2430,12 @@ def research():
     works_page = query.offset((page - 1) * limit).limit(limit).all()
     works      = [w.to_dict() for w in works_page]
 
-    # ── NOUVEAU : résultats catégorisés quand recherche textuelle ──
-    search_results = None
-    if q and page == 1:
-        lang = session.get('language', 'fr')
-        pattern = f"%{q}%"
-
-        # Artistes
-        artist_field = Artwork.creator_fallback_fr if lang == 'fr' else Artwork.creator_fallback_en
-        sr_artists = db.session.query(
-            artist_field.label('nom'),
-            func.count(Artwork.id).label('count')
-        ).filter(
-            artist_field.ilike(pattern),
-            artist_field.isnot(None), artist_field != ''
-        ).group_by(artist_field).order_by(func.count(Artwork.id).desc()).limit(20).all()
-
-# Villes — compte les musées
-        city_field = Collection.city_fr if lang == 'fr' else Collection.city_en
-        sr_cities = db.session.query(
-            city_field.label('nom'),
-            func.count(func.distinct(Collection.id)).label('count')
-        ).join(ArtworkCollection, Collection.id == ArtworkCollection.collection_id
-        ).filter(
-            city_field.ilike(pattern),
-            city_field.isnot(None),
-            city_field != ''
-        ).group_by(city_field).order_by(
-            func.count(func.distinct(Collection.id)).desc()
-        ).limit(20).all()
-
-        # Pays — compte les musées
-        country_field = Collection.country_fr if lang == 'fr' else Collection.country_en
-        sr_countries = db.session.query(
-            country_field.label('nom'),
-            func.count(func.distinct(Collection.id)).label('count')
-        ).join(ArtworkCollection, Collection.id == ArtworkCollection.collection_id
-        ).filter(
-            country_field.ilike(pattern),
-            country_field.isnot(None),
-            country_field != ''
-        ).group_by(country_field).order_by(
-            func.count(func.distinct(Collection.id)).desc()
-        ).limit(20).all()
-
-        # Musées
-        museum_field = Collection.collection_fr if lang == 'fr' else Collection.collection_en
-        sr_museums = db.session.query(
-            Collection.id,
-            museum_field.label('nom'),
-            func.count(ArtworkCollection.artwork_id).label('count')
-        ).join(ArtworkCollection, Collection.id == ArtworkCollection.collection_id
-        ).filter(
-            museum_field.ilike(pattern),
-            museum_field.isnot(None),
-            museum_field != ''
-        ).group_by(Collection.id, museum_field
-        ).order_by(
-            func.count(ArtworkCollection.artwork_id).desc()
-        ).limit(20).all()
-
-        # Musées
-        museum_field = Collection.collection_fr if lang == 'fr' else Collection.collection_en
-        sr_museums = db.session.query(
-            Collection.id,
-            museum_field.label('nom'),
-            func.count(ArtworkCollection.artwork_id).label('count')
-        ).join(ArtworkCollection, Collection.id == ArtworkCollection.collection_id
-        ).filter(museum_field.ilike(pattern), museum_field.isnot(None), museum_field != ''
-        ).group_by(Collection.id, museum_field
-        ).order_by(func.count(ArtworkCollection.artwork_id).desc()).limit(10).all()
-
-        # Œuvres
-        title_field = Artwork.label_fallback_fr if lang == 'fr' else Artwork.label_fallback_en
-        sr_works = db.session.query(Artwork).filter(
-            title_field.ilike(pattern),
-            Artwork.image_url.isnot(None), Artwork.image_url != ''
-        ).limit(4).all()
-
-        has_any = any([sr_artists, sr_countries, sr_cities, sr_museums])
-        if has_any:
-            search_results = {
-                'query': q,
-                'artists':   [{'nom': a.nom, 'count': a.count} for a in sr_artists],
-                'countries': [{'nom': c.nom, 'count': c.count} for c in sr_countries],
-                'cities':    [{'nom': c.nom, 'count': c.count} for c in sr_cities],
-                'museums':   [{'id': m.id, 'nom': m.nom, 'count': m.count} for m in sr_museums],
-            }
-
-# Noms des musées sélectionnés pour les tags
-    museum_names = {}
-    selected_museums = request.args.getlist('museum')
-    if selected_museums:
-        lang = session.get('language', 'fr')
-        museum_field = Collection.collection_fr if lang == 'fr' else Collection.collection_en
-        museums_data = db.session.query(
-            Collection.id,
-            museum_field.label('name')
-        ).filter(Collection.id.in_(selected_museums)).all()
-        museum_names = {m.id: m.name for m in museums_data}
-
     return render_template('research.html',
         works=works,
         total_oeuvres=total,
         current_page=page,
-        current_view=view,
-        search_results=search_results,
-        q=q,
-        museum_names=museum_names,
-    )
-
-@app.route('/api/srp-detail')
-def api_srp_detail():
-    try:
-        lang = session.get('language', 'fr')
-        city = request.args.get('city', '')
-        country = request.args.get('country', '')
-
-        museum_field = Collection.collection_fr if lang == 'fr' else Collection.collection_en
-        city_field   = Collection.city_fr if lang == 'fr' else Collection.city_en
-        country_field = Collection.country_fr if lang == 'fr' else Collection.country_en
-
-        if country and not city:
-            # Pays → liste des villes
-            cities = db.session.query(
-                city_field.label('nom'),
-                func.count(func.distinct(Collection.id)).label('count')
-            ).filter(
-                country_field.ilike(f"%{country}%"),
-                city_field.isnot(None),
-                city_field != ''
-            ).group_by(city_field).order_by(
-                func.count(func.distinct(Collection.id)).desc()
-            ).limit(20).all()
-
-            return jsonify({
-                'type': 'cities',
-                'name': country,
-                'items': [{'nom': c.nom, 'count': c.count} for c in cities]
-            })
-        else:
-            # Ville → liste des musées
-            query = db.session.query(
-                Collection.id,
-                museum_field.label('nom'),
-                func.count(ArtworkCollection.artwork_id).label('count')
-            ).join(ArtworkCollection, Collection.id == ArtworkCollection.collection_id)
-
-            if city:
-                query = query.filter(city_field.ilike(f"%{city}%"))
-
-            museums = query.group_by(
-                Collection.id, museum_field
-            ).order_by(
-                func.count(ArtworkCollection.artwork_id).desc()
-            ).limit(20).all()
-
-            return jsonify({
-                'type': 'museums',
-                'name': city,
-                'items': [{'id': m.id, 'nom': m.nom, 'count': m.count} for m in museums]
-            })
-    except Exception as e:
-        return jsonify({'items': []}), 500
-
+        current_view=view, # ← AJOUTER CETTE LIGNE
+)
 
 @app.route('/api/works')
 def api_works():
