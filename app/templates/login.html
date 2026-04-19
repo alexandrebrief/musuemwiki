@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+{% if session.language == 'en' %}
+<html lang="en">
+{% else %}
+<html lang="fr">
+{% endif %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ site_name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-light: #ffffff;
+            --surface-dark: #141414;
+            --surface-light: #f5f5f5;
+            --text-dark: #ffffff;
+            --text-light: #1a1a1a;
+            --text-muted-dark: #7a7a7a;
+            --text-muted-light: #9a9a9a;
+            --border-dark: #2a2a2a;
+            --border-light: #e0e0e0;
+            --accent: #6c5ce7;
+            --accent-hover: #5a4bcf;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-text: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: var(--font-text);
+            color: var(--text-dark);
+            line-height: 1.5;
+            font-weight: 300;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.theme-light {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            --surface: var(--surface-light);
+            --surface-hover: #eaeaea;
+            --border-color: var(--border-light);
+            --text-muted: var(--text-muted-light);
+        }
+
+        body.theme-dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            --surface: var(--surface-dark);
+            --surface-hover: #1f1f1f;
+            --border-color: var(--border-dark);
+            --text-muted: #b0b0b0;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-display);
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+
+        /* ===== LAYOUT ===== */
+        .page-wrap {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            margin-top: 66px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+        }
+
+        /* ===== CARD ===== */
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid var(--border-color);
+            padding: 3rem 2.5rem;
+            position: relative;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .login-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            color: var(--text-dark);
+        }
+
+        body.theme-light .login-title {
+            color: var(--text-light);
+        }
+
+        /* ===== ALERTS ===== */
+        .alert {
+            padding: 0.8rem 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.82rem;
+            border-left: 2px solid;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            background: var(--surface);
+        }
+
+        .alert-danger  { border-color: #e03131; color: #e03131; }
+        .alert-success { border-color: #2f9e44; color: #2f9e44; }
+        .alert-info    { border-color: var(--accent); color: var(--accent); }
+        .alert-warning { border-color: #f08c00; color: #f08c00; }
+
+        .alert ul { margin: 0; padding-left: 1rem; }
+
+        .alert-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.6;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            padding: 0;
+            line-height: 1;
+        }
+        .alert-close:hover { opacity: 1; }
+
+        /* ===== FORM ===== */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        body.theme-light .form-label {
+            color: var(--text-light);
+        }
+
+        .form-control {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: inherit;
+            padding: 0.75rem 1rem;
+            font-family: var(--font-text);
+            font-size: 0.9rem;
+            font-weight: 300;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        .form-control:focus { border-color: var(--accent); }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        /* Password field */
+        .password-wrap { position: relative; }
+
+        .password-wrap .form-control { padding-right: 3rem; }
+
+        .password-toggle {
+            position: absolute;
+            right: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding: 0;
+            transition: color 0.2s;
+        }
+        .password-toggle:hover { color: var(--accent); }
+
+        /* ===== SUBMIT ===== */
+        .btn-login {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.85rem 2rem;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 1.5rem;
+        }
+        .btn-login:hover { background: var(--accent-hover); }
+
+        /* ===== FOOTER LINKS ===== */
+        .login-footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        body.theme-light .login-footer {
+            color: var(--text-light);
+        }
+
+        .login-footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .login-footer a:hover { text-decoration: underline; }
+
+        .forgot-link {
+            display: block;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .forgot-link:hover { color: var(--accent); }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal-box {
+            background: var(--surface, #141414);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        body.theme-light .modal-box {
+            background: var(--surface-light);
+        }
+
+        .modal-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        body.theme-light .modal-title {
+            color: var(--text-light);
+        }
+
+        .modal-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        .modal-close:hover { color: var(--accent); }
+
+        .modal-spam {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 576px) {
+            .login-card { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body class="theme-dark">
+<script>
+    (function() {
+        const t = localStorage.getItem('theme') || 'dark';
+        document.body.classList.remove('theme-dark', 'theme-light');
+        document.body.classList.add('theme-' + t);
+    })();
+</script>
+
+    {% include 'navbar.html' %}
+
+    <div class="page-wrap">
+        <div class="main-content">
+            <div class="login-card">
+                <div class="login-title">Se connecter</div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category != 'message' else 'info' }}">
+                            <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-circle' }}"></i>
+                            <span>{{ message }}</span>
+                            <button class="alert-close" onclick="this.closest('.alert').remove()">×</button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="/login">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required autofocus>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Mot de passe</label>
+                        <div class="password-wrap">
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword()">
+                                <i class="far fa-eye" id="toggleIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-login">Se connecter</button>
+                </form>
+
+                <div class="login-footer">
+                    Pas encore de compte ? <a href="/register">S'inscrire</a>
+                </div>
+
+                <a class="forgot-link" href="#" onclick="openModal(); return false;">
+                    <i class="fas fa-key"></i> Mot de passe oublié ?
+                </a>
+            </div>
+        </div>
+
+        {% include 'footer.html' %}
+    </div>
+
+    <!-- Modal mot de passe oublié -->
+    <div class="modal-overlay" id="forgotModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-title">Mot de passe oublié</div>
+            <p class="modal-desc">Entrez votre email, nous vous enverrons un lien pour réinitialiser votre mot de passe.</p>
+
+            <div id="forgotMessages"></div>
+
+            <form id="forgotForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label class="form-label" for="forgot-email">Email</label>
+                    <input type="email" class="form-control" id="forgot-email" name="email" required>
+                </div>
+                <button type="submit" class="btn-login" id="forgotSubmitBtn">Envoyer le lien</button>
+            </form>
+
+            <p class="modal-spam">Si vous ne recevez pas d'email, vérifiez vos spams.</p>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const inp = document.getElementById('password');
+            const icon = document.getElementById('toggleIcon');
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                inp.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        function openModal() {
+            document.getElementById('forgotModal').classList.add('show');
+            document.getElementById('forgotMessages').innerHTML = '';
+            document.getElementById('forgotForm').reset();
+        }
+
+        function closeModal() {
+            document.getElementById('forgotModal').classList.remove('show');
+        }
+
+        document.getElementById('forgotModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-dismiss alerts
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(a => a.remove());
+            }, 5000);
+
+            // Forgot password form
+            document.getElementById('forgotForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const email = document.getElementById('forgot-email').value;
+                const msgDiv = document.getElementById('forgotMessages');
+                const btn = document.getElementById('forgotSubmitBtn');
+
+                btn.disabled = true;
+                btn.textContent = 'Envoi...';
+
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                    const res = await fetch('/api/forgot-password', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+                        body: JSON.stringify({ email })
+                    });
+                    const data = await res.json();
+
+                    if (res.ok) {
+                        msgDiv.innerHTML = `<div class="alert alert-success"><i class="fas fa-check-circle"></i><span>${data.message}</span></div>`;
+                        setTimeout(() => closeModal(), 3000);
+                    } else {
+                        msgDiv.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i><span>${data.error || 'Une erreur est survenue'}</span></div>`;
+                    }
+                } catch {
+                    msgDiv.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i><span>Erreur de connexion</span></div>`;
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Envoyer le lien';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

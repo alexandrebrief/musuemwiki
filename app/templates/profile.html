@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+{% if session.language == 'en' %}
+<html lang="en">
+{% else %}
+<html lang="fr">
+{% endif %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ site_name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-light: #ffffff;
+            --surface-dark: #141414;
+            --surface-light: #f5f5f5;
+            --text-dark: #ffffff;
+            --text-light: #1a1a1a;
+            --text-muted-dark: #7a7a7a;
+            --text-muted-light: #9a9a9a;
+            --border-dark: #2a2a2a;
+            --border-light: #e0e0e0;
+            --accent: #6c5ce7;
+            --accent-hover: #5a4bcf;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-text: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: var(--font-text);
+            color: var(--text-dark);
+            line-height: 1.5;
+            font-weight: 300;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.theme-light {
+            background-color: var(--bg-light);
+            color: #000000;
+            --surface: var(--surface-light);
+            --surface-hover: #eaeaea;
+            --border-color: var(--border-light);
+            --text-muted: #444444;
+            --input-bg: #f5f5f5;
+        }
+
+        body.theme-dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            --surface: var(--surface-dark);
+            --surface-hover: #1f1f1f;
+            --border-color: var(--border-dark);
+            --text-muted: #b0b0b0;
+            --input-bg: #0f0f0f;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-display);
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+
+        /* ===== LAYOUT ===== */
+        .page-wrap {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            margin-top: 66px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+        }
+
+        /* ===== CARD ===== */
+        .profile-card {
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid var(--border-color);
+            padding: 3rem 2.5rem;
+            position: relative;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .profile-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            color: var(--text-dark);
+        }
+
+        body.theme-light .profile-title {
+            color: #000000;
+        }
+
+        /* ===== ALERTS ===== */
+        .alert {
+            padding: 0.8rem 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.82rem;
+            border-left: 2px solid;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            background: var(--surface);
+        }
+
+        .alert-danger  { border-color: #e03131; color: #e03131; }
+        .alert-success { border-color: #2f9e44; color: #2f9e44; }
+        .alert-info    { border-color: var(--accent); color: var(--accent); }
+        .alert-warning { border-color: #f08c00; color: #f08c00; }
+
+        .alert-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.6;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            padding: 0;
+            line-height: 1;
+        }
+        .alert-close:hover { opacity: 1; }
+
+        /* ===== INFO ROWS ===== */
+        .info-section {
+            margin-bottom: 2rem;
+        }
+
+        .info-row {
+            margin-bottom: 1.2rem;
+        }
+
+        .info-label {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .info-value {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: inherit;
+            padding: 0.75rem 1rem;
+            font-family: var(--font-text);
+            font-size: 0.9rem;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        body.theme-dark .info-value {
+            color: #ffffff;
+        }
+
+        .info-value i {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            width: 14px;
+            flex-shrink: 0;
+        }
+
+        .info-value .edit-icon {
+            margin-left: auto;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            transition: color 0.2s;
+            width: auto;
+        }
+        .info-value .edit-icon:hover { color: var(--accent); }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            font-family: var(--font-display);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .status-badge.verified { color: #2f9e44; }
+        .status-badge.pending  { color: #f08c00; }
+
+        /* Edit username */
+        .edit-username-form {
+            margin-top: 0.5rem;
+        }
+
+        .edit-username-form input {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: inherit;
+            padding: 0.75rem 1rem;
+            font-family: var(--font-text);
+            font-size: 0.9rem;
+            font-weight: 300;
+            outline: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .edit-username-form input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .edit-btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-save {
+            flex: 1;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-save:hover { background: var(--accent-hover); }
+
+        .btn-cancel {
+            flex: 1;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1rem;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-cancel:hover {
+            border-color: var(--text-muted);
+            color: inherit;
+        }
+
+        /* ===== DIVIDER ===== */
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 1.8rem 0;
+        }
+
+        .section-label {
+            font-family: var(--font-display);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .btn-action {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: inherit;
+            padding: 0.75rem 1rem;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .btn-action i {
+            font-size: 0.75rem;
+            width: 14px;
+        }
+
+        .btn-action:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-action.btn-danger {
+            border-color: transparent;
+            color: #e03131;
+        }
+
+        .btn-action.btn-danger:hover {
+            border-color: #e03131;
+            color: #e03131;
+            background: transparent;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal-box {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        body.theme-light .modal-box {
+            background: var(--bg-light);
+        }
+
+        .modal-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: #e03131;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        .modal-close:hover { color: inherit; }
+
+        .modal-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .danger-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .danger-list li {
+            font-size: 0.8rem;
+            color: #e03131;
+            padding: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .danger-list li i { font-size: 0.7rem; }
+
+        .modal-form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .modal-form-group label {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .modal-form-group input {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: inherit;
+            padding: 0.75rem 1rem;
+            font-family: var(--font-text);
+            font-size: 0.9rem;
+            font-weight: 300;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .modal-form-group input:focus { border-color: #e03131; }
+        .modal-form-group input::placeholder { color: var(--text-muted); opacity: 0.5; }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-modal-cancel {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.75rem;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-modal-cancel:hover { border-color: var(--text-muted); color: inherit; }
+
+        .btn-modal-delete {
+            flex: 1;
+            background: #e03131;
+            border: none;
+            color: white;
+            padding: 0.75rem;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-modal-delete:hover { background: #c92a2a; }
+
+        @media (max-width: 576px) {
+            .profile-card { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body class="theme-dark">
+<script>
+    (function() {
+        const t = localStorage.getItem('theme') || 'dark';
+        document.body.classList.remove('theme-dark', 'theme-light');
+        document.body.classList.add('theme-' + t);
+    })();
+</script>
+
+    {% include 'navbar.html' %}
+
+    <div class="page-wrap">
+        <div class="main-content">
+            <div class="profile-card">
+                <div class="profile-title">Mon profil</div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category != 'message' else 'info' }}">
+                            <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-circle' }}"></i>
+                            <span>{{ message }}</span>
+                            <button class="alert-close" onclick="this.closest('.alert').remove()">×</button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <div id="alert-container"></div>
+
+                <!-- Nom d'utilisateur -->
+                <div class="info-row">
+                    <span class="info-label">Nom d'utilisateur</span>
+                    <div class="info-value">
+                        <i class="fas fa-user"></i>
+                        <span id="username-display">{{ user.username }}</span>
+                        <i class="fas fa-pen edit-icon" id="edit-username-btn" onclick="enableUsernameEdit()"></i>
+                    </div>
+                    <div id="edit-username-form" class="edit-username-form" style="display:none;">
+                        <input type="text" id="new-username" value="{{ user.username }}" maxlength="80" placeholder="Nouveau nom d'utilisateur">
+                        <div class="edit-btn-group">
+                            <button class="btn-save" onclick="saveUsername()">Enregistrer</button>
+                            <button class="btn-cancel" onclick="cancelUsernameEdit()">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="info-row">
+                    <span class="info-label">Email</span>
+                    <div class="info-value">
+                        <i class="fas fa-envelope"></i>
+                        <span>{{ user.email }}</span>
+                    </div>
+                </div>
+
+                <!-- Membre depuis -->
+                <div class="info-row">
+                    <span class="info-label">Membre depuis</span>
+                    <div class="info-value">
+                        <i class="fas fa-calendar"></i>
+                        <span>{{ user.created_at.strftime('%d/%m/%Y') if user.created_at else '—' }}</span>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <div class="action-list">
+                    <a href="/change-password" class="btn-action">
+                        <i class="fas fa-key"></i> Changer mon mot de passe
+                    </a>
+                    <a href="/logout" class="btn-action">
+                        <i class="fas fa-sign-out-alt"></i> Se déconnecter
+                    </a>
+                    <button type="button" class="btn-action btn-danger" onclick="openDeleteModal()">
+                        <i class="fas fa-trash"></i> Supprimer mon compte
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        {% include 'footer.html' %}
+    </div>
+
+    <!-- Modal suppression -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeDeleteModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-title">Supprimer le compte</div>
+            <p class="modal-desc">Cette action est irréversible. Les données suivantes seront supprimées :</p>
+            <ul class="danger-list">
+                <li><i class="fas fa-user"></i> Votre compte</li>
+                <li><i class="fas fa-star"></i> Vos notes et commentaires</li>
+                <li><i class="fas fa-heart"></i> Vos favoris</li>
+            </ul>
+            <form method="POST" action="/delete-account" id="delete-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-form-group">
+                    <label>Confirmez votre mot de passe</label>
+                    <input type="password" name="password" placeholder="Mot de passe" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-modal-cancel" onclick="closeDeleteModal()">Annuler</button>
+                    <button type="submit" class="btn-modal-delete"><i class="fas fa-trash"></i> Supprimer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme') || 'dark';
+            document.body.classList.remove('theme-dark', 'theme-light');
+            document.body.classList.add('theme-' + saved);
+        })();
+
+        // Auto-dismiss alerts
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(a => a.remove());
+        }, 5000);
+
+        function openDeleteModal() {
+            document.getElementById('deleteModal').classList.add('show');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('show');
+            document.getElementById('delete-form').reset();
+        }
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDeleteModal();
+        });
+
+        function enableUsernameEdit() {
+            document.getElementById('username-display').style.display = 'none';
+            document.getElementById('edit-username-btn').style.display = 'none';
+            document.getElementById('edit-username-form').style.display = 'block';
+            document.getElementById('new-username').focus();
+        }
+
+        function cancelUsernameEdit() {
+            document.getElementById('username-display').style.display = 'inline';
+            document.getElementById('edit-username-btn').style.display = 'inline';
+            document.getElementById('edit-username-form').style.display = 'none';
+        }
+
+        async function saveUsername() {
+            const newUsername = document.getElementById('new-username').value.trim();
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+            if (!newUsername) { showAlert('Le nom d\'utilisateur ne peut pas être vide', 'danger'); return; }
+            if (newUsername.length > 80) { showAlert('Trop long (max 80 caractères)', 'danger'); return; }
+
+            try {
+                const response = await fetch('/api/update-username', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+                    body: JSON.stringify({ username: newUsername })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('username-display').textContent = newUsername;
+                    cancelUsernameEdit();
+                    showAlert('Nom d\'utilisateur modifié avec succès', 'success');
+                } else {
+                    showAlert(data.error || 'Erreur lors de la modification', 'danger');
+                }
+            } catch (e) {
+                showAlert('Erreur de connexion', 'danger');
+            }
+        }
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alert-container');
+            const div = document.createElement('div');
+            div.className = `alert alert-${type}`;
+            div.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i><span>${message}</span><button class="alert-close" onclick="this.closest('.alert').remove()">×</button>`;
+            container.appendChild(div);
+            setTimeout(() => div.remove(), 4000);
+        }
+    </script>
+</body>
+</html>

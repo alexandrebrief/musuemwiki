@@ -1,0 +1,70 @@
+<footer class="footer-contemporary">
+    <div class="footer-content">
+        <!-- Bouton À propos uniquement -->
+        <a href="/about" class="footer-about-btn">À PROPOS</a>
+    </div>
+</footer>
+
+<style>
+/* ===== FOOTER CONTEMPORAIN VIOLET PERMANENT ===== */
+.footer-contemporary {
+    position: relative;
+    width: 100%;
+    background: #6c5ce7;  /* Violet permanent */
+    z-index: 100;
+    padding: 0.5rem 1rem;
+    margin-top: 0;
+    font-family: 'Inter', sans-serif;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);  /* Bordure dorée subtile */
+}
+  
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===== BOUTON À PROPOS ===== */
+.footer-about-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    text-decoration: none;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.6rem 1.5rem;
+    display: inline-block;
+}
+
+.footer-about-btn:hover {
+    color: white;
+    opacity: 0.8;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .footer-contemporary {
+        padding: 2.5rem 1rem;
+    }
+
+    .footer-about-btn {
+        font-size: 0.65rem;  /* Un peu plus petit sur mobile */
+        padding: 0.6rem 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-contemporary {
+        padding: 2rem 1rem;
+    }
+    
+    .footer-about-btn {
+        font-size: 0.6rem;
+    }
+}
+</style>

@@ -1,0 +1,3055 @@
+<!DOCTYPE html>
+{% if session.language == 'en' %}
+<html lang="en">
+{% else %}
+<html lang="fr">
+{% endif %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ site_name }}</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+       /* ===== DESIGN CONTEMPORAIN - INSPIRÉ HOME ===== */
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-light: #ffffff;
+            --surface-dark: #141414;
+            --surface-light: #f5f5f5;
+            --text-dark: #ffffff;
+            --text-light: #1a1a1a;
+            --text-muted-dark: #7a7a7a;
+            --text-muted-light: #9a9a9a;
+            --border-dark: #2a2a2a;
+            --border-light: #e0e0e0;
+            --accent: #6c5ce7;
+            --accent-hover: #5a4bcf;
+            --gold: #b89b7b;
+            --shadow: 0 4px 20px rgba(0,0,0,0.02);
+            --shadow-hover: 0 8px 30px rgba(0,0,0,0.04);
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-text: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: var(--font-text);
+            color: var(--text-dark);
+            line-height: 1.5;
+            font-weight: 300;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+
+        body.theme-light {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            --surface: var(--surface-light);
+            --surface-hover: #eaeaea;
+            --border-color: var(--border-light);
+            --text-muted: var(--text-muted-light);
+        }
+
+        body.theme-dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            --surface: var(--surface-dark);
+            --surface-hover: #1f1f1f;
+            --border-color: var(--border-dark);
+            --text-muted: #b0b0b0;
+            --text-filter: #f0f0f0;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 0.75rem;
+        }
+
+        /* ===== OFFSET POUR NAVBAR FIXE ===== */
+.main-content {
+    margin-top: 100px;
+    min-height: calc(100vh - 100px);
+    padding-top: 0.5cm;
+}
+
+
+
+  
+        /* ===== BARRE D'OUTILS ===== */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0 2rem;
+    padding: 1rem 0;
+
+}
+
+.works-counter {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+#displayed-count {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    background: none;
+    padding: 0;
+    margin: 0;   /* ← plus de margin qui forcerait un saut de ligne */
+}
+
+.works-counter-label {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.filter-tools {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-left: auto;
+    
+}
+
+
+/* ===== BOUTON CHARGER PLUS ===== */
+#load-more-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.9rem 3.5rem;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+#load-more-btn:hover {
+    background: var(--accent);
+    color: white;
+}
+
+#load-more-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#load-more-btn:disabled:hover {
+    background: transparent;
+    color: var(--accent);
+}
+
+.btn-count {
+    font-size: 0.65rem;
+    opacity: 0.6;
+    border-left: 1px solid currentColor;
+    padding-left: 0.8rem;
+}
+
+        /* ===== BOUTONS ICÔNES ===== */
+        .icon-button {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .icon-button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .icon-button.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+
+
+
+.work-fav {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+
+.work-fav.active { opacity: 1; background: transparent; }
+.work-fav i { color: white; font-size: 0.75rem; }
+.work-fav.active i { color: var(--favorite, #e03131); }
+
+        /* ===== DROPDOWNS ===== */
+        .filter-dropdown { 
+            position: relative; 
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            min-width: 340px;
+            max-width: 380px;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        body.theme-dark .dropdown-menu {
+    background: #1e1e1e;
+    color: #f0f0f0;
+    border-color: #3a3a3a;  /* au lieu de la bordure par défaut blanche */
+        }
+
+        .dropdown-menu.show { 
+            display: block; 
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-section { 
+            margin-bottom: 1.5rem; 
+        }
+
+        .dropdown-subtitle {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        body.theme-dark .dropdown-subtitle {
+            color: #b0b0b0;
+        }
+
+        .dropdown-search {
+            display: flex;
+            align-items: center;
+            background: var(--surface-hover);
+            border: 1px solid var(--border-color);
+            padding: 0.3rem 0.8rem;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+
+        body.theme-dark .dropdown-search {
+            background: #2a2a2a;
+            border-color: #3a3a3a;
+        }
+
+        .dropdown-search i { 
+            color: var(--text-muted); 
+            font-size: 0.8rem; 
+            margin-right: 0.5rem; 
+        }
+
+        body.theme-dark .dropdown-search i {
+            color: #b0b0b0;
+        }
+
+        .dropdown-search input { 
+            background: transparent; 
+            border: none; 
+            width: 100%; 
+            padding: 0.3rem 0; 
+            font-size: 0.85rem;
+        }
+
+        body.theme-dark .dropdown-search input {
+            color: #f0f0f0;
+        }
+
+        body.theme-dark .dropdown-search input::placeholder {
+            color: #7a7a7a;
+        }
+
+        .dropdown-search input:focus { 
+            outline: none; 
+        }
+
+        .dropdown-items {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--border-color);
+        }
+
+        .dropdown-items::-webkit-scrollbar { width: 3px; }
+        .dropdown-items::-webkit-scrollbar-track { background: var(--border-color); }
+        .dropdown-items::-webkit-scrollbar-thumb { background: var(--accent); }
+
+        .dropdown-item { 
+            padding: 0.2rem 0; 
+        }
+
+        .dropdown-item label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 0.3rem 0.5rem;
+            transition: background 0.2s;
+            
+        }
+
+        body.theme-dark .dropdown-item label {
+            color: #f0f0f0;
+        }
+
+        .dropdown-item label:hover { 
+            background: var(--surface-hover); 
+            outline: none;
+        }
+input[type="checkbox"],
+input[type="radio"] {
+    outline: none !important;
+}
+
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+        body.theme-dark .dropdown-item label:hover {
+            background: #2a2a2a;
+        }
+
+        /* ===== STYLE UNIFORME POUR TOUS LES FILTRES ===== */
+        .dropdown-item input[type="checkbox"],
+        .dropdown-item input[type="radio"] { 
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--text-muted);
+            border-radius: 3px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            margin: 0;
+        }
+
+        .dropdown-item input[type="checkbox"]:checked,
+        .dropdown-item input[type="radio"]:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .dropdown-item input[type="checkbox"]:checked::after,
+        .dropdown-item input[type="radio"]:checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        body.theme-dark .dropdown-item input[type="checkbox"],
+        body.theme-dark .dropdown-item input[type="radio"] {
+            border-color: #b0b0b0;
+        }
+
+        body.theme-dark .dropdown-item input[type="checkbox"]:checked,
+        body.theme-dark .dropdown-item input[type="radio"]:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .dropdown-item .count { 
+            color: var(--text-muted); 
+            font-size: 0.7rem; 
+            margin-left: auto;
+        }
+
+        body.theme-dark .dropdown-item .count {
+            color: #b0b0b0;
+        }
+
+        .dropdown-actions { 
+            display: flex; 
+            justify-content: flex-end; 
+            padding-top: 1rem; 
+            border-top: 1px solid var(--border-color); 
+        }
+
+        .apply-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 0.4rem 1.5rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .apply-btn:hover { 
+            background: var(--accent); 
+            color: white; 
+        }
+
+        /* ===== TAGS ACTIFS ===== */
+        .active-tags { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 0.5rem; 
+            margin: 0.5rem 0 0.5rem;    /* Même marge en haut ET en bas */
+        }
+
+        .filter-tag {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            padding: 0.2rem 1rem 0.2rem 1.2rem;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        body.theme-dark .filter-tag {
+            color: #f0f0f0;
+            background: #1e1e1e;
+        }
+
+        .filter-tag i { 
+            color: var(--accent); 
+            cursor: pointer; 
+            font-size: 0.6rem; 
+        }
+
+        .filter-tag i:hover { 
+            color: #c44545; 
+        }
+
+        /* ===== GRILLE DES ŒUVRES ===== */
+        img {
+            content-visibility: auto;
+            contain-intrinsic-size: 300px;
+        }
+
+        .works-grid { 
+            display: grid; 
+            gap: 0.5rem;
+            margin: 0.5 0 0;  
+            padding: 0.5rem 0;
+            background: transparent;
+            border: none;
+            content-visibility: auto;
+            contain-intrinsic-size: 1000px;
+        }
+
+        .works-grid.grid-4 { 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 0.5rem;
+        }
+
+        .works-grid.grid-6 { 
+            grid-template-columns: repeat(6, 1fr); 
+            gap: 0.5rem;
+        }
+
+        .work-item {
+            position: relative;
+            background: transparent;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            overflow: hidden;
+            border: none;
+            outline: none;
+        }
+
+        .works-grid.grid-4 .work-item {
+            aspect-ratio: 1/1;
+            background: transparent;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .works-grid.grid-4 .work-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            background: transparent;
+            transition: opacity 0.4s ease;
+        }
+
+        .works-grid.grid-6 .work-item {
+            aspect-ratio: 2/3;
+            background: transparent;
+            overflow: hidden;
+        }
+
+        .works-grid.grid-6 .work-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background: transparent;
+            transition: opacity 0.4s ease;
+        }
+
+        .work-item:hover img { 
+            opacity: 0.7; 
+        }
+
+        .work-image-container { 
+            width: 100%; 
+            height: 100%; 
+            position: relative; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+        }
+
+        .work-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 80%);
+            padding: 2rem 1rem 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            color: white;
+            pointer-events: none;
+        }
+
+        .work-item:hover .work-overlay { 
+            opacity: 1; 
+        }
+
+        .work-title { 
+            font-family: var(--font-display);
+            font-weight: 500; 
+            font-size: 0.75rem; 
+            margin-bottom: 0.1rem; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+        }
+
+        .work-artist { 
+            font-size: 0.65rem; 
+            opacity: 0.7; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
+        }
+
+        /* ===== ÉTATS ===== */
+        .loading-indicator, .end-message, .no-results {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .loading-indicator i { 
+            color: var(--accent); 
+            margin-right: 0.5rem; 
+        }
+
+        /* ===== SCROLL TO TOP ===== */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 44px;
+            height: 44px;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            z-index: 100;
+        }
+
+        .scroll-top.visible { 
+            opacity: 1; 
+            visibility: visible; 
+        }
+
+        .scroll-top:hover { 
+            border-color: var(--accent); 
+            color: var(--accent); 
+        }
+
+@media (max-width: 1200px) { 
+    .works-grid.grid-6 { grid-template-columns: repeat(5, 1fr); } 
+}
+
+@media (max-width: 992px) { 
+    .works-grid.grid-6 { grid-template-columns: repeat(4, 1fr); } 
+}
+
+@media (max-width: 768px) {
+    .srp-header-section { margin-top: 0.5cm; } 
+    .works-grid.grid-4 { grid-template-columns: repeat(3, 1fr); }
+    .works-grid.grid-6 { grid-template-columns: repeat(3, 1fr); }
+    .toolbar { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 1rem; 
+        margin: 1rem 0 0.5rem;
+        padding: 0.5rem 0;      
+    }
+    .filter-tools { 
+        width: 100%; 
+        justify-content: flex-start; 
+    }
+}
+
+@media (max-width: 576px) {
+    .works-grid.grid-4, .works-grid.grid-6 { 
+        grid-template-columns: repeat(2, 1fr); 
+    }
+    .dropdown-menu { 
+        width: 300px; /* gardez juste la largeur réduite sur mobile */
+    }
+}
+
+/* ===== SEARCH RESULTS PANEL ===== */
+.srp {
+    margin: 0 0 1.5rem;
+    animation: fadeIn 0.25s ease;
+    overflow: hidden;
+}
+
+/* Onglets */
+.srp-tabs {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid var(--border-color);
+}
+
+body.theme-dark .srp-tabs { border-color: #2a2a2a; }
+
+.srp-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 1.2rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.srp-tab i { font-size: 0.85rem; }
+
+.srp-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+.srp-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.75rem;
+    padding: 0 1rem;
+    opacity: 0.4;
+    transition: opacity 0.15s;
+}
+.srp-close:hover { opacity: 1; }
+
+/* Slider */
+.srp-slider-wrap {
+    overflow: hidden;
+    touch-action: pan-y;
+}
+
+.srp-slider {
+    display: flex;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+}
+
+.srp-slide {
+    min-width: 100%;
+    padding: 0.4rem 0;
+}
+
+/* Lignes */
+.srp-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.55rem 1.4rem;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+@media (hover: hover) {
+    .srp-tab:hover { color: currentColor; opacity: 0.8; }
+    .srp-row:hover { background: rgba(108, 92, 231, 0.06); padding-left: 1.9rem; }
+    body.theme-dark .srp-row:hover { background: rgba(108, 92, 231, 0.1); }
+    .srp-row:hover .srp-row-name { color: var(--accent); }
+    .srp-row:hover .srp-row-chevron { opacity: 1; color: var(--accent); transform: translateX(3px); }
+}
+
+.srp-row-name {
+    font-family: var(--font-text);
+    font-size: 0.82rem;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+}
+
+body.theme-dark .srp-row-name { color: #d0d0d0; }
+
+/* Lieux : plus grand */
+#srp-lieux-main .srp-row-name,
+#srp-lieux-extra .srp-row-name {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+#srp-lieux-main .srp-row-count,
+#srp-lieux-extra .srp-row-count {
+    font-size: 0.78rem;
+}
+
+.srp-row-count {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.srp-row-chevron {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    opacity: 0.4;
+    flex-shrink: 0;
+    transition: transform 0.15s, opacity 0.15s;
+}
+
+/* Footer */
+.srp-footer {
+    padding: 0.7rem 1.4rem;
+    border-top: 1px solid var(--border-color);
+}
+
+body.theme-dark .srp-footer { border-color: #2a2a2a; }
+
+.srp-footer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: var(--font-display);
+    transition: color 0.2s, gap 0.2s;
+}
+
+@media (hover: hover) {
+    .srp-footer-link:hover { color: var(--accent); gap: 0.8rem; }
+    .srp-detail-all:hover { gap: 0.8rem; }
+    .srp-back:hover { color: var(--accent); }
+    .srp-show-more:hover { color: var(--accent); }
+}
+
+/* Drill down */
+.srp-detail {
+    animation: fadeIn 0.2s ease;
+}
+
+.srp-back {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
+    padding: 0.7rem 1.4rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: left;
+    transition: color 0.15s;
+}
+
+body.theme-dark .srp-back { border-color: #2a2a2a; }
+
+#srp-back-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: currentColor;
+    font-family: var(--font-display);
+}
+
+.srp-detail-all {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.4rem;
+    font-size: 0.72rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-top: 1px solid var(--border-color);
+    transition: gap 0.2s;
+}
+
+body.theme-dark .srp-detail-all { border-color: #2a2a2a; }
+
+.srp-show-more {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: none;
+    border-top: 1px solid var(--border-color);
+    width: 100%;
+    padding: 0.9rem 1.4rem;
+    color: var(--nt, #ffffff);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+    text-align: left;
+}
+
+.srp-show-more span { color: var(--accent); }
+body.theme-dark .srp-show-more { border-color: #2a2a2a; }
+
+.srp-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin: 1.5rem 0 1rem;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.srp-divider::before,
+.srp-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
+    opacity: 0.5;
+}
+
+.srp-header-section {
+    margin: 0 0 0.8rem;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.srp-header-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+}
+
+.srp-header-num {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+}
+
+.srp-header-label {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: currentColor;
+}
+
+.srp-header-sub {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+}
+
+.srp-header-sub em {
+    font-style: normal;
+    color: var(--accent);
+}
+
+.srp-results-line {
+    margin: 1.5rem 0 0.8rem;
+    padding-top: 0;
+    border-top: none;
+}
+
+.srp-results-line-top {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+}
+
+@media (max-width: 768px) {
+    .srp-tab { font-size: 1.1rem; padding: 0.2rem 1rem; }
+    .srp-header-section { margin: 0 0 0.8rem; }
+    .srp-row { padding: 0.2rem 1rem; }
+    .srp-row-name { font-size: 0.88rem; }
+    .srp-row-count { font-size: 0.75rem; }
+}
+
+.filter-tools {
+    flex: 1;
+}
+
+
+    </style>
+</head>
+<body class="theme-dark" style="visibility:hidden">
+<script>
+    (function() {
+        const t = localStorage.getItem('theme') || 'dark';
+        document.body.classList.remove('theme-dark', 'theme-light');
+        document.body.classList.add('theme-' + t);
+        document.body.style.visibility = '';
+    })();
+</script>
+
+
+    {% include 'navbar.html' %}
+
+    <div class="container main-content">
+
+
+  
+
+
+        
+        
+{% if q %}
+<div class="srp-header-section">
+    <div class="srp-header-title">
+        <span class="srp-header-num">{{ (search_results.artists|length) + (search_results.museums|length) + (search_results.cities|length) + (search_results.countries|length) }}</span>
+        <span class="srp-header-label">Suggestions</span>
+        <span class="srp-header-label">« {{ q }} »</span>
+    </div>
+</div>
+
+
+<div class="srp" id="search-results-panel">
+
+    <div class="srp-tabs">
+        {% if search_results.cities or search_results.countries %}
+        <button class="srp-tab active" onclick="switchTab(0, this)">
+            <i class="fas fa-map-marker-alt"></i> Lieux
+        </button>
+        {% endif %}
+        {% if search_results.museums %}
+        <button class="srp-tab {% if not search_results.cities and not search_results.countries %}active{% endif %}"
+            onclick="switchTab({% if search_results.cities or search_results.countries %}1{% else %}0{% endif %}, this)">
+            <i class="fas fa-landmark"></i> Musées
+        </button>
+        {% endif %}
+        {% if search_results.artists %}
+        <button class="srp-tab {% if not search_results.cities and not search_results.countries and not search_results.museums %}active{% endif %}"
+            onclick="switchTab({% if search_results.cities or search_results.countries %}{% if search_results.museums %}2{% else %}1{% endif %}{% else %}{% if search_results.museums %}1{% else %}0{% endif %}{% endif %}, this)">
+            <i class="fas fa-user"></i> Artistes
+        </button>
+        {% endif %}
+    </div>
+
+    <div class="srp-slider-wrap">
+        <div class="srp-slider" id="srp-slider">
+
+{% if search_results.cities or search_results.countries %}
+<div class="srp-slide">
+    <div class="srp-slide-main" id="srp-lieux-main">
+        <div id="srp-lieux-list">
+            {% set all_lieux = search_results.cities + search_results.countries %}
+{% set all_lieux_sorted = (search_results.cities + search_results.countries) | sort(attribute='count', reverse=True) %}
+{% for c in all_lieux_sorted[:5] %}
+<a class="srp-row" onclick="srpDrillDown(event, '{% if c in search_results.cities %}city{% else %}country{% endif %}', '{{ c.nom|e }}')">
+    <span class="srp-row-name">{{ c.nom }}</span>
+<span class="srp-row-count">
+    {% if c in search_results.countries %}
+        {{ c.villes_count }} ville{% if c.villes_count > 1 %}s{% endif %} · {{ c.oeuvres_count }} œuvres
+    {% else %}
+        {{ c.musees_count }} musée{% if c.musees_count > 1 %}s{% endif %} · {{ c.oeuvres_count }} œuvres
+    {% endif %}
+</span>
+    <i class="fas fa-chevron-right srp-row-chevron"></i>
+</a>
+{% endfor %}
+
+
+        </div>
+
+
+{% if all_lieux|length > 5 %}
+<button class="srp-show-more" id="srp-lieux-more-8" onclick="srpShowMore8('lieux')">
+    Voir plus <span>(+{{ [all_lieux|length - 5, 8]|min }})</span>
+</button>
+{% if all_lieux|length > 13 %}
+<button class="srp-show-more" id="srp-lieux-more-all" style="display:none;" onclick="srpShowAll('lieux')">
+    Voir tout <span>(+{{ all_lieux|length - 13 }})</span>
+</button>
+{% endif %}
+<div id="srp-lieux-extra-8" style="display:none;">
+    {% for c in all_lieux_sorted[5:13] %}
+    <a class="srp-row" onclick="srpDrillDown(event, '{% if c in search_results.cities %}city{% else %}country{% endif %}', '{{ c.nom|e }}')">
+        <span class="srp-row-name">{{ c.nom }}</span>
+        <span class="srp-row-count">
+            {% if c in search_results.countries %}
+                {{ c.villes_count }} ville{% if c.villes_count > 1 %}s{% endif %} · {{ c.oeuvres_count }} œuvres
+            {% else %}
+                {{ c.musees_count }} musée{% if c.musees_count > 1 %}s{% endif %} · {{ c.oeuvres_count }} œuvres
+            {% endif %}
+        </span>
+        <i class="fas fa-chevron-right srp-row-chevron"></i>
+    </a>
+    {% endfor %}
+</div>
+<div id="srp-lieux-extra-all" style="display:none;">
+    {% for c in all_lieux_sorted[13:] %}
+    <a class="srp-row" onclick="srpDrillDown(event, '{% if c in search_results.cities %}city{% else %}country{% endif %}', '{{ c.nom|e }}')">
+        <span class="srp-row-name">{{ c.nom }}</span>
+        <span class="srp-row-count">
+            {% if c in search_results.countries %}
+                {{ c.villes_count }} ville{% if c.villes_count > 1 %}s{% endif %} · {{ c.oeuvres_count }} œuvres
+            {% else %}
+                {{ c.musees_count }} musée{% if c.musees_count > 1 %}s{% endif %} · {{ c.oeuvres_count }} œuvres
+            {% endif %}
+        </span>
+        <i class="fas fa-chevron-right srp-row-chevron"></i>
+    </a>
+    {% endfor %}
+</div>
+<div id="srp-lieux-actions" style="display:none; flex-direction:row; border-top: 1px solid var(--border-color);">
+    <button class="srp-show-more" id="srp-lieux-less" style="border-top:none; flex:1;" onclick="srpShowLess('lieux')">
+        Voir moins <span></span>
+    </button>
+    <button class="srp-show-more" id="srp-lieux-more-all-inline" style="border-top:none; border-left: 1px solid var(--border-color); flex:1; display:none;" onclick="srpShowAll('lieux')">
+        Voir tout <span></span>
+    </button>
+</div>
+{% endif %}
+
+
+
+    </div>
+    <div class="srp-detail" id="srp-lieux-detail" style="display:none;">
+        <button class="srp-back" onclick="srpBack()">
+            <i class="fas fa-arrow-left"></i>
+            <span id="srp-back-label"></span>
+        </button>
+        <div id="srp-detail-content"></div>
+    </div>
+</div>
+{% endif %}
+
+{% if search_results.museums %}
+<div class="srp-slide">
+    <div id="srp-museums-list">
+        {% for m in search_results.museums[:5] %}
+        <a class="srp-row" onclick="srpApplyFilter('museum', '{{ (m.id or 'divers')|e }}')">
+            <span class="srp-row-name">{{ m.nom }}</span>
+            <span class="srp-row-count">{{ m.count }} œuvres</span>
+        </a>
+        {% endfor %}
+    </div>
+
+{% if search_results.museums|length > 5 %}
+<button class="srp-show-more" id="srp-museums-more-8" onclick="srpShowMore8('museums')">
+    Voir plus <span>(+{{ [search_results.museums|length - 5, 8]|min }})</span>
+</button>
+{% if search_results.museums|length > 13 %}
+<button class="srp-show-more" id="srp-museums-more-all" style="display:none;" onclick="srpShowAll('museums')">
+    Voir tout <span>(+{{ search_results.museums|length - 13 }})</span>
+</button>
+{% endif %}
+<div id="srp-museums-extra-8" style="display:none;">
+    {% for m in search_results.museums[5:13] %}
+    <a class="srp-row" onclick="srpApplyFilter('museum', '{{ (m.id or 'divers')|e }}')">
+        <span class="srp-row-name">{{ m.nom }}</span>
+        <span class="srp-row-count">{{ m.count }} œuvres</span>
+    </a>
+    {% endfor %}
+</div>
+<div id="srp-museums-extra-all" style="display:none;">
+    {% for m in search_results.museums[13:] %}
+    <a class="srp-row" onclick="srpApplyFilter('museum', '{{ (m.id or 'divers')|e }}')">
+        <span class="srp-row-name">{{ m.nom }}</span>
+        <span class="srp-row-count">{{ m.count }} œuvres</span>
+    </a>
+    {% endfor %}
+</div>
+<div id="srp-museums-actions" style="display:none; flex-direction:row; border-top: 1px solid var(--border-color);">
+    <button class="srp-show-more" id="srp-museums-less" style="border-top:none; flex:1;" onclick="srpShowLess('museums')">
+        Voir moins <span></span>
+    </button>
+    <button class="srp-show-more" id="srp-museums-more-all-inline" style="border-top:none; border-left: 1px solid var(--border-color); flex:1; display:none;" onclick="srpShowAll('museums')">
+        Voir tout <span></span>
+    </button>
+</div>
+{% endif %}
+</div>
+{% endif %}
+
+{% if search_results.artists %}
+<div class="srp-slide">
+    <div id="srp-artists-list">
+        {% for a in search_results.artists[:5] %}
+        <a class="srp-row" onclick="srpApplyFilter('artist', '{{ a.nom|e }}')">
+            <span class="srp-row-name">{{ a.nom }}</span>
+            <span class="srp-row-count">{{ a.count }} œuvres</span>
+        </a>
+        {% endfor %}
+    </div>
+
+
+
+{% if search_results.artists|length > 5 %}
+<button class="srp-show-more" id="srp-artists-more-8" onclick="srpShowMore8('artists')">
+    Voir plus <span>(+{{ [search_results.artists|length - 5, 8]|min }})</span>
+</button>
+{% if search_results.artists|length > 13 %}
+<button class="srp-show-more" id="srp-artists-more-all" style="display:none;" onclick="srpShowAll('artists')">
+    Voir tout <span>(+{{ search_results.artists|length - 13 }})</span>
+</button>
+{% endif %}
+<div id="srp-artists-extra-8" style="display:none;">
+    {% for a in search_results.artists[5:13] %}
+    <a class="srp-row" onclick="srpApplyFilter('artist', '{{ a.nom|e }}', _srpIndex, '{{ a.nom|e }}')">
+        <span class="srp-row-name">{{ a.nom }}</span>
+        <span class="srp-row-count">{{ a.count }} œuvres</span>
+    </a>
+    {% endfor %}
+</div>
+<div id="srp-artists-extra-all" style="display:none;">
+    {% for a in search_results.artists[13:] %}
+    <a class="srp-row" onclick="srpApplyFilter('artist', '{{ a.nom|e }}')">
+        <span class="srp-row-name">{{ a.nom }}</span>
+        <span class="srp-row-count">{{ a.count }} œuvres</span>
+    </a>
+    {% endfor %}
+</div>
+<div id="srp-artists-actions" style="display:none; flex-direction:row; border-top: 1px solid var(--border-color);">
+    <button class="srp-show-more" id="srp-artists-less" style="border-top:none; flex:1;" onclick="srpShowLess('artists')">
+        Voir moins <span></span>
+    </button>
+    <button class="srp-show-more" id="srp-artists-more-all-inline" style="border-top:none; border-left: 1px solid var(--border-color); flex:1; display:none;" onclick="srpShowAll('artists')">
+        Voir tout <span></span>
+    </button>
+</div>
+{% endif %}
+
+
+
+            </div>
+            {% endif %}
+
+        </div><!-- fin .srp-slider -->
+    </div><!-- fin .srp-slider-wrap -->
+
+</div><!-- fin .srp -->
+{% endif %}
+
+
+
+
+
+<div class="srp-results-line">
+    <div class="srp-results-line-top">
+        <span class="srp-header-num">{{ total_oeuvres }}</span>
+        <span class="srp-header-label">résultat{% if total_oeuvres > 1 %}s{% endif %}</span>
+        {% if request.args.get('city') %}
+            <span class="srp-header-label">— Ville de {{ request.args.get('city') }}</span>
+        {% elif request.args.get('country') %}
+            <span class="srp-header-label">— {{ request.args.get('country') }}</span>
+        {% elif request.args.getlist('artist') %}
+            <span class="srp-header-label">— {{ request.args.getlist('artist')|join(', ') }}</span>
+        {% elif request.args.get('museum') %}
+            <span class="srp-header-label">— {{ museum_names.get(request.args.get('museum'), request.args.get('museum')) }}</span>
+        {% elif q %}
+            <span class="srp-header-label">« {{ q }} »</span>
+        {% endif %}
+    </div>
+    <div class="filter-tools" style="margin-top:0.8rem;">
+        <div class="filter-dropdown">
+            <button class="icon-button" onclick="toggleDropdown('artist-dropdown', event)" title="Filtrer par artiste"><i class="fas fa-user"></i></button>
+            <div class="dropdown-menu" id="artist-dropdown">
+                <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher un artiste..." id="artist-search-filter"></div>
+                <div class="dropdown-items" id="artist-items"><div style="padding:1rem;color:var(--text-muted);text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+                <div class="dropdown-actions"><button onclick="applyArtistFilter()" class="apply-btn">Appliquer</button></div>
+            </div>
+        </div>
+        <div class="filter-dropdown">
+            <button class="icon-button" onclick="toggleDropdown('geo-dropdown', event)" title="Filtrer par pays ou ville"><i class="fas fa-globe"></i></button>
+            <div class="dropdown-menu" id="geo-dropdown">
+                <div class="dropdown-section">
+                    <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher un pays..." id="country-search-filter"></div>
+                    <div class="dropdown-items" id="country-items"><div style="padding:1rem;color:var(--text-muted);text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+                </div>
+                <div class="dropdown-section">
+                    <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher une ville..." id="city-search-filter"></div>
+                    <div class="dropdown-items" id="city-items"><div style="padding:1rem;color:var(--text-muted);text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+                </div>
+                <div class="dropdown-actions"><button onclick="applyGeoFilter()" class="apply-btn">Appliquer</button></div>
+            </div>
+        </div>
+        <div class="filter-dropdown">
+            <button class="icon-button" onclick="toggleDropdown('museum-dropdown', event)" title="Filtrer par musée"><i class="fas fa-landmark"></i></button>
+            <div class="dropdown-menu" id="museum-dropdown">
+                <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher un musée..." id="museum-search-filter"></div>
+                <div class="dropdown-items" id="museum-items"><div style="padding:1rem;color:var(--text-muted);text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+                <div class="dropdown-actions"><button onclick="applyMuseumFilter()" class="apply-btn">Appliquer</button></div>
+            </div>
+        </div>
+<div class="filter-dropdown">
+    <button class="icon-button" onclick="toggleDropdown('type-dropdown', event)" title="Filtrer par type d'œuvre"><i class="fas fa-object-group"></i></button>
+    <div class="dropdown-menu" id="type-dropdown">
+        <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" id="type-search-filter" placeholder="Rechercher un type d'œuvre..."></div>
+        <div class="dropdown-items" id="type-items"><div style="padding:1rem;color:var(--text-muted);text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+        <div class="dropdown-actions"><button onclick="applyTypeFilter()" class="apply-btn">Appliquer</button></div>
+    </div>
+</div>
+<div class="filter-dropdown">
+    <button class="icon-button" onclick="toggleDropdown('movement-dropdown', event)" title="Filtrer par mouvement"><i class="fas fa-palette"></i></button>
+    <div class="dropdown-menu" id="movement-dropdown">
+        <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" id="movement-search-filter" placeholder="Rechercher un mouvement..."></div>
+        <div class="dropdown-items" id="movement-items"><div style="padding:1rem;color:var(--text-muted);text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+        <div class="dropdown-actions"><button onclick="applyMovementFilter()" class="apply-btn">Appliquer</button></div>
+    </div>
+</div>
+
+<div class="filter-dropdown">
+    <button class="icon-button" onclick="toggleDropdown('genre-dropdown', event)" title="Filtrer par genre"><i class="fas fa-masks-theater"></i></button>
+    <div class="dropdown-menu" id="genre-dropdown">
+        <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" id="genre-search-filter" placeholder="Rechercher un genre..."></div>
+        <div class="dropdown-items" id="genre-items"><div style="padding:1rem;color:var(--text-muted);text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+        <div class="dropdown-actions"><button onclick="applyGenreFilter()" class="apply-btn">Appliquer</button></div>
+    </div>
+</div>
+
+<div class="filter-dropdown">
+    <button class="icon-button" onclick="toggleDropdown('material-dropdown', event)" title="Filtrer par matériau"><i class="fas fa-cube"></i></button>
+    <div class="dropdown-menu" id="material-dropdown">
+        <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" id="material-search-filter" placeholder="Rechercher un matériau..."></div>
+        <div class="dropdown-items" id="material-items"><div style="padding:1rem;color:var(--text-muted);text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+        <div class="dropdown-actions"><button onclick="applyMaterialFilter()" class="apply-btn">Appliquer</button></div>
+    </div>
+</div>
+
+        <div class="filter-dropdown">
+            <button class="icon-button" onclick="toggleDropdown('sort-dropdown', event)" title="Trier"><i class="fas fa-arrow-up-wide-short"></i></button>
+            <div class="dropdown-menu" id="sort-dropdown">
+                <div class="dropdown-items" id="sort-items"></div>
+                <div class="dropdown-actions"><button onclick="applySortFilter()" class="apply-btn">Appliquer</button></div>
+            </div>
+        </div>
+        <button class="icon-button" onclick="clearAllFilters()" title="Effacer tous les filtres"><i class="fas fa-times"></i></button>
+        <button class="icon-button view-btn" id="view-4" onclick="setViewMode(4)" title="Vue normale"><i class="fas fa-th-large"></i></button>
+        <button class="icon-button view-btn" id="view-6" onclick="setViewMode(6)" title="Vue compacte"><i class="fas fa-th"></i></button>
+        <div class="active-tags" id="active-tags"></div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- Grille des œuvres -->
+<div class="works-grid grid-4" id="works-grid">
+            {% for artwork in works %}
+            <a href="/oeuvre/{{ artwork.id }}" class="work-item" data-id="{{ artwork.id }}">
+
+
+
+<div class="work-image-container">
+    <div class="work-fav" onclick="toggleFav(event, '{{ artwork.id }}', this)">
+        <i class="far fa-heart"></i>
+    </div>
+                    {% if artwork.image_url and artwork.image_url != '' %}
+                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit=cover&output=webp&q=75"
+                         alt="{{ artwork.titre }}"
+                         data-original="{{ artwork.image_url }}"
+                         data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit=cover&output=webp&q=75"
+                         data-fallback3="{{ artwork.image_url }}"
+                         data-current-service="weserv"
+                         data-error-count="0"
+                         loading="lazy"
+                         style="background: transparent; opacity: 0; transition: opacity 0.3s;"
+                         onload="this.style.opacity='1'"
+                         onerror="handleImageError(this)">
+                    <div class="image-placeholder" style="display:none;"><i class="fas fa-image"></i></div>
+                    {% else %}
+                    <div class="image-placeholder"><i class="fas fa-image"></i></div>
+                    {% endif %}
+                    <div class="work-overlay">
+                        <div class="work-title">{{ artwork.titre|truncate(40) if artwork.titre else 'SANS TITRE' }}</div>
+                        <div class="work-artist">{{ artwork.createur|truncate(30) if artwork.createur else 'ARTISTE INCONNU' }}</div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+<!-- États -->
+<div class="loading-indicator" id="loading-indicator" style="display:none;">
+    <i class="fas fa-spinner fa-spin"></i> Chargement...
+</div>
+
+<div id="load-more-container" style="text-align:center; padding: 3rem 0 4rem;">
+    <button id="load-more-btn" onclick="loadMoreWorks()">
+        <span class="btn-text">Voir plus</span>
+
+    </button>
+</div>
+
+<div class="end-message" id="end-message" style="display:none;">
+    <i class="fas fa-check"></i> Fin de la collection
+</div>
+
+        <div class="no-results" id="no-results" style="display:none;">
+            <i class="fas fa-search"></i>
+            <h4>Aucune œuvre trouvée</h4>
+            <p>Essayez de modifier vos filtres</p>
+        </div>
+
+    </div><!-- fin .container / .main-content -->
+
+    <!-- Scroll to top -->
+    <div class="scroll-top" id="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    {% include 'footer.html' %}
+
+
+<script>
+    (function () {
+        // ================================================
+        // ÉTAT GLOBAL
+        // ================================================
+        let currentPage     = 1;
+        let isLoading       = false;
+        let hasMore         = true;
+        let scrollTriggered = false;
+        let displayedCount  = {{ works|length }};
+        let currentView     = 6;
+        let museumNames = {{ museum_names | tojson }};
+        let totalOeuvres = {{ total_oeuvres }};
+        const isLoggedIn = {{ 'true' if session.user_id else 'false' }};
+        const _loadedDropdowns = new Set();
+        
+
+        // ===== PARAMÈTRES URL =====
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // ===== CHARGER LES NOMS DES MUSÉES SI NÉCESSAIRE =====
+        if (Object.keys(museumNames).length === 0 && urlParams.getAll('museum').length) {
+            fetch(`/api/filter-museums?${urlParams.toString()}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.length) {
+                        data.forEach(m => {
+                            museumNames[m.id] = m.name;
+                        });
+                        updateActiveTags();
+                    }
+                })
+                .catch(err => console.error('Erreur chargement noms musées:', err));
+        }
+
+        try {
+            const saved = localStorage.getItem('viewMode');
+            if (saved && [4, 6].includes(parseInt(saved))) currentView = parseInt(saved);
+        } catch (e) {}
+
+        let _srpIndex = 0;
+
+        window.switchTab = function(index, btn) {
+            _srpIndex = index;
+            document.querySelectorAll('.srp-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            const slider = document.getElementById('srp-slider');
+            if (slider) {
+                slider.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                slider.style.transform = `translateX(-${index * 100}%)`;
+            }
+        };
+
+
+// Dans la fonction srpApplyFilter
+window.srpApplyFilter = function(type, value, srpTab, srpItem) {
+    const params = new URLSearchParams(window.location.search);
+    params.delete('q');
+    
+    // Ajouter le nouveau filtre sans supprimer les existants
+    if (type === 'museum') {
+        // Si c'est un musée, on l'ajoute à la liste existante
+        const existing = params.getAll('museum');
+        params.delete('museum');
+        existing.forEach(m => params.append('museum', m));
+        params.append('museum', value);
+    } else if (type === 'artist') {
+        const existing = params.getAll('artist');
+        params.delete('artist');
+        existing.forEach(a => params.append('artist', a));
+        params.append('artist', value);
+    } else if (type === 'city') {
+        const existing = params.getAll('city');
+        params.delete('city');
+        existing.forEach(c => params.append('city', c));
+        params.append('city', value);
+    } else if (type === 'country') {
+        params.set('country', value);
+    }
+    
+    if (srpTab !== undefined) params.set('srp_tab', srpTab);
+    if (srpItem) params.set('srp_item', srpItem);
+    window.location.href = `/research?${params}`;
+};
+
+window.srpApplyFilterWithCity = function(type, value, city) {
+    const params = new URLSearchParams(window.location.search);
+    params.delete('q');
+    
+    const existingCities = params.getAll('city');
+    if (!existingCities.includes(city)) {
+        params.append('city', city);
+    }
+    
+    const existingMuseums = params.getAll('museum');
+    params.delete('museum');
+    existingMuseums.forEach(m => params.append('museum', m));
+    params.append('museum', value);
+    
+    window.location.href = `/research?${params}`;
+};
+
+
+
+
+
+
+window.srpDrillDown = async function(e, type, name) {
+    e.preventDefault();
+    const main      = document.getElementById('srp-lieux-main');
+    const detail    = document.getElementById('srp-lieux-detail');
+    const content   = document.getElementById('srp-detail-content');
+    const backLabel = document.getElementById('srp-back-label');
+    backLabel.textContent = name;
+    content.innerHTML = '<div style="padding:1rem 1.4rem;color:var(--text-muted);font-size:0.8rem;"><i class="fas fa-spinner fa-spin"></i></div>';
+    main.style.display   = 'none';
+    detail.style.display = 'block';
+    const param = type === 'city'
+        ? `city=${encodeURIComponent(name)}`
+        : `country=${encodeURIComponent(name)}`;
+    try {
+        const res  = await fetch(`/api/srp-detail?${param}`);
+        const data = await res.json();
+        if (!data.items || !data.items.length) {
+            content.innerHTML = '<div style="padding:1rem 1.4rem;color:var(--text-muted);font-size:0.8rem;">Aucun résultat</div>';
+            return;
+        }
+        const limit1  = 6;
+        const limit2  = 8;
+        const visible = data.items.slice(0, limit1);
+        const middle  = data.items.slice(limit1, limit1 + limit2);
+        const hidden  = data.items.slice(limit1 + limit2);
+        let html = '';
+
+        if (data.type === 'cities') {
+            const totalVilles  = data.total_villes;
+            const totalOeuvres = data.total_oeuvres;
+            html += `<a class="srp-row" style="color:var(--accent);font-weight:500;" onclick="srpApplyFilter('country', '${escHtml(name)}')">
+                <span class="srp-row-name">Toutes les œuvres de ${escHtml(name)}</span>
+                <span class="srp-row-count">${totalVilles} ville${totalVilles > 1 ? 's' : ''} · ${totalOeuvres} œuvres</span>
+                <i class="fas fa-arrow-right srp-row-chevron" style="opacity:1;color:var(--accent);"></i>
+            </a>`;
+            html += visible.map(c => `
+                <a class="srp-row" onclick="srpDrillDown(event, 'city', '${escHtml(c.nom)}')">
+                    <span class="srp-row-name">${escHtml(c.nom)}</span>
+                    <span class="srp-row-count">${c.musees_count} musée${c.musees_count > 1 ? 's' : ''} · ${c.oeuvres_count} œuvre${c.oeuvres_count > 1 ? 's' : ''}</span>
+                    <i class="fas fa-chevron-right srp-row-chevron"></i>
+                </a>`).join('');
+
+            if (middle.length || hidden.length) {
+                const extraId8   = `srp-drill-extra8c-${Date.now()}`;
+                const extraIdAll = `srp-drill-extraallc-${Date.now()}`;
+                const btnMore8   = `${extraId8}-more`;
+                const btnMoreAll = `${extraIdAll}-more`;
+                const actionsId  = `srp-drill-actionsc-${Date.now()}`;
+                html += `
+                <div id="${extraId8}" style="display:none;">
+                    ${middle.map(c => `
+                        <a class="srp-row" onclick="srpDrillDown(event, 'city', '${escHtml(c.nom)}'); return false;">
+                            <span class="srp-row-name">${escHtml(c.nom)}</span>
+                            <span class="srp-row-count">${c.musees_count} musée${c.musees_count > 1 ? 's' : ''} · ${c.oeuvres_count} œuvre${c.oeuvres_count > 1 ? 's' : ''}</span>
+                            <i class="fas fa-chevron-right srp-row-chevron"></i>
+                        </a>`).join('')}
+                </div>
+                <div id="${extraIdAll}" style="display:none;">
+                    ${hidden.map(c => `
+                        <a class="srp-row" onclick="srpDrillDown(event, 'city', '${escHtml(c.nom)}'); return false;">
+                            <span class="srp-row-name">${escHtml(c.nom)}</span>
+                            <span class="srp-row-count">${c.musees_count} musée${c.musees_count > 1 ? 's' : ''} · ${c.oeuvres_count} œuvre${c.oeuvres_count > 1 ? 's' : ''}</span>
+                            <i class="fas fa-chevron-right srp-row-chevron"></i>
+                        </a>`).join('')}
+                </div>
+                <button class="srp-show-more" id="${btnMore8}" onclick="
+                    document.getElementById('${extraId8}').style.display='block';
+                    document.getElementById('${btnMore8}').style.display='none';
+                    document.getElementById('${actionsId}').style.display='flex';
+                ">Voir plus <span>(+${middle.length})</span></button>
+                <div id="${actionsId}" style="display:none; flex-direction:row; border-top: 1px solid var(--border-color);">
+                    <button class="srp-show-more" style="border-top:none; flex:1;" onclick="
+                        document.getElementById('${extraId8}').style.display='none';
+                        document.getElementById('${extraIdAll}').style.display='none';
+                        document.getElementById('${btnMore8}').style.display='flex';
+                        document.getElementById('${actionsId}').style.display='none';
+                    ">Voir moins <span></span></button>
+                    ${hidden.length ? `
+                    <button class="srp-show-more" id="${btnMoreAll}" style="border-top:none; border-left: 1px solid var(--border-color); flex:1;" onclick="
+                        document.getElementById('${extraIdAll}').style.display='block';
+                        document.getElementById('${btnMoreAll}').style.display='none';
+                    ">Voir tout <span>(+${hidden.length})</span></button>` : ''}
+                </div>`;
+            }
+
+        } else {
+            const totalMusees  = data.total_musees;
+            const totalOeuvres = data.total_oeuvres;
+            html += `<a class="srp-row" style="color:var(--accent);font-weight:500;" onclick="srpApplyFilter('city', '${escHtml(name)}')">
+                <span class="srp-row-name">Toutes les œuvres de ${escHtml(name)}</span>
+                <span class="srp-row-count">${totalMusees} musée${totalMusees > 1 ? 's' : ''} · ${totalOeuvres} œuvres</span>
+                <i class="fas fa-arrow-right srp-row-chevron" style="opacity:1;color:var(--accent);"></i>
+            </a>`;
+            html += visible.map(m => `
+                <a class="srp-row" onclick="srpApplyFilterWithCity('museum', '${escHtml(m.id || 'divers')}', '${escHtml(name)}')">
+                    <span class="srp-row-name">${escHtml(m.nom)}</span>
+                    <span class="srp-row-count">${m.count} œuvre${m.count > 1 ? 's' : ''}</span>
+                </a>`).join('');
+
+            if (middle.length || hidden.length) {
+                const extraId8   = `srp-drill-extra8-${Date.now()}`;
+                const extraIdAll = `srp-drill-extraall-${Date.now()}`;
+                const btnMore8   = `${extraId8}-more`;
+                const btnMoreAll = `${extraIdAll}-more`;
+                const actionsId  = `srp-drill-actions-${Date.now()}`;
+                html += `
+                <div id="${extraId8}" style="display:none;">
+                    ${middle.map(m => `
+                        <a class="srp-row" onclick="srpApplyFilterWithCity('museum', '${escHtml(m.id || 'divers')}', '${escHtml(name)}')">
+                            <span class="srp-row-name">${escHtml(m.nom)}</span>
+                            <span class="srp-row-count">${m.count} œuvre${m.count > 1 ? 's' : ''}</span>
+                        </a>`).join('')}
+                </div>
+                <div id="${extraIdAll}" style="display:none;">
+                    ${hidden.map(m => `
+                        <a class="srp-row" onclick="srpApplyFilterWithCity('museum', '${escHtml(m.id || 'divers')}', '${escHtml(name)}')">
+                            <span class="srp-row-name">${escHtml(m.nom)}</span>
+                            <span class="srp-row-count">${m.count} œuvre${m.count > 1 ? 's' : ''}</span>
+                        </a>`).join('')}
+                </div>
+                <button class="srp-show-more" id="${btnMore8}" onclick="
+                    document.getElementById('${extraId8}').style.display='block';
+                    document.getElementById('${btnMore8}').style.display='none';
+                    document.getElementById('${actionsId}').style.display='flex';
+                ">Voir plus <span>(+${middle.length})</span></button>
+                <div id="${actionsId}" style="display:none; flex-direction:row; border-top: 1px solid var(--border-color);">
+                    <button class="srp-show-more" style="border-top:none; flex:1;" onclick="
+                        document.getElementById('${extraId8}').style.display='none';
+                        document.getElementById('${extraIdAll}').style.display='none';
+                        document.getElementById('${btnMore8}').style.display='flex';
+                        document.getElementById('${actionsId}').style.display='none';
+                    ">Voir moins <span></span></button>
+                    ${hidden.length ? `
+                    <button class="srp-show-more" id="${btnMoreAll}" style="border-top:none; border-left: 1px solid var(--border-color); flex:1;" onclick="
+                        document.getElementById('${extraIdAll}').style.display='block';
+                        document.getElementById('${btnMoreAll}').style.display='none';
+                    ">Voir tout <span>(+${hidden.length})</span></button>` : ''}
+                </div>`;
+            }
+        }
+
+        content.innerHTML = html;
+    } catch(err) {
+        content.innerHTML = '<div style="padding:1rem 1.4rem;color:var(--text-muted);">Erreur</div>';
+    }
+};
+
+
+
+
+
+
+window.srpExpandDetail = function(btn) {
+    const extra = btn.nextElementSibling;
+    if (extra) extra.style.display = 'block';
+    btn.style.display = 'none';
+    const moins = document.createElement('button');
+    moins.className = 'srp-show-more';
+    moins.innerHTML = 'Voir moins <span></span>';
+    moins.setAttribute('onclick', 'srpCollapseDetail(this)');
+    extra.insertAdjacentElement('afterend', moins);
+};
+
+window.srpCollapseDetail = function(btn) {
+    const extra = btn.previousElementSibling;
+    if (extra) extra.style.display = 'none';
+    btn.remove();
+    const showBtn = extra ? extra.previousElementSibling : null;
+    if (showBtn && showBtn.classList.contains('srp-show-more')) {
+        showBtn.style.display = 'flex';
+    }
+};
+
+window.srpCollapseDetail = function(btn) {
+    const extra = btn.nextElementSibling;
+    if (extra) extra.style.display = 'none';
+    const count = extra ? extra.querySelectorAll('.srp-row').length : '';
+    btn.innerHTML = `Voir tout <span>(+${count})</span>`;
+    btn.setAttribute('onclick', 'srpExpandDetail(this)');
+};
+
+window.srpBack = function() {
+    document.getElementById('srp-lieux-main').style.display  = 'block';
+    document.getElementById('srp-lieux-detail').style.display = 'none';
+};
+
+
+window.srpShowMore8 = function(type) {
+    document.getElementById(`srp-${type}-extra-8`).style.display = 'block';
+    document.getElementById(`srp-${type}-more-8`).style.display = 'none';
+    document.getElementById(`srp-${type}-actions`).style.display = 'flex';
+    const extraAll = document.getElementById(`srp-${type}-extra-all`);
+    if (extraAll && extraAll.children.length > 0) {
+        document.getElementById(`srp-${type}-more-all-inline`).style.display = 'flex';
+    }
+};
+
+window.srpShowAll = function(type) {
+    document.getElementById(`srp-${type}-extra-all`).style.display = 'block';
+    document.getElementById(`srp-${type}-more-all-inline`).style.display = 'none';
+};
+
+window.srpShowLess = function(type) {
+    document.getElementById(`srp-${type}-extra-8`).style.display = 'none';
+    const extraAll = document.getElementById(`srp-${type}-extra-all`);
+    if (extraAll) extraAll.style.display = 'none';
+    document.getElementById(`srp-${type}-more-8`).style.display = 'flex';
+    document.getElementById(`srp-${type}-actions`).style.display = 'none';
+    const moreAllInline = document.getElementById(`srp-${type}-more-all-inline`);
+    if (moreAllInline) moreAllInline.style.display = 'none';
+};
+
+
+
+
+(function initSrpSwipe() {
+    document.addEventListener('DOMContentLoaded', function() {
+        const wrap = document.querySelector('.srp-slider-wrap');
+        const slider = document.getElementById('srp-slider');
+        if (!wrap || !slider) return;
+
+        let startX = 0, startY = 0, isDragging = false, isHorizontal = null;
+
+        function getBase() { return -(_srpIndex * wrap.offsetWidth); }
+
+        function setPos(x, animated) {
+            slider.style.transition = animated
+                ? 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                : 'none';
+            slider.style.transform = `translateX(${x}px)`;
+        }
+
+        wrap.addEventListener('touchstart', e => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            isHorizontal = null;
+            slider.style.transition = 'none';
+        }, { passive: true });
+
+        wrap.addEventListener('touchmove', e => {
+            if (!isDragging) return;
+            const dx = e.touches[0].clientX - startX;
+            const dy = e.touches[0].clientY - startY;
+            if (isHorizontal === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+                isHorizontal = Math.abs(dx) > Math.abs(dy);
+            }
+            if (!isHorizontal) return;
+            e.preventDefault();
+            const tabs = document.querySelectorAll('.srp-tab');
+            const minX = -((tabs.length - 1) * wrap.offsetWidth);
+            let newX = getBase() + dx;
+            if (newX > 0) newX = newX * 0.2;
+            if (newX < minX) newX = minX + (newX - minX) * 0.2;
+            slider.style.transform = `translateX(${newX}px)`;
+        }, { passive: false });
+
+        wrap.addEventListener('touchend', e => {
+            if (!isDragging || !isHorizontal) { isDragging = false; return; }
+            isDragging = false;
+            const dx = e.changedTouches[0].clientX - startX;
+            const tabs = document.querySelectorAll('.srp-tab');
+            const threshold = wrap.offsetWidth * 0.3;
+            if (dx < -threshold && _srpIndex < tabs.length - 1) _srpIndex++;
+            else if (dx > threshold && _srpIndex > 0) _srpIndex--;
+            tabs.forEach(t => t.classList.remove('active'));
+            tabs[_srpIndex].classList.add('active');
+            setPos(getBase(), true);
+        }, { passive: true });
+    });
+})();
+
+
+// ===== MOUVEMENTS =====
+async function loadMovements() {
+    const container = document.getElementById('movement-items');
+    if (!container) return;
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = {};
+        if (urlParams.getAll('artist').length) params.artist = urlParams.getAll('artist');
+        if (urlParams.get('country')) params.country = urlParams.get('country');
+        if (urlParams.getAll('city').length) params.city = urlParams.getAll('city');
+        if (urlParams.getAll('museum').length) params.museum = urlParams.getAll('museum');
+        if (urlParams.getAll('type').length) params.type = urlParams.getAll('type');           // ← AJOUTÉ
+        if (urlParams.getAll('movement').length) params.movement = urlParams.getAll('movement'); // ← AJOUTÉ
+        if (urlParams.getAll('genre').length) params.genre = urlParams.getAll('genre');         // ← AJOUTÉ
+        if (urlParams.getAll('material').length) params.material = urlParams.getAll('material'); // ← AJOUTÉ
+        
+        const data = await fetchAPI('/api/filter-movements', params);
+        if (!data || !data.length) {
+            container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun mouvement trouvé</div>';
+            return;
+        }
+        
+        const selectedMovements = urlParams.getAll('movement');
+        container.innerHTML = data.map(m => `
+            <div class="dropdown-item" data-movement-name="${escHtml(m.name).toLowerCase()}">
+                <label>
+                    <input type="checkbox" value="${escHtml(m.name)}" ${selectedMovements.includes(m.name) ? 'checked' : ''}>
+                    <span class="name">${escHtml(m.name)}</span>
+                    <span class="count">${m.count}</span>
+                </label>
+            </div>`).join('');
+        
+        initMovementSearch();
+    } catch(e) {
+        console.error('Erreur loadMovements:', e);
+        container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Erreur de chargement</div>';
+    }
+}
+
+function initMovementSearch() {
+    const input = document.getElementById('movement-search-filter');
+    if (!input || input._initialized) return;
+    input._initialized = true;
+    let timer;
+    input.addEventListener('input', function() {
+        clearTimeout(timer);
+        const term = this.value.trim().toLowerCase();
+        const container = document.getElementById('movement-items');
+        const items = container.querySelectorAll('.dropdown-item');
+        let visibleCount = 0;
+        items.forEach(item => {
+            const name = item.getAttribute('data-movement-name') || '';
+            if (term === '' || name.includes(term)) {
+                item.style.display = 'block';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        const noResultsMsg = container.querySelector('.no-results-msg');
+        if (visibleCount === 0 && term !== '') {
+            if (!noResultsMsg) {
+                const msg = document.createElement('div');
+                msg.className = 'no-results-msg';
+                msg.style.padding = '1rem';
+                msg.style.color = 'var(--text-muted)';
+                msg.style.textAlign = 'center';
+                msg.innerHTML = '<i class="fas fa-search"></i> Aucun mouvement trouvé';
+                container.appendChild(msg);
+            }
+        } else if (noResultsMsg) {
+            noResultsMsg.remove();
+        }
+    });
+}
+
+window.applyMovementFilter = function() {
+    const selected = Array.from(document.querySelectorAll('#movement-items input:checked')).map(c => c.value);
+    const params = new URLSearchParams(window.location.search);
+    params.delete('movement');
+    selected.forEach(m => params.append('movement', m));
+    params.set('page', '1');
+    window.location.href = `/research?${params}`;
+};
+
+// ===== GENRES =====
+async function loadGenres() {
+    const container = document.getElementById('genre-items');
+    if (!container) return;
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = {};
+        if (urlParams.getAll('artist').length) params.artist = urlParams.getAll('artist');
+        if (urlParams.get('country')) params.country = urlParams.get('country');
+        if (urlParams.getAll('city').length) params.city = urlParams.getAll('city');
+        if (urlParams.getAll('museum').length) params.museum = urlParams.getAll('museum');
+        if (urlParams.getAll('type').length) params.type = urlParams.getAll('type');           // ← AJOUTÉ
+        if (urlParams.getAll('movement').length) params.movement = urlParams.getAll('movement'); // ← AJOUTÉ
+        if (urlParams.getAll('genre').length) params.genre = urlParams.getAll('genre');         // ← AJOUTÉ
+        if (urlParams.getAll('material').length) params.material = urlParams.getAll('material'); // ← AJOUTÉ
+        
+        const data = await fetchAPI('/api/filter-genres', params);
+        if (!data || !data.length) {
+            container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun genre trouvé</div>';
+            return;
+        }
+        
+        const selectedGenres = urlParams.getAll('genre');
+        container.innerHTML = data.map(g => `
+            <div class="dropdown-item" data-genre-name="${escHtml(g.name).toLowerCase()}">
+                <label>
+                    <input type="checkbox" value="${escHtml(g.name)}" ${selectedGenres.includes(g.name) ? 'checked' : ''}>
+                    <span class="name">${escHtml(g.name)}</span>
+                    <span class="count">${g.count}</span>
+                </label>
+            </div>`).join('');
+        
+        initGenreSearch();
+    } catch(e) {
+        console.error('Erreur loadGenres:', e);
+        container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Erreur de chargement</div>';
+    }
+}
+
+function initGenreSearch() {
+    const input = document.getElementById('genre-search-filter');
+    if (!input || input._initialized) return;
+    input._initialized = true;
+    let timer;
+    input.addEventListener('input', function() {
+        clearTimeout(timer);
+        const term = this.value.trim().toLowerCase();
+        const container = document.getElementById('genre-items');
+        const items = container.querySelectorAll('.dropdown-item');
+        let visibleCount = 0;
+        items.forEach(item => {
+            const name = item.getAttribute('data-genre-name') || '';
+            if (term === '' || name.includes(term)) {
+                item.style.display = 'block';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        const noResultsMsg = container.querySelector('.no-results-msg');
+        if (visibleCount === 0 && term !== '') {
+            if (!noResultsMsg) {
+                const msg = document.createElement('div');
+                msg.className = 'no-results-msg';
+                msg.style.padding = '1rem';
+                msg.style.color = 'var(--text-muted)';
+                msg.style.textAlign = 'center';
+                msg.innerHTML = '<i class="fas fa-search"></i> Aucun genre trouvé';
+                container.appendChild(msg);
+            }
+        } else if (noResultsMsg) {
+            noResultsMsg.remove();
+        }
+    });
+}
+
+window.applyGenreFilter = function() {
+    const selected = Array.from(document.querySelectorAll('#genre-items input:checked')).map(c => c.value);
+    const params = new URLSearchParams(window.location.search);
+    params.delete('genre');
+    selected.forEach(g => params.append('genre', g));
+    params.set('page', '1');
+    window.location.href = `/research?${params}`;
+};
+
+// ===== MATÉRIAUX =====
+async function loadMaterials() {
+    const container = document.getElementById('material-items');
+    if (!container) return;
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = {};
+        if (urlParams.getAll('artist').length) params.artist = urlParams.getAll('artist');
+        if (urlParams.get('country')) params.country = urlParams.get('country');
+        if (urlParams.getAll('city').length) params.city = urlParams.getAll('city');
+        if (urlParams.getAll('museum').length) params.museum = urlParams.getAll('museum');
+        if (urlParams.getAll('type').length) params.type = urlParams.getAll('type');           // ← AJOUTÉ
+        if (urlParams.getAll('movement').length) params.movement = urlParams.getAll('movement'); // ← AJOUTÉ
+        if (urlParams.getAll('genre').length) params.genre = urlParams.getAll('genre');         // ← AJOUTÉ
+        if (urlParams.getAll('material').length) params.material = urlParams.getAll('material'); // ← AJOUTÉ
+        
+        const data = await fetchAPI('/api/filter-materials', params);
+        if (!data || !data.length) {
+            container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun matériau trouvé</div>';
+            return;
+        }
+        
+        const selectedMaterials = urlParams.getAll('material');
+        container.innerHTML = data.map(m => `
+            <div class="dropdown-item" data-material-name="${escHtml(m.name).toLowerCase()}">
+                <label>
+                    <input type="checkbox" value="${escHtml(m.name)}" ${selectedMaterials.includes(m.name) ? 'checked' : ''}>
+                    <span class="name">${escHtml(m.name)}</span>
+                    <span class="count">${m.count}</span>
+                </label>
+            </div>`).join('');
+        
+        initMaterialSearch();
+    } catch(e) {
+        console.error('Erreur loadMaterials:', e);
+        container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Erreur de chargement</div>';
+    }
+}
+
+function initMaterialSearch() {
+    const input = document.getElementById('material-search-filter');
+    if (!input || input._initialized) return;
+    input._initialized = true;
+    let timer;
+    input.addEventListener('input', function() {
+        clearTimeout(timer);
+        const term = this.value.trim().toLowerCase();
+        const container = document.getElementById('material-items');
+        const items = container.querySelectorAll('.dropdown-item');
+        let visibleCount = 0;
+        items.forEach(item => {
+            const name = item.getAttribute('data-material-name') || '';
+            if (term === '' || name.includes(term)) {
+                item.style.display = 'block';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        const noResultsMsg = container.querySelector('.no-results-msg');
+        if (visibleCount === 0 && term !== '') {
+            if (!noResultsMsg) {
+                const msg = document.createElement('div');
+                msg.className = 'no-results-msg';
+                msg.style.padding = '1rem';
+                msg.style.color = 'var(--text-muted)';
+                msg.style.textAlign = 'center';
+                msg.innerHTML = '<i class="fas fa-search"></i> Aucun matériau trouvé';
+                container.appendChild(msg);
+            }
+        } else if (noResultsMsg) {
+            noResultsMsg.remove();
+        }
+    });
+}
+
+window.applyMaterialFilter = function() {
+    const selected = Array.from(document.querySelectorAll('#material-items input:checked')).map(c => c.value);
+    const params = new URLSearchParams(window.location.search);
+    params.delete('material');
+    selected.forEach(m => params.append('material', m));
+    params.set('page', '1');
+    window.location.href = `/research?${params}`;
+};
+
+
+// ================================================
+        // GESTIONNAIRE D'IMAGES - VERSION OPTIMISÉE
+        // ================================================
+window.handleImageError = function(img) {
+    const errorCount = parseInt(img.dataset.errorCount || '0');
+    
+    if (errorCount === 0) {
+        // Essai 1 : wsrv.nl
+        img.dataset.errorCount = '1';
+        img.dataset.currentService = 'wsrv';
+        img.src = img.dataset.fallback1;
+    } else if (errorCount === 1) {
+        // Essai 2 : URL Wikipedia directe
+        img.dataset.errorCount = '2';
+        img.dataset.currentService = 'direct';
+        img.src = img.dataset.fallback3;
+    } else {
+        // Abandon → placeholder
+        img.style.display = 'none';
+        const placeholder = img.nextElementSibling;
+        if (placeholder) placeholder.style.display = 'flex';
+    }
+};
+
+        // ================================================
+        // GESTION DU THEME
+        // ================================================
+        function syncTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.classList.remove('theme-dark', 'theme-light');
+            document.body.classList.add(`theme-${savedTheme}`);
+        }
+        
+        if (typeof window.toggleTheme !== 'function') {
+            window.toggleTheme = function() {
+                const isDark = document.body.classList.contains('theme-dark');
+                document.body.classList.remove('theme-dark', 'theme-light');
+                document.body.classList.add(isDark ? 'theme-light' : 'theme-dark');
+                localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            };
+        }
+
+        // ================================================
+        // TOGGLE DROPDOWN
+        // ================================================
+window.toggleDropdown = function (id, event) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+
+    // Toujours recharger pour refléter les filtres actifs
+    if (id === 'artist-dropdown')   { loadArtists();  initArtistSearch(); }
+    if (id === 'geo-dropdown')      { loadCountries(); loadCities(); initCountrySearch(); initCitySearch(); }
+    if (id === 'museum-dropdown')   { loadMuseums();  initMuseumSearch(); }
+    if (id === 'sort-dropdown')     { loadSortOptions(); }
+    if (id === 'type-dropdown')     { loadTypes(); }
+    if (id === 'movement-dropdown') { loadMovements(); }
+    if (id === 'genre-dropdown')    { loadGenres(); }
+    if (id === 'material-dropdown') { loadMaterials(); }
+
+    const dropdown = document.getElementById(id);
+    dropdown.classList.toggle('show');
+const btn = event?.target?.closest('.filter-dropdown');
+if (btn) {
+    const rect = btn.getBoundingClientRect();
+    const dropdownWidth = 340;
+    // Si le dropdown dépasse à gauche de l'écran
+    if (rect.right - dropdownWidth < 0) {
+        dropdown.style.right = 'auto';
+        dropdown.style.left = `-${rect.left - 12}px`; // 12px de marge gauche
+    } else {
+        dropdown.style.left = 'auto';
+        dropdown.style.right = '0';
+    }
+}
+
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                if (menu.id !== id) menu.classList.remove('show');
+            });
+        };
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.filter-dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+            }
+        });
+
+
+
+
+
+async function loadTypes(searchTerm = '') {
+    const container = document.getElementById('type-items');
+    if (!container) return;
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = {};
+        if (urlParams.getAll('artist').length) params.artist  = urlParams.getAll('artist');
+        if (urlParams.get('country'))          params.country = urlParams.get('country');
+        if (urlParams.getAll('city').length)   params.city    = urlParams.getAll('city');
+        if (urlParams.getAll('museum').length) params.museum  = urlParams.getAll('museum');
+        if (urlParams.getAll('type').length) params.type = urlParams.getAll('type');        // ← AJOUTÉ
+        if (urlParams.getAll('movement').length) params.movement = urlParams.getAll('movement');  // ← AJOUTÉ
+        if (urlParams.getAll('genre').length) params.genre = urlParams.getAll('genre');          // ← AJOUTÉ
+        if (urlParams.getAll('material').length) params.material = urlParams.getAll('material');
+    
+        if (searchTerm) params.search = searchTerm;
+
+        const data = await fetchAPI('/api/filter-types', params);
+        if (!data || !data.length) {
+            container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun type trouvé</div>';
+            return;
+        }
+        
+        window.allTypes = data;
+        
+        container.innerHTML = data.map(t => `
+            <div class="dropdown-item" data-type-name="${escHtml(t.name).toLowerCase()}">
+                <label>
+                    <input type="checkbox" value="${escHtml(t.name)}" ${t.selected ? 'checked' : ''}>
+                    <span class="name">${escHtml(t.name)}</span>
+                    <span class="count">${t.count}</span>
+                </label>
+            </div>`).join('');
+        
+        const countSpan = document.getElementById('type-filter-count');
+        if (countSpan) {
+            countSpan.textContent = `${data.length} type${data.length > 1 ? 's' : ''}`;
+        }
+        
+        // ===== INITIALISER LA RECHERCHE ICI (UNE SEULE FOIS) =====
+        initTypeSearch();
+        
+    } catch (e) {
+        console.error('Erreur loadTypes:', e);
+        container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Erreur de chargement</div>';
+    }
+}
+
+
+// Fonction pour filtrer la liste des types
+function filterTypesList(searchTerm) {
+    const container = document.getElementById('type-items');
+    if (!container || !window.allTypes) return;
+    
+    const term = searchTerm.toLowerCase().trim();
+    const items = container.querySelectorAll('.dropdown-item');
+    
+    let visibleCount = 0;
+    items.forEach(item => {
+        const typeName = item.getAttribute('data-type-name') || '';
+        if (term === '' || typeName.includes(term)) {
+            item.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    // Afficher un message si aucun résultat
+    const noResultsMsg = container.querySelector('.no-results-msg');
+    if (visibleCount === 0 && term !== '') {
+        if (!noResultsMsg) {
+            const msg = document.createElement('div');
+            msg.className = 'no-results-msg';
+            msg.style.padding = '1rem';
+            msg.style.color = 'var(--text-muted)';
+            msg.style.textAlign = 'center';
+            msg.innerHTML = '<i class="fas fa-search"></i> Aucun type trouvé';
+            container.appendChild(msg);
+        }
+    } else if (noResultsMsg) {
+        noResultsMsg.remove();
+    }
+}
+
+// Initialiser la recherche dans les types
+let typeSearchInitialized = false;
+
+function initTypeSearch() {
+    const input = document.getElementById('type-search-filter');
+    if (!input || typeSearchInitialized) return;
+    typeSearchInitialized = true;
+    
+    let debounceTimer;
+    input.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        const searchTerm = this.value.trim();
+        
+        // Afficher un indicateur de chargement
+        const container = document.getElementById('type-items');
+        if (container) {
+            container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;"><i class="fas fa-spinner fa-spin"></i> Recherche...</div>';
+        }
+        
+        debounceTimer = setTimeout(() => {
+            loadTypes(searchTerm);
+        }, 400);
+    });
+}
+
+
+        // ================================================
+        // UTILITAIRES
+        // ================================================
+function updateCounter() {
+    document.getElementById('displayed-count').textContent = totalOeuvres.toLocaleString('fr-FR');
+    const hasFilters = document.querySelectorAll('.filter-tag').length > 0;
+    document.getElementById('filter-indicator').style.display = hasFilters ? 'inline' : 'none';
+}
+
+        // ===== FONCTION API  =====
+async function fetchAPI(url, params = {}) {
+    try {
+        const qs = new URLSearchParams();
+        for (const [key, val] of Object.entries(params)) {
+            if (Array.isArray(val)) {
+                val.forEach(v => qs.append(key, v));
+            } else if (val) {
+                qs.append(key, val);
+            }
+        }
+        const res = await fetch(qs.toString() ? `${url}?${qs}` : url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+    } catch (e) {
+        console.error(`Erreur API ${url}:`, e);
+        return null;
+    }
+}
+
+
+
+        window.setViewMode = function (mode) {
+            currentView = mode;
+            const grid = document.getElementById('works-grid');
+            grid.classList.remove('grid-4', 'grid-6');
+            grid.classList.add(`grid-${mode}`);
+            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`view-${mode}`).classList.add('active');
+            try { localStorage.setItem('viewMode', mode); } catch (e) {}
+            
+            const images = grid.querySelectorAll('img');
+            images.forEach(img => {
+                img.style.objectFit = mode === 6 ? 'cover' : 'contain';
+            });
+            
+            const url = new URL(window.location);
+            url.searchParams.set('view', mode);
+            window.history.replaceState({}, '', url);
+        };
+
+window.clearAllFilters = function () {
+    // Garder seulement la vue et la page
+    const view = new URLSearchParams(window.location.search).get('view');
+    let url = '/research?page=1';
+    if (view) url += `&view=${view}`;
+    window.location.href = url;
+};
+
+        // TYPE D'ŒUVRE
+window.applyTypeFilter = function () {
+    const selected = Array.from(document.querySelectorAll('#type-items input:checked')).map(c => c.value);
+    const params = new URLSearchParams(window.location.search);
+    
+    params.delete('type');
+    selected.forEach(t => params.append('type', t));
+    
+    // Conserver tous les autres paramètres
+    params.set('page', '1');
+    window.location.href = `/research?${params}`;
+};
+
+        // ARTISTES
+async function loadArtists() {
+    const container = document.getElementById('artist-items');
+    if (!container) return;
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = {};
+        const artists = urlParams.getAll('artist');
+        const country = urlParams.get('country');
+        const cities  = urlParams.getAll('city');
+        const museums = urlParams.getAll('museum');
+        const types = urlParams.getAll('type');
+        const movements = urlParams.getAll('movement');
+        const genres = urlParams.getAll('genre');
+        const materials = urlParams.getAll('material');
+        
+        if (artists.length) params.artist = artists;
+        if (country)        params.country = country;
+        if (cities.length)  params.city    = cities;
+        if (museums.length) params.museum  = museums;
+        if (types.length)   params.type    = types;
+        if (movements.length) params.movement = movements;
+        if (genres.length)  params.genre   = genres;
+        if (materials.length) params.material = materials;
+
+        const data = await fetchAPI('/api/filter-artists', params);
+
+        if (!data || !data.length) {
+            container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun artiste trouvé</div>';
+            return;
+        }
+        container.innerHTML = data.map(a => `
+            <div class="dropdown-item">
+                <label>
+                    <input type="checkbox" value="${escHtml(a.id)}" ${a.selected ? 'checked' : ''}>
+                    <span class="name">${escHtml(a.name)}</span>
+                    <span class="count">${a.count}</span>
+                </label>
+            </div>`).join('');
+    } catch (e) {
+        container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Erreur de chargement</div>';
+    }
+}
+
+
+
+
+
+        function initArtistSearch() {
+            const input = document.getElementById('artist-search-filter');
+            if (!input || input._initialized) return;
+            input._initialized = true;
+            let timer;
+            input.addEventListener('input', function () {
+                clearTimeout(timer);
+                const q = this.value.trim();
+                if (!q) { loadArtists(); return; }
+                if (q.length < 2) {
+                    document.getElementById('artist-items').innerHTML =
+                        '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Tapez au moins 2 caractères</div>';
+                    return;
+                }
+                timer = setTimeout(async () => {
+                    const res = await fetch(`/api/search-suggestions?q=${encodeURIComponent(q)}`);
+                    const data = await res.json();
+                    const selected = new URLSearchParams(window.location.search).getAll('artist');
+                    const container = document.getElementById('artist-items');
+                    if (!data.artistes || !data.artistes.length) {
+                        container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun résultat</div>';
+                        return;
+                    }
+                    container.innerHTML = data.artistes.map(a => `
+                        <div class="dropdown-item">
+                            <label>
+                                <input type="checkbox" value="${escHtml(a.nom)}" ${selected.includes(a.nom) ? 'checked' : ''}>
+                                <span class="name">${escHtml(a.nom)}</span>
+                                <span class="count">${a.oeuvres_count}</span>
+                            </label>
+                        </div>`).join('');
+                }, 300);
+            });
+        }
+
+window.applyArtistFilter = function () {
+    const selected = Array.from(document.querySelectorAll('#artist-items input:checked')).map(c => c.value);
+    const params = new URLSearchParams(window.location.search);
+    
+    params.delete('artist');
+    selected.forEach(a => params.append('artist', a));
+    
+    // Conserver tous les autres paramètres (city, museum, country, etc.)
+    params.set('page', '1');
+    window.location.href = `/research?${params}`;
+};
+
+        // PAYS
+async function loadCountries() {
+    const container = document.getElementById('country-items');
+    if (!container) return;
+    try {
+        const urlParams  = new URLSearchParams(window.location.search);
+        const selectedCountry = urlParams.get('country') || '';
+        
+        const params = {
+            ...(urlParams.getAll('artist').length ? { artist: urlParams.getAll('artist') } : {}),
+            ...(urlParams.getAll('city').length   ? { city:   urlParams.getAll('city')   } : {}),
+            ...(urlParams.getAll('museum').length ? { museum: urlParams.getAll('museum') } : {}),
+            ...(urlParams.getAll('type').length   ? { type:   urlParams.getAll('type')   } : {}),
+            ...(urlParams.getAll('movement').length ? { movement: urlParams.getAll('movement') } : {}),
+            ...(urlParams.getAll('genre').length  ? { genre:  urlParams.getAll('genre')  } : {}),
+            ...(urlParams.getAll('material').length ? { material: urlParams.getAll('material') } : {})
+        };
+
+        const data = await fetchAPI('/api/filter-countries', params);
+
+        let html = `<div class="dropdown-item"><label>
+            <input type="radio" name="country" value="" ${!selectedCountry ? 'checked' : ''}>
+            <span class="name">Tous les pays</span>
+        </label></div>`;
+
+        if (data && data.length) {
+            html += data.slice(0, 50).map(c => `
+                <div class="dropdown-item"><label>
+                    <input type="radio" name="country" value="${escHtml(c.id)}" ${c.selected ? 'checked' : ''}>
+                    <span class="name">${escHtml(c.name)}</span>
+                    <span class="count">${c.count}</span>
+                </label></div>`).join('');
+        }
+        container.innerHTML = html;
+    } catch (e) {
+        container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Erreur de chargement</div>';
+    }
+}
+
+        function initCountrySearch() {
+            const input = document.getElementById('country-search-filter');
+            if (!input || input._initialized) return;
+            input._initialized = true;
+            let timer;
+            input.addEventListener('input', function () {
+                clearTimeout(timer);
+                const q = this.value.trim();
+                if (!q) { loadCountries(); return; }
+                if (q.length < 2) {
+                    document.getElementById('country-items').innerHTML =
+                        '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Tapez au moins 2 caractères</div>';
+                    return;
+                }
+                timer = setTimeout(async () => {
+                    const res  = await fetch(`/api/search-countries?q=${encodeURIComponent(q)}`);
+                    const data = await res.json();
+                    const selectedCountry = new URLSearchParams(window.location.search).get('country') || '';
+                    const container = document.getElementById('country-items');
+                    let html = `<div class="dropdown-item"><label>
+                        <input type="radio" name="country" value="" ${!selectedCountry ? 'checked' : ''}>
+                        <span class="name">Tous les pays</span>
+                    </label></div>`;
+                    if (data.length) {
+                        html += data.slice(0, 4).map(c => `
+                            <div class="dropdown-item"><label>
+                                <input type="radio" name="country" value="${escHtml(c.nom)}" ${selectedCountry === c.nom ? 'checked' : ''}>
+                                <span class="name">${escHtml(c.nom)}</span>
+                                <span class="count">${c.oeuvres_count}</span>
+                            </label></div>`).join('');
+                    } else {
+                        html = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun pays trouvé</div>';
+                    }
+                    container.innerHTML = html;
+                }, 300);
+            });
+        }
+
+        // VILLES
+async function loadCities() {
+    const container = document.getElementById('city-items');
+    if (!container) return;
+    try {
+        const urlParams     = new URLSearchParams(window.location.search);
+        const selectedCities = urlParams.getAll('city');
+        const params = {
+            ...(urlParams.getAll('artist').length ? { artist: urlParams.getAll('artist') } : {}),
+            ...(urlParams.get('country') ? { country: urlParams.get('country') } : {}),
+            ...(selectedCities.length ? { city: selectedCities } : {}),
+            ...(urlParams.getAll('museum').length ? { museum: urlParams.getAll('museum') } : {}),
+            ...(urlParams.getAll('type').length ? { type: urlParams.getAll('type') } : {}),
+            ...(urlParams.getAll('movement').length ? { movement: urlParams.getAll('movement') } : {}),
+            ...(urlParams.getAll('genre').length ? { genre: urlParams.getAll('genre') } : {}),
+            ...(urlParams.getAll('material').length ? { material: urlParams.getAll('material') } : {})
+        };
+
+        const data = await fetchAPI('/api/filter-cities', params);
+
+        if (!data || !data.length) {
+            container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucune ville trouvée</div>';
+            return;
+        }
+        container.innerHTML = data.map(c => `
+            <div class="dropdown-item"><label>
+                <input type="checkbox" value="${escHtml(c.id)}" ${selectedCities.includes(c.id) ? 'checked' : ''}>
+                <span class="name">${escHtml(c.name)}</span>
+                <span class="count">${c.count}</span>
+            </label></div>`).join('');
+    } catch (e) {
+        container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Erreur de chargement</div>';
+    }
+}
+
+function initCitySearch() {
+    const input = document.getElementById('city-search-filter');
+    if (!input || input._initialized) return;
+    input._initialized = true;
+    let timer;
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+        const q = this.value.trim();
+        if (!q) { loadCities(); return; }
+        if (q.length < 2) {
+            document.getElementById('city-items').innerHTML =
+                '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Tapez au moins 2 caractères</div>';
+            return;
+        }
+        timer = setTimeout(async () => {
+            const res  = await fetch(`/api/search-cities?q=${encodeURIComponent(q)}`);
+            const data = await res.json();
+            const selectedCities = new URLSearchParams(window.location.search).getAll('city');
+            const container = document.getElementById('city-items');
+            if (!data.length) {
+                container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucune ville trouvée</div>';
+                return;
+            }
+            container.innerHTML = data.slice(0, 50).map(c => `
+                <div class="dropdown-item"><label>
+                    <input type="checkbox" value="${escHtml(c.nom)}" ${selectedCities.includes(c.nom) ? 'checked' : ''}>
+                    <span class="name">${escHtml(c.nom)}</span>
+                    <span class="count">${c.oeuvres_count}</span>
+                </label></div>`).join('');
+        }, 300);
+    });
+}
+
+window.applyGeoFilter = function () {
+    const country = document.querySelector('input[name="country"]:checked')?.value || '';
+    const cities  = Array.from(document.querySelectorAll('#city-items input:checked')).map(c => c.value);
+    const params  = new URLSearchParams(window.location.search);
+    
+    // Mettre à jour les filtres géographiques
+    if (country) params.set('country', country); 
+    else params.delete('country');
+    
+    params.delete('city');
+    cities.forEach(c => params.append('city', c));
+    
+    // IMPORTANT: Conserver les musées déjà sélectionnés
+    // Ne pas modifier params.delete('museum')
+    
+    params.set('page', '1');
+    window.location.href = `/research?${params}`;
+};
+
+        // MUSÉES
+async function loadMuseums() {
+    const container = document.getElementById('museum-items');
+    if (!container) return;
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = {
+            ...(urlParams.getAll('artist').length ? { artist: urlParams.getAll('artist') } : {}),
+            ...(urlParams.get('country') ? { country: urlParams.get('country') } : {}),
+            ...(urlParams.getAll('city').length ? { city: urlParams.getAll('city') } : {}),
+            ...(urlParams.getAll('museum').length ? { museum: urlParams.getAll('museum') } : {}),
+            ...(urlParams.getAll('type').length ? { type: urlParams.getAll('type') } : {}),
+            ...(urlParams.getAll('movement').length ? { movement: urlParams.getAll('movement') } : {}),
+            ...(urlParams.getAll('genre').length ? { genre: urlParams.getAll('genre') } : {}),
+            ...(urlParams.getAll('material').length ? { material: urlParams.getAll('material') } : {})
+        };
+
+        const data = await fetchAPI('/api/filter-museums', params);
+
+        museumNames = {};
+        if (data && data.length) {
+            data.forEach(m => { 
+                museumNames[m.id] = m.name;
+            });
+        }
+
+        const selectedMuseums = urlParams.getAll('museum');
+
+        if (!data || !data.length) {
+            container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun musée trouvé</div>';
+            return;
+        }
+        
+        container.innerHTML = data.map(m => `
+            <div class="dropdown-item"><label>
+                <input type="checkbox" value="${escHtml(m.id)}" ${m.selected ? 'checked' : ''}>
+                <span class="name" title="${escHtml(m.name)}">${escHtml(m.name.length > 30 ? m.name.substring(0, 30) + '…' : m.name)}</span>
+                <span class="count">${m.count}</span>
+            </label></div>`).join('');
+    } catch (e) {
+        console.error('Erreur loadMuseums:', e);
+        container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Erreur de chargement</div>';
+    }
+}
+
+        function initMuseumSearch() {
+            const input = document.getElementById('museum-search-filter');
+            if (!input || input._initialized) return;
+            input._initialized = true;
+            let timer;
+            input.addEventListener('input', function () {
+                clearTimeout(timer);
+                const q = this.value.trim();
+                if (!q) { loadMuseums(); return; }
+                if (q.length < 2) {
+                    document.getElementById('museum-items').innerHTML =
+                        '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Tapez au moins 2 caractères</div>';
+                    return;
+                }
+                timer = setTimeout(async () => {
+                    const res  = await fetch(`/api/search-museums?q=${encodeURIComponent(q)}`);
+                    const data = await res.json();
+                    const selectedMuseums = new URLSearchParams(window.location.search).getAll('museum');
+                    const container = document.getElementById('museum-items');
+                    if (!data.length) {
+                        container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun musée trouvé</div>';
+                        return;
+                    }
+                    container.innerHTML = data.map(m => `
+                        <div class="dropdown-item"><label>
+                            <input type="checkbox" value="${escHtml(m.id)}" ${selectedMuseums.includes(m.id) ? 'checked' : ''}>
+                            <span class="name">${escHtml(m.nom)}</span>
+                            <span class="count">${m.oeuvres_count}</span>
+                        </label></div>`).join('');
+                }, 300);
+            });
+        }
+
+window.applyMuseumFilter = function () {
+    const selected = Array.from(document.querySelectorAll('#museum-items input:checked')).map(c => {
+        return c.value;
+    });
+    
+    // Récupérer tous les paramètres actuels de l'URL
+    const params = new URLSearchParams(window.location.search);
+    
+    // Supprimer uniquement l'ancien filtre museum
+    params.delete('museum');
+    
+    // Ajouter les nouveaux musées sélectionnés
+    selected.forEach(m => params.append('museum', m));
+    
+    // Conserver tous les autres paramètres (city, country, artist, type, sort, etc.)
+    // Ne pas supprimer params.delete('city') ou autres
+    
+    // Remettre la page à 1 pour les nouveaux résultats
+    params.set('page', '1');
+    
+    // Construire la nouvelle URL
+    const newUrl = `/research?${params.toString()}`;
+    window.location.href = newUrl;
+};
+
+        // TRI
+        function loadSortOptions() {
+            const container = document.getElementById('sort-items');
+            if (!container) return;
+            const current = new URLSearchParams(window.location.search).get('sort') || 'relevance';
+            const options = [
+                { value: 'relevance', label: 'Pertinence' },
+                { value: 'rating_desc', label: 'Mieux notées' },
+                { value: 'rating_asc', label: 'Moins bien notées' },
+                { value: 'date_desc', label: 'Plus récent' },
+                { value: 'date_asc',  label: 'Plus ancien' },
+                { value: 'title_asc', label: 'Titre A-Z'   },
+                { value: 'artist_asc',label: 'Artiste A-Z' },
+            ];
+            container.innerHTML = options.map(o => `
+                <div class="dropdown-item"><label>
+                    <input type="radio" name="sort" value="${o.value}" ${current === o.value ? 'checked' : ''}>
+                    <span class="name">${o.label}</span>
+                </label></div>`).join('');
+        }
+
+window.applySortFilter = function () {
+    const sort   = document.querySelector('input[name="sort"]:checked')?.value;
+    const params = new URLSearchParams(window.location.search);
+    
+    if (sort && sort !== 'relevance') params.set('sort', sort); 
+    else params.delete('sort');
+    
+    // Conserver tous les autres paramètres
+    params.set('page', '1');
+    window.location.href = `/research?${params}`;
+};
+
+
+
+
+
+        // TAGS ACTIFS
+function updateActiveTags() {
+    const container = document.getElementById('active-tags');
+    if (!container) return;
+    const params = new URLSearchParams(window.location.search);
+    const tags   = [];
+
+    params.getAll('artist').forEach(a => tags.push({ type: 'artist', label: a, value: a }));
+
+    const country = params.get('country');
+    if (country) tags.push({ type: 'country', label: country, value: country });
+
+    params.getAll('city').forEach(c => tags.push({ type: 'city', label: c, value: c }));
+
+    params.getAll('museum').forEach(id => {
+        const label = museumNames[id] || id;
+        tags.push({ type: 'museum', label: label, value: id });
+    });
+
+    params.getAll('type').forEach(t => tags.push({ type: 'type', label: t, value: t }));
+
+    const sort = params.get('sort');
+    if (sort && sort !== 'relevance') {
+        const labels = { date_desc: 'Plus récent', date_asc: 'Plus ancien', title_asc: 'A-Z', artist_asc: 'Artiste A-Z' };
+        tags.push({ type: 'sort', label: labels[sort] || sort, value: sort });
+    }
+    params.getAll('movement').forEach(m => tags.push({ type: 'movement', label: m, value: m }));
+    params.getAll('genre').forEach(g => tags.push({ type: 'genre', label: g, value: g }));
+    params.getAll('material').forEach(m => tags.push({ type: 'material', label: m, value: m }));
+    container.innerHTML = tags.map(t => `
+        <div class="filter-tag">
+            ${escHtml(t.label)}
+            <i class="fas fa-times" onclick="removeTag('${t.type}','${escHtml(t.value)}')"></i>
+        </div>`).join('');
+
+    updateCounter();
+}
+
+window.removeTag = function (type, value) {
+    const params = new URLSearchParams(window.location.search);
+    if (type === 'artist') {
+        const list = params.getAll('artist').filter(a => a !== value);
+        params.delete('artist'); list.forEach(a => params.append('artist', a));
+    } else if (type === 'country') {
+        params.delete('country');
+    } else if (type === 'city') {
+        const list = params.getAll('city').filter(c => c !== value);
+        params.delete('city'); list.forEach(c => params.append('city', c));
+    } else if (type === 'museum') {
+        const list = params.getAll('museum').filter(m => m !== value);
+        params.delete('museum'); list.forEach(m => params.append('museum', m));
+    } else if (type === 'type') {
+        const list = params.getAll('type').filter(t => t !== value);
+        params.delete('type'); list.forEach(t => params.append('type', t));
+    } else if (type === 'sort') {
+        params.delete('sort');
+    } else if (type === 'movement') {
+        const list = params.getAll('movement').filter(m => m !== value);
+        params.delete('movement'); list.forEach(m => params.append('movement', m));
+    } else if (type === 'genre') {
+        const list = params.getAll('genre').filter(g => g !== value);
+        params.delete('genre'); list.forEach(g => params.append('genre', g));
+    } else if (type === 'material') {
+        const list = params.getAll('material').filter(m => m !== value);
+        params.delete('material'); list.forEach(m => params.append('material', m));
+}
+    window.location.href = `/research?${params}`;
+};
+
+        // ================================================
+        // SCROLL INFINI
+        // ================================================
+
+
+window.loadMoreWorks = async function() {
+    if (isLoading || !hasMore) return;
+    
+    const btn = document.getElementById('load-more-btn');
+    const btnText = document.querySelector('.btn-text');
+    isLoading = true;
+    
+    if (btn) btn.disabled = true;
+    if (btnText) btnText.textContent = 'Chargement...';
+
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('page', currentPage + 1);
+        urlParams.set('limit', 12);
+
+        const res = await fetch(`/api/works?${urlParams}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        const data = await res.json();
+
+        if (!data.works || !data.works.length) {
+            hasMore = false;
+            document.getElementById('load-more-container').style.display = 'none';
+            document.getElementById('end-message').style.display = 'block';
+            return;
+        }
+
+        appendWorks(data.works);
+        currentPage++;
+        displayedCount += data.works.length;
+        hasMore = data.has_more;
+        if (data.total) totalOeuvres = data.total;
+        updateCounter();
+
+        // Mettre à jour le compteur restant
+        const remaining = totalOeuvres - displayedCount;
+        const countEl = document.getElementById('remaining-count');
+        if (countEl && remaining > 0) countEl.textContent = `${remaining} restantes`;
+
+        if (!hasMore) {
+            document.getElementById('load-more-container').style.display = 'none';
+            document.getElementById('end-message').style.display = 'block';
+        }
+
+    } catch (e) {
+        console.error('Erreur chargement:', e);
+    } finally {
+        isLoading = false;
+        if (btn) btn.disabled = false;
+        if (btnText) btnText.textContent = 'Voir plus';
+    }
+}
+
+window.toggleFav = async function(e, artworkId, el) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isLoggedIn) {
+        window.location.href = `/login?next=/research`;
+        return;
+    }
+    try {
+        const res = await fetch('/api/favorite/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ artwork_id: artworkId })
+        });
+        const data = await res.json();
+        el.classList.toggle('active', data.favorite);
+        el.querySelector('i').className = data.favorite ? 'fas fa-heart' : 'far fa-heart';
+    } catch(e) {}
+};
+
+
+
+
+function appendWorks(works) {
+    const grid = document.getElementById('works-grid');
+    const fragment = document.createDocumentFragment();
+    const fit = 'cover';
+
+    works.forEach((artwork) => {
+        const a = document.createElement('a');
+        a.href = `/oeuvre/${artwork.id}`;
+        a.className = 'work-item';
+
+        const wrap = document.createElement('div');
+        wrap.className = 'work-image-container';
+
+        if (artwork.image_url) {
+            const img = document.createElement('img');
+            const encodedUrl = encodeURIComponent(artwork.image_url);
+            img.src = `https://images.weserv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=webp&q=75`;
+            img.alt = artwork.titre || '';
+            img.loading = 'lazy';
+            img.style.background = 'transparent';
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.3s';
+            img.dataset.original = artwork.image_url;
+            img.dataset.fallback1 = `https://wsrv.nl/?url=${encodedUrl}&w=400&h=400&fit=${fit}&output=webp&q=75`;
+            img.dataset.fallback3 = artwork.image_url;
+            img.dataset.currentService = 'weserv';
+            img.dataset.errorCount = '0';
+            img.onload = function() { this.style.opacity = '1'; };
+            img.onerror = function() { handleImageError(this); };
+
+            const ph = document.createElement('div');
+            ph.className = 'image-placeholder';
+            ph.style.display = 'none';
+            ph.innerHTML = '<i class="fas fa-image"></i>';
+
+            wrap.appendChild(img);
+            wrap.appendChild(ph);
+        } else {
+            const ph = document.createElement('div');
+            ph.className = 'image-placeholder';
+            ph.innerHTML = '<i class="fas fa-image"></i>';
+            wrap.appendChild(ph);
+        }
+
+        const fav = document.createElement('div');
+        fav.className = 'work-fav';
+        fav.innerHTML = '<i class="far fa-heart"></i>';
+        fav.addEventListener('click', (e) => toggleFav(e, artwork.id, fav));
+        wrap.appendChild(fav);
+
+        const ov = document.createElement('div');
+        ov.className = 'work-overlay';
+        ov.innerHTML = `
+            <div class="work-title">${escHtml((artwork.titre || 'Sans titre').substring(0,40))}</div>
+            <div class="work-artist">${escHtml((artwork.createur || 'Artiste inconnu').substring(0,30))}</div>`;
+
+        wrap.appendChild(ov);
+        a.appendChild(wrap);
+        fragment.appendChild(a);
+    });
+
+    grid.appendChild(fragment);
+}
+
+        function initScrollToTop() {
+            const btn = document.getElementById('scroll-top');
+            window.addEventListener('scroll', () => {
+                btn.classList.toggle('visible', window.scrollY > 500);
+            });
+            btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        }
+
+        function escHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // ================================================
+        // PRIORISATION DES IMAGES
+        // ================================================
+        function prioritizeImages() {
+            setTimeout(() => {
+                const priorityImages = document.querySelectorAll('.work-item:nth-child(-n+4) img');
+                priorityImages.forEach(img => {
+                    img.setAttribute('fetchpriority', 'high');
+                    img.setAttribute('loading', 'eager');
+                });
+                
+                const otherImages = document.querySelectorAll('.work-item:nth-child(n+5) img');
+                otherImages.forEach(img => img.setAttribute('loading', 'lazy'));
+            }, 100);
+        }
+
+        // ================================================
+        // INITIALISATION
+        // ================================================
+        document.addEventListener('DOMContentLoaded', function () {
+            syncTheme();
+            setViewMode(currentView);
+            loadSortOptions();
+            updateActiveTags();
+//            initInfiniteScroll();
+            initScrollToTop();
+            prioritizeImages();
+
+const srpTab = urlParams.get('srp_tab');
+const srpItem = urlParams.get('srp_item');
+if (srpTab !== null) {
+    const tabs = document.querySelectorAll('.srp-tab');
+    const tabIndex = parseInt(srpTab);
+    if (tabs[tabIndex]) {
+        tabs.forEach(t => t.classList.remove('active'));
+        tabs[tabIndex].classList.add('active');
+        const slider = document.getElementById('srp-slider');
+        if (slider) slider.style.transform = `translateX(-${tabIndex * 100}%)`;
+    }
+}
+if (srpItem) {
+    setTimeout(() => {
+        document.querySelectorAll('.srp-row-name').forEach(row => {
+            if (row.textContent.trim() === srpItem) {
+                row.closest('.srp-row').style.background = 'rgba(108, 92, 231, 0.12)';
+                row.style.color = 'var(--accent)';
+            }
+        });
+    }, 100);
+}
+
+
+            const remaining = totalOeuvres - displayedCount;
+            const countEl = document.getElementById('remaining-count');
+            if (countEl && remaining > 0) countEl.textContent = `${remaining} restantes`;
+
+const urlParams = new URLSearchParams(window.location.search);
+
+updateActiveTags();
+        });
+
+    })();
+    </script>
+</body>
+</html>

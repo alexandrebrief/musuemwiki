@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+{% if session.language == 'en' %}
+<html lang="en">
+{% else %}
+<html lang="fr">
+{% endif %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ site_name }}</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-light: #ffffff;
+            --surface-dark: #141414;
+            --surface-light: #f5f5f5;
+            --text-dark: #ffffff;
+            --text-light: #1a1a1a;
+            --text-muted-dark: #7a7a7a;
+            --text-muted-light: #9a9a9a;
+            --border-dark: #2a2a2a;
+            --border-light: #e0e0e0;
+            --accent: #6c5ce7;
+            --gold: #c9a96e;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-text: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: var(--font-text);
+            color: var(--text-dark);
+            line-height: 1.5;
+            font-weight: 300;
+            min-height: 100vh;
+        }
+
+        body.theme-light {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            --surface: var(--surface-light);
+            --surface-hover: #eaeaea;
+            --border-color: var(--border-light);
+            --text-muted: var(--text-muted-light);
+        }
+
+        body.theme-dark {
+            --surface: var(--surface-dark);
+            --surface-hover: #1f1f1f;
+            --border-color: var(--border-dark);
+            --text-muted: var(--text-muted-dark);
+        }
+
+        .container { max-width: 1440px; margin: 0 auto; padding: 0 0.75rem; }
+        .main-content { margin-top: 100px; min-height: calc(100vh - 100px); padding-top: 0.5cm; }
+
+        .filter-tools { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; flex: 1; margin-top: 1rem; }
+
+        .icon-button {
+            background: transparent; border: 1px solid var(--border-color);
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s;
+            color: var(--text-muted); font-size: 1rem;
+        }
+        .icon-button:hover { border-color: var(--accent); color: var(--accent); }
+        .icon-button.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+        #load-more-btn {
+            background: transparent; border: 1px solid var(--gold);
+            color: var(--gold); padding: 0.9rem 3.5rem;
+            font-family: var(--font-display); font-size: 0.75rem;
+            text-transform: uppercase; letter-spacing: 2px;
+            cursor: pointer; transition: all 0.3s ease;
+            display: inline-flex; align-items: center; gap: 0.8rem;
+        }
+        #load-more-btn:hover { background: var(--gold); color: white; }
+        #load-more-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .filter-dropdown { position: relative; }
+        .dropdown-menu {
+            position: absolute; top: calc(100% + 5px);
+            min-width: 300px; max-width: 360px;
+            background: var(--surface); border: 1px solid var(--border-color);
+            padding: 1.2rem; z-index: 1000; display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        body.theme-dark .dropdown-menu { background: #1e1e1e; border-color: #3a3a3a; }
+        .dropdown-menu.show { display: block; animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .dropdown-search {
+            display: flex; align-items: center;
+            background: var(--surface-hover);
+            border: 1px solid var(--border-color);
+            padding: 0.3rem 0.8rem; margin-bottom: 1rem; width: 100%;
+        }
+        body.theme-dark .dropdown-search { background: #2a2a2a; border-color: #3a3a3a; }
+        .dropdown-search i { color: var(--text-muted); font-size: 0.8rem; margin-right: 0.5rem; }
+        .dropdown-search input { background: transparent; border: none; width: 100%; padding: 0.3rem 0; font-size: 0.85rem; color: inherit; }
+        .dropdown-search input:focus { outline: none; }
+        .dropdown-search input::placeholder { color: var(--text-muted); opacity: 0.7; }
+
+        .dropdown-items { max-height: 250px; overflow-y: auto; margin-bottom: 1rem; scrollbar-width: thin; scrollbar-color: var(--accent) var(--border-color); }
+        .dropdown-items::-webkit-scrollbar { width: 3px; }
+        .dropdown-items::-webkit-scrollbar-track { background: var(--border-color); }
+        .dropdown-items::-webkit-scrollbar-thumb { background: var(--accent); }
+
+        .dropdown-item { padding: 0.1rem 0; }
+        .dropdown-item label {
+            display: flex; align-items: center; gap: 0.5rem;
+            font-size: 0.85rem; cursor: pointer;
+            padding: 0.3rem 0.5rem; transition: background 0.2s;
+        }
+        .dropdown-item label:hover { background: var(--surface-hover); }
+        .dropdown-item input[type="checkbox"], .dropdown-item input[type="radio"] {
+            appearance: none; -webkit-appearance: none;
+            width: 16px; height: 16px; flex-shrink: 0;
+            border: 2px solid var(--text-muted);
+            border-radius: 3px; background: transparent;
+            cursor: pointer; position: relative; margin: 0;
+        }
+        .dropdown-item input[type="radio"] { border-radius: 50%; }
+        .dropdown-item input:checked { background: var(--accent); border-color: var(--accent); }
+        .dropdown-item input:checked::after {
+            content: '✓'; color: white; font-size: 11px;
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .dropdown-item input[type="radio"]:checked::after {
+            content: ''; width: 6px; height: 6px;
+            background: white; border-radius: 50%;
+        }
+        .dropdown-item .count { color: var(--text-muted); font-size: 0.7rem; margin-left: auto; }
+
+        .dropdown-section-header {
+            font-family: var(--font-display);
+            font-size: 0.7rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 2px;
+            color: var(--accent);
+            padding: 0.5rem 0 0.3rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .dropdown-actions { display: flex; justify-content: flex-end; padding-top: 0.8rem; border-top: 1px solid var(--border-color); }
+        .apply-btn {
+            background: transparent; border: 1px solid var(--accent); color: var(--accent);
+            padding: 0.4rem 1.5rem; font-size: 0.7rem;
+            text-transform: uppercase; letter-spacing: 1px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .apply-btn:hover { background: var(--accent); color: white; }
+
+        .active-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; }
+        .filter-tag {
+            background: var(--surface); border: 1px solid var(--border-color);
+            padding: 0.2rem 1rem 0.2rem 1.2rem;
+            font-size: 0.7rem; display: flex; align-items: center; gap: 0.5rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        body.theme-dark .filter-tag { background: #1e1e1e; }
+        .filter-tag i { color: var(--accent); cursor: pointer; font-size: 0.6rem; }
+
+        .srp-results-line { margin: 1.5rem 0 0.5rem; }
+        .srp-results-line-top { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
+        .srp-header-num { font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; color: var(--gold); line-height: 1; }
+        .srp-header-label { font-family: var(--font-display); font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+
+        /* Notes sur les images */
+        .rating-stack {
+            position: absolute; top: 0.5rem; left: 0.5rem; z-index: 20;
+            display: flex; flex-direction: column; gap: 0.2rem;
+            background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+            padding: 0.3rem 0.5rem; border-radius: 6px;
+            font-family: var(--font-display); pointer-events: none;
+            font-size: 0.65rem; line-height: 1.2;
+        }
+        .rating-main { display: flex; align-items: center; gap: 0.3rem; font-weight: 500; color: var(--gold); padding-bottom: 0.15rem; border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .rating-main i { font-size: 0.55rem; }
+        .rating-value { font-size: 0.7rem; font-weight: 600; }
+        .rating-sub { display: flex; flex-direction: column; gap: 0.15rem; }
+        .sub-item { display: flex; align-items: center; gap: 0.3rem; font-size: 0.55rem; color: rgba(255,255,255,0.7); }
+        .sub-item i { width: 12px; font-size: 0.5rem; }
+        .sub-item.technique i { color: #4a9eff; }
+        .sub-item.originalite i { color: #ffb347; }
+        .sub-item.emotion i { color: #ff6b9d; }
+        .sub-item span { font-weight: 500; font-size: 0.6rem; }
+        body.theme-light .rating-stack { background: rgba(255,255,255,0.85); }
+        body.theme-light .rating-main { border-bottom-color: rgba(0,0,0,0.1); }
+        body.theme-light .sub-item { color: #555; }
+
+        .works-grid { display: grid; gap: 0.5rem; margin: 0.5rem 0 0; padding: 0.5rem 0; }
+        .works-grid.grid-4 { grid-template-columns: repeat(4, 1fr); }
+        .works-grid.grid-6 { grid-template-columns: repeat(6, 1fr); }
+
+        .work-item { position: relative; text-decoration: none; color: inherit; display: block; overflow: hidden; }
+        .works-grid.grid-4 .work-item { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; }
+        .works-grid.grid-4 .work-item img { width: 100%; height: 100%; object-fit: contain; }
+        .works-grid.grid-6 .work-item { aspect-ratio: 2/3; }
+        .works-grid.grid-6 .work-item img { width: 100%; height: 100%; object-fit: cover; }
+        .work-item:hover img { opacity: 0.7; }
+
+        .work-image-container { width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; }
+        .image-placeholder { width: 100%; height: 100%; min-height: 200px; background: var(--surface); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 1.5rem; }
+
+        .work-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 80%);
+            padding: 2rem 1rem 1rem; opacity: 0; transition: opacity 0.3s ease;
+            color: white; pointer-events: none;
+        }
+        .work-item:hover .work-overlay { opacity: 1; }
+        .work-title { font-family: var(--font-display); font-weight: 500; font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; }
+        .work-artist { font-size: 0.65rem; opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .end-message { text-align: center; padding: 4rem; color: var(--text-muted); font-size: 0.9rem; }
+        .empty-state { text-align: center; padding: 6rem 2rem; color: var(--text-muted); }
+        .empty-state i { font-size: 3rem; color: var(--gold); opacity: 0.3; margin-bottom: 1.5rem; display: block; }
+        .empty-state h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 500; margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
+        .btn-explore { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 0.8rem 2rem; font-family: var(--font-display); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; display: inline-block; transition: all 0.2s; margin-top: 1rem; }
+        .btn-explore:hover { background: var(--accent); color: white; }
+
+        .scroll-top { position: fixed; bottom: 2rem; right: 2rem; width: 44px; height: 44px; background: var(--surface); border: 1px solid var(--border-color); color: var(--text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100; }
+        .scroll-top.visible { opacity: 1; visibility: visible; }
+        .scroll-top:hover { border-color: var(--accent); color: var(--accent); }
+
+        @media (max-width: 1200px) { .works-grid.grid-6 { grid-template-columns: repeat(5, 1fr); } }
+        @media (max-width: 992px) { .works-grid.grid-6 { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 768px) {
+            .works-grid.grid-4 { grid-template-columns: repeat(3, 1fr); }
+            .works-grid.grid-6 { grid-template-columns: repeat(3, 1fr); }
+            .filter-tools { width: 100%; }
+            .dropdown-menu { min-width: 280px; }
+            .rating-stack { display: none; }
+        }
+        @media (max-width: 576px) {
+            .works-grid.grid-4, .works-grid.grid-6 { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 700px) { .main-content { margin-top: 58px !important; } }
+    </style>
+</head>
+<body style="visibility:hidden">
+<script>
+    (function() {
+        const t = localStorage.getItem('theme') || 'dark';
+        document.body.classList.remove('theme-dark', 'theme-light');
+        document.body.classList.add('theme-' + t);
+        document.body.style.visibility = '';
+    })();
+</script>
+
+{% include 'navbar.html' %}
+
+<div class="container main-content">
+    <div class="srp-results-line">
+        <div class="srp-results-line-top">
+            <span class="srp-header-num" id="displayed-count">{{ total_ratings }}</span>
+            <span class="srp-header-label">évaluation{{ 's' if total_ratings > 1 else '' }}</span>
+            <i class="fas fa-star" style="color:var(--gold); font-size:0.9rem;"></i>
+        </div>
+
+        <div class="filter-tools">
+            <!-- ARTISTE -->
+            <div class="filter-dropdown">
+                <button class="icon-button" onclick="toggleDropdown('artist-dropdown', event)" title="Artiste"><i class="fas fa-user"></i></button>
+                <div class="dropdown-menu" id="artist-dropdown">
+                    <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher un artiste..." id="artist-search-filter"></div>
+                    <div class="dropdown-items" id="artist-items"><div style="padding:1rem;text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+                    <div class="dropdown-actions"><button onclick="applyArtistFilter()" class="apply-btn">Appliquer</button></div>
+                </div>
+            </div>
+
+            <!-- MUSÉE -->
+            <div class="filter-dropdown">
+                <button class="icon-button" onclick="toggleDropdown('museum-dropdown', event)" title="Musée"><i class="fas fa-landmark"></i></button>
+                <div class="dropdown-menu" id="museum-dropdown">
+                    <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher un musée..." id="museum-search-filter"></div>
+                    <div class="dropdown-items" id="museum-items"><div style="padding:1rem;text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+                    <div class="dropdown-actions"><button onclick="applyMuseumFilter()" class="apply-btn">Appliquer</button></div>
+                </div>
+            </div>
+
+            <!-- GÉO -->
+            <div class="filter-dropdown">
+                <button class="icon-button" onclick="toggleDropdown('geo-dropdown', event)" title="Pays / Ville"><i class="fas fa-globe"></i></button>
+                <div class="dropdown-menu" id="geo-dropdown">
+                    <div class="dropdown-section-header">Pays</div>
+                    <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher un pays..." id="country-search-filter"></div>
+                    <div class="dropdown-items" id="country-items"><div style="padding:1rem;text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+                    <div class="dropdown-section-header" style="margin-top:0.8rem;">Villes</div>
+                    <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher une ville..." id="city-search-filter"></div>
+                    <div class="dropdown-items" id="city-items"><div style="padding:1rem;text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+                    <div class="dropdown-actions"><button onclick="applyGeoFilter()" class="apply-btn">Appliquer</button></div>
+                </div>
+            </div>
+
+            <!-- TYPE -->
+            <div class="filter-dropdown">
+                <button class="icon-button" onclick="toggleDropdown('type-dropdown', event)" title="Type"><i class="fas fa-object-group"></i></button>
+                <div class="dropdown-menu" id="type-dropdown">
+                    <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher un type..." id="type-search-filter"></div>
+                    <div class="dropdown-items" id="type-items"><div style="padding:1rem;text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+                    <div class="dropdown-actions"><button onclick="applyTypeFilter()" class="apply-btn">Appliquer</button></div>
+                </div>
+            </div>
+
+            <!-- MOUVEMENT -->
+            <div class="filter-dropdown">
+                <button class="icon-button" onclick="toggleDropdown('movement-dropdown', event)" title="Mouvement"><i class="fas fa-palette"></i></button>
+                <div class="dropdown-menu" id="movement-dropdown">
+                    <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher un mouvement..." id="movement-search-filter"></div>
+                    <div class="dropdown-items" id="movement-items"><div style="padding:1rem;text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+                    <div class="dropdown-actions"><button onclick="applyMovementFilter()" class="apply-btn">Appliquer</button></div>
+                </div>
+            </div>
+
+            <!-- GENRE -->
+            <div class="filter-dropdown">
+                <button class="icon-button" onclick="toggleDropdown('genre-dropdown', event)" title="Genre"><i class="fas fa-masks-theater"></i></button>
+                <div class="dropdown-menu" id="genre-dropdown">
+                    <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher un genre..." id="genre-search-filter"></div>
+                    <div class="dropdown-items" id="genre-items"><div style="padding:1rem;text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+                    <div class="dropdown-actions"><button onclick="applyGenreFilter()" class="apply-btn">Appliquer</button></div>
+                </div>
+            </div>
+
+            <!-- MATÉRIAU -->
+            <div class="filter-dropdown">
+                <button class="icon-button" onclick="toggleDropdown('material-dropdown', event)" title="Matériau"><i class="fas fa-cube"></i></button>
+                <div class="dropdown-menu" id="material-dropdown">
+                    <div class="dropdown-search"><i class="fas fa-search"></i><input type="text" placeholder="Rechercher un matériau..." id="material-search-filter"></div>
+                    <div class="dropdown-items" id="material-items"><div style="padding:1rem;text-align:center;"><i class="fas fa-spinner fa-spin"></i></div></div>
+                    <div class="dropdown-actions"><button onclick="applyMaterialFilter()" class="apply-btn">Appliquer</button></div>
+                </div>
+            </div>
+
+            <!-- NOTE GLOBALE -->
+            <div class="filter-dropdown">
+                <button class="icon-button" onclick="toggleDropdown('rating-global-dropdown', event)" title="Note globale"><i class="fas fa-star"></i></button>
+                <div class="dropdown-menu" id="rating-global-dropdown">
+                    <div class="dropdown-section-header">⭐ Note globale</div>
+                    <div class="dropdown-items">
+                        <div class="dropdown-item"><label><input type="checkbox" value="5" class="rating-global-cb"><span>5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="4.5" class="rating-global-cb"><span>4.5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="4" class="rating-global-cb"><span>4 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="3.5" class="rating-global-cb"><span>3.5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="3" class="rating-global-cb"><span>3 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="2.5" class="rating-global-cb"><span>2.5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="2" class="rating-global-cb"><span>2 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="1.5" class="rating-global-cb"><span>1.5 étoile</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="1" class="rating-global-cb"><span>1 étoile</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="0.5" class="rating-global-cb"><span>0.5 étoile</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="0" class="rating-global-cb"><span>0 étoile</span></label></div>
+                    </div>
+                    <div class="dropdown-actions"><button onclick="applyRatingFilter('rating_global', 'rating-global-cb')" class="apply-btn">Appliquer</button></div>
+                </div>
+            </div>
+
+            <!-- NOTE TECHNIQUE -->
+            <div class="filter-dropdown">
+                <button class="icon-button" onclick="toggleDropdown('rating-technique-dropdown', event)" title="Technique"><i class="fas fa-paintbrush"></i></button>
+                <div class="dropdown-menu" id="rating-technique-dropdown">
+                    <div class="dropdown-section-header">🎨 Technique</div>
+                    <div class="dropdown-items">
+                        <div class="dropdown-item"><label><input type="checkbox" value="5" class="rating-technique-cb"><span>5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="4.5" class="rating-technique-cb"><span>4.5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="4" class="rating-technique-cb"><span>4 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="3.5" class="rating-technique-cb"><span>3.5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="3" class="rating-technique-cb"><span>3 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="2.5" class="rating-technique-cb"><span>2.5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="2" class="rating-technique-cb"><span>2 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="1.5" class="rating-technique-cb"><span>1.5 étoile</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="1" class="rating-technique-cb"><span>1 étoile</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="0.5" class="rating-technique-cb"><span>0.5 étoile</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="0" class="rating-technique-cb"><span>0 étoile</span></label></div>
+                    </div>
+                    <div class="dropdown-actions"><button onclick="applyRatingFilter('rating_technique', 'rating-technique-cb')" class="apply-btn">Appliquer</button></div>
+                </div>
+            </div>
+
+            <!-- NOTE CRÉATIVITÉ -->
+            <div class="filter-dropdown">
+                <button class="icon-button" onclick="toggleDropdown('rating-originalite-dropdown', event)" title="Créativité"><i class="fas fa-lightbulb"></i></button>
+                <div class="dropdown-menu" id="rating-originalite-dropdown">
+                    <div class="dropdown-section-header">💡 Créativité</div>
+                    <div class="dropdown-items">
+                        <div class="dropdown-item"><label><input type="checkbox" value="5" class="rating-originalite-cb"><span>5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="4.5" class="rating-originalite-cb"><span>4.5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="4" class="rating-originalite-cb"><span>4 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="3.5" class="rating-originalite-cb"><span>3.5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="3" class="rating-originalite-cb"><span>3 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="2.5" class="rating-originalite-cb"><span>2.5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="2" class="rating-originalite-cb"><span>2 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="1.5" class="rating-originalite-cb"><span>1.5 étoile</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="1" class="rating-originalite-cb"><span>1 étoile</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="0.5" class="rating-originalite-cb"><span>0.5 étoile</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="0" class="rating-originalite-cb"><span>0 étoile</span></label></div>
+                    </div>
+                    <div class="dropdown-actions"><button onclick="applyRatingFilter('rating_originalite', 'rating-originalite-cb')" class="apply-btn">Appliquer</button></div>
+                </div>
+            </div>
+
+            <!-- NOTE ÉMOTION -->
+            <div class="filter-dropdown">
+                <button class="icon-button" onclick="toggleDropdown('rating-emotion-dropdown', event)" title="Émotion"><i class="fas fa-heart"></i></button>
+                <div class="dropdown-menu" id="rating-emotion-dropdown">
+                    <div class="dropdown-section-header">❤️ Émotion</div>
+                    <div class="dropdown-items">
+                        <div class="dropdown-item"><label><input type="checkbox" value="5" class="rating-emotion-cb"><span>5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="4.5" class="rating-emotion-cb"><span>4.5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="4" class="rating-emotion-cb"><span>4 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="3.5" class="rating-emotion-cb"><span>3.5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="3" class="rating-emotion-cb"><span>3 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="2.5" class="rating-emotion-cb"><span>2.5 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="2" class="rating-emotion-cb"><span>2 étoiles</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="1.5" class="rating-emotion-cb"><span>1.5 étoile</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="1" class="rating-emotion-cb"><span>1 étoile</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="0.5" class="rating-emotion-cb"><span>0.5 étoile</span></label></div>
+                        <div class="dropdown-item"><label><input type="checkbox" value="0" class="rating-emotion-cb"><span>0 étoile</span></label></div>
+                    </div>
+                    <div class="dropdown-actions"><button onclick="applyRatingFilter('rating_emotion', 'rating-emotion-cb')" class="apply-btn">Appliquer</button></div>
+                </div>
+            </div>
+
+            <!-- TRI -->
+            <div class="filter-dropdown">
+                <button class="icon-button" onclick="toggleDropdown('sort-dropdown', event)" title="Trier"><i class="fas fa-arrow-up-wide-short"></i></button>
+                <div class="dropdown-menu" id="sort-dropdown">
+                    <div class="dropdown-items" id="sort-items"></div>
+                    <div class="dropdown-actions"><button onclick="applySortFilter()" class="apply-btn">Appliquer</button></div>
+                </div>
+            </div>
+
+            <!-- RESET + VUE -->
+            <button class="icon-button" onclick="clearAllFilters()" title="Effacer les filtres"><i class="fas fa-times"></i></button>
+            <button class="icon-button view-btn" id="view-4" onclick="setViewMode(4)" title="Vue 4 colonnes"><i class="fas fa-th-large"></i></button>
+            <button class="icon-button view-btn" id="view-6" onclick="setViewMode(6)" title="Vue 6 colonnes"><i class="fas fa-th"></i></button>
+        </div>
+
+        <div class="active-tags" id="active-tags"></div>
+    </div>
+
+    {% if artworks %}
+    <div class="works-grid grid-4" id="works-grid">
+        {% for artwork in artworks %}
+        <a href="/oeuvre/{{ artwork.id }}" class="work-item" data-id="{{ artwork.id }}">
+            <div class="work-image-container">
+                <div class="rating-stack">
+                    <div class="rating-main">
+                        <i class="fas fa-star"></i>
+                        <span class="rating-value">{{ "%.1f"|format(artwork.user_rating_global) if artwork.user_rating_global else '—' }}</span>
+                    </div>
+                    <div class="rating-sub">
+                        <div class="sub-item technique">
+                            <i class="fas fa-paintbrush"></i>
+                            <span>{{ "%.1f"|format(artwork.user_rating_technique) if artwork.user_rating_technique else '—' }}</span>
+                        </div>
+                        <div class="sub-item originalite">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>{{ "%.1f"|format(artwork.user_rating_originalite) if artwork.user_rating_originalite else '—' }}</span>
+                        </div>
+                        <div class="sub-item emotion">
+                            <i class="fas fa-heart"></i>
+                            <span>{{ "%.1f"|format(artwork.user_rating_emotion) if artwork.user_rating_emotion else '—' }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% if artwork.image_url and artwork.image_url != '' %}
+                <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit=cover&output=webp&q=75"
+                     alt="{{ artwork.titre }}"
+                     data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit=cover&output=webp&q=75"
+                     data-fallback3="{{ artwork.image_url }}"
+                     data-error-count="0"
+                     loading="lazy"
+                     style="opacity:0; transition: opacity 0.3s;"
+                     onload="this.style.opacity='1'"
+                     onerror="handleImageError(this)">
+                <div class="image-placeholder" style="display:none;"><i class="fas fa-image"></i></div>
+                {% else %}
+                <div class="image-placeholder"><i class="fas fa-image"></i></div>
+                {% endif %}
+                <div class="work-overlay">
+                    <div class="work-title">{{ artwork.titre|truncate(40) if artwork.titre else 'SANS TITRE' }}</div>
+                    <div class="work-artist">{{ artwork.createur|truncate(30) if artwork.createur else 'ARTISTE INCONNU' }}</div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <div id="load-more-container" style="text-align:center; padding: 3rem 0 4rem; {% if not has_more %}display:none;{% endif %}">
+        <button id="load-more-btn" onclick="loadMore()"><span class="btn-text">Voir plus</span></button>
+    </div>
+    <div class="end-message" id="end-message" style="display:none;"><i class="fas fa-check"></i> Fin de vos évaluations</div>
+
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-star"></i>
+        {% set has_filters = request.args.getlist('artist') or request.args.get('country') or request.args.getlist('city') or request.args.getlist('museum') or request.args.getlist('type') or request.args.getlist('movement') or request.args.getlist('genre') or request.args.getlist('material') or request.args.getlist('rating_global') or request.args.getlist('rating_technique') or request.args.getlist('rating_originalite') or request.args.getlist('rating_emotion') %}
+        {% if has_filters %}
+            <h3>Aucun résultat pour ces filtres</h3>
+            <p>Essayez de modifier ou supprimer vos filtres.</p>
+            <a href="/rated" class="btn-explore">Effacer les filtres</a>
+        {% else %}
+            <h3>Aucune évaluation pour le moment</h3>
+            <p>Explorez la collection et notez vos œuvres préférées.</p>
+            <a href="/research" class="btn-explore">Explorer la collection</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<div class="scroll-top" id="scroll-top"><i class="fas fa-arrow-up"></i></div>
+{% include 'footer.html' %}
+
+<script>
+(function() {
+    // ================================================
+    // ÉTAT GLOBAL
+    // ================================================
+    let currentPage = 1;
+    let isLoading = false;
+    let hasMore = {{ 'true' if has_more else 'false' }};
+    let displayedCount = {{ artworks|length }};
+    let currentView = 4;
+    let allFilterOptions = null;
+
+    try {
+        const saved = localStorage.getItem('viewMode');
+        if (saved && [4, 6].includes(parseInt(saved))) currentView = parseInt(saved);
+    } catch(e) {}
+
+    // ================================================
+    // UTILITAIRES
+    // ================================================
+    function escHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+
+    function buildParams() {
+        return new URLSearchParams(window.location.search);
+    }
+
+    // ================================================
+    // IMAGES
+    // ================================================
+    window.handleImageError = function(img) {
+        const n = parseInt(img.dataset.errorCount || '0');
+        if (n === 0) { img.dataset.errorCount = '1'; img.src = img.dataset.fallback1; }
+        else if (n === 1) { img.dataset.errorCount = '2'; img.src = img.dataset.fallback3; }
+        else { img.style.display = 'none'; const ph = img.nextElementSibling; if (ph) ph.style.display = 'flex'; }
+    };
+
+    // ================================================
+    // VUE
+    // ================================================
+    window.setViewMode = function(mode) {
+        currentView = mode;
+        const grid = document.getElementById('works-grid');
+        if (!grid) return;
+        grid.classList.remove('grid-4', 'grid-6');
+        grid.classList.add('grid-' + mode);
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('view-' + mode)?.classList.add('active');
+        try { localStorage.setItem('viewMode', mode); } catch(e) {}
+    };
+
+    // ================================================
+    // LOAD MORE
+    // ================================================
+    window.loadMore = async function() {
+        if (isLoading || !hasMore) return;
+        isLoading = true;
+        const btn = document.getElementById('load-more-btn');
+        const btnText = document.querySelector('.btn-text');
+        if (btn) btn.disabled = true;
+        if (btnText) btnText.textContent = 'Chargement...';
+
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('page', currentPage + 1);
+            const res = await fetch('/api/rated/works?' + urlParams.toString());
+            const data = await res.json();
+
+            if (data.works && data.works.length) {
+                appendWorks(data.works);
+                currentPage++;
+                displayedCount += data.works.length;
+                hasMore = data.has_more;
+                document.getElementById('displayed-count').textContent = displayedCount;
+            } else {
+                hasMore = false;
+            }
+
+            if (!hasMore) {
+                document.getElementById('load-more-container').style.display = 'none';
+                document.getElementById('end-message').style.display = 'block';
+            }
+        } catch(e) { console.error(e); }
+        finally {
+            isLoading = false;
+            if (btn) btn.disabled = false;
+            if (btnText) btnText.textContent = 'Voir plus';
+        }
+    };
+
+    function appendWorks(works) {
+        const grid = document.getElementById('works-grid');
+        const fit = currentView === 4 ? 'contain' : 'cover';
+        const frag = document.createDocumentFragment();
+
+        works.forEach(artwork => {
+            const a = document.createElement('a');
+            a.href = `/oeuvre/${artwork.id}`;
+            a.className = 'work-item';
+
+            const wrap = document.createElement('div');
+            wrap.className = 'work-image-container';
+
+            const g = artwork.user_rating_global;
+            const t = artwork.user_rating_technique;
+            const o = artwork.user_rating_originalite;
+            const em = artwork.user_rating_emotion;
+
+            const stack = document.createElement('div');
+            stack.className = 'rating-stack';
+            stack.innerHTML = `
+                <div class="rating-main"><i class="fas fa-star"></i><span class="rating-value">${g ? g.toFixed(1) : '—'}</span></div>
+                <div class="rating-sub">
+                    <div class="sub-item technique"><i class="fas fa-paintbrush"></i><span>${t ? t.toFixed(1) : '—'}</span></div>
+                    <div class="sub-item originalite"><i class="fas fa-lightbulb"></i><span>${o ? o.toFixed(1) : '—'}</span></div>
+                    <div class="sub-item emotion"><i class="fas fa-heart"></i><span>${em ? em.toFixed(1) : '—'}</span></div>
+                </div>`;
+            wrap.appendChild(stack);
+
+            if (artwork.image_url) {
+                const enc = encodeURIComponent(artwork.image_url);
+                const img = document.createElement('img');
+                img.src = `https://images.weserv.nl/?url=${enc}&w=400&h=400&fit=${fit}&output=webp&q=75`;
+                img.alt = artwork.titre || '';
+                img.loading = 'lazy';
+                img.style.cssText = 'opacity:0;transition:opacity 0.3s;';
+                img.dataset.fallback1 = `https://wsrv.nl/?url=${enc}&w=400&h=400&fit=${fit}&output=webp&q=75`;
+                img.dataset.fallback3 = artwork.image_url;
+                img.dataset.errorCount = '0';
+                img.onload = function() { this.style.opacity = '1'; };
+                img.onerror = function() { handleImageError(this); };
+                const ph = document.createElement('div');
+                ph.className = 'image-placeholder';
+                ph.style.display = 'none';
+                ph.innerHTML = '<i class="fas fa-image"></i>';
+                wrap.appendChild(img);
+                wrap.appendChild(ph);
+            } else {
+                wrap.innerHTML += '<div class="image-placeholder"><i class="fas fa-image"></i></div>';
+            }
+
+            const ov = document.createElement('div');
+            ov.className = 'work-overlay';
+            ov.innerHTML = `<div class="work-title">${escHtml((artwork.titre||'Sans titre').substring(0,40))}</div>
+                            <div class="work-artist">${escHtml((artwork.createur||'Artiste inconnu').substring(0,30))}</div>`;
+            wrap.appendChild(ov);
+            a.appendChild(wrap);
+            frag.appendChild(a);
+        });
+        grid.appendChild(frag);
+    }
+
+    // ================================================
+    // FILTER OPTIONS (UN SEUL APPEL API)
+    // ================================================
+    async function loadAllFilterOptions() {
+        if (allFilterOptions) return allFilterOptions;
+        try {
+            const res = await fetch('/api/rated/filter-options');
+            allFilterOptions = await res.json();
+            return allFilterOptions;
+        } catch(e) {
+            return { artists: [], museums: [], countries: [], cities: [], types: [], movements: [], genres: [], materials: [] };
+        }
+    }
+
+    // ================================================
+    // DROPDOWNS
+    // ================================================
+    window.toggleDropdown = function(id, event) {
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            if (menu.id !== id) menu.classList.remove('show');
+        });
+
+        const dropdown = document.getElementById(id);
+        if (!dropdown) return;
+        dropdown.classList.toggle('show');
+
+        if (dropdown.classList.contains('show')) {
+            if (id === 'artist-dropdown') loadArtists();
+            else if (id === 'museum-dropdown') loadMuseums();
+            else if (id === 'geo-dropdown') { loadCountries(); loadCities(); }
+            else if (id === 'type-dropdown') loadTypes();
+            else if (id === 'movement-dropdown') loadMovements();
+            else if (id === 'genre-dropdown') loadGenres();
+            else if (id === 'material-dropdown') loadMaterials();
+            else if (id === 'sort-dropdown') loadSortOptions();
+            else if (id.startsWith('rating-')) restoreRatingCheckboxes(id);
+        }
+
+        // Positionnement
+        const btn = event?.target?.closest('.filter-dropdown');
+        if (btn) {
+            const rect = btn.getBoundingClientRect();
+            const dropdownWidth = 300;
+            if (rect.left + dropdownWidth > window.innerWidth) {
+                dropdown.style.left = 'auto';
+                dropdown.style.right = '0';
+            } else {
+                dropdown.style.left = '0';
+                dropdown.style.right = 'auto';
+            }
+        }
+    };
+
+    // Restaure les cases cochées d'après l'URL
+    function restoreRatingCheckboxes(dropdownId) {
+        const map = {
+            'rating-global-dropdown':      { param: 'rating_global',      cls: 'rating-global-cb' },
+            'rating-technique-dropdown':   { param: 'rating_technique',    cls: 'rating-technique-cb' },
+            'rating-originalite-dropdown': { param: 'rating_originalite',  cls: 'rating-originalite-cb' },
+            'rating-emotion-dropdown':     { param: 'rating_emotion',      cls: 'rating-emotion-cb' },
+        };
+        const cfg = map[dropdownId];
+        if (!cfg) return;
+        const selected = new URLSearchParams(window.location.search).getAll(cfg.param);
+        document.querySelectorAll('.' + cfg.cls).forEach(cb => {
+            cb.checked = selected.includes(cb.value);
+        });
+    }
+
+    // ================================================
+    // LOADERS
+    // ================================================
+    function makeSearchFilter(inputId, itemSelector) {
+        const input = document.getElementById(inputId);
+        if (!input || input._init) return;
+        input._init = true;
+        input.addEventListener('input', function() {
+            const term = this.value.trim().toLowerCase();
+            document.querySelectorAll(itemSelector).forEach(item => {
+                const name = item.dataset.name || '';
+                item.style.display = (!term || name.includes(term)) ? '' : 'none';
+            });
+        });
+    }
+
+    async function loadArtists() {
+        const opts = await loadAllFilterOptions();
+        const container = document.getElementById('artist-items');
+        const selected = new URLSearchParams(window.location.search).getAll('artist');
+        if (!opts.artists?.length) { container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun artiste</div>'; return; }
+        container.innerHTML = opts.artists.map(a => `<div class="dropdown-item" data-name="${escHtml(a.name).toLowerCase()}"><label>
+            <input type="checkbox" value="${escHtml(a.id)}" ${selected.includes(a.id) ? 'checked' : ''}>
+            <span>${escHtml(a.name)}</span><span class="count">${a.count}</span></label></div>`).join('');
+        makeSearchFilter('artist-search-filter', '#artist-items .dropdown-item');
+    }
+
+    async function loadMuseums() {
+        const opts = await loadAllFilterOptions();
+        const container = document.getElementById('museum-items');
+        const selected = new URLSearchParams(window.location.search).getAll('museum');
+        if (!opts.museums?.length) { container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun musée</div>'; return; }
+        container.innerHTML = opts.museums.map(m => `<div class="dropdown-item" data-name="${escHtml(m.name).toLowerCase()}"><label>
+            <input type="checkbox" value="${escHtml(m.id)}" ${selected.includes(m.id) ? 'checked' : ''}>
+            <span>${escHtml(m.name)}</span><span class="count">${m.count}</span></label></div>`).join('');
+        makeSearchFilter('museum-search-filter', '#museum-items .dropdown-item');
+    }
+
+    async function loadCountries() {
+        const opts = await loadAllFilterOptions();
+        const container = document.getElementById('country-items');
+        const selected = new URLSearchParams(window.location.search).get('country') || '';
+        let html = `<div class="dropdown-item"><label><input type="radio" name="country" value="" ${!selected ? 'checked' : ''}><span>Tous les pays</span></label></div>`;
+        if (opts.countries?.length) {
+            html += opts.countries.map(c => `<div class="dropdown-item" data-name="${escHtml(c.name).toLowerCase()}"><label>
+                <input type="radio" name="country" value="${escHtml(c.id)}" ${selected === c.id ? 'checked' : ''}>
+                <span>${escHtml(c.name)}</span><span class="count">${c.count}</span></label></div>`).join('');
+        }
+        container.innerHTML = html;
+        makeSearchFilter('country-search-filter', '#country-items .dropdown-item');
+    }
+
+    async function loadCities() {
+        const opts = await loadAllFilterOptions();
+        const container = document.getElementById('city-items');
+        const selected = new URLSearchParams(window.location.search).getAll('city');
+        if (!opts.cities?.length) { container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucune ville</div>'; return; }
+        container.innerHTML = opts.cities.map(c => `<div class="dropdown-item" data-name="${escHtml(c.name).toLowerCase()}"><label>
+            <input type="checkbox" value="${escHtml(c.id)}" ${selected.includes(c.id) ? 'checked' : ''}>
+            <span>${escHtml(c.name)}</span><span class="count">${c.count}</span></label></div>`).join('');
+        makeSearchFilter('city-search-filter', '#city-items .dropdown-item');
+    }
+
+    async function loadTypes() {
+        const opts = await loadAllFilterOptions();
+        const container = document.getElementById('type-items');
+        const selected = new URLSearchParams(window.location.search).getAll('type');
+        if (!opts.types?.length) { container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun type</div>'; return; }
+        container.innerHTML = opts.types.map(t => `<div class="dropdown-item" data-name="${escHtml(t.name).toLowerCase()}"><label>
+            <input type="checkbox" value="${escHtml(t.name)}" ${selected.includes(t.name) ? 'checked' : ''}>
+            <span>${escHtml(t.name)}</span><span class="count">${t.count}</span></label></div>`).join('');
+        makeSearchFilter('type-search-filter', '#type-items .dropdown-item');
+    }
+
+    async function loadMovements() {
+        const opts = await loadAllFilterOptions();
+        const container = document.getElementById('movement-items');
+        const selected = new URLSearchParams(window.location.search).getAll('movement');
+        if (!opts.movements?.length) { container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun mouvement</div>'; return; }
+        container.innerHTML = opts.movements.map(m => `<div class="dropdown-item" data-name="${escHtml(m.name).toLowerCase()}"><label>
+            <input type="checkbox" value="${escHtml(m.name)}" ${selected.includes(m.name) ? 'checked' : ''}>
+            <span>${escHtml(m.name)}</span><span class="count">${m.count}</span></label></div>`).join('');
+        makeSearchFilter('movement-search-filter', '#movement-items .dropdown-item');
+    }
+
+    async function loadGenres() {
+        const opts = await loadAllFilterOptions();
+        const container = document.getElementById('genre-items');
+        const selected = new URLSearchParams(window.location.search).getAll('genre');
+        if (!opts.genres?.length) { container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun genre</div>'; return; }
+        container.innerHTML = opts.genres.map(g => `<div class="dropdown-item" data-name="${escHtml(g.name).toLowerCase()}"><label>
+            <input type="checkbox" value="${escHtml(g.name)}" ${selected.includes(g.name) ? 'checked' : ''}>
+            <span>${escHtml(g.name)}</span><span class="count">${g.count}</span></label></div>`).join('');
+        makeSearchFilter('genre-search-filter', '#genre-items .dropdown-item');
+    }
+
+    async function loadMaterials() {
+        const opts = await loadAllFilterOptions();
+        const container = document.getElementById('material-items');
+        const selected = new URLSearchParams(window.location.search).getAll('material');
+        if (!opts.materials?.length) { container.innerHTML = '<div style="padding:1rem;color:var(--text-muted);text-align:center;">Aucun matériau</div>'; return; }
+        container.innerHTML = opts.materials.map(m => `<div class="dropdown-item" data-name="${escHtml(m.name).toLowerCase()}"><label>
+            <input type="checkbox" value="${escHtml(m.name)}" ${selected.includes(m.name) ? 'checked' : ''}>
+            <span>${escHtml(m.name)}</span><span class="count">${m.count}</span></label></div>`).join('');
+        makeSearchFilter('material-search-filter', '#material-items .dropdown-item');
+    }
+
+    function loadSortOptions() {
+        const container = document.getElementById('sort-items');
+        if (!container) return;
+        const cur = new URLSearchParams(window.location.search).get('sort') || 'rating_desc';
+        const opts = [
+            { value: 'rating_desc',      label: 'Note globale ↓' },
+            { value: 'rating_asc',       label: 'Note globale ↑' },
+            { value: 'technique_desc',   label: 'Technique ↓' },
+            { value: 'originalite_desc', label: 'Créativité ↓' },
+            { value: 'emotion_desc',     label: 'Émotion ↓' },
+            { value: 'date_desc',        label: 'Date de notation (récente)' },
+            { value: 'date_asc',         label: 'Date de notation (ancienne)' },
+            { value: 'title_asc',        label: 'Titre A–Z' },
+            { value: 'artist_asc',       label: 'Artiste A–Z' },
+        ];
+        container.innerHTML = opts.map(o => `<div class="dropdown-item"><label>
+            <input type="radio" name="sort" value="${o.value}" ${cur === o.value ? 'checked' : ''}>
+            <span>${o.label}</span></label></div>`).join('');
+    }
+
+    // ================================================
+    // APPLY FILTERS
+    // ================================================
+
+    // Filtre notes — UNE SEULE FONCTION générique
+    window.applyRatingFilter = function(paramName, className) {
+        const values = Array.from(document.querySelectorAll('.' + className + ':checked')).map(cb => cb.value);
+        const p = buildParams();
+        p.delete(paramName);
+        values.forEach(v => p.append(paramName, v));
+        window.location.href = '/rated?' + p;
+    };
+
+    window.applyArtistFilter = function() {
+        const sel = Array.from(document.querySelectorAll('#artist-items input:checked')).map(c => c.value);
+        const p = buildParams(); p.delete('artist'); sel.forEach(a => p.append('artist', a));
+        window.location.href = '/rated?' + p;
+    };
+    window.applyMuseumFilter = function() {
+        const sel = Array.from(document.querySelectorAll('#museum-items input:checked')).map(c => c.value);
+        const p = buildParams(); p.delete('museum'); sel.forEach(m => p.append('museum', m));
+        window.location.href = '/rated?' + p;
+    };
+    window.applyGeoFilter = function() {
+        const country = document.querySelector('input[name="country"]:checked')?.value || '';
+        const cities = Array.from(document.querySelectorAll('#city-items input:checked')).map(c => c.value);
+        const p = buildParams();
+        if (country) p.set('country', country); else p.delete('country');
+        p.delete('city'); cities.forEach(c => p.append('city', c));
+        window.location.href = '/rated?' + p;
+    };
+    window.applyTypeFilter = function() {
+        const sel = Array.from(document.querySelectorAll('#type-items input:checked')).map(c => c.value);
+        const p = buildParams(); p.delete('type'); sel.forEach(t => p.append('type', t));
+        window.location.href = '/rated?' + p;
+    };
+    window.applyMovementFilter = function() {
+        const sel = Array.from(document.querySelectorAll('#movement-items input:checked')).map(c => c.value);
+        const p = buildParams(); p.delete('movement'); sel.forEach(m => p.append('movement', m));
+        window.location.href = '/rated?' + p;
+    };
+    window.applyGenreFilter = function() {
+        const sel = Array.from(document.querySelectorAll('#genre-items input:checked')).map(c => c.value);
+        const p = buildParams(); p.delete('genre'); sel.forEach(g => p.append('genre', g));
+        window.location.href = '/rated?' + p;
+    };
+    window.applyMaterialFilter = function() {
+        const sel = Array.from(document.querySelectorAll('#material-items input:checked')).map(c => c.value);
+        const p = buildParams(); p.delete('material'); sel.forEach(m => p.append('material', m));
+        window.location.href = '/rated?' + p;
+    };
+    window.applySortFilter = function() {
+        const sort = document.querySelector('input[name="sort"]:checked')?.value;
+        const p = buildParams();
+        if (sort && sort !== 'rating_desc') p.set('sort', sort); else p.delete('sort');
+        window.location.href = '/rated?' + p;
+    };
+    window.clearAllFilters = function() { window.location.href = '/rated'; };
+
+    // ================================================
+    // ACTIVE TAGS
+    // ================================================
+    function updateActiveTags() {
+        const container = document.getElementById('active-tags');
+        if (!container) return;
+        const params = new URLSearchParams(window.location.search);
+        const tags = [];
+
+        params.getAll('artist').forEach(a => tags.push({ type: 'artist', label: a, value: a }));
+        const country = params.get('country');
+        if (country) tags.push({ type: 'country', label: country, value: country });
+        params.getAll('city').forEach(c => tags.push({ type: 'city', label: c, value: c }));
+        params.getAll('museum').forEach(m => tags.push({ type: 'museum', label: m, value: m }));
+        params.getAll('type').forEach(t => tags.push({ type: 'type', label: t, value: t }));
+        params.getAll('movement').forEach(m => tags.push({ type: 'movement', label: m, value: m }));
+        params.getAll('genre').forEach(g => tags.push({ type: 'genre', label: g, value: g }));
+        params.getAll('material').forEach(m => tags.push({ type: 'material', label: m, value: m }));
+
+        const rg = params.getAll('rating_global');
+        if (rg.length) tags.push({ type: 'rating_global', label: '⭐ Globale: ' + rg.join(', '), value: '' });
+        const rt = params.getAll('rating_technique');
+        if (rt.length) tags.push({ type: 'rating_technique', label: '🎨 Technique: ' + rt.join(', '), value: '' });
+        const ro = params.getAll('rating_originalite');
+        if (ro.length) tags.push({ type: 'rating_originalite', label: '💡 Créativité: ' + ro.join(', '), value: '' });
+        const rem = params.getAll('rating_emotion');
+        if (rem.length) tags.push({ type: 'rating_emotion', label: '❤️ Émotion: ' + rem.join(', '), value: '' });
+
+        const sort = params.get('sort');
+        if (sort && sort !== 'rating_desc') {
+            const lbl = { rating_asc: 'Note ↑', technique_desc: 'Technique ↓', originalite_desc: 'Créativité ↓', emotion_desc: 'Émotion ↓', date_desc: 'Date récente', date_asc: 'Date ancienne', title_asc: 'A–Z', artist_asc: 'Artiste A–Z' };
+            tags.push({ type: 'sort', label: lbl[sort] || sort, value: sort });
+        }
+
+        container.innerHTML = tags.map(t =>
+            `<div class="filter-tag">${escHtml(t.label)}<i class="fas fa-times" onclick="removeTag('${t.type}','${escHtml(t.value)}')"></i></div>`
+        ).join('');
+    }
+
+    window.removeTag = function(type, value) {
+        const p = buildParams();
+        const multiParams = ['artist', 'city', 'museum', 'type', 'movement', 'genre', 'material'];
+        const ratingParams = ['rating_global', 'rating_technique', 'rating_originalite', 'rating_emotion'];
+        if (multiParams.includes(type)) {
+            const list = p.getAll(type).filter(v => v !== value);
+            p.delete(type); list.forEach(v => p.append(type, v));
+        } else if (ratingParams.includes(type)) {
+            p.delete(type);
+        } else {
+            p.delete(type);
+        }
+        window.location.href = '/rated?' + p;
+    };
+
+    // ================================================
+    // FERMER EN CLIQUANT DEHORS
+    // ================================================
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.filter-dropdown')) {
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+        }
+    });
+
+    // ================================================
+    // SCROLL TO TOP
+    // ================================================
+    const scrollBtn = document.getElementById('scroll-top');
+    window.addEventListener('scroll', () => scrollBtn?.classList.toggle('visible', window.scrollY > 500));
+    scrollBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // ================================================
+    // INIT
+    // ================================================
+    document.addEventListener('DOMContentLoaded', () => {
+        setViewMode(currentView);
+        updateActiveTags();
+        loadSortOptions();
+        loadAllFilterOptions(); // préchargement silencieux
+    });
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+{% if session.language == 'en' %}
+<html lang="en">
+{% else %}
+<html lang="fr">
+{% endif %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ site_name }}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dark: #0a0a0a;
+    --bg-light: #ffffff;
+    --surface-dark: #141414;
+    --surface-light: #f5f5f5;
+    --text-dark: #ffffff;
+    --text-light: #1a1a1a;
+    --text-muted-dark: #7a7a7a;
+    --text-muted-light: #9a9a9a;
+    --border-dark: #2a2a2a;
+    --border-light: #e0e0e0;
+    --accent: #6c5ce7;
+    --accent-hover: #5a4bcf;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-text: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    font-family: var(--font-text);
+    color: var(--text-dark);
+    line-height: 1.5;
+    font-weight: 300;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+}
+
+body.theme-light {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    --surface: var(--surface-light);
+    --surface-hover: #eaeaea;
+    --border-color: var(--border-light);
+    --text-muted: var(--text-muted-light);
+}
+
+body.theme-dark {
+    --surface: var(--surface-dark);
+    --surface-hover: #1f1f1f;
+    --border-color: var(--border-dark);
+    --text-muted: var(--text-muted-dark);
+}
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 0.75rem;
+}
+
+.main-content {
+    margin-top: 100px;
+    min-height: calc(100vh - 100px);
+    padding-bottom: 6rem;
+}
+
+/* ===== HEADER ===== */
+.page-header {
+    padding: 3rem 0 2rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 4rem;
+}
+
+.page-title {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    line-height: 0.9;
+}
+
+.page-title span {
+    color: var(--accent);
+}
+
+/* ===== GRILLE 2 COLONNES ===== */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    max-width: 1000px;
+}
+
+.about-block {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    padding: 2.5rem;
+    position: relative;
+}
+
+.about-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+.block-label {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.block-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.2rem;
+    line-height: 1;
+}
+
+.block-text {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+}
+
+.block-text p {
+    margin-bottom: 1rem;
+}
+
+.block-text p:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== TECH ===== */
+.tech-section {
+    margin-top: 4rem;
+    max-width: 1000px;
+}
+
+.tech-label {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tech-tag {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    padding: 0.4rem 1rem;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.tech-tag i { color: var(--accent); font-size: 0.8rem; }
+.tech-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .page-title { font-size: 2rem; }
+    .main-content { margin-top: 58px !important; }
+}
+    </style>
+</head>
+<body style="visibility:hidden">
+<script>
+    (function() {
+        const t = localStorage.getItem('theme') || 'dark';
+        document.body.classList.remove('theme-dark', 'theme-light');
+        document.body.classList.add('theme-' + t);
+        document.body.style.visibility = '';
+    })();
+</script>
+
+    {% include 'navbar.html' %}
+
+    <div class="container main-content">
+
+        <div class="page-header">
+            <h1 class="page-title">À <span>Propos</span></h1>
+        </div>
+
+        <div class="about-grid">
+
+            <div class="about-block">
+                <div class="block-label">01</div>
+                <div class="block-title">L'Objectif</div>
+                <div class="block-text">
+                    <p><strong style="color:inherit; font-weight:500;">{{ site_name }}</strong> est né d'une idée simple : rendre l'art accessible à tous.</p>
+                    <p>Que vous soyez amateur éclairé ou simple curieux, explorez des milliers d'œuvres issues des plus grands musées du monde, filtrez par artiste, ville ou mouvement, et construisez votre propre galerie virtuelle.</p>
+                    <p>L'art n'est pas fait uniquement pour les musées — il mérite d'être collectionné, partagé et intégré dans notre quotidien.</p>
+                </div>
+            </div>
+
+            <div class="about-block">
+                <div class="block-label">02</div>
+                <div class="block-title">Ma Vision</div>
+                <div class="block-text">
+                    <p>Je crois qu'une œuvre d'art gagne en valeur quand elle est partagée. Chaque note, chaque commentaire construit une mémoire collective autour d'un patrimoine commun.</p>
+                    <p>L'objectif à terme est de créer un espace où chacun peut non seulement découvrir, mais aussi contribuer — par ses avis, ses listes, sa curiosité — à une base de connaissances vivante sur l'art mondial.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tech-section">
+            <div class="tech-label">Stack technique</div>
+            <div class="tech-tags">
+                <span class="tech-tag"><i class="fab fa-python"></i> Python</span>
+                <span class="tech-tag"><i class="fas fa-flask"></i> Flask</span>
+                <span class="tech-tag"><i class="fas fa-database"></i> PostgreSQL</span>
+                <span class="tech-tag"><i class="fas fa-code"></i> HTML / CSS</span>
+                <span class="tech-tag"><i class="fas fa-project-diagram"></i> Wikidata API</span>
+                <span class="tech-tag"><i class="fas fa-envelope"></i> SendGrid</span>
+                <span class="tech-tag"><i class="fas fa-cloud"></i> Weserv</span>
+            </div>
+        </div>
+
+    </div>
+
+    {% include 'footer.html' %}
+
+</body>
+</html>

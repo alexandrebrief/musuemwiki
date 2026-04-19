@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+{% if session.language == 'en' %}
+<html lang="en">
+{% else %}
+<html lang="fr">
+{% endif %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ site_name }}</title>
+    
+    <!-- Fonts minimalistes -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+        /* ===== DESIGN CONTEMPORAIN - GALERIE MINIMALISTE ===== */
+        :root {
+            /* Palette monochrome sophistiquée */
+            --bg-dark: #0a0a0a;
+            --bg-light: #ffffff;
+            --surface-dark: #141414;
+            --surface-light: #f5f5f5;
+            --text-dark: #ffffff;
+            --text-light: #1a1a1a;
+            --text-muted-dark: #7a7a7a;
+            --text-muted-light: #9a9a9a;
+            --border-dark: #2a2a2a;
+            --border-light: #e0e0e0;
+            --accent: #6c5ce7;
+            --accent-hover: #5a4bcf;
+            --favorite: #e03131;  /* Rouge pour les favoris */
+            --favorite-hover: #c92a2a;
+            --shadow: 0 4px 20px rgba(0,0,0,0.02);
+            --shadow-hover: 0 8px 30px rgba(0,0,0,0.04);
+            --radius: 0px;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-text: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: var(--font-text);
+            color: var(--text-dark);
+            line-height: 1.5;
+            font-weight: 300;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+
+        }
+
+        body.theme-light {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            --surface: var(--surface-light);
+            --surface-hover: #eaeaea;
+            --border-color: var(--border-light);
+            --text-muted: var(--text-muted-light);
+        }
+
+        body.theme-dark {
+            --surface: var(--surface-dark);
+            --surface-hover: #1f1f1f;
+            --border-color: var(--border-dark);
+            --text-muted: var(--text-muted-dark);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .container-fluid {
+            width: 100%;
+            padding: 0 0.75rem;
+        }
+
+        /* ===== Ajustement pour navbar fixe ===== */
+        main {
+            flex: 0 0 auto;
+        }
+
+        /* ===== HERO GALERIE ===== */
+        .hero-gallery {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 0rem;
+            overflow: hidden;
+        }
+
+        .hero-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.5);
+            transform: scale(1.02);
+            transition: transform 0.2s ease-out;
+            z-index: 0;
+        }
+
+        .theme-light .hero-backdrop {
+            filter: brightness(0.8);
+        }
+
+        .hero-backdrop::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, transparent 70%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            width: 100%;
+        }
+
+        .hero-eyebrow {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+@media (max-width: 700px) {
+    .hero-content {
+        padding: 0 1rem;
+    }
+}
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: 7rem;
+            font-weight: 600;
+            line-height: 0.9;
+            color: white;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            text-transform: uppercase;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 4rem;
+            margin: 3rem 0;
+            color: white;
+        }
+
+        .hero-stat {
+            text-align: left;
+        }
+
+
+
+        .hero-stat-number {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: white;
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+
+        .hero-stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* ===== RECHERCHE GALERIE ===== */
+        .hero-search-wrapper {
+            margin-top: 3rem;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .hero-search-card {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.3rem 0.3rem 0.3rem 1.5rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            height: 56px;
+        }
+
+        .theme-light .hero-search-card {
+            background: rgba(0,0,0,0.02);
+            border-color: rgba(0,0,0,0.1);
+        }
+
+        .hero-search-card:focus-within {
+            border-color: var(--accent);
+        }
+
+        .hero-search-icon {
+            color: var(--accent);
+            font-size: 1rem;
+            margin-right: 0.8rem;
+        }
+
+        .hero-search-input {
+            flex: 1;
+            border: none;
+            padding: 0.5rem 0;
+            background: transparent;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        .theme-light .hero-search-input {
+            color: var(--text-light);
+        }
+
+        .hero-search-input::placeholder {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        .theme-light .hero-search-input::placeholder {
+            color: rgba(0,0,0,0.3);
+        }
+
+        .hero-search-input:focus {
+            outline: none;
+        }
+
+        .hero-search-btn {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 0.8rem 2rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: all 0.3s;
+            height: 44px;
+            white-space: nowrap;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hero-search-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Suggestions */
+        .hero-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            margin-top: 8px;
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .hero-suggestions.visible {
+            display: block;
+        }
+
+        .hero-suggestion-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: background 0.2s;
+            color: var(--text);
+        }
+
+        .hero-suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .hero-suggestion-item:hover {
+            background: var(--surface-hover);
+        }
+
+        .hero-suggestion-item i {
+            color: var(--accent);
+            width: 20px;
+            font-size: 1rem;
+        }
+
+        .hero-suggestion-category {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-left: auto;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== SECTION GALERIE ===== */
+        .section-gallery {
+            margin: 4rem 0;
+        }
+
+        .section-header-gallery {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.25rem;
+        }
+        
+        .section-title-gallery {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 0;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        
+        .section-link-gallery {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.2s;
+            font-weight: 400;
+        }
+        
+        .section-link-gallery:hover {
+            color: var(--accent-hover);
+        }
+
+        /* ===== GRILLE MOSAÏQUE ===== */
+        .mosaic-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        
+        .mosaic-item {
+            aspect-ratio: 2/3;
+            position: relative;
+            overflow: hidden;
+            background: var(--surface);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .mosaic-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+        
+        .mosaic-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .mosaic-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.9);
+            padding: 1.5rem 1rem;
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+        
+        .mosaic-item:hover .mosaic-overlay {
+            transform: translateY(0);
+        }
+        
+        .mosaic-overlay-title {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+            text-transform: uppercase;
+        }
+        
+        .mosaic-overlay-artist {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .mosaic-placeholder {
+            width: 100%;
+            height: 100%;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+
+.mosaic-fav {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+.mosaic-fav.active { opacity: 1; }
+.mosaic-fav i { color: white; font-size: 1rem; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+.mosaic-fav.active i { color: var(--favorite, #e03131); }
+
+        /* ===== SCROLL HORIZONTAL ===== */
+        .horizontal-scroll {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding: 0.5rem 0 2rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--border-color);
+        }
+        
+        .horizontal-scroll::-webkit-scrollbar {
+            height: 2px;
+        }
+        
+        .horizontal-scroll::-webkit-scrollbar-track {
+            background: var(--border-color);
+        }
+        
+        .horizontal-scroll::-webkit-scrollbar-thumb {
+            background: var(--accent);
+        }
+        
+        .scroll-item {
+            flex: 0 0 200px;
+            background: var(--surface);
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+        }
+        
+        .scroll-item img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.3s;
+        }
+        
+        .scroll-item:hover img {
+            opacity: 0.8;
+        }
+        
+        .scroll-item-info {
+            padding: 1rem 0.5rem 0.5rem;
+        }
+        
+        .scroll-item-title {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+        }
+        
+        .scroll-item-artist {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 0.2rem;
+        }
+
+        /* ===== CARTES MIEUX NOTÉES ===== */
+        .top-rated-item {
+            flex: 0 0 200px;
+            background: var(--surface);
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+        }
+
+        .top-rated-image {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+        }
+
+        .top-rated-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.4s;
+        }
+
+        .top-rated-item:hover .top-rated-image img {
+            opacity: 0.7;
+        }
+
+        .top-rated-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            z-index: 2;
+            letter-spacing: 1px;
+        }
+
+        .top-rated-rank {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            color: white;
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            line-height: 1;
+            z-index: 2;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .top-rated-info {
+            padding: 1rem 0.5rem 0.5rem;
+        }
+
+        .top-rated-title {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+        }
+
+        .top-rated-artist {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0.3rem 0;
+        }
+
+        .top-rated-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--accent);
+            font-size: 0.75rem;
+        }
+
+        .top-rated-favorites {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--favorite);
+            font-size: 0.7rem;
+        }
+
+        /* ===== CRITIQUES COMPACTES - PLUS PETITES ===== */
+        .reviews-grid {
+            display: grid;
+            gap: 0.5rem;
+            margin: 2rem 0 4rem;
+            grid-template-columns: repeat(4, 1fr);
+        }
+        
+        .review-card {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        
+        .review-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.4rem;
+        }
+        
+        .review-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        
+        .review-meta {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .review-user {
+            font-weight: 500;
+            color: var(--accent);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .review-work {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text);
+            text-decoration: none;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: var(--font-display);
+        }
+        
+        .review-work:hover {
+            color: var(--accent);
+        }
+        
+        .review-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            color: var(--accent);
+            font-size: 0.6rem;
+        }
+        
+        .review-comment {
+            font-size: 0.7rem;
+            line-height: 1.3;
+            color: var(--text);
+            margin-top: 0.4rem;
+            padding-top: 0.4rem;
+            border-top: 1px solid var(--border-color);
+            font-style: italic;
+            max-height: 3.9rem;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+        
+        .review-comment::before {
+            content: '"';
+            font-size: 0.8rem;
+            color: var(--accent);
+            opacity: 0.5;
+            margin-right: 0.1rem;
+        }
+        
+        .review-comment::after {
+            content: '"';
+            font-size: 0.8rem;
+            color: var(--accent);
+            opacity: 0.5;
+            margin-left: 0.1rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .hero-title { font-size: 5rem; }
+            .mosaic-grid { grid-template-columns: repeat(4, 1fr); }
+            .reviews-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 900px) {
+            .hero-title { font-size: 4rem; }
+            .mosaic-grid { grid-template-columns: repeat(3, 1fr); }
+            .hero-stats { flex-wrap: wrap; gap: 2rem; }
+            .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 3rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .hero-search-wrapper { max-width: 100%; }
+            .reviews-grid { grid-template-columns: 1fr; }
+            .mosaic-grid { grid-template-columns: repeat(2, 1fr); }
+            .section-header-gallery { flex-direction: column; gap: 0.5rem; }
+            .hero-stat-number { font-size: 2rem; }
+            .hero-stats { gap: 1.5rem; }
+
+
+
+        }
+    </style>
+</head>
+<body class="theme-dark">
+    {% include 'navbar.html' %}
+    
+    <main>
+        <!-- ===== HERO GALERIE ===== -->
+        <div class="hero-gallery" id="hero">
+            {% if mosaic_artworks and mosaic_artworks|length > 0 %}
+<div class="hero-backdrop" id="heroBackdrop" 
+     style="background-image: url('{{ mosaic_artworks[0].image_url }}');">
+</div>
+            {% endif %}
+            
+            <div class="hero-content">
+                <h1 class="hero-title">{{ site_name }}</h1>
+                <p class="hero-subtitle">
+                    Explorez les pays, gardez vos coups de cœur,<br>
+                    donnez votre critique, et c'est gratuit !
+                </p>
+                
+<div class="hero-stats">
+    <div class="hero-stat">
+        <div class="hero-stat-number">{{ total_oeuvres }}</div>
+        <div class="hero-stat-label">ŒUVRES</div>
+    </div>
+    <div class="hero-stat">
+        <div class="hero-stat-number">{{ total_artistes }}</div>
+        <div class="hero-stat-label">ARTISTES</div>
+    </div>
+    <div class="hero-stat">
+        <div class="hero-stat-number">{{ total_musees }}</div>
+        <div class="hero-stat-label">MUSÉES</div>
+    </div>
+<div class="hero-stat">
+    <div class="hero-stat-number">{{ total_visits }}</div>
+    <div class="hero-stat-label">VISITEURS</div>
+</div>
+<div class="hero-stat">
+    <div class="hero-stat-number">{{ total_users }}</div>
+    <div class="hero-stat-label">MEMBRES</div>
+</div>
+</div>
+                
+
+<div style="margin-top: 3rem;">
+    {% if session.user_id %}
+    <a href="/research" style="background: var(--accent); color: white; padding: 1rem 2.5rem; font-family: var(--font-display); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; transition: background 0.2s;">
+        EXPLORER
+    </a>
+    {% else %}
+    <a href="/register" style="background: var(--accent); color: white; padding: 1rem 2.5rem; font-family: var(--font-display); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; transition: background 0.2s;">
+        COMMENCER
+    </a>
+    {% endif %}
+</div>
+</div>
+            </div>
+        </div>
+
+
+
+<!-- ===== CONTENU PRINCIPAL ===== -->
+<div class="container-fluid">
+    <!-- MOSAÏQUE -->
+    <div class="section-gallery">
+        <div class="section-header-gallery">
+            <h2 class="section-title-gallery">EXPLORER</h2>
+            <a href="/research" class="section-link-gallery">VOIR TOUT →</a>
+        </div>
+        
+        <div class="mosaic-grid">
+            {% set count = namespace(value=0) %}
+            {% for artwork in mosaic_artworks %}
+                {% if count.value < 6 %}
+                    {% if artwork.image_url and artwork.image_url != '' %}
+                    <a href="/oeuvre/{{ artwork.id }}" class="mosaic-item">
+                        <div class="mosaic-fav" onclick="toggleMosaicFav(event, '{{ artwork.id }}', this)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=600&h=900&fit=cover&a=attention&output=jpg&q=80"
+                             alt="{{ artwork.titre if artwork.titre else 'Sans titre' }}"
+                             loading="lazy"
+                             data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=600&h=900&fit=cover&a=attention&output=jpg&q=80"
+                             data-fallback3="{{ artwork.image_url }}"
+                             data-error-count="0"
+                             style="opacity:0; transition: opacity 0.3s;"
+                             onload="this.style.opacity='1'"
+                             onerror="handleImageError(this)">
+                        <div class="mosaic-overlay">
+                            <div class="mosaic-overlay-title">{{ artwork.titre|truncate(30) if artwork.titre else 'SANS TITRE' }}</div>
+                            <div class="mosaic-overlay-artist">{{ artwork.createur|truncate(25) if artwork.createur else 'ARTISTE INCONNU' }}</div>
+                        </div>
+                    </a>
+                    {% set count.value = count.value + 1 %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            
+            <!-- Placeholders -->
+            {% for i in range(6 - count.value) %}
+            <div class="mosaic-item">
+                <div class="mosaic-placeholder">
+                    <i class="fas fa-image fa-2x"></i>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{#
+            <!-- MIEUX NOTÉES -->
+            <div class="section-gallery">
+                <div class="section-header-gallery">
+                    <h2 class="section-title-gallery">MIEUX NOTÉES</h2>
+                    <a href="/research?sort=rating_desc" class="section-link-gallery">TOUTES LES NOTES →</a>
+                </div>
+
+                <div class="horizontal-scroll">
+                    {% set displayed = 0 %}
+                    {% for artwork in top_rated %}
+                        {% if artwork.image_url and artwork.image_url != '' and displayed < 10 %}
+                            {% set displayed = displayed + 1 %}
+                            <a href="/oeuvre/{{ artwork.id }}" class="top-rated-item">
+<div class="top-rated-image">
+    <div class="mosaic-fav" onclick="toggleMosaicFav(event, '{{ artwork.id }}', this)">
+        <i class="far fa-heart"></i>
+    </div>
+<img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit=cover&a=attention&output=jpg&q=80" 
+     alt="{{ artwork.titre if artwork.titre else 'Sans titre' }}" 
+     loading="lazy"
+     data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit=cover&a=attention&output=jpg&q=80"
+     data-fallback3="{{ artwork.image_url }}"
+     data-error-count="0"
+     style="opacity:0; transition: opacity 0.3s;"
+     onload="this.style.opacity='1'"
+     onerror="handleImageError(this)">
+
+                                    
+                                    <div class="top-rated-rank">{{ loop.index }}</div>
+                                </div>
+                                
+                                <div class="top-rated-info">
+                                    <div class="top-rated-title">{{ artwork.titre|truncate(25) if artwork.titre else 'SANS TITRE' }}</div>
+                                    <div class="top-rated-artist">{{ artwork.createur|truncate(25) if artwork.createur else 'ARTISTE INCONNU' }}</div>
+                                    <div class="top-rated-rating">
+                                        <i class="fas fa-star"></i> {{ artwork.avg_rating|round(1) if artwork.avg_rating else '?' }}/5
+                                    </div>
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- FAVORIS DES MEMBRES (sans le rectangle rouge) -->
+            <div class="section-gallery">
+                <div class="section-header-gallery">
+                    <h2 class="section-title-gallery">FAVORIS DES MEMBRES</h2>
+                    <a href="/research?sort=popular" class="section-link-gallery">PLUS DE FAVORIS →</a>
+                </div>
+                
+                <div class="horizontal-scroll">
+                    {% set displayed = 0 %}
+                    {% for artwork in popular_favorites %}
+                        {% if artwork.image_url and artwork.image_url != '' and displayed < 10 %}
+                            {% set displayed = displayed + 1 %}
+                            <a href="/oeuvre/{{ artwork.id }}" class="top-rated-item">
+                                <div class="top-rated-image">
+    <div class="mosaic-fav" onclick="toggleMosaicFav(event, '{{ artwork.id }}', this)">
+        <i class="far fa-heart"></i>
+    </div>
+<img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit=cover&a=attention&output=jpg&q=80" 
+     alt="{{ artwork.titre if artwork.titre else 'Sans titre' }}" 
+     loading="lazy"
+     data-fallback1="https://wsrv.nl/?url={{ artwork.image_url|urlencode }}&w=400&h=400&fit=cover&a=attention&output=jpg&q=80"
+     data-fallback3="{{ artwork.image_url }}"
+     data-error-count="0"
+     style="opacity:0; transition: opacity 0.3s;"
+     onload="this.style.opacity='1'"
+     onerror="handleImageError(this)">
+                                    
+                                    <div class="top-rated-rank">{{ loop.index }}</div>
+                                </div>
+                                
+                                <div class="top-rated-info">
+                                    <div class="top-rated-title">{{ artwork.titre|truncate(25) if artwork.titre else 'SANS TITRE' }}</div>
+                                    <div class="top-rated-artist">{{ artwork.createur|truncate(25) if artwork.createur else 'ARTISTE INCONNU' }}</div>
+                                    <div class="top-rated-favorites">
+                                        <i class="fas fa-heart"></i> {{ artwork.favorites_count if artwork.favorites_count else '0' }} FAVORIS
+                                    </div>
+                                    {% if artwork.avg_rating %}
+                                    <div class="top-rated-rating">
+                                        <i class="fas fa-star"></i> {{ artwork.avg_rating|round(1) }}/5
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+#}
+
+<!-- CRITIQUES COMPACTES -->
+<div class="section-gallery">
+    <div class="section-header-gallery">
+        <h2 class="section-title-gallery">DERNIÈRES CRITIQUES</h2>
+        <a href="/research" class="section-link-gallery">TOUTES LES CRITIQUES →</a>
+    </div>
+    
+    <div class="horizontal-scroll">
+        {% if recent_reviews %}
+            {% for review in recent_reviews[:10] %}
+                {% if review and review.username and review.artwork and review.artwork.image_url %}
+<a href="/oeuvre/{{ review.artwork.id }}" class="top-rated-item" style="text-decoration:none;">
+    <div class="top-rated-image">
+        <div class="mosaic-fav" onclick="toggleMosaicFav(event, '{{ review.artwork.id }}', this)">
+            <i class="far fa-heart"></i>
+        </div>
+                        <img src="https://images.weserv.nl/?url={{ review.artwork.image_url|urlencode }}&w=400&h=400&fit=cover&a=attention&output=jpg&q=80"
+                             alt="{{ review.artwork.titre if review.artwork.titre else 'Sans titre' }}"
+                             loading="lazy"S
+                             data-fallback1="https://wsrv.nl/?url={{ review.artwork.image_url|urlencode }}&w=400&h=400&fit=cover&output=jpg&q=80"
+                             data-fallback3="{{ review.artwork.image_url }}"
+                             data-error-count="0"
+                             style="opacity:0; transition: opacity 0.3s;"
+                             onload="this.style.opacity='1'"
+                             onerror="handleImageError(this)">
+                    </div>
+
+
+<div class="top-rated-info">
+    {% if review.commentaire %}
+    <div style="font-size:1rem; color:currentColor; margin-bottom:0.6rem; font-style:italic; overflow:hidden; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; line-height:1.5;">
+        "{{ review.commentaire|truncate(80) }}"
+    </div>
+    {% endif %}
+    <div style="font-size:0.75rem; color:var(--text-muted);">par <span style="color:var(--accent);">{{ review.username }}</span></div>
+</div>
+
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div style="color:var(--text-muted); padding:2rem;">Aucune critique pour le moment.</div>
+        {% endif %}
+    </div>
+</div>
+
+
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+
+
+    <script>
+window.handleImageError = function(img) {
+    const errorCount = parseInt(img.dataset.errorCount || '0');
+    if (errorCount === 0) {
+        img.dataset.errorCount = '1';
+        img.src = img.dataset.fallback1;
+    } else if (errorCount === 1) {
+        img.dataset.errorCount = '2';
+        img.src = img.dataset.fallback3;
+    } else {
+        img.style.display = 'none';
+        const placeholder = document.createElement('div');
+        placeholder.className = 'mosaic-placeholder';
+        placeholder.innerHTML = '<i class="fas fa-image fa-2x"></i>';
+        img.parentNode.appendChild(placeholder);
+    }
+};    
+    
+        // ===== THÈME =====
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            
+            if (body.classList.contains('theme-dark')) {
+                body.classList.remove('theme-dark');
+                body.classList.add('theme-light');
+                if (icon) icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.remove('theme-light');
+                body.classList.add('theme-dark');
+                if (icon) icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+(function() {
+    const backdrop = document.getElementById('heroBackdrop');
+    if (!backdrop) return;
+    const original = {{ mosaic_artworks[0].image_url|tojson }};
+    const weserv = 'https://images.weserv.nl/?url=' + encodeURIComponent(original) + '&w=1800&h=1200&output=jpg&q=70';
+    const wsrv = 'https://wsrv.nl/?url=' + encodeURIComponent(original) + '&w=1800&h=1200&output=jpg&q=70';
+
+    function tryLoad(url, fallbackFn) {
+        const img = new Image();
+        img.onload = () => backdrop.style.backgroundImage = `url('${url}')`;
+        img.onerror = fallbackFn;
+        img.src = url;
+    }
+
+    tryLoad(weserv, () =>
+        tryLoad(wsrv, () =>
+            backdrop.style.backgroundImage = `url('${original}')`
+        )
+    );
+})();
+
+
+        // Charger le thème sauvegardé
+        (function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            
+            body.classList.remove('theme-dark', 'theme-light');
+            body.classList.add(`theme-${savedTheme}`);
+            if (icon) icon.className = savedTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        })();
+
+
+
+        // Effet parallaxe
+        document.addEventListener('scroll', function() {
+            const hero = document.getElementById('heroBackdrop');
+            if (hero) {
+                const scrolled = window.pageYOffset;
+                hero.style.transform = `scale(1.02) translateY(${scrolled * 0.1}px)`;
+            }
+        });
+
+        // Animation au scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+            document.querySelectorAll('.section-gallery, .mosaic-grid, .horizontal-scroll, .reviews-grid').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.8s ease';
+                observer.observe(el);
+            });
+        });
+        
+async function toggleMosaicFav(e, artworkId, el) {
+    e.preventDefault();
+    e.stopPropagation();
+    {% if not session.user_id %}
+    window.location.href = '/login?next=/home';
+    return;
+    {% endif %}
+    try {
+        const res = await fetch('/api/favorite/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ artwork_id: artworkId })
+        });
+        const data = await res.json();
+        el.classList.toggle('active', data.favorite);
+        el.querySelector('i').className = data.favorite ? 'fas fa-heart' : 'far fa-heart';
+    } catch(e) {}
+}        
+        
+        
+    </script>
+</body>
+</html>

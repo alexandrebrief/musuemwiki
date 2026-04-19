@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+{% if session.language == 'en' %}
+<html lang="en">
+{% else %}
+<html lang="fr">
+{% endif %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ site_name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-light: #ffffff;
+            --surface-dark: #141414;
+            --surface-light: #f5f5f5;
+            --text-dark: #ffffff;
+            --text-light: #1a1a1a;
+            --border-dark: #2a2a2a;
+            --border-light: #e0e0e0;
+            --accent: #6c5ce7;
+            --accent-hover: #5a4bcf;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-text: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: var(--font-text);
+            color: var(--text-dark);
+            line-height: 1.5;
+            font-weight: 300;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.theme-light {
+            background-color: var(--bg-light);
+            color: #000000;
+            --surface: var(--surface-light);
+            --border-color: var(--border-light);
+            --text-muted: #444444;
+        }
+
+        body.theme-dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            --surface: var(--surface-dark);
+            --border-color: var(--border-dark);
+            --text-muted: #b0b0b0;
+        }
+
+        .page-wrap {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            margin-top: 66px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid var(--border-color);
+            padding: 3rem 2.5rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        body.theme-light .card-title { color: #000000; }
+
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        /* ===== ALERTS ===== */
+        .alert {
+            padding: 0.8rem 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.82rem;
+            border-left: 2px solid;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            background: var(--surface);
+            text-align: left;
+        }
+
+        .alert-danger  { border-color: #e03131; color: #e03131; }
+        .alert-success { border-color: #2f9e44; color: #2f9e44; }
+        .alert-info    { border-color: var(--accent); color: var(--accent); }
+        .alert-warning { border-color: #f08c00; color: #f08c00; }
+
+        .alert-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.6;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            padding: 0;
+            line-height: 1;
+        }
+        .alert-close:hover { opacity: 1; }
+
+        /* ===== SPAM WARNING ===== */
+        .spam-warning {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .spam-warning i { color: #f08c00; font-size: 0.75rem; }
+
+        /* ===== VERIFY TEXT ===== */
+        .verify-text {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .verify-text strong {
+            color: inherit;
+            font-weight: 500;
+        }
+
+        body.theme-dark .verify-text strong { color: #ffffff; }
+        body.theme-light .verify-text strong { color: #000000; }
+
+        /* ===== CODE INPUT ===== */
+        .code-input {
+            margin-bottom: 1.5rem;
+        }
+
+        .code-input input {
+            width: 100%;
+            max-width: 220px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: inherit;
+            padding: 0.85rem 1rem;
+            font-family: monospace;
+            font-size: 1.6rem;
+            letter-spacing: 8px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .code-input input:focus { border-color: var(--accent); }
+
+        .code-input input::-webkit-outer-spin-button,
+        .code-input input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+        /* ===== SUBMIT ===== */
+        .btn-submit {
+            width: 100%;
+            max-width: 220px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.85rem 2rem;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 2rem;
+        }
+        .btn-submit:hover { background: var(--accent-hover); }
+
+        /* ===== FOOTER LINKS ===== */
+        .card-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .card-footer a, .card-footer button {
+            color: var(--accent);
+            text-decoration: none;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: opacity 0.2s;
+        }
+
+        .card-footer a:hover,
+        .card-footer button:hover { opacity: 0.7; }
+
+        .card-footer .sep {
+            color: var(--border-color);
+        }
+
+        @media (max-width: 576px) {
+            .card { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body class="theme-dark">
+<script>
+    (function() {
+        const t = localStorage.getItem('theme') || 'dark';
+        document.body.classList.remove('theme-dark', 'theme-light');
+        document.body.classList.add('theme-' + t);
+    })();
+</script>
+
+    {% include 'navbar.html' %}
+
+    <div class="page-wrap">
+        <div class="main-content">
+            <div class="card">
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category != 'message' else 'info' }}">
+                            <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-circle' }}"></i>
+                            <span>{{ message }}</span>
+                            <button class="alert-close" onclick="this.closest('.alert').remove()">×</button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <div class="card-title">Vérification</div>
+
+                <p class="verify-text">
+                    Code envoyé à <strong>{{ request.args.get('email', 'votre adresse') }}</strong>
+                </p>
+
+                <form method="POST" action="/verify-code">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="email" value="{{ request.args.get('email', '') }}">
+                    <div class="code-input">
+                        <input type="text" name="code" maxlength="6" pattern="[0-9]{6}" required autofocus>
+                    </div>
+                    <button type="submit" class="btn-submit">Vérifier</button>
+                </form>
+
+                <div class="card-footer">
+                    <form method="POST" action="/resend-verification" style="display:inline;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="email" value="{{ request.args.get('email', '') }}">
+                        <button type="submit">Renvoyer l'email</button>
+                    </form>
+                    <span class="sep">—</span>
+                    <a href="/login">Retour à la connexion</a>
+                </div>
+
+            </div>
+        </div>
+
+        {% include 'footer.html' %}
+    </div>
+
+    <script>
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(a => a.remove());
+        }, 5000);
+
+        const codeInput = document.querySelector('input[name="code"]');
+        if (codeInput) {
+            codeInput.addEventListener('input', function() {
+                if (this.value.length === 6) this.form.submit();
+            });
+        }
+    </script>
+</body>
+</html>

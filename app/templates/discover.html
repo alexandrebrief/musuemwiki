@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+{% if session.language == 'en' %}
+<html lang="en">
+{% else %}
+<html lang="fr">
+{% endif %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ site_name }}</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-light: #ffffff;
+            --surface-dark: #141414;
+            --surface-light: #f5f5f5;
+            --text-dark: #ffffff;
+            --text-light: #1a1a1a;
+            --text-muted-dark: #7a7a7a;
+            --text-muted-light: #9a9a9a;
+            --border-dark: #2a2a2a;
+            --border-light: #e0e0e0;
+            --accent: #6c5ce7;
+            --accent-soft: #8b7df2;
+            --accent-glow: rgba(108, 92, 231, 0.1);
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-text: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: var(--font-text);
+            color: var(--text-dark);
+            line-height: 1.5;
+            font-weight: 300;
+            min-height: 100vh;
+        }
+
+        body.theme-light {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            --surface: var(--surface-light);
+            --surface-hover: #eaeaea;
+            --border-color: var(--border-light);
+            --text-muted: var(--text-muted-light);
+        }
+
+        body.theme-dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            --surface: var(--surface-dark);
+            --surface-hover: #1f1f1f;
+            --border-color: var(--border-dark);
+            --text-muted: #b0b0b0;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .main-content {
+            margin-top: 80px;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 2rem 1rem 3rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: var(--text);
+        }
+
+        .hero-title .accent {
+            color: var(--accent);
+        }
+
+        .hero-sub {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section-wrap {
+            padding: 2rem 0 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-wrap:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-color), transparent);
+        }
+
+        /* ===== GRILLES ===== */
+        .grid-movements {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+        }
+
+        .grid-types {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+        }
+
+        .grid-cities {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0.5rem;
+        }
+
+        .grid-countries {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0.5rem;
+        }
+
+        .grid-genres {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 0.5rem;
+        }
+
+        .grid-artists {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+        }
+
+        /* ===== CARTES MOUVEMENTS (style typographique) ===== */
+        .movement-card {
+            position: relative;
+            background: var(--surface);
+            padding: 1.5rem 0.8rem;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .movement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .movement-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .movement-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .movement-name {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--nt);
+            margin-bottom: 0.3rem;
+        }
+
+        .movement-count {
+            font-size: 0.65rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* ===== CARTES TYPES ===== */
+        .type-card {
+            position: relative;
+            aspect-ratio: 1/1.2;
+            overflow: hidden;
+            text-decoration: none;
+            background: var(--surface);
+        }
+
+        .type-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease, filter 0.3s ease;
+            filter: grayscale(0.2) brightness(0.85);
+        }
+
+        .type-card:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0) brightness(1);
+        }
+
+        .type-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+        }
+
+        .type-card-body {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.8rem;
+        }
+
+        .type-card-name {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: white;
+            margin-bottom: 0.2rem;
+        }
+
+        .type-card-count {
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ===== CARTES COMPACTES (villes, pays, genres) ===== */
+        .compact-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0.8rem;
+            background: var(--surface);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+            border: 1px solid var(--border-color);
+        }
+
+        .compact-card:hover {
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .compact-name {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .compact-count {
+            font-size: 0.65rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ===== CARTES ARTISTES ===== */
+        .artist-card {
+            position: relative;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            text-decoration: none;
+            background: var(--surface);
+        }
+
+        .artist-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(0.3) brightness(0.85);
+            transition: transform 0.4s ease, filter 0.3s ease;
+        }
+
+        .artist-card:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0) brightness(1);
+        }
+
+        .artist-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .artist-card:hover .artist-overlay {
+            opacity: 1;
+        }
+
+        .artist-body {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .artist-card:hover .artist-body {
+            opacity: 1;
+        }
+
+        .artist-name {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .artist-count {
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ===== REVEAL ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== SCROLL TOP ===== */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 44px;
+            height: 44px;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            z-index: 100;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .grid-movements, .grid-types, .grid-artists { grid-template-columns: repeat(4, 1fr); }
+            .grid-cities, .grid-countries { grid-template-columns: repeat(6, 1fr); }
+            .grid-genres { grid-template-columns: repeat(6, 1fr); }
+        }
+
+        @media (max-width: 992px) {
+            .grid-movements, .grid-types, .grid-artists { grid-template-columns: repeat(3, 1fr); }
+            .grid-cities, .grid-countries { grid-template-columns: repeat(4, 1fr); }
+            .grid-genres { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .grid-movements, .grid-types, .grid-artists { grid-template-columns: repeat(2, 1fr); }
+            .grid-cities, .grid-countries { grid-template-columns: repeat(3, 1fr); }
+            .grid-genres { grid-template-columns: repeat(3, 1fr); }
+            .hero { padding: 1.5rem 1rem 2rem; }
+        }
+
+        @media (max-width: 480px) {
+            .grid-cities, .grid-countries { grid-template-columns: repeat(2, 1fr); }
+            .grid-genres { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body class="theme-dark" style="visibility:hidden">
+<script>
+    (function() {
+        const t = localStorage.getItem('theme') || 'dark';
+        document.body.classList.remove('theme-dark', 'theme-light');
+        document.body.classList.add('theme-' + t);
+        document.body.style.visibility = '';
+        
+        if (typeof window.toggleTheme !== 'function') {
+            window.toggleTheme = function() {
+                const isDark = document.body.classList.contains('theme-dark');
+                document.body.classList.remove('theme-dark', 'theme-light');
+                document.body.classList.add(isDark ? 'theme-light' : 'theme-dark');
+                localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            };
+        }
+    })();
+</script>
+
+{% include 'navbar.html' %}
+
+<div class="container main-content">
+
+    <!-- HERO -->
+    <div class="hero">
+        <h1 class="hero-title">explorer<span class="accent">.</span></h1>
+        <div class="hero-sub">parcourir · découvrir · s'inspirer</div>
+    </div>
+
+    <!-- MOUVEMENTS - style typographique -->
+    <section class="section-wrap">
+        <div class="section-title reveal">Mouvements artistiques</div>
+        <div class="grid-movements">
+            {% for m in movements %}
+            <a class="movement-card reveal" href="/research?movement={{ m.name|urlencode }}">
+                <div class="movement-name">{{ m.name }}</div>
+                <div class="movement-count">{{ m.count }} œuvres</div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- TYPES - avec images -->
+    <section class="section-wrap">
+        <div class="section-title reveal">Typologies</div>
+        <div class="grid-types">
+            {% for t in types %}
+            <a class="type-card reveal" href="/research?type={{ t.name|urlencode }}">
+                {% if t.image %}
+                <img src="https://images.weserv.nl/?url={{ t.image|urlencode }}&w=300&h=360&fit=cover&output=webp&q=75"
+                     alt="{{ t.name }}" loading="lazy">
+                {% else %}
+                <div style="width:100%;height:100%;background:var(--surface);display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-image" style="font-size:1.5rem;color:var(--text-muted);"></i>
+                </div>
+                {% endif %}
+                <div class="type-card-overlay"></div>
+                <div class="type-card-body">
+                    <div class="type-card-name">{{ t.name }}</div>
+                    <div class="type-card-count">{{ t.count }} œuvres</div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- VILLES - format compact -->
+    <section class="section-wrap">
+        <div class="section-title reveal">Villes</div>
+        <div class="grid-cities">
+            {% for c in cities %}
+            <a class="compact-card reveal" href="/research?city={{ c.name|urlencode }}">
+                <span class="compact-name"><i class="fas fa-city" style="font-size:0.65rem; margin-right:0.4rem; color:var(--accent);"></i>{{ c.name }}</span>
+                <span class="compact-count">{{ c.count }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- PAYS - format compact -->
+    <section class="section-wrap">
+        <div class="section-title reveal">Pays</div>
+        <div class="grid-countries">
+            {% for c in countries %}
+            <a class="compact-card reveal" href="/research?country={{ c.name|urlencode }}">
+                <span class="compact-name"><i class="fas fa-globe" style="font-size:0.65rem; margin-right:0.4rem; color:var(--accent);"></i>{{ c.name }}</span>
+                <span class="compact-count">{{ c.count }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- GENRES - format compact -->
+    <section class="section-wrap">
+        <div class="section-title reveal">Genres</div>
+        <div class="grid-genres">
+            {% for g in genres %}
+            <a class="compact-card reveal" href="/research?genre={{ g.name|urlencode }}">
+                <span class="compact-name"><i class="fas fa-tag" style="font-size:0.6rem; margin-right:0.4rem; color:var(--accent);"></i>{{ g.name }}</span>
+                <span class="compact-count">{{ g.count }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ARTISTES - grand format -->
+    <section class="section-wrap">
+        <div class="section-title reveal">Créateurs</div>
+        <div class="grid-artists">
+            {% for a in artists %}
+            <a class="artist-card reveal" href="/research?artist={{ a.name|urlencode }}">
+                {% if a.image %}
+                <img src="https://images.weserv.nl/?url={{ a.image|urlencode }}&w=300&h=300&fit=cover&output=webp&q=75"
+                     alt="{{ a.name }}" loading="lazy">
+                {% else %}
+                <div style="width:100%;height:100%;background:var(--surface);display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-user" style="font-size:2rem;color:var(--text-muted);"></i>
+                </div>
+                {% endif %}
+                <div class="artist-overlay"></div>
+                <div class="artist-body">
+                    <div class="artist-name">{{ a.name }}</div>
+                    <div class="artist-count">{{ a.count }} œuvres</div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+</div>
+
+<div class="scroll-top" id="scroll-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+{% include 'footer.html' %}
+
+<script>
+    // REVEAL AU SCROLL
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // SCROLL TOP
+    const scrollTop = document.getElementById('scroll-top');
+    window.addEventListener('scroll', () => {
+        scrollTop.classList.toggle('visible', window.scrollY > 500);
+    });
+    scrollTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+
+</body>
+</html>

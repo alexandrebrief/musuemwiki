@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+{% if session.language == 'en' %}
+<html lang="en">
+{% else %}
+<html lang="fr">
+{% endif %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ site_name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg-dark: #0a0a0a;
+    --bg-light: #ffffff;
+    --surface-dark: #141414;
+    --surface-light: #f5f5f5;
+    --text-dark: #ffffff;
+    --text-light: #1a1a1a;
+    --border-dark: #2a2a2a;
+    --border-light: #e0e0e0;
+    --accent: #6c5ce7;
+    --gold: #c9a84c;
+    --silver: #a0a0b0;
+    --bronze: #c07a3a;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-text: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    font-family: var(--font-text);
+    color: var(--text-dark);
+    line-height: 1.5;
+    font-weight: 300;
+    min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+}
+body.theme-light {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    --surface: var(--surface-light);
+    --surface-hover: #eaeaea;
+    --border-color: var(--border-light);
+    --text-muted: #9a9a9a;
+}
+body.theme-dark {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+    --surface: var(--surface-dark);
+    --surface-hover: #1f1f1f;
+    --border-color: var(--border-dark);
+    --text-muted: #b0b0b0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+}
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 0.75rem;
+}
+
+.main-content {
+    margin-top: 100px;
+    min-height: calc(100vh - 100px);
+    padding-top: 0.5cm;
+    padding-bottom: 4rem;
+}
+
+/* ===== PAGE HEADER ===== */
+.page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+.page-title span { color: var(--accent); }
+.page-subtitle {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
+/* ===== TABS ===== */
+.top-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.top-tabs::-webkit-scrollbar { display: none; }
+
+.top-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: color 0.15s;
+    white-space: nowrap;
+}
+.top-tab i { font-size: 1rem; }
+.top-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+.top-tab:hover:not(.active) { color: currentColor; opacity: 0.7; }
+
+/* ===== PANELS ===== */
+.top-panel { display: none; }
+.top-panel.active { display: block; }
+
+/* ===== RANKING LIST ===== */
+.ranking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.rank-item {
+    display: grid;
+    grid-template-columns: 3.5rem 150px 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s, padding-left 0.15s;
+    cursor: pointer;
+}
+.rank-item:hover {
+    background: rgba(108, 92, 231, 0.04);
+    padding-left: 0.5rem;
+}
+body.theme-dark .rank-item:hover { background: rgba(108, 92, 231, 0.08); }
+
+.rank-num {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+.rank-num.gold { color: var(--gold); }
+.rank-num.silver { color: var(--silver); }
+.rank-num.bronze { color: var(--bronze); }
+
+.rank-thumb {
+    width: 150px;
+    height: 100px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--surface);
+    position: relative;
+    border-radius: 4px;
+}
+.rank-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.rank-thumb img.loaded { opacity: 1; }
+.rank-thumb .no-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 2rem;
+}
+
+.rank-info { min-width: 0; }
+.rank-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.3rem;
+}
+.rank-artist {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.3rem;
+}
+.rank-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.rank-score { text-align: right; flex-shrink: 0; }
+.rank-score-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--accent);
+}
+.rank-score-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    display: block;
+    margin-top: 0.1rem;
+}
+
+.stars {
+    display: flex;
+    gap: 2px;
+    margin-top: 0.3rem;
+    justify-content: flex-end;
+}
+.stars i {
+    font-size: 0.8rem;
+    color: var(--gold);
+}
+.stars i.empty { color: var(--border-color); }
+
+.fav-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: #e03131;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.fav-badge i { font-size: 0.9rem; }
+
+/* ===== COMMENTAIRES RÉCENTS ===== */
+.recent-comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.comment-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1.2rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--border-color);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s, padding-left 0.15s;
+    cursor: pointer;
+}
+.comment-item:hover {
+    background: rgba(108, 92, 231, 0.04);
+    padding-left: 0.5rem;
+}
+
+.comment-thumb {
+    width: 120px;
+    height: 90px;
+    overflow: hidden;
+    background: var(--surface);
+    flex-shrink: 0;
+    border-radius: 4px;
+}
+.comment-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.comment-thumb img.loaded { opacity: 1; }
+.comment-thumb .no-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 1.8rem;
+}
+
+.comment-content { min-width: 0; }
+.comment-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+.comment-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.comment-user {
+    font-size: 0.8rem;
+    color: var(--accent);
+}
+.comment-date {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+.comment-stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 0.5rem;
+}
+.comment-stars i {
+    font-size: 0.7rem;
+    color: var(--gold);
+}
+.comment-stars i.empty { color: var(--border-color); }
+.comment-text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.4;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: var(--text-muted);
+}
+.empty-state i { font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.3; }
+.empty-state p { font-size: 0.9rem; }
+
+/* ===== SCROLL TOP ===== */
+.scroll-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 44px;
+    height: 44px;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    z-index: 100;
+}
+.scroll-top.visible { opacity: 1; visibility: visible; }
+.scroll-top:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .rank-item {
+        grid-template-columns: 2.8rem 100px 1fr auto;
+        gap: 1rem;
+    }
+    .rank-thumb { width: 100px; height: 70px; }
+    .rank-score-num { font-size: 1.6rem; }
+    .rank-num { font-size: 1.4rem; }
+    .rank-title { font-size: 0.85rem; }
+    .rank-artist { font-size: 0.75rem; }
+    .comment-item { grid-template-columns: 80px 1fr; gap: 1rem; }
+    .comment-thumb { width: 80px; height: 60px; }
+    .comment-title { font-size: 0.85rem; }
+}
+@media (max-width: 480px) {
+    .rank-item { grid-template-columns: 2.2rem 70px 1fr auto; gap: 0.8rem; }
+    .rank-thumb { width: 70px; height: 50px; }
+    .rank-meta { display: none; }
+    .rank-title { font-size: 0.75rem; }
+    .comment-header { flex-direction: column; gap: 0.3rem; align-items: flex-start; }
+    .comment-thumb { width: 60px; height: 45px; }
+}
+    </style>
+</head>
+
+<body class="theme-dark" style="visibility:hidden">
+<script>
+(function() {
+    const t = localStorage.getItem('theme') || 'dark';
+    document.body.classList.remove('theme-dark', 'theme-light');
+    document.body.classList.add('theme-' + t);
+    document.body.style.visibility = '';
+})();
+</script>
+
+{% include 'navbar.html' %}
+
+<div class="container main-content">
+    <div class="page-header">
+        <h1 class="page-title">TOP <span>POLOUM</span></h1>
+        <p class="page-subtitle">Classements · Favoris · Commentaires</p>
+    </div>
+
+    <div class="top-tabs">
+        <button class="top-tab active" onclick="switchPanel('rated', this)">
+            <i class="fas fa-star"></i> Mieux notées
+        </button>
+        <button class="top-tab" onclick="switchPanel('fav', this)">
+            <i class="fas fa-heart"></i> Plus de favoris
+        </button>
+        <button class="top-tab" onclick="switchPanel('comments', this)">
+            <i class="fas fa-comment"></i> Derniers commentaires
+        </button>
+    </div>
+
+    <!-- PANEL 1 : MIEUX NOTÉES (10 max) -->
+    <div class="top-panel active" id="panel-rated">
+        {% if top_rated %}
+        <div class="ranking-list">
+            {% for artwork, avg_rating, nb_notes in top_rated[:10] %}
+            {% set rank = loop.index %}
+            <a href="/oeuvre/{{ artwork.id }}" class="rank-item">
+                <div class="rank-num {% if rank == 1 %}gold{% elif rank == 2 %}silver{% elif rank == 3 %}bronze{% endif %}">
+                    {% if rank == 1 %}
+                        <i class="fas fa-trophy" style="font-size:1.5rem;"></i>
+                    {% elif rank == 2 or rank == 3 %}
+                        <i class="fas fa-medal" style="font-size:1.3rem;"></i>
+                    {% else %}
+                        {{ rank }}
+                    {% endif %}
+                </div>
+                <div class="rank-thumb">
+                    {% if artwork.image_url %}
+                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=300&h=200&fit=cover&output=webp&q=85"
+                         alt="{{ artwork.titre }}"
+                         data-fallback="{{ artwork.image_url }}"
+                         loading="lazy"
+                         onload="this.classList.add('loaded')"
+                         onerror="this.src=this.dataset.fallback; this.classList.add('loaded')">
+                    {% else %}
+                    <div class="no-img"><i class="fas fa-image"></i></div>
+                    {% endif %}
+                </div>
+                <div class="rank-info">
+                    <div class="rank-title">{{ artwork.titre|truncate(50) if artwork.titre else 'Sans titre' }}</div>
+                    <div class="rank-artist">{{ artwork.createur|truncate(40) if artwork.createur else 'Artiste inconnu' }}</div>
+                    <div class="rank-meta">{{ nb_notes }} note{% if nb_notes > 1 %}s{% endif %}</div>
+                </div>
+                <div class="rank-score">
+                    <div class="rank-score-num">{{ "%.1f"|format(avg_rating) }}</div>
+                    <div class="stars">
+                        {% set full = avg_rating|int %}
+                        {% set has_half = (avg_rating - full) >= 0.5 %}
+                        {% for i in range(full) %}<i class="fas fa-star"></i>{% endfor %}
+                        {% if has_half %}<i class="fas fa-star-half-alt"></i>{% set full = full + 1 %}{% endif %}
+                        {% for i in range(5 - full - (1 if has_half else 0)) %}<i class="far fa-star empty"></i>{% endfor %}
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-star"></i>
+            <p>Aucune œuvre notée pour l'instant.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- PANEL 2 : PLUS DE FAVORIS (10 max) -->
+    <div class="top-panel" id="panel-fav">
+        {% if top_fav %}
+        <div class="ranking-list">
+            {% for artwork, fav_count in top_fav[:10] %}
+            {% set rank = loop.index %}
+            <a href="/oeuvre/{{ artwork.id }}" class="rank-item">
+                <div class="rank-num {% if rank == 1 %}gold{% elif rank == 2 %}silver{% elif rank == 3 %}bronze{% endif %}">
+                    {% if rank == 1 %}
+                        <i class="fas fa-trophy" style="font-size:1.5rem;"></i>
+                    {% elif rank == 2 or rank == 3 %}
+                        <i class="fas fa-medal" style="font-size:1.3rem;"></i>
+                    {% else %}
+                        {{ rank }}
+                    {% endif %}
+                </div>
+                <div class="rank-thumb">
+                    {% if artwork.image_url %}
+                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=300&h=200&fit=cover&output=webp&q=85"
+                         alt="{{ artwork.titre }}"
+                         data-fallback="{{ artwork.image_url }}"
+                         loading="lazy"
+                         onload="this.classList.add('loaded')"
+                         onerror="this.src=this.dataset.fallback; this.classList.add('loaded')">
+                    {% else %}
+                    <div class="no-img"><i class="fas fa-image"></i></div>
+                    {% endif %}
+                </div>
+                <div class="rank-info">
+                    <div class="rank-title">{{ artwork.titre|truncate(50) if artwork.titre else 'Sans titre' }}</div>
+                    <div class="rank-artist">{{ artwork.createur|truncate(40) if artwork.createur else 'Artiste inconnu' }}</div>
+                </div>
+                <div class="rank-score">
+                    <div class="rank-score-num">{{ fav_count }}</div>
+                    <div class="fav-badge">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-heart"></i>
+            <p>Aucun favori enregistré pour l'instant.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- PANEL 3 : DERNIERS COMMENTAIRES (10 max) -->
+    <div class="top-panel" id="panel-comments">
+        {% if recent_comments %}
+        <div class="recent-comments-list">
+            {% for artwork, note_globale, commentaire, created_at, username in recent_comments[:10] %}
+            <a href="/oeuvre/{{ artwork.id }}" class="comment-item">
+                <div class="comment-thumb">
+                    {% if artwork.image_url %}
+                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=240&h=180&fit=cover&output=webp&q=85"
+                         alt="{{ artwork.titre }}"
+                         data-fallback="{{ artwork.image_url }}"
+                         loading="lazy"
+                         onload="this.classList.add('loaded')"
+                         onerror="this.src=this.dataset.fallback; this.classList.add('loaded')">
+                    {% else %}
+                    <div class="no-img"><i class="fas fa-image"></i></div>
+                    {% endif %}
+                </div>
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <span class="comment-title">{{ artwork.titre|truncate(50) if artwork.titre else 'Sans titre' }}</span>
+                        <span class="comment-user"><i class="fas fa-user" style="font-size:0.65rem;"></i> {{ username }}</span>
+                        <span class="comment-date">{{ created_at.strftime('%d/%m/%Y') }}</span>
+                    </div>
+                    <div class="comment-stars">
+                        {% set full = note_globale|int %}
+                        {% set has_half = (note_globale - full) >= 0.5 %}
+                        {% for i in range(full) %}<i class="fas fa-star"></i>{% endfor %}
+                        {% if has_half %}<i class="fas fa-star-half-alt"></i>{% endif %}
+                        {% for i in range(5 - full - (1 if has_half else 0)) %}<i class="far fa-star empty"></i>{% endfor %}
+                        <span style="margin-left:0.5rem; font-size:0.7rem;">{{ "%.1f"|format(note_globale) }}</span>
+                    </div>
+                    {% if commentaire %}
+                    <div class="comment-text">« {{ commentaire|truncate(120) }} »</div>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-comment"></i>
+            <p>Aucun commentaire pour l'instant.<br>Soyez le premier à commenter !</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="scroll-top" id="scroll-top"><i class="fas fa-arrow-up"></i></div>
+
+{% include 'footer.html' %}
+
+<script>
+(function() {
+    function syncTheme() {
+        const t = localStorage.getItem('theme') || 'dark';
+        document.body.classList.remove('theme-dark', 'theme-light');
+        document.body.classList.add('theme-' + t);
+    }
+    window.toggleTheme = window.toggleTheme || function() {
+        const isDark = document.body.classList.contains('theme-dark');
+        document.body.classList.remove('theme-dark', 'theme-light');
+        document.body.classList.add(isDark ? 'theme-light' : 'theme-dark');
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    };
+    syncTheme();
+
+    window.switchPanel = function(id, btn) {
+        document.querySelectorAll('.top-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.top-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel-' + id).classList.add('active');
+        const url = new URL(window.location);
+        url.searchParams.set('tab', id);
+        window.history.replaceState({}, '', url);
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const tab = new URLSearchParams(window.location.search).get('tab');
+        if (tab) {
+            const btn = document.querySelector(`.top-tab[onclick*="'${tab}'"]`);
+            if (btn) switchPanel(tab, btn);
+        }
+    });
+
+    const scrollBtn = document.getElementById('scroll-top');
+    window.addEventListener('scroll', () => {
+        scrollBtn.classList.toggle('visible', window.scrollY > 400);
+    });
+    scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+})();
+</script>
+</body>
+</html>
