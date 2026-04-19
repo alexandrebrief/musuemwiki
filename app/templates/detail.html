@@ -951,7 +951,7 @@ input[type="range"]::-moz-range-thumb:hover {
             <!-- PANEL IMAGE -->
             <div class="image-panel">
                 {% if oeuvre.image_url %}
-                <img src="https://images.weserv.nl/?url={{ oeuvre.image_url|urlencode }}&w=1000&h=1000&fit=contain&output=png&we"
+                <img src="https://images.weserv.nl/?url={{ oeuvre.image_url|urlencode }}&w=800&h=800&fit=contain&output=jpg&q=85"
                      alt="{{ oeuvre.titre }}"
                      class="artwork-image"
                      id="mainImage"
@@ -1240,14 +1240,14 @@ setupSlider(emotionSlider, emotionVal);
             modalImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
         }
 
-        function openImageModal(url) {
-            if (!url) return;
-            modalImage.src = `https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=1800&h=1800&fit=contain&output=png`;
-            scale = 1; translateX = 0; translateY = 0;
-            applyTransform();
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+function openImageModal(url) {
+    if (!url) return;
+    modalImage.src = url;
+    scale = 1; translateX = 0; translateY = 0;
+    applyTransform();
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
 
         function closeModal() {
             modal.classList.remove('active');
@@ -1258,7 +1258,7 @@ setupSlider(emotionSlider, emotionVal);
         modalImage.addEventListener('wheel', function(e) {
             e.preventDefault();
             const delta = e.deltaY * -0.003;
-            const newScale = Math.min(Math.max(scale + delta, 1), 10);
+            const newScale = Math.min(Math.max(scale + delta, 1), 20);
             const rect = modalImage.getBoundingClientRect();
             const mouseX = e.clientX - rect.left - rect.width / 2;
             const mouseY = e.clientY - rect.top - rect.height / 2;

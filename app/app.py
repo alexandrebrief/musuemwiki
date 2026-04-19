@@ -312,6 +312,16 @@ class Favorite(db.Model):
         db.UniqueConstraint('user_id', 'artwork_id', name='unique_user_artwork_favorite'),
     )
 
+class ArtworkStats(db.Model):
+    __tablename__ = 'artwork_stats'
+    
+    artwork_id = db.Column(db.String(50), primary_key=True)
+    avg_rating = db.Column(db.Float, default=0)
+    rating_count = db.Column(db.Integer, default=0)
+    fav_count = db.Column(db.Integer, default=0)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+# Mettre à jour quotidiennement avec une tâche cron ou APScheduler
 
 class Rating(db.Model):
     __tablename__ = 'ratings'
@@ -413,10 +423,53 @@ Index('idx_rating_artwork',   Rating.artwork_id)
 Index('idx_rating_user',      Rating.user_id)
 Index('idx_favorite_user',    Favorite.user_id)
 Index('idx_favorite_artwork', Favorite.artwork_id)
-
+Index('idx_artwork_has_image', Artwork.image_url, 
+      postgresql_where=Artwork.image_url.isnot(None))
+Index('idx_rating_artwork_public', Rating.artwork_id, Rating.is_public)
+Index('idx_rating_created_at_desc', Rating.created_at.desc())
+Index('idx_artwork_inception', Artwork.inception)
+Index('idx_label_fr_trgm', Artwork.label_fr, postgresql_using='gin',
+      postgresql_ops={'label_fr': 'gin_trgm_ops'})
+Index('idx_label_en_trgm', Artwork.label_en, postgresql_using='gin',
+      postgresql_ops={'label_en': 'gin_trgm_ops'})
+Index('idx_creator_fr_trgm', Artwork.creator_fr, postgresql_using='gin',
+      postgresql_ops={'creator_fr': 'gin_trgm_ops'})
+Index('idx_creator_en_trgm', Artwork.creator_en, postgresql_using='gin',
+      postgresql_ops={'creator_en': 'gin_trgm_ops'})
+      
 # ============================================================
 # UTILITAIRES
 # ============================================================
+
+
+
+# À ajouter dans app.py
+def update_artwork_stats():
+    """Met à jour la table artwork_stats (à exécuter périodiquement)"""
+    # Mettre à jour les moyennes et compteurs
+    db.session.execute(text("""
+        INSERT INTO artwork_stats (artwork_id, avg_rating, rating_count, fav_count, updated_at)
+        SELECT 
+            a.id,
+            COALESCE(ROUND(AVG(r.note_globale)::numeric, 1), 0),
+            COUNT(r.id),
+            COUNT(DISTINCT f.id),
+            NOW()
+        FROM artworks a
+        LEFT JOIN ratings r ON a.id = r.artwork_id AND r.is_public = true
+        LEFT JOIN favorites f ON a.id = f.artwork_id
+        WHERE a.image_url IS NOT NULL AND a.image_url != ''
+        GROUP BY a.id
+        ON CONFLICT (artwork_id) 
+        DO UPDATE SET 
+            avg_rating = EXCLUDED.avg_rating,
+            rating_count = EXCLUDED.rating_count,
+            fav_count = EXCLUDED.fav_count,
+            updated_at = EXCLUDED.updated_at
+    """))
+    db.session.commit()
+
+
 
 def validate_password_strength(password):
     errors = []
@@ -803,33 +856,56 @@ def _build_artwork_query(artists, country, cities, museums, types=None, q='', mo
 
 
 def _apply_sort(query, sort):
+    """
+    Applique le tri à la requête avec des optimisations pour éviter les ralentissements.
+    """
+    lang = session.get('language', 'fr')
+    
     if sort == 'date_desc':
-        return query.order_by(Artwork.inception.desc())
+        return query.order_by(Artwork.inception.desc().nullslast())
+    
     elif sort == 'date_asc':
-        return query.order_by(Artwork.inception.asc())
+        return query.order_by(Artwork.inception.asc().nullslast())
+    
     elif sort == 'title_asc':
-        col = Artwork.label_fr if session.get('language') == 'fr' else Artwork.label_en
-        return query.order_by(col)
+        col = Artwork.label_fr if lang == 'fr' else Artwork.label_en
+        return query.order_by(col.asc().nullslast())
+    
     elif sort == 'artist_asc':
-        col = Artwork.creator_fr if session.get('language') == 'fr' else Artwork.creator_en
-        return query.order_by(col)
+        col = Artwork.creator_fr if lang == 'fr' else Artwork.creator_en
+        return query.order_by(col.asc().nullslast())
+    
     elif sort in ('rating_desc', 'rating_asc'):
+        # Sous-requête pour la moyenne des notes
         avg_subquery = db.session.query(
             Rating.artwork_id,
             func.avg(Rating.note_globale).label('avg_rating')
         ).group_by(Rating.artwork_id).subquery()
+        
         query = query.outerjoin(avg_subquery, Artwork.id == avg_subquery.c.artwork_id)
+        
         if sort == 'rating_desc':
             return query.order_by(avg_subquery.c.avg_rating.desc().nullslast())
         else:
             return query.order_by(avg_subquery.c.avg_rating.asc().nullslast())
+    
     else:
-    # Offset aléatoire rapide au lieu de ORDER BY random() sur toute la table
-                count = query.count()
-                if count > 1000:
-                    offset = random.randint(0, min(count - 100, 50000))
-                    return query.offset(offset)
-                return query.order_by(func.random())
+        # OPTIMISATION : Éviter ORDER BY random() qui est TRÈS lent sur grosses tables
+        # Alternative 1 : Limiter le nombre de résultats
+        count = query.count()
+        
+        if count > 10000:
+            # Pour les très grosses tables, on prend un offset aléatoire
+            # et on limite à 1000 résultats maximum
+            offset = random.randint(0, min(count - 100, 50000))
+            return query.offset(offset).limit(1000)
+        elif count > 1000:
+            # Pour les tables moyennes, offset aléatoire sans limite
+            offset = random.randint(0, min(count - 100, 50000))
+            return query.offset(offset)
+        else:
+            # Pour les petites tables (<1000), on peut se permettre random()
+            return query.order_by(func.random())
 
 
 
@@ -842,30 +918,25 @@ def _apply_sort(query, sort):
 def top():
     lang = session.get('language', 'fr')
 
-    # ===== TOP MIEUX NOTÉS (min 2 notes pour éviter les biais) =====
+    # ===== TOP MIEUX NOTÉS =====
     top_rated_rows = db.session.query(
         Artwork,
-        func.avg(Rating.note_globale).label('avg_rating'),
-        func.count(Rating.id).label('nb_notes')
-    ).join(Rating, Artwork.id == Rating.artwork_id).filter(
+        ArtworkStats.avg_rating,
+        ArtworkStats.rating_count
+    ).join(ArtworkStats, Artwork.id == ArtworkStats.artwork_id).filter(
         Artwork.image_url.isnot(None),
-        Artwork.image_url != ''
-    ).group_by(Artwork.id).having(
-        func.count(Rating.id) >= 1
-    ).order_by(
-        func.avg(Rating.note_globale).desc()
-    ).limit(50).all()
+        Artwork.image_url != '',
+        ArtworkStats.rating_count >= 1
+    ).order_by(ArtworkStats.avg_rating.desc()).limit(50).all()
 
     # ===== TOP PLUS FAVORIS =====
     top_fav_rows = db.session.query(
         Artwork,
-        func.count(Favorite.id).label('fav_count')
-    ).join(Favorite, Artwork.id == Favorite.artwork_id).filter(
+        ArtworkStats.fav_count
+    ).join(ArtworkStats, Artwork.id == ArtworkStats.artwork_id).filter(
         Artwork.image_url.isnot(None),
         Artwork.image_url != ''
-    ).group_by(Artwork.id).order_by(
-        func.count(Favorite.id).desc()
-    ).limit(50).all()
+    ).order_by(ArtworkStats.fav_count.desc()).limit(50).all()
 
     # ===== DERNIERS COMMENTAIRES =====
     recent_comments = db.session.query(
@@ -879,18 +950,17 @@ def top():
     ).filter(
         Artwork.image_url.isnot(None),
         Artwork.image_url != '',
-        Rating.commentaire.isnot(None),  # ← IMPORTANT : seulement ceux avec commentaire
+        Rating.commentaire.isnot(None),
         Rating.commentaire != '',
         Rating.is_public == True
     ).order_by(Rating.created_at.desc()).limit(50).all()
 
+    # ⚠️ IMPORTANT : retourner le template
     return render_template('top.html',
         top_rated=top_rated_rows,
         top_fav=top_fav_rows,
-        recent_comments=recent_comments,  # ← maintenant cette variable existe !
+        recent_comments=recent_comments
     )
-
-
 
 
 @app.route('/discover')
@@ -1241,7 +1311,6 @@ def get_cached_home_stats():
     return _home_stats_cache
 
 
-
 @app.route('/home')
 def home():
     # ===== STATS AVEC CACHE (5 minutes) =====
@@ -1276,7 +1345,7 @@ def home():
     total_users = stats['total_users']
     total_visits = VisitCounter.get_total()
     
-    # ===== MOSAÏQUE (6 œuvres aléatoires - optimisé sans ORDER BY random) =====
+    # ===== MOSAÏQUE (6 œuvres aléatoires) =====
     count = db.session.query(func.count(Artwork.id)).filter(
         Artwork.image_url.isnot(None),
         Artwork.image_url != ''
@@ -1291,28 +1360,6 @@ def home():
         Artwork.image_url.isnot(None),
         Artwork.image_url != ''
     ).offset(offset).limit(6).all()
-    
-    # ===== MIEUX NOTÉES (structure originale conservée) =====
-    top_rated_rows = db.session.query(
-        Artwork,
-        func.avg(Rating.note_globale).label('avg_rating')
-    ).join(Rating, Artwork.id == Rating.artwork_id).filter(
-        Artwork.image_url.isnot(None),
-        Artwork.image_url != ''
-    ).group_by(Artwork.id).order_by(
-        func.avg(Rating.note_globale).desc()
-    ).limit(10).all()
-    
-    # ===== FAVORIS DES MEMBRES (structure originale conservée) =====
-    popular_rows = db.session.query(
-        Artwork,
-        func.count(Favorite.id).label('fav_count')
-    ).join(Favorite, Artwork.id == Favorite.artwork_id).filter(
-        Artwork.image_url.isnot(None),
-        Artwork.image_url != ''
-    ).group_by(Artwork.id).order_by(
-        func.count(Favorite.id).desc()
-    ).limit(10).all()
     
     # ===== DERNIÈRES CRITIQUES =====
     recent_data = db.session.query(
@@ -1342,8 +1389,6 @@ def home():
     
     return render_template('home.html',
         mosaic_artworks=mosaic_artworks,
-        top_rated=top_rated_rows,
-        popular_favorites=popular_rows,
         recent_reviews=reviews_list,
         total_oeuvres=fmt(total_oeuvres),
         total_artistes=fmt(total_artistes),
@@ -1351,7 +1396,6 @@ def home():
         total_users=fmt(total_users),
         total_visits=fmt(total_visits)
     )
-
 
 
 

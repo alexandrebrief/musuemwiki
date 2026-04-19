@@ -1068,8 +1068,8 @@ window.handleImageError = function(img) {
     const backdrop = document.getElementById('heroBackdrop');
     if (!backdrop) return;
     const original = {{ mosaic_artworks[0].image_url|tojson }};
-    const weserv = 'https://images.weserv.nl/?url=' + encodeURIComponent(original) + '&w=1800&h=1200&output=jpg&q=70';
-    const wsrv = 'https://wsrv.nl/?url=' + encodeURIComponent(original) + '&w=1800&h=1200&output=jpg&q=70';
+    const weserv = 'https://images.weserv.nl/?url=' + encodeURIComponent(original) + '&w=1800&h=1200&output=jpg&q=90';
+    const wsrv = 'https://wsrv.nl/?url=' + encodeURIComponent(original) + '&w=1800&h=1200&output=jpg&q=90';
 
     function tryLoad(url, fallbackFn) {
         const img = new Image();
