@@ -6,13 +6,13 @@
 {% endif %}
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ site_name }} · {{ oeuvre.titre }}</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -23,336 +23,803 @@
         }
 
         :root {
-            --bg-dark: #0a0a0a;
-            --bg-light: #ffffff;
-            --surface-dark: #141414;
-            --surface-light: #f5f5f5;
-            --text-dark: #ffffff;
-            --text-light: #111111;
-            --text-muted-dark: #7a7a7a;
-            --text-muted-light: #9a9a9a;
-            --border-dark: #2a2a2a;
-            --border-light: #e0e0e0;
             --accent: #6c5ce7;
             --accent-hover: #5a4bcf;
             --gold: #c9a96e;
-            --favorite: #e03131;
             --font-display: 'Space Grotesk', sans-serif;
             --font-text: 'Inter', sans-serif;
         }
 
-        body {
-            background-color: var(--bg-dark);
-            font-family: var(--font-text);
-            color: var(--text-dark);
-            line-height: 1.5;
-            font-weight: 300;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            min-height: 100vh;
+        body.theme-dark {
+            --bg: #0a0a0a;
+            --surface: #121212;
+            --surface-hover: #1a1a1a;
+            --text: #ffffff;
+            --text-muted: #7a7a7a;
+            --text-subtle: #5a5a5a;
+            --border: #222222;
         }
 
         body.theme-light {
-            background-color: var(--bg-light);
-            color: var(--text-light);
-            --surface: var(--surface-light);
-            --surface-hover: #eaeaea;
-            --border-color: var(--border-light);
-            --text-muted: var(--text-muted-light);
+            --bg: #ffffff;
+            --surface: #f8f8f8;
+            --surface-hover: #f0f0f0;
+            --text: #111111;
+            --text-muted: #8a8a8a;
+            --text-subtle: #aaaaaa;
+            --border: #e8e8e8;
         }
 
-        body.theme-dark {
-            --surface: var(--surface-dark);
-            --surface-hover: #1f1f1f;
-            --border-color: var(--border-dark);
-            --text-muted: var(--text-muted-dark);
-        }
-
-        .container {
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 0 2rem;
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-text);
+            font-weight: 400;
+            line-height: 1.5;
         }
 
         .main-content {
-            margin-top: 100px;
-            min-height: calc(100vh - 100px);
+            margin-top: 80px;
         }
 
-        .gallery-view {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            margin-bottom: 0;
-            align-items: start;
-        }
-
-        .image-panel {
-            background: transparent;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
+        /* ===== HEADER IMAGE ===== */
+        .hero-image {
+            width: 100%;
+            background: var(--surface);
             position: relative;
-        }
-
-        .artwork-image {
-            max-width: 100%;
-            max-height: 85vh;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            display: block;
-            background: transparent;
             cursor: zoom-in;
         }
 
-        .info-panel {
-            padding: 2rem 0 0;
+        .hero-image img {
+            width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
 
-        .artwork-title {
-            font-family: var(--font-display);
-            font-size: 3.5rem;
-            font-weight: 600;
-            line-height: 0.9;
-            margin-bottom: 0.8rem;
-            letter-spacing: -0.03em;
+        /* ===== INFOS BAR ===== */
+        .info-bar {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 2rem 1rem;
+        }
+
+        .tags-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .tags-left {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            font-size: 0.7rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            background: var(--surface);
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
         }
 
-        .artwork-subtitle {
-            font-size: 1.1rem;
+        .tag a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .tag a:hover {
+            color: var(--accent);
+        }
+
+        .tag i {
+            margin-right: 0.4rem;
+            font-size: 0.65rem;
+        }
+
+        .btn-scroll-down {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 500;
             color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            letter-spacing: 1px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .title-left {
+            flex: 2;
+        }
+
+        .title-left h1 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.3rem;
+            line-height: 1.2;
+        }
+
+        .title-left .artist {
+            font-size: 1rem;
+            color: var(--text-muted);
         }
 
         .artist-link {
             color: inherit;
             text-decoration: none;
-            border-bottom: 1px dotted var(--accent);
-            transition: color 0.2s;
+            border-bottom: 2px dotted var(--accent);
         }
 
         .artist-link:hover {
             color: var(--accent);
         }
 
-        .actions-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
+        .public-stats-compact {
+            flex: 1;
+            text-align: right;
         }
 
-        .action-btn {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            padding: 0.8rem;
-            color: currentColor;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-            font-family: var(--font-display);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .action-btn:hover {
-            border-color: var(--accent);
+        .compact-rating {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
             color: var(--accent);
         }
 
-        .action-btn i {
+        .compact-stars {
             font-size: 1rem;
-            color: var(--accent);
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin: 0.2rem 0;
         }
 
-        .action-btn.favorite.active {
-            border-color: var(--favorite);
-            color: var(--favorite);
+        .compact-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
         }
 
-        .action-btn.favorite.active i {
-            color: var(--favorite);
-        }
-
-        .rating-area {
+        .actions-bar {
             display: flex;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
+            gap: 1.5rem;
+            margin: 1rem 0 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
             flex-wrap: wrap;
         }
 
-        .global-rating-col {
-            flex: 1;
-            min-width: 150px;
+        .action-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .sub-ratings-col {
+        .action-btn.favorite.active {
+            color: #e03131;
+        }
+
+        /* ===== LAYOUT ===== */
+        .two-columns {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 3rem;
+            display: flex;
+            gap: 3rem;
+            align-items: flex-start;
+        }
+
+        .main-col {
             flex: 2;
-            min-width: 250px;
+            min-width: 0;
         }
 
-        .rating-label {
+        .sidebar {
+            flex: 1;
+            position: sticky;
+            top: 2rem;
+        }
+
+        /* ===== VERSION MOBILE ===== */
+        @media (max-width: 768px) {
+            .info-bar {
+                padding: 1rem 1rem 0.5rem;
+            }
+            
+            .title-left h1 {
+                font-size: 1.6rem;
+            }
+            
+            .title-left .artist {
+                font-size: 0.9rem;
+            }
+            
+            .compact-rating {
+                font-size: 1.8rem;
+            }
+            
+            .two-columns {
+                flex-direction: column;
+                padding: 0;
+                gap: 0;
+            }
+            
+            .sidebar {
+                position: static;
+                order: 0;
+                padding: 0 1rem;
+                margin-bottom: 1rem;
+                background: transparent;
+            }
+            
+            .main-col {
+                order: 1;
+                padding: 0 1rem;
+            }
+            
+            /* Suggestions en bas */
+            .suggestions-mobile {
+                order: 2;
+                padding: 1rem;
+                margin-top: 0.5rem;
+            }
+            
+            /* Sliders pleine largeur */
+            .slider-control {
+                width: 100%;
+            }
+            
+            .slider-control input[type="range"] {
+                width: 100%;
+            }
+            
+            /* Commentaires pleine largeur */
+            .input-wrapper {
+                width: 100%;
+            }
+            
+            .input-wrapper input {
+                width: 100%;
+            }
+            
+            /* Compact note */
+            .rating-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                margin-bottom: 1rem;
+                flex-wrap: wrap;
+            }
+            
+
+        }
+
+        /* Fiche technique */
+        .tech-section {
+            margin-bottom: 2rem;
+        }
+
+        .tech-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .tech-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+
+
+
+/* Sidebar - style compact */
+.rating-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+}
+
+.rating-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.stars-row-big {
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    margin: 0;
+    display: flex;
+    gap: 2px;
+}
+
+.stars-row-big span {
+    cursor: pointer;
+    color: var(--border);
+    transition: color 0.1s;
+    position: relative;
+    display: inline-block;
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+/* Pseudo-élément pour la demi-étoile */
+.stars-row-big span::before {
+    content: '★';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    overflow: hidden;
+    color: var(--gold);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Étoile pleine */
+.stars-row-big span.full {
+    color: var(--gold);
+}
+
+/* Demi-étoile : la moitié gauche est dorée */
+.stars-row-big span.half {
+    color: var(--border);
+}
+
+.stars-row-big span.half::before {
+    opacity: 1;
+}
+
+/* Aperçu au survol */
+.stars-row-big span.preview-full {
+    color: var(--gold);
+    opacity: 0.6;
+}
+
+.stars-row-big span.preview-half {
+    color: var(--border);
+}
+
+.stars-row-big span.preview-half::before {
+    opacity: 0.6;
+}
+
+.rating-feedback {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+/* Version desktop et mobile - plus compact */
+.tech-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.15rem;
+    padding: 0.1rem 0;
+    /* Plus de bordure pointillée */
+}
+
+.tech-label {
+    width: 110px;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.tech-value {
+    flex: 1;
+    color: var(--text);
+    font-size: 0.85rem;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    line-height: 1.35;
+}
+
+.tech-value a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--accent);
+}
+
+.tech-value a:hover {
+    border-bottom: 1px solid var(--accent);
+}
+
+/* Version mobile - encore plus compact */
+@media (max-width: 768px) {
+    .tech-item {
+        gap: 0.5rem;
+        margin-bottom: 0.05rem;
+        padding: 0.05rem 0;
+    }
+    
+    .tech-label {
+        width: 85px;
+        font-size: 0.7rem;
+    }
+    
+    .tech-value {
+        font-size: 0.8rem;
+    }
+}
+
+.suggestion-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0; /* Sera mis à 1 par le onload="this.style.opacity='1'" */
+    transition: opacity 0.3s ease;
+}
+
+
+        /* Commentaires */
+        .comments-section {
+            margin-bottom: 2rem;
+        }
+
+        .comments-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .comment-input-line {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.8rem;
+            align-items: flex-start;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 0.6rem 0;
+            color: var(--text);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .write-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .vis-toggle {
+            display: flex;
+            gap: 0;
+            background: var(--surface);
+            border-radius: 30px;
+            padding: 0.2rem;
+        }
+
+        .vis-toggle input {
+            display: none;
+        }
+
+        .vis-toggle label {
+            padding: 0.4rem 1rem;
+            font-size: 0.7rem;
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 30px;
+        }
+
+        .vis-toggle input:checked + label {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-publish {
+            background: var(--accent);
+            border: none;
+            padding: 0.4rem 1.5rem;
+            border-radius: 30px;
             font-family: var(--font-display);
             font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-            margin-bottom: 0.6rem;
-        }
-
-        .sub-rating-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .sub-rating-label {
-            font-size: 0.85rem;
-            min-width: 80px;
-            font-weight: 500;
-        }
-
-        .sub-rating-value {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--accent);
-            min-width: 40px;
-            text-align: right;
-        }
-
-        input[type="range"] {
-            flex: 1;
-            -webkit-appearance: none;
-            background: var(--border-color);
-            border-radius: 4px;
-            height: 6px;
-        }
-
-        input[type="range"] {
-            background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--fill-percent, 0%), var(--border-color) var(--fill-percent, 0%), var(--border-color) 100%);
-        }
-
-        input[type="range"]:focus {
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--accent);
+            color: white;
             cursor: pointer;
-            transition: all 0.1s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        input[type="range"]::-moz-range-track {
-            width: 100%;
-            height: 6px;
-            background: var(--border-color);
-            border-radius: 4px;
-        }
-
-        input[type="range"]::-moz-range-progress {
-            height: 6px;
-            background: var(--accent);
-            border-radius: 4px;
-        }
-
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--accent);
-            cursor: pointer;
-            border: none;
-        }
-
-        .metadata-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin: 1rem 0;
-            padding: 2rem 0;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .metadata-label {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-            margin-bottom: 0.4rem;
-            font-family: var(--font-display);
-            font-weight: 600;
-        }
-
-        .metadata-value {
-            font-family: var(--font-display);
-            font-size: 1.05rem;
-            font-weight: 400;
-        }
-
-        .collection-info {
+        .private-comment-box {
             background: var(--surface);
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            margin: 0 0 1rem;
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid var(--accent);
         }
 
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
 
-.museum-link, .city-link, .country-link {
-    color: var(--text-muted);
-    text-decoration: none;
-    border-bottom: 1px dotted var(--accent);
-    transition: color 0.2s;
-}
+        .comment {
+            display: flex;
+            gap: 0.75rem;
+        }
 
-.museum-link:hover, .city-link:hover, .country-link:hover {
-    color: var(--accent);
-}
+        .comment-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: white;
+        }
 
-        .collection-title {
-            font-family: var(--font-display);
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .comment-author {
+            font-weight: 700;
             font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 0.8rem;
             color: var(--accent);
         }
 
-        .collection-detail {
-            font-size: 0.95rem;
+        .comment-stars {
+            color: var(--gold);
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+        }
+
+        .comment-date {
+            font-size: 0.65rem;
             color: var(--text-muted);
-            margin-bottom: 0.4rem;
+        }
+
+        .comment-text {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: var(--text);
+        }
+
+        .zero-comments {
+            padding: 2rem 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+
+
+        .slider-row-inline {
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
             gap: 0.5rem;
         }
 
-        .collection-detail i {
-            color: var(--accent);
-            width: 16px;
-            font-size: 0.85rem;
+        .slider-label-inline {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            width: 70px;
+            flex-shrink: 0;
         }
 
-        .museum-modal {
+        .slider-control {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .slider-control input[type="range"] {
+            flex: 1;
+            height: 4px;
+            -webkit-appearance: none;
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .slider-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        .slider-value-inline {
+            font-size: 0.75rem;
+            color: var(--accent);
+            min-width: 30px;
+            text-align: right;
+            font-weight: 700;
+        }
+
+        /* Suggestions */
+        .suggestions-desktop {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .suggestions-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .suggestion-card {
+            background: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .suggestion-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .suggestion-image {
+            aspect-ratio: 1 / 1;
+            background: var(--surface-hover);
+            overflow: hidden;
+        }
+
+        .suggestion-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .suggestion-info {
+            padding: 0.5rem;
+        }
+
+
+
+        .suggestion-title {
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.2rem;
+        }
+
+        .suggestion-artist {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .suggestion-stars {
+            color: var(--gold);
+            font-size: 0.55rem;
+            letter-spacing: 1px;
+            margin-top: 0.2rem;
+        }
+
+        /* Mobile : suggestions en bas */
+        .suggestions-mobile {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: transparent;
+        }
+
+        @media (min-width: 769px) {
+            .suggestions-mobile {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .suggestions-desktop {
+                display: none;
+            }
+        }
+
+
+
+
+        /* Modals */
+        .image-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -365,289 +832,22 @@
             justify-content: center;
         }
 
-        .museum-modal.active {
-            display: flex;
-        }
+        .image-modal.active { display: flex; }
 
-        .modal-image {
+        .modal-img {
             max-width: 95vw;
             max-height: 95vh;
             object-fit: contain;
-            cursor: grab;
-        }
-
-        .modal-image:active {
-            cursor: grabbing;
         }
 
         .modal-close {
             position: absolute;
-            top: 2rem;
-            right: 2rem;
-            color: white;
+            top: 1rem;
+            right: 1rem;
             font-size: 2rem;
-            cursor: pointer;
-            opacity: 0.5;
-            transition: opacity 0.2s;
-        }
-
-        .modal-close:hover {
-            opacity: 1;
-        }
-
-        .community-section {
-            margin: 1.5rem 0 5rem;
-        }
-
-        .community-layout {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 2rem;
-            align-items: start;
-        }
-
-        .panel-notes {
-            background: var(--surface);
-            border: 1px solid var(--border-color);
-            padding: 1.8rem;
-            position: sticky;
-            top: 120px;
-        }
-
-        .panel-label {
-            font-family: var(--font-display);
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-            margin-bottom: 1.2rem;
-        }
-
-        .score-block {
-            display: flex;
-            align-items: flex-end;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .score-number {
-            font-family: var(--font-display);
-            font-size: 4.5rem;
-            font-weight: 700;
-            line-height: 1;
-            color: var(--accent);
-        }
-
-        .score-stars {
-            font-size: 1.1rem;
-            letter-spacing: 3px;
-            color: var(--gold);
-        }
-
-        .score-meta {
-            font-family: var(--font-display);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-        }
-
-        .dist-row {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .dist-label {
-            font-family: var(--font-display);
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--gold);
-            min-width: 28px;
-        }
-
-        .dist-bar-wrap {
-            flex: 1;
-            height: 4px;
-            background: var(--border-color);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .dist-bar-fill {
-            height: 100%;
-            background: var(--accent);
-            border-radius: 2px;
-            transition: width 0.6s ease;
-            width: 0%;
-        }
-
-        .dist-count {
-            font-family: var(--font-display);
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            min-width: 30px;
-            text-align: right;
-        }
-
-        .stars-row {
-            display: flex;
-            gap: 0.3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stars-row .star {
-            font-size: 1.8rem;
-            color: var(--border-color);
-            cursor: pointer;
-            transition: color 0.1s;
-            user-select: none;
-            line-height: 1;
-            position: relative;
-            display: inline-block;
-        }
-
-        .stars-row .star::before {
-            content: '★';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 50%;
-            overflow: hidden;
-            color: var(--gold);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .stars-row .star.half::before {
-            opacity: 1;
-        }
-
-        .stars-row .star.full {
-            color: var(--gold);
-        }
-
-        .stars-row .star.half {
-            color: var(--border-color);
-        }
-
-        .stars-row .star.preview-full {
-            color: var(--gold);
-            opacity: 0.6;
-        }
-
-        .stars-row .star.preview-half {
-            color: var(--border-color);
-            opacity: 1;
-        }
-
-        .stars-row .star.preview-half::before {
-            opacity: 0.6;
-        }
-
-        .panel-comments {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .write-zone {
-            background: var(--surface);
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-        }
-
-        .write-zone textarea {
-            width: 100%;
-            min-height: 100px;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--border-color);
-            color: currentColor;
-            font-family: var(--font-text);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            resize: none;
-            padding-bottom: 0.8rem;
-            margin-bottom: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        .write-zone textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .write-zone textarea::placeholder {
-            color: var(--text-muted);
-            font-style: italic;
-        }
-
-        .write-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.8rem;
-        }
-
-        .vis-toggle {
-            display: flex;
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .vis-toggle input {
-            display: none;
-        }
-
-        .vis-toggle label {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            padding: 0.45rem 0.9rem;
-            font-family: var(--font-display);
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: background 0.15s, color 0.15s;
-            user-select: none;
-        }
-
-        .vis-toggle label i {
-            font-size: 0.7rem;
-        }
-
-        .vis-toggle input:checked + label {
-            background: var(--accent);
             color: white;
-        }
-
-        .btn-publish {
-            background: var(--accent);
-            border: none;
-            color: white;
-            padding: 0.55rem 1.5rem;
-            font-family: var(--font-display);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
             cursor: pointer;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-
-        .btn-publish:hover {
-            background: var(--accent-hover);
-        }
-
-        .btn-publish:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
+            z-index: 2001;
         }
 
         .login-modal {
@@ -657,262 +857,53 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
-            z-index: 10000;
+            z-index: 3000;
             display: none;
             align-items: center;
             justify-content: center;
         }
 
-        .login-modal.active {
-            display: flex;
-        }
+        .login-modal.active { display: flex; }
 
-        .login-modal-content {
+        .login-card {
             background: var(--surface);
-            border-radius: 0px;
-            padding: 2rem;
-            max-width: 400px;
-            width: 90%;
+            padding: 1.5rem;
+            max-width: 320px;
+            width: 85%;
             text-align: center;
-            position: relative;
-            border: 1px solid var(--border-color);
+            border-radius: 16px;
         }
 
-        .login-modal-content i {
-            font-size: 3rem;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-
-        .login-modal-content h3 {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: currentColor;
-        }
-
-        .login-modal-content p {
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-        }
-
-        .login-modal-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .login-modal-btn {
-            padding: 0.7rem 1.5rem;
-            font-family: var(--font-display);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-decoration: none;
-            transition: all 0.2s;
-            cursor: pointer;
-            display: inline-block;
-        }
-
-        .login-modal-btn.primary {
-            background: var(--accent);
-            color: white;
-            border: none;
-        }
-
-        .login-modal-btn.primary:hover {
-            background: var(--accent-hover);
-        }
-
-        .login-modal-btn.secondary {
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            background: transparent;
-        }
-
-        .login-modal-btn.secondary:hover {
-            background: var(--accent);
-            color: white;
-        }
-
-        .modal-close-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.2s;
-            z-index: 1;
-        }
-
-        .modal-close-btn:hover {
-            color: var(--accent);
-        }
-
-        .private-comment-box {
+        .scroll-top {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 44px;
+            height: 44px;
             background: var(--surface);
-            border: 1px solid var(--border-color);
-            border-left: 3px solid var(--accent);
-            padding: 1.2rem 1.5rem;
-            display: none;
-        }
-
-        .private-comment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.6rem;
-        }
-
-        .private-badge {
-            font-family: var(--font-display);
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .private-comment-text {
-            font-size: 0.9rem;
-            line-height: 1.6;
-            color: currentColor;
-            opacity: 0.8;
-        }
-
-        .comments-list {
-            border: 1px solid var(--border-color);
-        }
-
-        .comment-item {
-            padding: 1.3rem 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            transition: background 0.15s;
-        }
-
-        .comment-item:last-child {
-            border-bottom: none;
-        }
-
-        .comment-item:hover {
-            background: var(--surface-hover);
-        }
-
-        .comment-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.6rem;
-        }
-
-        .comment-author-wrap {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .comment-avatar {
-            width: 32px;
-            height: 32px;
+            border: 1px solid var(--border);
             border-radius: 50%;
-            background: var(--accent);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: var(--font-display);
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: white;
-            flex-shrink: 0;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            z-index: 100;
         }
 
-        .comment-author {
-            font-family: var(--font-display);
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--accent);
-        }
-
-        .comment-right {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .comment-stars {
-            color: var(--gold);
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
-
-        .comment-date {
-            font-family: var(--font-display);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .comment-text {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: currentColor;
-            opacity: 0.85;
-        }
-
-        .no-comments {
-            padding: 3rem 1.5rem;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-style: italic;
-            border: 1px solid var(--border-color);
-        }
-
-        @media (max-width: 1024px) {
-            .gallery-view {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            .artwork-title {
-                font-size: 2.5rem;
-            }
-            .community-layout {
-                grid-template-columns: 1fr;
-            }
-            .panel-notes {
-                position: static;
-            }
-            .rating-area {
-                flex-direction: column;
-                gap: 1rem;
-            }
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
-            .metadata-grid {
-                padding: 1rem 0;
-                grid-template-columns: 1fr;
-            }
-            .write-footer {
-                flex-wrap: wrap;
-                gap: 0.6rem;
+            .scroll-top {
+                bottom: 1rem;
+                right: 1rem;
+                width: 38px;
+                height: 38px;
             }
         }
     </style>
@@ -920,7 +911,7 @@
 <body style="visibility:hidden">
 <script>
     (function() {
-        const t = localStorage.getItem('theme') || 'dark';
+        const t = localStorage.getItem('theme') || 'light';
         document.body.classList.add('theme-' + t);
         document.body.style.visibility = '';
     })();
@@ -928,459 +919,514 @@
 
 {% include 'navbar.html' %}
 
-<div class="museum-modal" id="imageModal" onclick="closeModal()">
-    <span class="modal-close">&times;</span>
-    <img src="" alt="" class="modal-image" id="modalImage">
+<!-- Modals -->
+<div class="image-modal" id="imageModal">
+    <span class="modal-close" onclick="closeImageModal()">&times;</span>
+    <img src="" alt="" class="modal-img" id="modalImage">
 </div>
 
 <div class="login-modal" id="loginModal">
-    <button class="modal-close-btn" onclick="closeLoginModal()">&times;</button>
-    <div class="login-modal-content">
+    <div class="login-card">
         <i class="fas fa-user-circle"></i>
         <h3>Connexion requise</h3>
-        <p>Vous devez être connecté afin d'utiliser cette fonctionnalité</p>
-        <div class="login-modal-buttons">
-            <a href="/login?next={{ request.path }}" class="login-modal-btn primary">Se connecter</a>
-            <a href="/register?next={{ request.path }}" class="login-modal-btn secondary">S'inscrire</a>
+        <p>Connectez-vous pour noter, commenter</p>
+        <div style="display: flex; gap: 0.8rem; justify-content: center; margin-top: 1rem;">
+            <a href="/login?next={{ request.path }}" class="login-btn primary" style="padding: 0.5rem 1.2rem; background: var(--accent); color: white; border-radius: 30px; text-decoration: none; font-size: 0.75rem;">Se connecter</a>
+            <a href="/register?next={{ request.path }}" class="login-btn secondary" style="padding: 0.5rem 1.2rem; border: 1px solid var(--accent); color: var(--accent); border-radius: 30px; text-decoration: none; font-size: 0.75rem;">S'inscrire</a>
         </div>
     </div>
 </div>
 
-<div class="container main-content">
-    <div class="gallery-view">
-        <div class="image-panel">
-            {% if oeuvre.image_url %}
-            <img src="https://images.weserv.nl/?url={{ oeuvre.image_url|urlencode }}&w=800&h=800&fit=contain&output=jpg&q=85"
-                 alt="{{ oeuvre.titre }}"
-                 class="artwork-image"
-                 id="mainImage"
-                 onclick="openImageModal('{{ oeuvre.image_url }}')"
-                 onerror="this.onerror=null; this.src='{{ oeuvre.image_url }}';">
-            {% else %}
-            <div style="width:100%; height:400px; display:flex; align-items:center; justify-content:center; color:var(--text-muted);">
-                <i class="fas fa-image fa-3x"></i>
-            </div>
-            {% endif %}
+<div class="main-content">
+    <!-- Image -->
+    <div class="hero-image">
+        {% if oeuvre.image_url %}
+        <img src="https://images.weserv.nl/?url={{ oeuvre.image_url|urlencode }}&w=1400&fit=contain&output=jpg&q=85"
+             alt="{{ oeuvre.titre }}"
+             id="mainImage"
+             onclick="openImageModal('{{ oeuvre.image_url }}')"
+             onerror="this.onerror=null; this.src='{{ oeuvre.image_url }}';">
+        {% else %}
+        <div style="aspect-ratio: 16/9; background: var(--surface); display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-image fa-4x" style="color: var(--text-muted); opacity: 0.3;"></i>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="info-bar">
+        <div class="tags-row">
+<div class="tags-left">
+    <!-- Type d'œuvre (gardé) -->
+    {% set instance = oeuvre.instance_of_fr if session.language == 'fr' else oeuvre.instance_of_en %}
+    {% if instance %}
+    <span class="tag"><i class="fas fa-tag"></i> <a href="/suggestions?type={{ instance|urlencode }}">{{ instance }}</a></span>
+    {% endif %}
+    
+    <!-- Genre (gardé) -->
+    {% set genre = oeuvre.genre_fr if session.language == 'fr' else oeuvre.genre_en %}
+    {% if genre %}
+    <span class="tag"><i class="fas fa-heart"></i> <a href="/suggestions?genre={{ genre|urlencode }}">{{ genre }}</a></span>
+    {% endif %}
+    
+    <!-- Mouvement (SUPPRIMÉ ou COMMENTÉ) -->
+    {# 
+    {% set mouvement = oeuvre.movement_fr if session.language == 'fr' else oeuvre.movement_en %}
+    {% if mouvement %}
+    <span class="tag"><i class="fas fa-palette"></i> <a href="/suggestions?movement={{ mouvement|urlencode }}">{{ mouvement }}</a></span>
+    {% endif %}
+    #}
+    
+    <!-- Année (SUPPRIMÉ ou COMMENTÉ) -->
+    {# 
+    {% if oeuvre.inception %}
+    <span class="tag"><i class="fas fa-calendar"></i> {{ oeuvre.inception[:4] }}</span>
+    {% endif %}
+    #}
+</div>
+            <button class="btn-scroll-down" onclick="document.querySelector('.two-columns').scrollIntoView({behavior: 'smooth'})">
+                <i class="fas fa-arrow-down"></i>
+            </button>
         </div>
 
-        <div class="info-panel">
-            <h1 class="artwork-title">{{ oeuvre.titre or 'SANS TITRE' }}</h1>
-            <div class="artwork-subtitle">
-                <a href="/research?artist={{ oeuvre.createur|urlencode }}" class="artist-link">
-                    {{ oeuvre.createur or 'ARTISTE INCONNU' }}
-                </a>
-                {% if oeuvre.inception %} · {{ oeuvre.inception[:4] }}{% endif %}
-            </div>
-
-            <div class="actions-grid">
-                <div class="action-btn favorite" id="favorite-btn" onclick="toggleFavorite()">
-                    <i class="far fa-heart" id="favorite-icon"></i>
-                    <span>Favori</span>
-                </div>
-                {% if oeuvre.url_wikidata %}
-                <a href="{{ oeuvre.url_wikidata }}" target="_blank" class="action-btn">
-                    <i class="fab fa-wikipedia-w"></i>
-                    <span>Wikidata</span>
-                </a>
-                {% endif %}
-            </div>
-
-            <div class="rating-area">
-                <div class="global-rating-col">
-                    <div class="rating-label">Votre note globale</div>
-                    <div class="stars-row" id="stars-input">
-                        <span class="star" data-value="1">★</span>
-                        <span class="star" data-value="2">★</span>
-                        <span class="star" data-value="3">★</span>
-                        <span class="star" data-value="4">★</span>
-                        <span class="star" data-value="5">★</span>
-                    </div>
-                    <input type="hidden" id="note-globale" value="0">
-                </div>
-
-                <div class="sub-ratings-col">
-                    <div class="sub-rating-item">
-                        <span class="sub-rating-label">Technique</span>
-                        <input type="range" id="note-technique" min="0" max="5" step="0.5" value="0">
-                        <span class="sub-rating-value" id="technique-value">0</span>
-                    </div>
-                    <div class="sub-rating-item">
-                        <span class="sub-rating-label">Originalité</span>
-                        <input type="range" id="note-originalite" min="0" max="5" step="0.5" value="0">
-                        <span class="sub-rating-value" id="originalite-value">0</span>
-                    </div>
-                    <div class="sub-rating-item">
-                        <span class="sub-rating-label">Émotion</span>
-                        <input type="range" id="note-emotion" min="0" max="5" step="0.5" value="0">
-                        <span class="sub-rating-value" id="emotion-value">0</span>
-                    </div>
+        <div class="title-row">
+            <div class="title-left">
+                <h1>{{ oeuvre.titre or 'SANS TITRE' }}</h1>
+                <div class="artist">
+                    <a href="/suggestions?artist={{ oeuvre.createur|urlencode }}" class="artist-link">{{ oeuvre.createur or 'ARTISTE INCONNU' }}</a>
                 </div>
             </div>
-
-            <div class="metadata-grid">
-                {% set instance = oeuvre.instance_of_fr if session.language == 'fr' else oeuvre.instance_of_en %}
-                {% if instance %}
-                <div class="metadata-item">
-                    <div class="metadata-label">Type</div>
-                    <div class="metadata-value">
-                        <a href="/research?type={{ instance|urlencode }}" class="artist-link">{{ instance }}</a>
-                    </div>
-                </div>
-                {% endif %}
-
-                {% set genre = oeuvre.genre_fr if session.language == 'fr' else oeuvre.genre_en %}
-                {% if genre %}
-                <div class="metadata-item">
-                    <div class="metadata-label">Genre</div>
-                    <div class="metadata-value">
-                        <a href="/research?genre={{ genre|urlencode }}" class="artist-link">{{ genre }}</a>
-                    </div>
-                </div>
-                {% endif %}
-
-                {% set mouvement = oeuvre.movement_fr if session.language == 'fr' else oeuvre.movement_en %}
-                {% if mouvement %}
-                <div class="metadata-item">
-                    <div class="metadata-label">Mouvement</div>
-                    <div class="metadata-value">
-                        <a href="/research?movement={{ mouvement|urlencode }}" class="artist-link">{{ mouvement }}</a>
-                    </div>
-                </div>
-                {% endif %}
-
-                {% set materiau = oeuvre.made_from_material_fr if session.language == 'fr' else oeuvre.made_from_material_en %}
-                {% if materiau %}
-                <div class="metadata-item">
-                    <div class="metadata-label">Matériau</div>
-                    <div class="metadata-value">
-                        <a href="/research?material={{ materiau|urlencode }}" class="artist-link">{{ materiau }}</a>
-                    </div>
-                </div>
-                {% endif %}
-
-                {% if oeuvre.height and oeuvre.width %}
-                <div class="metadata-item">
-                    <div class="metadata-label">Dimensions</div>
-                    <div class="metadata-value">{{ oeuvre.height }} × {{ oeuvre.width }} cm</div>
-                </div>
-                {% endif %}
-
-                {% set copyright = oeuvre.copyright_status_fr if session.language == 'fr' else oeuvre.copyright_status_en %}
-                {% if copyright %}
-                <div class="metadata-item">
-                    <div class="metadata-label">Copyright</div>
-                    <div class="metadata-value">{{ copyright }}</div>
-                </div>
-                {% endif %}
+            <div class="public-stats-compact">
+                <div class="compact-rating" id="global-number-header">4.5</div>
+                <div class="compact-stars" id="global-stars-header">★★★★½</div>
+                <div class="compact-meta"><span id="count-notes-header">0</span> avis</div>
             </div>
+        </div>
 
-            {% set nom = oeuvre.collection_fr if session.language == 'fr' else oeuvre.collection_en %}
-            {% set ville = oeuvre.city_fr if session.language == 'fr' else oeuvre.city_en %}
-            {% set pays = oeuvre.country_fr if session.language == 'fr' else oeuvre.country_en %}
-            {% if nom or ville or pays %}
-            <div class="collection-info">
-                <div class="collection-title">Lieu de conservation</div>
-                {% if nom %}
-                <div class="collection-detail">
-                    <i class="fas fa-landmark"></i>
-                    <a href="/research?museum={{ nom|urlencode }}" class="museum-link">{{ nom }}</a>
-                </div>
-                {% endif %}
-                {% if ville %}
-                <div class="collection-detail">
-                    <i class="fas fa-city"></i>
-                    <a href="/research?city={{ ville|urlencode }}" class="city-link">{{ ville }}</a>
-                </div>
-                {% endif %}
-                {% if pays %}
-                <div class="collection-detail">
-                    <i class="fas fa-flag"></i>
-                    <a href="/research?country={{ pays|urlencode }}" class="country-link">{{ pays }}</a>
-                </div>
-                {% endif %}
-            </div>
+        <div class="actions-bar">
+            <button class="action-btn favorite" id="favorite-btn" onclick="toggleFavorite()">
+                <i class="far fa-heart" id="favorite-icon"></i>
+                <span>Favori</span>
+            </button>
+            {% if oeuvre.url_wikidata %}
+            <a href="{{ oeuvre.url_wikidata }}" target="_blank" class="action-btn wikidata">
+                <i class="fab fa-wikipedia-w"></i>
+                <span>Wikidata</span>
+            </a>
             {% endif %}
         </div>
     </div>
 
-    <div class="community-section">
-        <div class="community-layout">
-            <div class="panel-notes">
-                <div class="panel-label">Note globale</div>
-                <div class="score-block">
-                    <div class="score-number" id="global-number">
-                        {{ stats.moyenne_globale|round(1) if stats and stats.moyenne_globale else '–' }}
-                    </div>
-                    <div class="score-right">
-                        <div class="score-stars" id="global-stars">☆☆☆☆☆</div>
-                        <div class="score-meta">
-                            <span id="count-notes">{{ stats.total_notes if stats else 0 }}</span> avis ·
-                            <span id="count-favs">{{ stats.favorites_count if stats else 0 }}</span> favoris
-                        </div>
-                    </div>
-                </div>
-                <div id="distribution-container"></div>
+    <!-- Layout 2 colonnes -->
+    <div class="two-columns">
+        <!-- Colonne principale (informations + commentaires) -->
+        <div class="main-col">
+            <div class="tech-section">
+                <div class="tech-title">INFORMATIONS</div>
+
+
+
+
+<!-- Remplacer la section .tech-list par celle-ci -->
+<div class="tech-list">
+    <!-- Lieu (musée/collection) -->
+    {% set lieu = oeuvre.collection_fr if session.language == 'fr' else oeuvre.collection_en %}
+    {% if lieu %}
+    <div class="tech-item">
+        <span class="tech-label">Lieu</span>
+        <span class="tech-value">
+            <a href="/suggestions?museum={{ lieu|urlencode }}">{{ lieu }}</a>
+        </span>
+    </div>
+    {% endif %}
+    
+    <!-- Ville -->
+    {% set ville = oeuvre.city_fr if session.language == 'fr' else oeuvre.city_en %}
+    {% if ville %}
+    <div class="tech-item">
+        <span class="tech-label">Ville</span>
+        <span class="tech-value">
+            <a href="/suggestions?city={{ ville|urlencode }}">{{ ville }}</a>
+        </span>
+    </div>
+    {% endif %}
+    
+    <!-- Pays -->
+    {% set pays = oeuvre.country_fr if session.language == 'fr' else oeuvre.country_en %}
+    {% if pays %}
+    <div class="tech-item">
+        <span class="tech-label">Pays</span>
+        <span class="tech-value">
+            <a href="/suggestions?country={{ pays|urlencode }}">{{ pays }}</a>
+        </span>
+    </div>
+    {% endif %}
+    
+    <!-- Date (inception) -->
+    {% if oeuvre.inception %}
+    <div class="tech-item">
+        <span class="tech-label">Date</span>
+        <span class="tech-value">{{ oeuvre.inception }}</span>
+    </div>
+    {% endif %}
+    
+    <!-- Mouvement -->
+    {% set mouvement = oeuvre.movement_fr if session.language == 'fr' else oeuvre.movement_en %}
+    {% if mouvement %}
+    <div class="tech-item">
+        <span class="tech-label">Mouvement</span>
+        <span class="tech-value">
+            <a href="/suggestions?movement={{ mouvement|urlencode }}">{{ mouvement }}</a>
+        </span>
+    </div>
+    {% endif %}
+    
+    <!-- Dimensions -->
+    {% if oeuvre.height and oeuvre.width %}
+    <div class="tech-item">
+        <span class="tech-label">Dimensions</span>
+        <span class="tech-value">{{ oeuvre.height }} × {{ oeuvre.width }} cm</span>
+    </div>
+    {% endif %}
+    
+    <!-- Matériaux -->
+    {% set materiau = oeuvre.made_from_material_fr if session.language == 'fr' else oeuvre.made_from_material_en %}
+    {% if materiau %}
+    <div class="tech-item">
+        <span class="tech-label">Matériaux</span>
+        <span class="tech-value">
+            <a href="/suggestions?material={{ materiau|urlencode }}">{{ materiau }}</a>
+        </span>
+    </div>
+    {% endif %}
+    
+    <!-- Type -->
+    {% set instance = oeuvre.instance_of_fr if session.language == 'fr' else oeuvre.instance_of_en %}
+    {% if instance %}
+    <div class="tech-item">
+        <span class="tech-label">Type</span>
+        <span class="tech-value">
+            <a href="/suggestions?type={{ instance|urlencode }}">{{ instance }}</a>
+        </span>
+    </div>
+    {% endif %}
+    
+    <!-- Genre -->
+    {% set genre = oeuvre.genre_fr if session.language == 'fr' else oeuvre.genre_en %}
+    {% if genre %}
+    <div class="tech-item">
+        <span class="tech-label">Genre</span>
+        <span class="tech-value">
+            <a href="/suggestions?genre={{ genre|urlencode }}">{{ genre }}</a>
+        </span>
+    </div>
+    {% endif %}
+</div>
+
+
             </div>
 
-            <div class="panel-comments">
-                <div class="write-zone">
-                    <div class="panel-label" style="margin-bottom:0.5rem;">Votre commentaire</div>
-                    <textarea id="commentaire" placeholder="Partagez votre avis..."></textarea>
-                    <div class="write-footer">
-                        <div class="vis-toggle">
-                            <input type="radio" name="visibility" id="vis-public" value="public" checked>
-                            <label for="vis-public" onclick="checkLoginBeforeAction(event)"><i class="fas fa-globe"></i> Public</label>
-                            <input type="radio" name="visibility" id="vis-private" value="private">
-                            <label for="vis-private" onclick="checkLoginBeforeAction(event)"><i class="fas fa-lock"></i> Privé</label>
-                        </div>
-                        <button class="btn-publish" id="btn-publish" onclick="saveComment()">Publier</button>
+            <!-- Commentaires -->
+            <div class="comments-section">
+                <div class="comments-title">COMMENTAIRES</div>
+                
+                <div class="comment-input-line">
+                    <div class="avatar">{% if session.user_id %}{{ session.username[0].upper() if session.username else 'U' }}{% else %}?{% endif %}</div>
+                    <div class="input-wrapper">
+                        <input type="text" id="commentaire" placeholder="Ajouter un commentaire...">
                     </div>
                 </div>
 
-                <div class="private-comment-box" id="private-comment-box">
-                    <div class="private-comment-header">
-                        <div class="private-badge"><i class="fas fa-lock"></i> Mon commentaire privé</div>
+                <div class="write-actions">
+                    <div class="vis-toggle">
+                        <input type="radio" name="visibility" id="vis-public" value="public" checked>
+                        <label for="vis-public"><i class="fas fa-globe"></i> Public</label>
+                        <input type="radio" name="visibility" id="vis-private" value="private">
+                        <label for="vis-private"><i class="fas fa-lock"></i> Privé</label>
                     </div>
-                    <div class="private-comment-text" id="private-comment-text"></div>
+                    <button class="btn-publish" id="btn-publish" onclick="saveComment()">Publier</button>
+                </div>
+
+                <div class="private-comment-box" id="private-comment-box" style="display: none;">
+                    <div style="font-size: 0.7rem; color: var(--accent); margin-bottom: 0.3rem;"><i class="fas fa-lock"></i> Commentaire privé</div>
+                    <div id="private-comment-text" style="font-size: 0.85rem;"></div>
                 </div>
 
                 <div id="comments-container">
-
+                    <div class="zero-comments">Pas encore de commentaire</div>
                 </div>
             </div>
         </div>
+
+        <!-- Sidebar (note + suggestions desktop) -->
+        <div class="sidebar">
+            <div class="tech-title">VOTRE NOTE</div>
+<div class="rating-row">
+    <div class="stars-row-big" id="stars-input">
+        <span data-val="1">★</span>
+        <span data-val="2">★</span>
+        <span data-val="3">★</span>
+        <span data-val="4">★</span>
+        <span data-val="5">★</span>
+    </div>
+    <input type="hidden" id="note-globale" value="0">
+    <div class="rating-feedback" id="global-value-display">Non noté</div>
+</div>
+
+            <div class="slider-row-inline">
+                <span class="slider-label-inline">Technique</span>
+                <div class="slider-control">
+                    <input type="range" id="note-technique" min="0" max="5" step="0.5" value="0">
+                    <span class="slider-value-inline" id="technique-value">0</span>
+                </div>
+            </div>
+            <div class="slider-row-inline">
+                <span class="slider-label-inline">Créativité</span>
+                <div class="slider-control">
+                    <input type="range" id="note-originalite" min="0" max="5" step="0.5" value="0">
+                    <span class="slider-value-inline" id="originalite-value">0</span>
+                </div>
+            </div>
+            <div class="slider-row-inline">
+                <span class="slider-label-inline">Émotion</span>
+                <div class="slider-control">
+                    <input type="range" id="note-emotion" min="0" max="5" step="0.5" value="0">
+                    <span class="slider-value-inline" id="emotion-value">0</span>
+                </div>
+            </div>
+
+            <!-- Suggestions desktop -->
+            <div class="suggestions-desktop">
+                <div class="tech-title">VOUS AIMEREZ AUSSI</div>
+                <div class="suggestions-grid" id="suggestions-list-desktop"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Suggestions mobile -->
+    <div class="suggestions-mobile">
+        <div class="tech-title">VOUS AIMEREZ AUSSI</div>
+        <div class="suggestions-grid" id="suggestions-list-mobile"></div>
     </div>
 </div>
 
 {% include 'footer.html' %}
 
+<div class="scroll-top" id="scroll-top"><i class="fas fa-arrow-up"></i></div>
+
 <script>
+
+
+
+
+
+
+
     const artworkId = '{{ oeuvre.id }}';
     let saveTimeout;
     let currentNote = 0;
 
-    // Fonction pour vérifier la connexion avant une action
+    const scrollBtn = document.getElementById('scroll-top');
+    window.addEventListener('scroll', () => scrollBtn?.classList.toggle('visible', window.scrollY > 500));
+    scrollBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
     function checkLoginBeforeAction(event) {
         {% if not session.user_id %}
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            const modal = document.getElementById('loginModal');
-            if (modal) modal.classList.add('active');
+            if (event) event.preventDefault();
+            document.getElementById('loginModal')?.classList.add('active');
             return false;
         {% endif %}
         return true;
     }
 
-    function requireLogin(event) {
-        return checkLoginBeforeAction(event);
-    }
-
     function closeLoginModal() {
-        const modal = document.getElementById('loginModal');
-        if (modal) modal.classList.remove('active');
+        document.getElementById('loginModal')?.classList.remove('active');
     }
 
-    function updateSliderFill(slider) {
-        const value = parseFloat(slider.value);
-        const max = parseFloat(slider.max);
-        const percent = (value / max) * 100;
-        slider.style.setProperty('--fill-percent', percent + '%');
+    function openImageModal(url) {
+        if (!url) return;
+        document.getElementById('modalImage').src = url;
+        document.getElementById('imageModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
 
-    const techniqueSlider = document.getElementById('note-technique');
-    const originaliteSlider = document.getElementById('note-originalite');
-    const emotionSlider = document.getElementById('note-emotion');
-    const techniqueVal = document.getElementById('technique-value');
-    const originaliteVal = document.getElementById('originalite-value');
-    const emotionVal = document.getElementById('emotion-value');
+    function closeImageModal() {
+        document.getElementById('imageModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function updateSliderProgress(slider) {
+        if (!slider) return;
+        const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+        slider.style.background = `linear-gradient(to right, var(--accent) 0%, var(--accent) ${value}%, var(--border) ${value}%, var(--border) 100%)`;
+    }
 
     function setupSlider(slider, display) {
         if (!slider) return;
-        updateSliderFill(slider);
-        slider.addEventListener('mousedown', function(e) {
-            if (!checkLoginBeforeAction(e)) return;
-        });
-        slider.addEventListener('input', function(e) {
-            if (!checkLoginBeforeAction(e)) return;
-            display.textContent = this.value;
-            updateSliderFill(this);
+        updateSliderProgress(slider);
+        slider.addEventListener('input', function() {
+            if (!checkLoginBeforeAction()) return;
+            display.textContent = parseFloat(this.value).toFixed(1);
+            updateSliderProgress(this);
             autoSave();
         });
     }
 
-    setupSlider(techniqueSlider, techniqueVal);
-    setupSlider(originaliteSlider, originaliteVal);
-    setupSlider(emotionSlider, emotionVal);
+    setupSlider(document.getElementById('note-technique'), document.getElementById('technique-value'));
+    setupSlider(document.getElementById('note-originalite'), document.getElementById('originalite-value'));
+    setupSlider(document.getElementById('note-emotion'), document.getElementById('emotion-value'));
 
-    (function initTheme() {
-        const t = localStorage.getItem('theme') || 'dark';
-        document.body.classList.add('theme-' + t);
-    })();
+window.imgErr = function(img) {
+    let n = parseInt(img.dataset.err || '0');
+    if (n === 0) { 
+        // Étape 1 : On tente le miroir wsrv.nl
+        img.dataset.err = '1'; 
+        img.src = img.dataset.f1; 
+    }
+    else if (n === 1) { 
+        // Étape 2 : On tente l'image originale brute de Wikipedia/Wikidata
+        img.dataset.err = '2'; 
+        img.src = img.dataset.f2; 
+    }
+    else { 
+        // Échec final : on cache l'image et on montre l'icône de secours
+        img.style.display = 'none'; 
+        const ph = img.parentElement?.querySelector('.image-placeholder'); 
+        if (ph) ph.style.display = 'flex'; 
+    }
+};
 
-    const modal = document.getElementById('imageModal');
-    const modalImage = document.getElementById('modalImage');
-    let scale = 1, translateX = 0, translateY = 0;
-    let isDragging = false, startX, startY;
 
-    function applyTransform() {
-        modalImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    // Fonction pour afficher les étoiles avec demies
+    function displayStars(value) {
+        const full = Math.floor(value);
+        const half = value % 1 >= 0.5;
+        let stars = '';
+        for (let i = 0; i < full; i++) stars += '★';
+        if (half) stars += '½';
+        for (let i = stars.length; i < 5; i++) stars += '☆';
+        return stars;
     }
 
-let isDraggingModal = false;  // Ajoute cette variable globale
 
-function openImageModal(url) {
-    if (!url) return;
-    modalImage.src = url;
-    scale = 1;
-    translateX = 0;
-    translateY = 0;
-    isDraggingModal = false;
-    applyTransform();
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    modalImage.style.cursor = 'zoom-in';
+function handleImgError(img, originalUrl) {
+    // On récupère le numéro de la tentative actuelle (par défaut 1)
+    let attempt = parseInt(img.dataset.attempt || 1);
+
+    if (attempt === 1) {
+        // Tentative 2 : Autre proxy Weserv
+        img.dataset.attempt = 2;
+        img.src = `https://wsrv.nl/?url=${encodeURIComponent(originalUrl)}&w=300&h=300&fit=cover`;
+    } 
+    else if (attempt === 2) {
+        // Tentative 3 : Image réelle (Wikipedia / Wikidata) sans proxy
+        img.dataset.attempt = 3;
+        img.src = originalUrl;
+    } 
+    else {
+        // Échec total : on cache l'image et on montre l'icône de remplacement
+        img.style.display = 'none';
+        const fallbackIcon = img.parentElement.querySelector('.fallback-icon');
+        if (fallbackIcon) fallbackIcon.style.display = 'flex';
+    }
 }
 
-    function closeModal() {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-        isDragging = false;
-    }
+function initStars() {
+    const container = document.getElementById('stars-input');
+    if (!container) return;
+    const stars = container.querySelectorAll('span');
 
-    modalImage.addEventListener('wheel', function(e) {
-        e.preventDefault();
-        e.stopPropagation();  // ← AJOUTE cette ligne
-
-        const delta = e.deltaY * -0.003;
-        const newScale = Math.min(Math.max(scale + delta, 1), 20);
-        const rect = modalImage.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left - rect.width / 2;
-        const mouseY = e.clientY - rect.top - rect.height / 2;
-        translateX -= mouseX * (newScale - scale) / scale;
-        translateY -= mouseY * (newScale - scale) / scale;
-        scale = newScale;
-        if (scale <= 1) { translateX = 0; translateY = 0; }
-        modalImage.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-        applyTransform();
-    }, { passive: false });
-
-
-
-
-modalImage.addEventListener('mousedown', function(e) {
-    if (scale <= 1) return;
-    isDraggingModal = true;
-    startX = e.clientX - translateX;
-    startY = e.clientY - translateY;
-    modalImage.style.cursor = 'grabbing';
-    e.preventDefault();
-    e.stopPropagation();
-});
-
-document.addEventListener('mousemove', function(e) {
-    if (!isDraggingModal) return;
-    translateX = e.clientX - startX;
-    translateY = e.clientY - startY;
-    applyTransform();
-});
-
-document.addEventListener('mouseup', function() {
-    if (!isDraggingModal) return;
-    isDraggingModal = false;
-    modalImage.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
-});
-
-// Éviter la fermeture du modal quand on clique sur l'image (sauf si pas de drag)
-modalImage.addEventListener('click', function(e) {
-    if (!isDraggingModal) {
-        e.stopPropagation();  // Empêche la fermeture
-    }
-});
-
-
-
-
-
-
-
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeModal();
-    });
-
-    function initStars() {
-        document.querySelectorAll('.stars-row').forEach(container => {
-            const stars = container.querySelectorAll('.star');
-            if (!stars.length) return;
-
-            container.addEventListener('mousemove', function(e) {
-                const target = e.target.closest('.star');
-                if (!target) return;
-                const idx = parseInt(target.dataset.value);
-                const rect = target.getBoundingClientRect();
-                const isHalf = (e.clientX - rect.left) < rect.width / 2;
-
-                stars.forEach(s => {
-                    const v = parseInt(s.dataset.value);
-                    s.classList.remove('full', 'half', 'preview-full', 'preview-half');
-                    if (v < idx) {
-                        s.classList.add('preview-full');
-                    } else if (v === idx) {
-                        s.classList.add(isHalf ? 'preview-half' : 'preview-full');
-                    }
-                });
-            });
-
-            container.addEventListener('mouseleave', function() {
-                renderStars(stars, currentNote);
-            });
-
-            container.addEventListener('click', function(e) {
-                if (!checkLoginBeforeAction(e)) return;
-                const target = e.target.closest('.star');
-                if (!target) return;
-                const idx = parseInt(target.dataset.value);
-                const rect = target.getBoundingClientRect();
-                const isHalf = (e.clientX - rect.left) < rect.width / 2;
-                const clickedVal = isHalf ? idx - 0.5 : idx;
-
-                if (clickedVal === currentNote) {
-                    currentNote = 0;
-                } else {
-                    currentNote = clickedVal;
-                }
-
-                document.querySelectorAll('#note-globale').forEach(el => el.value = currentNote);
-                document.querySelectorAll('.stars-row').forEach(c => {
-                    renderStars(c.querySelectorAll('.star'), currentNote);
-                });
-
-                autoSave();
-            });
-        });
-    }
-
-    function renderStars(stars, value) {
+    // Au survol : affiche un aperçu
+    container.addEventListener('mousemove', e => {
+        const target = e.target.closest('span');
+        if (!target) return;
+        const idx = parseInt(target.dataset.val);
+        const rect = target.getBoundingClientRect();
+        const isHalf = (e.clientX - rect.left) < rect.width / 2;
+        
         stars.forEach(s => {
-            const v = parseInt(s.dataset.value);
+            const v = parseInt(s.dataset.val);
             s.classList.remove('full', 'half', 'preview-full', 'preview-half');
-            if (value >= v) {
-                s.classList.add('full');
-            } else if (value >= v - 0.5) {
-                s.classList.add('half');
+            if (v < idx) {
+                s.classList.add('preview-full');
+            } else if (v === idx) {
+                s.classList.add(isHalf ? 'preview-half' : 'preview-full');
             }
         });
+    });
+
+    // Quand la souris quitte le conteneur
+    container.addEventListener('mouseleave', () => {
+        renderStars(stars, currentNote);
+    });
+
+    // Au clic : enregistre la note (entière ou demi)
+    container.addEventListener('click', e => {
+        if (!checkLoginBeforeAction(e)) return;
+        const target = e.target.closest('span');
+        if (!target) return;
+        const idx = parseInt(target.dataset.val);
+        const rect = target.getBoundingClientRect();
+        const isHalf = (e.clientX - rect.left) < rect.width / 2;
+        const val = isHalf ? idx - 0.5 : idx;
+        
+        currentNote = (val === currentNote) ? 0 : val;
+        document.getElementById('note-globale')?.setAttribute('value', currentNote);
+        renderStars(stars, currentNote);
+        autoSave();
+    });
+
+    // Support tactile pour mobile
+    container.addEventListener('touchend', e => {
+        if (!checkLoginBeforeAction(e)) return;
+        const touch = e.changedTouches[0];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('span');
+        if (!target) return;
+        const idx = parseInt(target.dataset.val);
+        const rect = target.getBoundingClientRect();
+        const isHalf = (touch.clientX - rect.left) < rect.width / 2;
+        const val = isHalf ? idx - 0.5 : idx;
+        
+        currentNote = (val === currentNote) ? 0 : val;
+        document.getElementById('note-globale')?.setAttribute('value', currentNote);
+        renderStars(stars, currentNote);
+        autoSave();
+        e.preventDefault();
+    }, { passive: false });
+}
+
+// Fonction pour afficher les étoiles selon une valeur (ex: 3.5)
+function renderStars(stars, value) {
+    stars.forEach(s => {
+        const v = parseInt(s.dataset.val);
+        s.classList.remove('full', 'half', 'preview-full', 'preview-half');
+        
+        if (value >= v) {
+            // Étoile pleine
+            s.classList.add('full');
+        } else if (value >= v - 0.5) {
+            // Demi-étoile
+            s.classList.add('half');
+        }
+    });
+}
+
+function updateStarsUI(value) {
+    const stars = document.querySelectorAll('#stars-input span');
+    renderStars(stars, value);
+    const feedback = document.getElementById('global-value-display');
+    if (feedback) {
+        feedback.textContent = value > 0 ? value.toFixed(1) + ' / 5' : 'Non noté';
     }
+}
 
     function autoSave() {
         clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(saveRating, 1000);
+        saveTimeout = setTimeout(() => saveRating(), 800);
     }
 
     async function saveRating() {
         {% if not session.user_id %} return; {% endif %}
-        const note = parseFloat(document.getElementById('note-globale').value) || 0;
+        const note = currentNote;
         const technique = parseFloat(document.getElementById('note-technique').value) || 0;
         const originalite = parseFloat(document.getElementById('note-originalite').value) || 0;
         const emotion = parseFloat(document.getElementById('note-emotion').value) || 0;
@@ -1392,29 +1438,25 @@ modalImage.addEventListener('click', function(e) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content },
                 body: JSON.stringify({ 
-                    artwork_id: artworkId, 
-                    note_globale: note, 
-                    note_technique: technique, 
-                    note_originalite: originalite, 
-                    note_emotion: emotion, 
-                    commentaire: document.getElementById('commentaire').value.trim() 
+                    artwork_id: artworkId, note_globale: note, note_technique: technique, 
+                    note_originalite: originalite, note_emotion: emotion,
+                    commentaire: document.getElementById('commentaire')?.value.trim() || ''
                 })
             });
             loadStats();
-            loadPublicAverages();
         } catch(e) {}
     }
 
     async function saveComment() {
         {% if not session.user_id %}
-            const modal = document.getElementById('loginModal');
-            if (modal) modal.classList.add('active');
+            document.getElementById('loginModal')?.classList.add('active');
             return;
         {% endif %}
         
         const comment = document.getElementById('commentaire').value.trim();
-        const note = parseFloat(document.getElementById('note-globale').value) || 0;
         const btn = document.getElementById('btn-publish');
+        const visibility = document.querySelector('input[name="visibility"]:checked')?.value || 'public';
+        const isPublic = visibility === 'public';
 
         if (!comment) {
             if (!confirm('Supprimer votre avis ?')) return;
@@ -1423,10 +1465,9 @@ modalImage.addEventListener('click', function(e) {
                 headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content },
                 body: JSON.stringify({ artwork_id: artworkId })
             });
-            hidePrivateComment();
+            document.getElementById('private-comment-box').style.display = 'none';
             loadComments();
             loadStats();
-            loadPublicAverages();
             btn.textContent = 'Publier';
             return;
         }
@@ -1434,29 +1475,25 @@ modalImage.addEventListener('click', function(e) {
         btn.disabled = true;
         btn.textContent = '...';
         try {
-            const visibility = document.querySelector('input[name="visibility"]:checked')?.value || 'public';
-            const isPublic = visibility === 'public';
             await fetch('/api/rating/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content },
                 body: JSON.stringify({ 
-                    artwork_id: artworkId, 
-                    note_globale: note, 
+                    artwork_id: artworkId, note_globale: currentNote || 0,
                     note_technique: parseFloat(document.getElementById('note-technique').value) || 0,
                     note_originalite: parseFloat(document.getElementById('note-originalite').value) || 0,
                     note_emotion: parseFloat(document.getElementById('note-emotion').value) || 0,
-                    commentaire: comment, 
-                    is_public: isPublic 
+                    commentaire: comment, is_public: isPublic 
                 })
             });
             if (!isPublic && comment) {
-                showPrivateComment(comment);
+                document.getElementById('private-comment-text').textContent = comment;
+                document.getElementById('private-comment-box').style.display = 'block';
             } else {
-                hidePrivateComment();
+                document.getElementById('private-comment-box').style.display = 'none';
             }
             loadComments();
             loadStats();
-            loadPublicAverages();
         } catch(e) {}
         finally {
             btn.disabled = false;
@@ -1464,21 +1501,9 @@ modalImage.addEventListener('click', function(e) {
         }
     }
 
-    function showPrivateComment(text) {
-        const box = document.getElementById('private-comment-box');
-        const textEl = document.getElementById('private-comment-text');
-        if (box && textEl) { textEl.textContent = text; box.style.display = 'block'; }
-    }
-
-    function hidePrivateComment() {
-        const box = document.getElementById('private-comment-box');
-        if (box) box.style.display = 'none';
-    }
-
     async function toggleFavorite() {
         {% if not session.user_id %}
-            const modal = document.getElementById('loginModal');
-            if (modal) modal.classList.add('active');
+            document.getElementById('loginModal')?.classList.add('active');
             return;
         {% endif %}
         
@@ -1499,29 +1524,21 @@ modalImage.addEventListener('click', function(e) {
                 btn.classList.remove('active');
                 icon.className = 'far fa-heart';
             }
-            const favCountEl = document.getElementById('count-favs');
-            if (favCountEl) {
-                let currentCount = parseInt(favCountEl.textContent) || 0;
-                favCountEl.textContent = data.favorite ? currentCount + 1 : currentCount - 1;
-            }
-        } catch(e) {
-            console.error('Erreur toggle favorite:', e);
-        }
+            loadStats();
+        } catch(e) {}
     }
 
-    async function checkFavorite() {
-        {% if session.user_id %}
+    async function loadStats() {
         try {
-            const response = await fetch(`/api/favorite/check/${artworkId}`);
-            const data = await response.json();
-            const btn = document.getElementById('favorite-btn');
-            const icon = document.getElementById('favorite-icon');
-            if (data.favorite) {
-                btn.classList.add('active');
-                icon.className = 'fas fa-heart';
-            }
+            const res = await fetch(`/api/artwork/stats/${artworkId}`);
+            const stats = await res.json();
+            const avg = stats.moyenne_globale || 0;
+            document.getElementById('global-number-header').textContent = avg.toFixed(1);
+            document.getElementById('count-notes-header').textContent = stats.total_notes || 0;
+            
+            const starsHtml = displayStars(avg);
+            document.getElementById('global-stars-header').textContent = starsHtml;
         } catch(e) {}
-        {% endif %}
     }
 
     async function loadUserRating() {
@@ -1532,107 +1549,172 @@ modalImage.addEventListener('click', function(e) {
             if (!data.has_rating) return;
             const r = data.rating;
             currentNote = r.note_globale;
-            document.querySelectorAll('#note-globale').forEach(el => el.value = r.note_globale);
-            document.querySelectorAll('.stars-row').forEach(c => {
-                renderStars(c.querySelectorAll('.star'), r.note_globale);
-            });
+            updateStarsUI(currentNote);
             
             if (r.note_technique !== undefined) {
                 document.getElementById('note-technique').value = r.note_technique;
                 document.getElementById('technique-value').textContent = r.note_technique;
-                updateSliderFill(document.getElementById('note-technique'));
+                updateSliderProgress(document.getElementById('note-technique'));
             }
             if (r.note_originalite !== undefined) {
                 document.getElementById('note-originalite').value = r.note_originalite;
                 document.getElementById('originalite-value').textContent = r.note_originalite;
-                updateSliderFill(document.getElementById('note-originalite'));
+                updateSliderProgress(document.getElementById('note-originalite'));
             }
             if (r.note_emotion !== undefined) {
                 document.getElementById('note-emotion').value = r.note_emotion;
                 document.getElementById('emotion-value').textContent = r.note_emotion;
-                updateSliderFill(document.getElementById('note-emotion'));
+                updateSliderProgress(document.getElementById('note-emotion'));
             }
             
             if (r.commentaire) document.getElementById('commentaire').value = r.commentaire;
             document.getElementById('btn-publish').textContent = 'Modifier';
             const visInput = document.querySelector(`input[name="visibility"][value="${r.is_public ? 'public' : 'private'}"]`);
             if (visInput) visInput.checked = true;
-            if (!r.is_public && r.commentaire) showPrivateComment(r.commentaire);
+            if (!r.is_public && r.commentaire) {
+                document.getElementById('private-comment-text').textContent = r.commentaire;
+                document.getElementById('private-comment-box').style.display = 'block';
+            }
         } catch(e) {}
         {% endif %}
     }
 
-    async function loadStats() {
-        try {
-            const res = await fetch(`/api/artwork/stats/${artworkId}`);
-            const stats = await res.json();
-            document.getElementById('global-number').textContent = stats.moyenne_globale ? stats.moyenne_globale.toFixed(1) : '–';
-            document.getElementById('count-notes').textContent = stats.total_notes || 0;
-            document.getElementById('count-favs').textContent = stats.favorites_count || 0;
-            const avg = stats.moyenne_globale || 0;
-            let starsHtml = '';
-            for (let i = 0; i < 5; i++) {
-                if (avg >= i + 1) starsHtml += '★';
-                else if (avg >= i + 0.5) starsHtml += '½';
-                else starsHtml += '☆';
-            }
-            document.getElementById('global-stars').textContent = starsHtml;
-            const distContainer = document.getElementById('distribution-container');
-            if (distContainer && stats.distribution) {
-                let html = '';
-                for (let i = 5; i >= 1; i--) {
-                    const count = stats.distribution[i] || 0;
-                    const pct = stats.total_notes > 0 ? (count / stats.total_notes * 100) : 0;
-                    html += `<div class="dist-row">
-                        <span class="dist-label">${i}★</span>
-                        <div class="dist-bar-wrap"><div class="dist-bar-fill" style="width:${pct}%"></div></div>
-                        <span class="dist-count">${count}</span>
-                    </div>`;
-                }
-                distContainer.innerHTML = html;
-            }
-        } catch(e) {}
-    }
+function createSuggestionCard(s) {
+    const title = (s.titre || 'Sans titre').substring(0, 30);
+    const artist = (s.createur || 'Artiste inconnu').substring(0, 25);
+    const starsHtml = s.note ? displayStars(s.note) : '';
+    const imgUrl = s.image_url;
 
-    async function loadPublicAverages() {
-        try {
-            const res = await fetch(`/api/artwork/public-averages/${artworkId}`);
-            const data = await res.json();
-            // Tu peux utiliser ces données si tu veux afficher les moyennes publiques
-        } catch(e) {}
-    }
+    let imgHtml = '';
+    if (imgUrl) {
+        const encoded = encodeURIComponent(imgUrl);
+        const src = `https://images.weserv.nl/?url=${encoded}&w=300&h=300&fit=cover&output=webp&q=75`;
+        const f1 = `https://wsrv.nl/?url=${encoded}&w=300&h=300&fit=cover&output=webp&q=75`;
+        const f2 = imgUrl; // L'URL directe
 
-async function loadComments() {
-    try {
-        const res = await fetch(`/api/comments/${artworkId}`);
-        const comments = await res.json();
-        const container = document.getElementById('comments-container');
-        if (!comments || !comments.length) {
-            container.innerHTML = '';  // Rien du tout, pas de cadre ni message
-            return;
-        }
-        container.innerHTML = `<div class="comments-list">${comments.map(c => {
-            const initial = (c.username || 'A')[0].toUpperCase();
-            let starsHtml = '';
-            for (let i = 1; i <= 5; i++) starsHtml += i <= c.note_globale ? '★' : '☆';
-            return `<div class="comment-item">
-                <div class="comment-top">
-                    <div class="comment-author-wrap">
-                        <div class="comment-avatar">${initial}</div>
-                        <span class="comment-author">${escapeHtml(c.username || 'Anonyme')}</span>
-                    </div>
-                    <div class="comment-right">
-                        ${c.note_globale ? `<span class="comment-stars">${starsHtml}</span>` : ''}
-                        <span class="comment-date">${c.created_at || ''}</span>
-                    </div>
-                </div>
-                <div class="comment-text">${escapeHtml(c.commentaire || '')}</div>
+        imgHtml = `
+            <img src="${src}" 
+                 alt="${escapeHtml(title)}" 
+                 data-f1="${f1}" 
+                 data-f2="${f2}" 
+                 data-err="0" 
+                 loading="lazy" 
+                 onload="this.style.opacity='1'" 
+                 onerror="imgErr(this)">
+            <div class="image-placeholder" style="display:none; position:absolute; inset:0; align-items:center; justify-content:center; background:var(--surface2);">
+                <i class="fas fa-image" style="color:var(--text-muted); opacity:0.5;"></i>
             </div>`;
-        }).join('')}</div>`;
-    } catch(e) {}
+    } else {
+        imgHtml = `
+            <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--surface2); color:var(--text-muted); font-size:0.6rem; text-align:center; padding:5px;">
+                <i class="fas fa-lock" style="margin-bottom:4px;"></i>
+                <span>© NON DISPONIBLE</span>
+            </div>`;
+    }
+
+    return `
+    <a href="/oeuvre/${s.id}" class="suggestion-card">
+        <div class="suggestion-image" style="position:relative; aspect-ratio:1/1; overflow:hidden; background:var(--surface2);">
+            ${imgHtml}
+        </div>
+        <div class="suggestion-info">
+            <div class="suggestion-title">${escapeHtml(title)}</div>
+            <div class="suggestion-artist">${escapeHtml(artist)}</div>
+            ${s.note ? `<div class="suggestion-stars">${starsHtml}</div>` : ''}
+        </div>
+    </a>`;
+}
+
+
+
+
+    async function loadComments() {
+        try {
+            const res = await fetch(`/api/comments/${artworkId}`);
+            const comments = await res.json();
+            const container = document.getElementById('comments-container');
+            const publicComments = comments.filter(c => c.is_public !== false);
+            
+            if (!publicComments.length) {
+                container.innerHTML = '<div class="zero-comments">Pas encore de commentaire public</div>';
+                return;
+            }
+            
+            container.innerHTML = `<div class="comment-list">${publicComments.map(c => {
+                const initial = (c.username || 'A')[0].toUpperCase();
+                const starsHtml = c.note_globale ? displayStars(c.note_globale) : '';
+                return `<div class="comment">
+                    <div class="comment-avatar">${escapeHtml(initial)}</div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">${escapeHtml(c.username || 'Anonyme')}</span>
+                            ${c.note_globale ? `<span class="comment-stars">${starsHtml}</span>` : ''}
+                            <span class="comment-date">${c.created_at || ''}</span>
+                        </div>
+                        <div class="comment-text">${escapeHtml(c.commentaire || '')}</div>
+                    </div>
+                </div>`;
+            }).join('')}</div>`;
+        } catch(e) {}
+    }
+
+
+
+async function loadSuggestions() {
+    const containerDesktop = document.getElementById('suggestions-list-desktop');
+    const containerMobile = document.getElementById('suggestions-list-mobile');
+    if (!containerDesktop && !containerMobile) return;
+
+    try {
+        // 1. Service principal (Suggestions intelligentes)
+        let res = await fetch(`/api/artwork/suggestions/${artworkId}`);
+        let suggestions = await res.json();
+
+        // 2. Fallback Artiste
+        if (!suggestions || suggestions.length === 0) {
+            const artist = "{{ oeuvre.createur|urlencode }}";
+            if (artist && artist !== 'null' && artist !== 'ARTISTE+INCONNU') {
+                const resArt = await fetch(`/api/works?artist=${artist}&limit=7`);
+                const dataArt = await resArt.json();
+                suggestions = dataArt.works;
+            }
+        }
+
+        // 3. Fallback Genre
+        if (!suggestions || suggestions.length === 0) {
+            {% set g_fallback = oeuvre.genre_fr if session.language == 'fr' else oeuvre.genre_en %}
+            const genre = "{{ g_fallback|urlencode }}";
+            if (genre && genre !== 'null') {
+                const resG = await fetch(`/api/works?genre=${genre}&limit=7`);
+                const dataG = await resG.json();
+                suggestions = dataG.works;
+            }
+        }
+
+        // 4. Fallback Global (Découverte)
+        if (!suggestions || suggestions.length === 0) {
+            const resAll = await fetch(`/api/works?limit=7`);
+            const dataAll = await resAll.json();
+            suggestions = dataAll.works;
+        }
+
+        // Filtrer l'œuvre actuelle et limiter à 6
+        suggestions = suggestions
+            .filter(w => String(w.id) !== String(artworkId))
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 6);
+
+        const html = suggestions.map(s => createSuggestionCard(s)).join('');
+        if (containerDesktop) containerDesktop.innerHTML = html;
+        if (containerMobile) containerMobile.innerHTML = html;
+
+    } catch(e) {
+        console.error('Erreur suggestions:', e);
+    }
 }
 
     function escapeHtml(text) {
+        if (!text) return '';
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
@@ -1640,53 +1722,15 @@ async function loadComments() {
 
     document.addEventListener('DOMContentLoaded', () => {
         initStars();
-        checkFavorite();
         loadUserRating();
         loadStats();
         loadComments();
-        loadPublicAverages();
+        loadSuggestions();
         
-        const techniqueSlider = document.getElementById('note-technique');
-        const originaliteSlider = document.getElementById('note-originalite');
-        const emotionSlider = document.getElementById('note-emotion');
-        const techniqueVal = document.getElementById('technique-value');
-        const originaliteVal = document.getElementById('originalite-value');
-        const emotionVal = document.getElementById('emotion-value');
-
-        if (techniqueSlider) {
-            techniqueSlider.addEventListener('input', function() {
-                if (!checkLoginBeforeAction()) return;
-                techniqueVal.textContent = this.value;
-                autoSave();
-            });
-        }
-        if (originaliteSlider) {
-            originaliteSlider.addEventListener('input', function() {
-                if (!checkLoginBeforeAction()) return;
-                originaliteVal.textContent = this.value;
-                autoSave();
-            });
-        }
-        if (emotionSlider) {
-            emotionSlider.addEventListener('input', function() {
-                if (!checkLoginBeforeAction()) return;
-                emotionVal.textContent = this.value;
-                autoSave();
-            });
-        }
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeLoginModal();
-            }
-        });
-
         const loginModal = document.getElementById('loginModal');
-        if (loginModal) {
-            loginModal.addEventListener('click', function(e) {
-                if (e.target === loginModal) closeLoginModal();
-            });
-        }
+        loginModal?.addEventListener('click', function(e) {
+            if (e.target === loginModal) closeLoginModal();
+        });
     });
 </script>
 </body>

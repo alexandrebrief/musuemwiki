@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ site_name }}</title>
+    <title>{{ site_name }} · Explorer</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -987,7 +987,7 @@ body {
 <body class="theme-dark" style="visibility:hidden">
 <script>
     (function() {
-        const t = localStorage.getItem('theme') || 'dark';
+        const t = localStorage.getItem('theme') || 'light';
         document.body.classList.remove('theme-dark','theme-light');
         document.body.classList.add('theme-'+t);
         document.body.style.visibility = '';
@@ -1046,7 +1046,7 @@ body {
     </div>
     <div class="types-grid">
         {% for t in types %}
-        <a class="type-card" href="/research?type={{ t.name|urlencode }}">
+        <a class="type-card" href="/suggestions?type={{ t.name|urlencode }}">
             <div class="type-card-line"></div>
             {% if t.image %}
             <img src="https://images.weserv.nl/?url={{ t.image|urlencode }}&w=500&h=400&fit=cover&output=webp&q=75"
@@ -1073,7 +1073,7 @@ body {
     </div>
     <div class="museums-flow">
         {% for museum in museums %}
-        <a class="museum-word" href="/research?museum={{ museum.name|urlencode }}">{{ museum.name }}</a>
+        <a class="museum-word" href="/suggestions?museum={{ museum.name|urlencode }}">{{ museum.name }}</a>
         {% if not loop.last %}<span class="museum-sep">·</span>{% endif %}
         {% endfor %}
     </div>
@@ -1087,7 +1087,7 @@ body {
     </div>
     <div class="artists-grid">
         {% for a in artists %}
-        <a class="artist-card" href="/research?artist={{ a.name|urlencode }}">
+        <a class="artist-card" href="/suggestions?artist={{ a.name|urlencode }}">
             <div class="artist-accent"></div>
             {% if a.image %}
             <img src="https://images.weserv.nl/?url={{ a.image|urlencode }}&w=350&h=470&fit=cover&output=webp&q=75"
@@ -1114,7 +1114,7 @@ body {
     </div>
     <div class="genres-flow">
         {% for g in genres %}
-        <a class="genre-word" href="/research?genre={{ g.name|urlencode }}">{{ g.name }}</a>
+        <a class="genre-word" href="/suggestions?genre={{ g.name|urlencode }}">{{ g.name }}</a>
         {% if not loop.last %}<span class="genre-sep">·</span>{% endif %}
         {% endfor %}
     </div>
@@ -1127,7 +1127,7 @@ body {
     </div>
     <div class="movements-scroll" id="movements-scroll">
         {% for m in movements %}
-        <a class="movement-card" href="/research?movement={{ m.name|urlencode }}">
+        <a class="movement-card" href="/suggestions?movement={{ m.name|urlencode }}">
             {% if m.image %}
             <img src="https://images.weserv.nl/?url={{ m.image|urlencode }}&w=400&h=550&fit=cover&output=webp&q=75"
                  alt="{{ m.name }}" loading="lazy"
@@ -1157,7 +1157,7 @@ body {
             <div class="geo-col-title">Pays</div>
             {% set pmax = countries[0].count if countries else 1 %}
             {% for c in countries %}
-            <a class="geo-row" href="/research?country={{ c.name|urlencode }}" style="--bar-w: {{ (c.count / pmax * 100)|int }}%;">
+            <a class="geo-row" href="/suggestions?country={{ c.name|urlencode }}" style="--bar-w: {{ (c.count / pmax * 100)|int }}%;">
                 <span class="geo-row-name">{{ c.name }}</span>
                 <div class="geo-row-bar"></div>
                 <span class="geo-row-count">{{ c.count }}</span>
@@ -1168,7 +1168,7 @@ body {
             <div class="geo-col-title">Villes</div>
             {% set cmax = cities[0].count if cities else 1 %}
             {% for c in cities %}
-            <a class="geo-row" href="/research?city={{ c.name|urlencode }}" style="--bar-w: {{ (c.count / cmax * 100)|int }}%;">
+            <a class="geo-row" href="/suggestions?city={{ c.name|urlencode }}" style="--bar-w: {{ (c.count / cmax * 100)|int }}%;">
                 <span class="geo-row-name">{{ c.name }}</span>
                 <div class="geo-row-bar"></div>
                 <span class="geo-row-count">{{ c.count }}</span>
@@ -1184,7 +1184,7 @@ body {
         Toute<br>
         la <span class="outline">collection.</span>
     </h2>
-    <a class="final-btn" href="/research">Rechercher</a>
+    <a class="final-btn" href="/suggestions">Rechercher</a>
 </div>
 
 </div><!-- /main-content -->

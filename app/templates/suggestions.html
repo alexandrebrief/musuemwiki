@@ -6,9 +6,9 @@
 {% endif %}
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ site_name }} · Suggestions</title>
+    <title>{{ site_name }} · Rechercher</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -25,7 +25,7 @@
             --emo: #ff6b9d;
             --font-display: 'Space Grotesk', sans-serif;
             --font-text: 'Inter', sans-serif;
-            --sidebar-w: 280px;
+            --sidebar-w: 300px;
         }
 
         body.theme-dark {
@@ -39,7 +39,6 @@
             --border: #2a2a2a;
             --border-light: #1f1f1f;
             --card-bg: #121212;
-            --overlay: rgba(0,0,0,0.7);
         }
 
         body.theme-light {
@@ -53,128 +52,162 @@
             --border: #e0e0e0;
             --border-light: #eeeeee;
             --card-bg: #ffffff;
-            --overlay: rgba(0,0,0,0.5);
         }
 
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--font-text);
-            font-weight: 400;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
-        .container { max-width: 1600px; margin: 0 auto; padding: 0 0.75rem; flex: 1; }
-        .main-content { margin-top: 80px; padding-top: 1rem; padding-bottom: 80px; }
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 0.75rem;
+    flex: 1;  /* ← Pousse le footer vers le bas */
+}
 
-        /* ===== EN-TÊTE ===== */
+.main-content {
+    margin-top: 80px;
+    padding-top: 1rem;
+    padding-bottom: 80px;
+    flex: 1;  /* ← Prend tout l'espace disponible */
+}
+
+footer {
+    margin-top: auto;  /* ← Se colle en bas */
+}
         .hero-header {
             text-align: center;
-            padding: 2rem 0 1.5rem;
+            padding: 1rem 0 1.5rem;
             border-bottom: 1px solid var(--border);
             margin-bottom: 1.5rem;
         }
         .hero-count {
             font-family: var(--font-display);
-            font-size: 3.5rem;
+            font-size: 2.5rem;
             font-weight: 700;
             color: var(--accent);
             line-height: 1;
-            letter-spacing: -0.02em;
         }
         .hero-label {
             font-family: var(--font-display);
-            font-size: 0.8rem;
-            font-weight: 500;
+            font-size: 0.88rem;
             text-transform: uppercase;
             letter-spacing: 3px;
             color: var(--text-muted);
-            margin-top: 0.3rem;
         }
         .hero-query {
             font-family: var(--font-display);
             font-size: 1.1rem;
-            font-weight: 500;
             color: var(--text-subtle);
-            margin-top: 0.5rem;
+            margin-top: 0.4rem;
         }
         .hero-query strong {
             color: var(--text);
-            font-weight: 700;
             background: rgba(108,92,231,0.1);
-            padding: 0.1rem 0.5rem;
+            padding: 0.15rem 0.5rem;
             border-radius: 20px;
         }
 
-        /* ===== SUGGESTIONS CHIPS (violet solide) ===== */
-        .suggestions-bar {
-            margin-bottom: 1.5rem;
+        .filter-tags {
             display: flex;
-            justify-content: center;
             flex-wrap: wrap;
-            gap: 0.75rem;
+            gap: 0.5rem;
+            margin-bottom: 0rem;
         }
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+    padding: 0.4rem 0.8rem 0.4rem 1.1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+    font-size: 0.92rem;
+
+            font-family: var(--font-display);
+            color: var(--text);
+        }
+        .filter-tag i { color: var(--accent); font-size: 1rem; cursor: pointer; }
+        .filter-tag .tag-remove { color: #e03131; cursor: pointer; margin-left: 0.2rem; }
+        .clear-all {
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+                font-weight: bold;   /* Optionnel : la rend plus épaisse */
+            font-family: var(--font-display);
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.3rem 0.6rem;
+        }
+        .clear-all:hover { color: #e03131; }
+
+.filter-tag .tag-remove:hover {
+    transform: scale(1.1);  /* Effet zoom au survol */
+}
+
+.suggestions-bar {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0;  /* ← change de 1.5rem à 0 */
+    margin-top: 0.9rem; /* ← ajoute un petit espace au-dessus si besoin */
+}
         .suggestion-chip {
             display: inline-flex;
             align-items: center;
-            gap: 0.6rem;
-            padding: 0.5rem 1.2rem;
+            gap: 0.4rem;
+    padding: 0.55rem 1.3rem;
             background: var(--accent);
-            border: none;
             border-radius: 40px;
             text-decoration: none;
             color: white;
             font-family: var(--font-display);
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             font-weight: 500;
-            transition: all 0.2s;
+            transition: transform 0.2s;
         }
-        .suggestion-chip:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-        .suggestion-chip i { font-size: 0.8rem; }
+        .suggestion-chip:hover { transform: translateY(-2px); background: var(--accent-hover); }
         .chip-count {
             background: rgba(255,255,255,0.25);
             border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            padding: 0.1rem 0.5rem;
-            color: white;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.8rem;
         }
 
-        /* ===== LAYOUT ===== */
         .search-layout {
-            display: grid;
-            grid-template-columns: var(--sidebar-w) 1fr;
+            display: flex;
             gap: 1.5rem;
-            align-items: start;
+            align-items: flex-start;
         }
 
-        /* ===== SIDEBAR ===== */
         .filters-sidebar {
+            width: var(--sidebar-w);
+            flex-shrink: 0;
             position: sticky;
-            top: 100px;
-            max-height: calc(100vh - 120px);
+            top: 90px;
+            max-height: calc(100vh - 100px);
             overflow-y: auto;
             padding-right: 0.5rem;
         }
         .filters-sidebar::-webkit-scrollbar { width: 3px; }
-        .filters-sidebar::-webkit-scrollbar-track { background: var(--surface); border-radius: 4px; }
-        .filters-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .filters-sidebar::-webkit-scrollbar-track { background: var(--surface); }
+        .filters-sidebar::-webkit-scrollbar-thumb { background: var(--border); }
 
         .sidebar-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1rem;
-            padding: 0 0.25rem;
+            margin-bottom: 0.8rem;
         }
         .sidebar-title {
             font-family: var(--font-display);
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -182,15 +215,15 @@
         }
         .sidebar-actions {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
         .btn-expand-all, .btn-clear-filters {
             background: none;
             border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 0.3rem 0.8rem;
+            padding: 0.25rem 0.7rem;
             font-family: var(--font-display);
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -198,162 +231,127 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-expand-all:hover, .btn-clear-filters:hover { border-color: var(--accent); color: var(--accent); background: rgba(108,92,231,0.05); }
+        .btn-expand-all:hover, .btn-clear-filters:hover { border-color: var(--accent); color: var(--accent); }
         .btn-clear-filters { border-color: rgba(224,49,49,0.3); color: #e03131; }
-        .btn-clear-filters:hover { border-color: #e03131; background: rgba(224,49,49,0.08); }
+        .btn-clear-filters:hover { border-color: #e03131; background: rgba(224,49,49,0.08); color: #e03131; }
 
         .filter-group {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 0.75rem;
+            border-radius: 10px;
+            margin-bottom: 0.6rem;
             overflow: hidden;
         }
-        .filter-group-toggle {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.9rem 1rem;
-            background: var(--surface);
-            border: none;
-            cursor: pointer;
-            color: var(--text);
-            font-family: var(--font-display);
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        .filter-group-toggle:hover { background: var(--surface2); }
-        .group-label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent);
-        }
-        .group-count {
-            font-size: 0.65rem;
-            font-family: monospace;
-            color: var(--text-muted);
-            background: var(--surface2);
-            padding: 0.1rem 0.4rem;
-            border-radius: 20px;
-            margin-left: 0.6rem;
-        }
-        .group-arrow {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            transition: transform 0.2s;
-        }
+.filter-group-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.8rem;
+    background: var(--surface);
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-weight: 500;
+}
+
+.group-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+}
+
+.right-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.group-count {
+    font-size: 0.7rem;
+    font-weight: 500;
+    font-family: monospace;
+    color: var(--text-muted);
+    background: var(--surface2);
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    letter-spacing: normal;
+}
+
+.group-arrow {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+}
         .filter-group.open .group-arrow { transform: rotate(180deg); }
-        .filter-body {
-            display: none;
-            border-top: 1px solid var(--border-light);
-            padding: 0.25rem 0;
-        }
         .filter-group.open .filter-body { display: block; }
+        .filter-body { display: none; border-top: 1px solid var(--border-light); padding: 0.2rem 0; max-height: 280px; overflow-y: auto; }
 
         .filter-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.6rem 1rem;
+            padding: 0.4rem 0.8rem;
             text-decoration: none;
             color: var(--text-muted);
             font-size: 0.85rem;
-            transition: all 0.2s;
+            transition: all 0.15s;
             border-left: 2px solid transparent;
         }
-        .filter-item:hover {
-            color: var(--text);
-            background: rgba(108,92,231,0.05);
-            border-left-color: var(--accent);
-        }
-        .filter-item.active {
-            color: var(--accent);
-            border-left-color: var(--accent);
-            background: rgba(108,92,231,0.08);
-            font-weight: 600;
-        }
-        .item-name {
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .item-count {
-            font-size: 0.7rem;
-            color: var(--text-subtle);
-            background: var(--surface2);
-            padding: 0.1rem 0.45rem;
-            border-radius: 20px;
-        }
+        .filter-item:hover { color: var(--text); background: rgba(108,92,231,0.05); border-left-color: var(--accent); }
+        .filter-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(108,92,231,0.08); font-weight: 600; }
+.item-name { 
+    flex: 1; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: clip;
+    word-break: break-all;   /* Coupe au milieu des mots */
+    max-width: 260px;
+}
+        
+        
+        .item-count { font-size: 0.6rem; background: var(--surface2); padding: 0.05rem 0.35rem; border-radius: 20px; }
+
         .filter-more-btn {
             width: 100%;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             background: none;
             border: none;
-            font-size: 0.7rem;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.6rem;
             font-family: var(--font-display);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--accent);
             cursor: pointer;
-            text-align: left;
+            text-align: center;
+            transition: opacity 0.2s;
         }
+        .filter-more-btn:hover { opacity: 0.7; background: rgba(108,92,231,0.03); }
 
-        /* ===== TOOLBAR ===== */
         .toolbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.6rem;
             flex-wrap: wrap;
         }
-        .active-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            align-items: center;
-            flex: 1;
-        }
-        .filter-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.3rem 0.8rem 0.3rem 1.2rem;
-            background: rgba(108,92,231,0.12);
-            border: 1px solid rgba(108,92,231,0.3);
-            border-radius: 30px;
-            font-family: var(--font-display);
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--accent);
-        }
-        .filter-tag button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--accent);
-            font-size: 0.7rem;
-            opacity: 0.7;
-        }
-        .filter-tag button:hover { opacity: 1; }
-
         .toolbar-actions {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             flex-shrink: 0;
         }
         .btn-icon {
-            width: 38px;
-            height: 38px;
+            width: 34px;
+            height: 34px;
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -367,70 +365,444 @@
         .btn-notes-toggle {
             display: inline-flex;
             align-items: center;
-            gap: 0.6rem;
-            padding: 0.5rem 1.2rem;
+            gap: 0.4rem;
+            padding: 0.5rem 1.3rem;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 40px;
             font-family: var(--font-display);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: 600;
             color: var(--text);
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-notes-toggle i { color: var(--accent); }
+        .btn-notes-toggle i { color: var(--text); } 
         .btn-notes-toggle:hover { border-color: var(--accent); background: rgba(108,92,231,0.05); }
         .btn-notes-toggle.mode-community { border-color: var(--accent); background: rgba(108,92,231,0.1); color: var(--accent); }
-        .btn-notes-toggle.mode-personal { border-color: #ec4899; background: rgba(236,72,153,0.1); color: #ec4899; }
-        .btn-notes-toggle.mode-personal i { color: #ec4899; }
+.btn-notes-toggle.mode-personal { 
+    border-color: #fbbf24; 
+    background: rgba(251, 191, 36, 0.1); 
+    color: #fbbf24; 
+}
+.btn-notes-toggle.mode-personal i { 
+    color: #fbbf24; 
+}
+        .btn-title-only {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.9rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+.btn-title-only.active { 
+    border-color: var(--accent); 
+    background: rgba(108,92,231,0.1); 
+    color: var(--accent); 
+}
+.btn-title-only.active i { 
+    color: var(--accent); 
+}
 
+
+
+/* ===== NOUVEAU STYLE FILTRES (comme rated.html) ===== */
+.filter-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--surface2);
+    border-top: 2px solid var(--accent);
+    transform: translateY(100%);
+    transition: transform 0.3s ease-out;
+    z-index: 1000;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 20px 20px 0 0;
+    touch-action: pan-y;
+}
+.filter-panel.open { transform: translateY(0); }
+
+.drag-handle {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 4px;
+    cursor: grab;
+    touch-action: none;
+}
+.drag-handle-bar {
+    width: 40px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+}
+
+.filter-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--surface2);
+    z-index: 10;
+}
+.filter-panel-header h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.close-panel {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 0.5rem;
+}
+
+.filter-section {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+}
+.filter-section-title {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+}
+
+.chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+}
+
+.filter-chip {
+    padding: 0.5rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.filter-chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+.show-more-chip {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px dashed var(--accent);
+    border-radius: 30px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: var(--accent);
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.show-more-chip:hover { background: rgba(108,92,231,0.1); }
+
+.filter-actions {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    border-top: 1px solid var(--border);
+    position: sticky;
+    bottom: 0;
+    background: var(--surface2);
+}
+.btn-clear {
+    flex: 1;
+    padding: 0.8rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #888;
+}
+.btn-apply {
+    flex: 2;
+    padding: 0.8rem;
+    background: var(--accent);
+    border: none;
+    border-radius: 40px;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+}
+
+/* Bouton Recherche avancée */
+.btn-advanced-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-advanced-search.active {
+    border-color: var(--accent);
+    background: rgba(108,92,231,0.15);
+    color: var(--accent);
+}
+.btn-advanced-search.active i {
+    color: var(--accent);
+}
+
+/* Barre de recherche dans les filtres - cachée par défaut */
+/* Barre de recherche dans les filtres - cachée par défaut */
+/* Ces règles doivent exister et être après les autres règles .filter-search */
+.filter-search {
+    display: none;  /* Par défaut, la barre est cachée */
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+
+
+/* En mode avancé, on force l'affichage des barres */
+.filters-sidebar.advanced-mode-active .filter-group .filter-search {
+    display: block;
+}
+
+/* Mode avancé ACTIF : afficher les barres de recherche */
+.filters-sidebar.advanced-mode-active .filter-search {
+    display: block;
+}
+.advanced-mode-active .filter-search {
+    display: block;
+}
+
+.filter-search input {
+    width: 100%;
+    padding: 0.5rem 0.7rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    font-size: 0.75rem;
+    font-family: var(--font-text);
+}
+.filter-search input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+.filter-search input::placeholder {
+    color: var(--text-muted);
+}
+
+
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s;
+}
+.overlay.visible { opacity: 1; visibility: visible; }
+
+
+.mobile-filter-hero {
+    display: none;
+}
+
+.mobile-only-actions {
+    display: none;
+}
+
+.filter-chip.mode-community {
+    background: rgba(108,92,231,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+.filter-chip.mode-personal {
+    background: rgba(251,191,36,0.1);
+    border-color: #fbbf24;
+    color: #fbbf24;
+}
+
+@media (max-width: 860px) {
+    .mobile-only-actions {
+        display: block;
+    }
+    
+    .toolbar-actions .btn-title-search,
+    .toolbar-actions .btn-notes-toggle {
+        display: none;
+    }
+}
+
+
+@media (max-width: 860px) {
+    .mobile-filter-hero {
+        display: flex;
+        justify-content: center;
+        margin: 1rem 0 1.2rem;
+    }
+
+    .mobile-filter-hero-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.9rem 2.5rem;
+        background: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-family: var(--font-display);
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(108, 92, 231, 0.4);
+        transition: all 0.2s;
+    }
+
+    .mobile-filter-hero-btn:active {
+        transform: scale(0.97);
+        box-shadow: 0 2px 10px rgba(108, 92, 231, 0.3);
+    }
+
+    .mobile-filter-hero-badge {
+        background: white;
+        color: var(--accent);
+        border-radius: 20px;
+        padding: 0.1rem 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 800;
+    }
+}
+
+/* Pour le bouton Recherche dans le titre - style par défaut */
+.btn-title-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-title-search.active {
+    border-color: var(--accent);
+    background: rgba(108,92,231,0.1);
+    color: var(--accent);
+}
+.btn-title-search.active i {
+    color: var(--accent);
+}
+
+        .btn-hide-images {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.9rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-hide-images.active { border-color: var(--accent); color: var(--accent); background: rgba(108,92,231,0.1); }
+
+        .mobile-filter-btn {
+            display: none;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.9rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
         .filter-badge {
             background: var(--accent);
             color: white;
             border-radius: 20px;
-            padding: 0 6px;
-            font-size: 0.7rem;
-            margin-left: 4px;
+            padding: 0 5px;
+            font-size: 0.55rem;
         }
 
-        /* ===== GRILLE - 6 oeuvres ===== */
         .works-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 4px;
-            margin-top: 0.5rem;
         }
-
         .work-card {
             text-decoration: none;
             color: inherit;
-            display: block;
             background: var(--card-bg);
             overflow: hidden;
             transition: transform 0.2s;
             position: relative;
         }
         .work-card:hover { transform: translateY(-2px); z-index: 2; }
-
         .work-image {
             position: relative;
-            width: 100%;
-            aspect-ratio: 2 / 3;
+            aspect-ratio: 2/3;
             background: var(--surface2);
             overflow: hidden;
         }
-
         .work-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: block;
             opacity: 0;
             transition: opacity 0.3s, transform 0.4s;
         }
         .work-card:hover .work-image img { transform: scale(1.03); }
-
         .image-placeholder, .no-copyright-badge {
             position: absolute;
             inset: 0;
@@ -440,21 +812,53 @@
             justify-content: center;
             background: var(--surface2);
             color: var(--text-muted);
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
-        .no-copyright-badge i { font-size: 2rem; opacity: 0.2; }
-        .no-copyright-badge span { font-family: var(--font-display); font-size: 0.7rem; text-transform: uppercase; }
+        
+        
+.no-copyright-badge {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+        .no-copyright-badge span { font-family: var(--font-display); font-size: 0.55rem; text-transform: uppercase; }
 
-        /* ===== STACK NOTES ===== */
+        .hide-images .work-image img,
+        .hide-images .image-placeholder,
+        .hide-images .no-copyright-badge {
+            display: none !important;
+        }
+        .hide-images .work-image {
+            background: var(--surface);
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hide-images .work-image::after {
+            content: "🖼️";
+            font-size: 1.8rem;
+            opacity: 0.3;
+        }
+
         .rating-stack {
             position: absolute;
-            top: 8px;
-            left: 8px;
+            top: 6px;
+            left: 6px;
             z-index: 10;
             background: rgba(0,0,0,0.65);
             backdrop-filter: blur(4px);
-            padding: 5px 8px;
-            border-radius: 6px;
+            padding: 3px 6px;
+            border-radius: 5px;
             font-family: var(--font-display);
             cursor: pointer;
             pointer-events: auto;
@@ -462,39 +866,38 @@
         .rating-main {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             color: var(--gold);
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             font-weight: 600;
-            padding-bottom: 3px;
+            padding-bottom: 2px;
             border-bottom: 1px solid rgba(255,255,255,0.15);
         }
-        .rating-main i { font-size: 0.6rem; }
+        .rating-main i { font-size: 0.5rem; }
         .rating-sub {
             display: flex;
             flex-direction: column;
             gap: 2px;
-            margin-top: 3px;
+            margin-top: 2px;
         }
         .sub-item {
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-size: 0.6rem;
+            gap: 3px;
+            font-size: 0.5rem;
             color: rgba(255,255,255,0.7);
         }
-        .sub-item i { width: 12px; font-size: 0.55rem; }
+        .sub-item i { width: 10px; font-size: 0.45rem; }
         .sub-item.technique i { color: var(--tech); }
         .sub-item.originalite i { color: var(--crea); }
         .sub-item.emotion i { color: var(--emo); }
 
-        /* ===== FAVORI EN HAUT A DROITE ===== */
         .work-fav {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 28px;
-            height: 28px;
+            top: 6px;
+            right: 6px;
+            width: 24px;
+            height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -502,40 +905,36 @@
             z-index: 10;
             background: transparent;
         }
-        .work-fav i {
-            color: white;
-            font-size: 1rem;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
+        .work-fav i { color: white; font-size: 0.8rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
         .work-fav:hover i { transform: scale(1.1); }
         .work-fav.active i { color: #e03131; }
 
         .work-title {
-            font-size: 0.75rem;
+            font-size: 0.9rem;
             font-weight: 600;
             font-family: var(--font-display);
-            margin-top: 6px;
+            margin-top: 7px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             text-align: center;
         }
         .work-artist {
-            font-size: 0.65rem;
+            font-size: 0.78rem;
             color: var(--text-muted);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             margin-top: 2px;
             text-align: center;
+            margin-bottom: 8px;
         }
 
-        /* ===== MODAL NOTES ===== */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: var(--overlay);
+            background: rgba(0,0,0,0.8);
             backdrop-filter: blur(8px);
             z-index: 500;
             align-items: center;
@@ -545,74 +944,74 @@
         .modal {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 1.8rem;
-            width: min(440px, 92vw);
+            border-radius: 16px;
+            padding: 1.3rem;
+            width: min(400px, 92vw);
             position: relative;
         }
         .modal-close {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 0.8rem;
+            right: 0.8rem;
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
         }
         .modal-title {
             font-family: var(--font-display);
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             margin-bottom: 0.2rem;
             padding-right: 2rem;
         }
         .modal-artist {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
         .rating-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1rem;
-            gap: 1rem;
+            margin-bottom: 0.7rem;
+            gap: 0.8rem;
         }
         .rating-label {
             font-family: var(--font-display);
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 600;
             color: var(--text-subtle);
-            min-width: 90px;
+            min-width: 75px;
         }
         .stars-input {
             display: flex;
-            gap: 0.2rem;
+            gap: 0.15rem;
             flex-direction: row-reverse;
             justify-content: flex-end;
         }
         .stars-input input { display: none; }
         .stars-input label {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             cursor: pointer;
             color: var(--border);
             transition: color 0.15s;
         }
-        .stars-input.small label { font-size: 1rem; }
+        .stars-input.small label { font-size: 0.9rem; }
         .stars-input label:hover,
         .stars-input label:hover ~ label,
         .stars-input input:checked ~ label { color: #fbbf24; }
-        .modal-divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
-        .modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+        .modal-divider { border: none; border-top: 1px solid var(--border); margin: 0.7rem 0; }
+        .modal-actions { display: flex; gap: 0.6rem; margin-top: 1rem; }
         .btn-primary {
             flex: 1;
             background: var(--accent);
             border: none;
             color: white;
-            padding: 0.7rem;
+            padding: 0.5rem;
             font-family: var(--font-display);
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 600;
             border-radius: 40px;
             cursor: pointer;
@@ -622,24 +1021,23 @@
             background: none;
             border: 1px solid var(--border);
             color: var(--text-muted);
-            padding: 0.7rem;
+            padding: 0.5rem;
             font-family: var(--font-display);
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 600;
             border-radius: 40px;
             cursor: pointer;
         }
         .btn-secondary:hover { border-color: #e03131; color: #e03131; }
 
-        /* ===== LOAD MORE ===== */
-        .load-more-container { text-align: center; padding: 2rem 0; }
+        .load-more-container { text-align: center; padding: 1.5rem 0; }
         .load-more-btn {
             background: transparent;
             border: 1px solid var(--border);
             color: var(--text-muted);
-            padding: 0.7rem 2rem;
+            padding: 0.6rem 1.8rem;
             font-family: var(--font-display);
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -649,34 +1047,21 @@
         }
         .load-more-btn:hover { border-color: var(--gold); color: var(--gold); }
         .load-more-info {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             color: var(--text-subtle);
-            margin-top: 0.75rem;
+            margin-top: 0.4rem;
         }
         .load-more-info span { color: var(--accent); font-weight: 700; }
 
-        .no-results { text-align: center; padding: 4rem 2rem; color: var(--text-muted); }
-        .no-results i { font-size: 3rem; color: var(--gold); opacity: 0.3; margin-bottom: 1rem; display: block; }
+        .no-results { text-align: center; padding: 2.5rem 1.5rem; color: var(--text-muted); }
+        .no-results i { font-size: 2rem; color: var(--gold); opacity: 0.3; margin-bottom: 0.8rem; display: block; }
+        .no-results strong { color: var(--text); background: var(--surface); padding: 0.15rem 0.5rem; border-radius: 20px; }
 
-        /* ===== MOBILE ===== */
-        .mobile-filter-btn {
-            display: none;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.5rem 1.2rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            font-family: var(--font-display);
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
         .drawer-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: var(--overlay);
+            background: rgba(0,0,0,0.5);
             z-index: 200;
         }
         .mobile-drawer {
@@ -697,71 +1082,35 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1rem;
+            padding: 0.8rem;
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             background: var(--surface);
         }
-        .drawer-header-left {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
         .drawer-title {
             font-family: var(--font-display);
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--text-subtle);
         }
-        .drawer-expand-btn {
-            background: none;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 0.3rem 0.8rem;
-            font-family: var(--font-display);
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            cursor: pointer;
-        }
         .drawer-close {
             background: none;
             border: none;
-            font-size: 1.2rem;
+            font-size: 1rem;
             cursor: pointer;
             color: var(--text-muted);
         }
-        .drawer-inner {
-            padding: 0.5rem 0;
-        }
-
-        @media (max-width: 1400px) { .works-grid { grid-template-columns: repeat(5, 1fr); } }
-        @media (max-width: 1200px) { .works-grid { grid-template-columns: repeat(4, 1fr); } }
-        @media (max-width: 1000px) { .works-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 860px) {
-            .search-layout { grid-template-columns: 1fr; }
-            .filters-sidebar { display: none; }
-            .mobile-filter-btn { display: flex; }
-            .works-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (max-width: 640px) {
-            .works-grid { grid-template-columns: repeat(2, 1fr); }
-            .toolbar { flex-direction: column; align-items: stretch; }
-            .toolbar-actions { justify-content: flex-start; }
-            .hero-count { font-size: 2.5rem; }
-        }
+        .drawer-inner { padding: 0.3rem 0; }
 
         .scroll-top {
             position: fixed;
             bottom: 1rem;
             right: 1rem;
-            width: 44px;
-            height: 44px;
+            width: 36px;
+            height: 36px;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 50%;
@@ -776,40 +1125,424 @@
         }
         .scroll-top.visible { opacity: 1; visibility: visible; }
         .scroll-top:hover { border-color: var(--accent); color: var(--accent); }
+.filter-group .filter-search {
+    display: none;
+}
+
+}
+/* Desktop only / Mobile only */
+.desktop-only { display: flex; }
+.mobile-only  { display: none; }
+
+@media (max-width: 860px) {
+    .desktop-only { display: none !important; }
+    .mobile-only  { display: block; }
+
+    /* On cache le bouton 4 colonnes sur mobile */
+    .btn-grid-toggle {
+        display: none !important;
+    }
+
+    /* On force l'affichage des boutons Notes et Titre */
+    .toolbar-actions .btn-title-search,
+    .toolbar-actions .btn-notes-toggle {
+        display: inline-flex !important;
+    }
+
+    /* On organise les boutons pour qu'ils soient côte à côte */
+    .btn-group-right {
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Ajustement de la taille des boutons pour mobile */
+    .btn-advanced-search, .btn-title-search, .btn-notes-toggle {
+        padding: 0.5rem 0.7rem !important;
+        font-size: 0.75rem !important;
+        flex: 1 1 auto; /* Permet aux boutons de se partager l'espace */
+        min-width: 100px;
+        justify-content: center;
+    }
+
+    .mobile-filter-hero {
+        display: flex;
+        justify-content: center;
+        margin: 0.8rem 0 0.6rem;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+
+/* Bottom sheet pour mobile */
+.sheet-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s;
+}
+.sheet-overlay.visible { opacity: 1; visibility: visible; }
+
+.bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--surface2);
+    border-radius: 24px 24px 0 0;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-out;
+    z-index: 999;
+    max-height: 85vh;
+    overflow-y: auto;
+    touch-action: pan-y;
+}
+.bottom-sheet.open { transform: translateY(0); }
+
+.drag-handle {
+    display: flex;
+    justify-content: center;
+    padding: 12px 0 6px;
+    cursor: grab;
+    touch-action: none;
+}
+.drag-handle-bar {
+    width: 50px;
+    height: 5px;
+    background: var(--border);
+    border-radius: 3px;
+}
+.sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--surface2);
+}
+.sheet-title {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-subtle);
+}
+.sheet-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+.sheet-inner {
+    padding: 0.3rem 0;
+}
+
+.btn-grid-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-grid-toggle.active {
+    border-color: var(--accent);
+    background: rgba(108,92,231,0.1);
+    color: var(--accent);
+}
+
+
+/* Badge pour le bouton recherche avancée */
+.advanced-badge {
+    background: #e03131;
+    color: white;
+    font-size: 0.55rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 20px;
+    font-weight: 700;
+    margin-left: 0.3rem;
+}
+
+
+/* Grille 4 colonnes */
+.works-grid.grid-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1400px) { .works-grid.grid-4 { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 1000px) { .works-grid.grid-4 { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px)  { .works-grid.grid-4 { grid-template-columns: repeat(2, 1fr); } }
+
+
+
+        @media (max-width: 1400px) { .works-grid { grid-template-columns: repeat(5, 1fr); } }
+        @media (max-width: 1200px) { .works-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 1000px) { .works-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 860px) {
+            .search-layout { display: block; }
+            .filters-sidebar { display: none; }
+            .mobile-filter-btn { display: inline-flex; }
+            .works-grid { grid-template-columns: repeat(3, 1fr); }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar-actions { justify-content: flex-start; }
+.mobile-filter-tags {
+    margin: 0 0 0.6rem;
+    padding: 0 0.2rem;
+}
+
+        }
+        @media (max-width: 640px) {
+            .works-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero-count { font-size: 2rem; }
+        }
     </style>
 </head>
 <body style="visibility:hidden">
+{% include 'loader.html' %}  <!-- AJOUTER CETTE LIGNE -->
 <script>
     (function() {
         const t = localStorage.getItem('theme') || 'light';
-        document.body.classList.remove('theme-dark', 'theme-light');
         document.body.classList.add('theme-' + t);
         document.body.style.visibility = '';
     })();
 
+
+
+
+
+
     let CSRF_TOKEN = '';
     let userRatings = {};
     let communityRatings = {};
-    let noteDisplayMode = 'community';
+    let noteDisplayMode = 'hidden';
     let isLoading = false;
     let currentPage = {{ current_page }};
     let hasMore = {{ 'true' if has_more else 'false' }};
     let displayedCount = {{ works|length }};
     let totalCount = {{ total_oeuvres }};
+    let hideImages = localStorage.getItem('hideImages') === 'true';
+    let allExpanded = true;
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const meta = document.querySelector('meta[name="csrf-token"]');
-        if (meta) CSRF_TOKEN = meta.content;
-        {% if session.user_id %}loadUserRatings();{% endif %}
-        loadAllCommunityRatings();
-        updateLoadMoreInfo();
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('title_only') === '1') document.getElementById('btn-title-only')?.classList.add('active');
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    if (meta) CSRF_TOKEN = meta.content;
+    {% if session.user_id %}loadUserRatings();{% endif %}
+    loadAllCommunityRatings();
+    updateLoadMoreInfo();
+    if (localStorage.getItem('gridMode') === '4') toggleGrid();
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('title_only') === '1') document.getElementById('btn-title-only')?.classList.add('active');
+    if (hideImages) {
+        document.getElementById('works-grid')?.classList.add('hide-images');
+        document.getElementById('btn-hide-images')?.classList.add('active');
+    }
+    
+    // Mode "Masquer notes" par défaut
+    noteDisplayMode = 'hidden';
+    const notesBtn = document.getElementById('notes-toggle-btn');
+    if (notesBtn) {
+        notesBtn.className = 'btn-notes-toggle';
+        notesBtn.innerHTML = '<i class="far fa-eye-slash"></i> <span>Notes</span>';
+    }
+    refreshAllNoteDisplays();
+    
+    // Replier tous les groupes de filtres
+    document.querySelectorAll('.filter-group').forEach(group => {
+        group.classList.remove('open');
     });
+    const expandBtn = document.querySelector('.btn-expand-all');
+    if (expandBtn) {
+        expandBtn.innerHTML = '<i class="fas fa-chevron-down"></i> Déplier';
+    }
+    
+    initBottomSheetDrag();
+    initFilterDrag();
+    
+    // ===== AJOUT : Loader sur les liens =====
+    // Intercepter tous les clics sur les liens de navigation
+    document.querySelectorAll('.work-card, .filter-item, .filter-chip, .suggestion-chip, .artist-link, .tag a, .tech-value a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+                const loader = document.getElementById('global-loader');
+                if (loader) loader.style.display = 'flex';
+            }
+        });
+    });
+});
 
-    function esc(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-    function params() { return new URLSearchParams(window.location.search); }
-    function navigate(url) { window.location.href = url; }
+function esc(s) { 
+    if (!s) return ''; 
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); 
+}
+
+function params() { 
+    return new URLSearchParams(window.location.search); 
+}
+
+function navigate(url) { 
+    window.location.href = url; 
+}
+
+// Version améliorée de loadMoreWorks avec loader
+window.loadMoreWorks = async function() {
+    if (isLoading || !hasMore) return;
+    isLoading = true;
+    const btn = document.querySelector('.load-more-btn');
+    const originalText = btn?.textContent;
+    if (btn) { 
+        btn.disabled = true; 
+        btn.innerHTML = '<span class="btn-loader"></span> CHARGEMENT…';
+    }
+    try {
+        let url = `/api/works?page=${currentPage + 1}&limit=12`;
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('q')) url += `&q=${urlParams.get('q')}`;
+        urlParams.getAll('artist').forEach(a => url += `&artist=${a}`);
+        urlParams.getAll('city').forEach(c => url += `&city=${c}`);
+        urlParams.getAll('museum').forEach(m => url += `&museum=${m}`);
+        if (urlParams.get('country')) url += `&country=${urlParams.get('country')}`;
+        urlParams.getAll('movement').forEach(m => url += `&movement=${m}`);
+        urlParams.getAll('type').forEach(t => url += `&type=${t}`);
+        urlParams.getAll('genre').forEach(g => url += `&genre=${g}`);
+        if (urlParams.get('title_only') === '1') url += '&title_only=1';
+
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.works && data.works.length) {
+            const grid = document.querySelector('.works-grid');
+            for (const w of data.works) grid.appendChild(buildCard(w));
+            currentPage++;
+            hasMore = data.has_more;
+            displayedCount += data.works.length;
+            for (const w of data.works) {
+                await loadOneCommunityRating(w.id);
+                {% if session.user_id %}await fetchUserRating(w.id);{% endif %}
+            }
+            refreshAllNoteDisplays();
+        }
+        if (!hasMore) { 
+            const c = document.querySelector('.load-more-container'); 
+            if (c) c.style.display = 'none'; 
+        }
+        updateLoadMoreInfo();
+    } catch(e) { 
+        console.error('Erreur chargement:', e); 
+    } finally { 
+        isLoading = false; 
+        if (btn) { 
+            btn.disabled = false; 
+            btn.innerHTML = originalText || 'VOIR PLUS';
+            updateLoadMoreInfo();
+        } 
+    }
+};
+
+
+function toggleExpandAll() {
+    allExpanded = !allExpanded;
+    const isAdvancedMode = document.querySelector('.filters-sidebar.advanced-mode-active') !== null;
+    
+    document.querySelectorAll('.filter-group').forEach(group => {
+        if (allExpanded) {
+            group.classList.add('open');
+            // 🔥 En mode avancé, quand on déplie, on montre aussi la barre de recherche
+            if (isAdvancedMode) {
+                const searchDiv = group.querySelector('.filter-search');
+                if (searchDiv) searchDiv.style.display = 'block';
+            }
+        } else {
+            group.classList.remove('open');
+            // 🔥 En mode avancé, quand on replie, on cache aussi la barre de recherche
+            if (isAdvancedMode) {
+                const searchDiv = group.querySelector('.filter-search');
+                if (searchDiv) searchDiv.style.display = 'none';
+            }
+            // Réinitialiser la recherche quand on replie
+            const searchInput = group.querySelector('.filter-search-input');
+            if (searchInput && searchInput.value !== '') {
+                searchInput.value = '';
+                const event = new Event('keyup');
+                searchInput.dispatchEvent(event);
+            }
+        }
+    });
+    
+    document.querySelectorAll('.btn-expand-all').forEach(btn => {
+        btn.innerHTML = allExpanded ? '<i class="fas fa-chevron-up"></i> Replier' : '<i class="fas fa-chevron-down"></i> Déplier';
+    });
+}
+
+function toggleMoreFilter(id, btn) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    
+    const isOpen = el.style.display === 'block';
+    const isAdvancedMode = document.querySelector('.filters-sidebar.advanced-mode-active') !== null;
+    
+    // Si mode avancé, on ne fait rien car tout est déjà affiché
+    if (isAdvancedMode) {
+        // En mode avancé, le bouton ne devrait pas être visible
+        // Mais si par hasard il l'est, on le cache
+        if (btn) btn.style.display = 'none';
+        return;
+    }
+    
+    if (isOpen) {
+        el.style.display = 'none';
+        btn.textContent = 'VOIR PLUS →';
+        // Remettre les 4 premiers visibles dans le body
+        const body = btn.closest('.filter-body');
+        if (body) {
+            const items = body.querySelectorAll('.filter-item:not(.more-items .filter-item)');
+            items.forEach((item, index) => {
+                item.style.display = index < 4 ? 'flex' : 'none';
+            });
+        }
+    } else {
+        el.style.display = 'block';
+        btn.textContent = 'VOIR MOINS ↑';
+        // Afficher tous les items
+        const body = btn.closest('.filter-body');
+        if (body) {
+            const items = body.querySelectorAll('.filter-item');
+            items.forEach(item => {
+                item.style.display = 'flex';
+            });
+            // Afficher aussi les items dans la div cachée
+            const hiddenItems = el.querySelectorAll('.filter-item');
+            hiddenItems.forEach(item => {
+                item.style.display = 'flex';
+            });
+        }
+    }
+}
+
+
+
+
+
+
 
     window.imgErr = function(img) {
         let n = parseInt(img.dataset.err || '0');
@@ -818,7 +1551,6 @@
         else { img.style.display = 'none'; const ph = img.parentElement?.querySelector('.image-placeholder'); if (ph) ph.style.display = 'flex'; }
     };
 
-    // Favorites
     async function toggleFav(e, artworkId, el) {
         e.preventDefault(); e.stopPropagation();
         if (!{{ 'true' if session.user_id else 'false' }}) { window.location.href = '/login?next=/suggestions?q={{ q }}'; return; }
@@ -834,7 +1566,6 @@
         } catch(e) {}
     }
 
-    // Community ratings
     async function loadAllCommunityRatings() {
         const ids = [...new Set(Array.from(document.querySelectorAll('.work-card[data-artwork-id]')).map(el => el.dataset.artworkId))];
         for (let i = 0; i < ids.length; i += 8) {
@@ -860,7 +1591,6 @@
         } catch(e) { communityRatings[id] = { avg: 0, count: 0, technique: 0, originalite: 0, emotion: 0 }; }
     }
 
-    // User ratings
     async function loadUserRatings() {
         const ids = [...new Set(Array.from(document.querySelectorAll('.work-card[data-artwork-id]')).map(el => el.dataset.artworkId))];
         for (const id of ids) await fetchUserRating(id);
@@ -870,27 +1600,24 @@
         try {
             const res = await fetch('/api/rating/get/' + artworkId);
             const data = await res.json();
-            if (data.has_rating) {
-                userRatings[artworkId] = data.rating;
-            }
+            if (data.has_rating) userRatings[artworkId] = data.rating;
         } catch(e) {}
         refreshAllNoteDisplays();
     }
 
-    // Toggle note display mode
     function toggleNoteDisplay() {
         if (noteDisplayMode === 'community') {
             noteDisplayMode = 'personal';
             document.getElementById('notes-toggle-btn').className = 'btn-notes-toggle mode-personal';
-            document.getElementById('notes-toggle-btn').innerHTML = '<i class="fas fa-heart"></i> <span>Mes notes</span>';
+            document.getElementById('notes-toggle-btn').innerHTML = '<i class="fas fa-star"></i> <span>Mes notes</span>';
         } else if (noteDisplayMode === 'personal') {
             noteDisplayMode = 'hidden';
             document.getElementById('notes-toggle-btn').className = 'btn-notes-toggle';
-            document.getElementById('notes-toggle-btn').innerHTML = '<i class="far fa-eye-slash"></i> <span>Masquer</span>';
+            document.getElementById('notes-toggle-btn').innerHTML = '<i class="far fa-eye-slash"></i> <span>Notes</span>';
         } else {
             noteDisplayMode = 'community';
             document.getElementById('notes-toggle-btn').className = 'btn-notes-toggle mode-community';
-            document.getElementById('notes-toggle-btn').innerHTML = '<i class="fas fa-users"></i> <span>Notes public</span>';
+            document.getElementById('notes-toggle-btn').innerHTML = '<i class="fas fa-users"></i> <span>Notes publiques</span>';
         }
         refreshAllNoteDisplays();
     }
@@ -900,59 +1627,44 @@
             const artworkId = card.dataset.artworkId;
             const stack = card.querySelector('.rating-stack');
             if (!stack) return;
-            
-            if (noteDisplayMode === 'hidden') {
-                stack.style.display = 'none';
-                return;
-            }
+            if (noteDisplayMode === 'hidden') { stack.style.display = 'none'; return; }
             stack.style.display = 'block';
-            
             const cr = communityRatings[artworkId] || {};
             const ur = userRatings[artworkId] || null;
             const fmt = v => v ? parseFloat(v).toFixed(1) : '—';
-            
             if (noteDisplayMode === 'community') {
                 if (cr.avg && cr.avg > 0) {
-                    stack.innerHTML = `
-                        <div class="rating-main"><i class="fas fa-star"></i><span>${fmt(cr.avg)}</span></div>
+                    stack.innerHTML = `<div class="rating-main"><i class="fas fa-star"></i><span>${fmt(cr.avg)}</span></div>
                         <div class="rating-sub">
                             <div class="sub-item technique"><i class="fas fa-paintbrush"></i><span>${fmt(cr.technique)}</span></div>
                             <div class="sub-item originalite"><i class="fas fa-lightbulb"></i><span>${fmt(cr.originalite)}</span></div>
                             <div class="sub-item emotion"><i class="fas fa-heart"></i><span>${fmt(cr.emotion)}</span></div>
-                        </div>
-                    `;
+                        </div>`;
                 } else {
-                    stack.innerHTML = `
-                        <div class="rating-main"><i class="far fa-star"></i><span></span></div>
+                    stack.innerHTML = `<div class="rating-main"><i class="far fa-star"></i><span></span></div>
                         <div class="rating-sub">
                             <div class="sub-item technique"><i class="fas fa-paintbrush"></i><span>—</span></div>
                             <div class="sub-item originalite"><i class="fas fa-lightbulb"></i><span>—</span></div>
                             <div class="sub-item emotion"><i class="fas fa-heart"></i><span>—</span></div>
-                        </div>
-                    `;
+                        </div>`;
                 }
             } else if (noteDisplayMode === 'personal') {
                 if (ur && ur.note_globale > 0) {
-                    stack.innerHTML = `
-                        <div class="rating-main"><i class="fas fa-star"></i><span>${fmt(ur.note_globale)}</span></div>
+                    stack.innerHTML = `<div class="rating-main"><i class="fas fa-star"></i><span>${fmt(ur.note_globale)}</span></div>
                         <div class="rating-sub">
                             <div class="sub-item technique"><i class="fas fa-paintbrush"></i><span>${fmt(ur.note_technique)}</span></div>
                             <div class="sub-item originalite"><i class="fas fa-lightbulb"></i><span>${fmt(ur.note_originalite)}</span></div>
                             <div class="sub-item emotion"><i class="fas fa-heart"></i><span>${fmt(ur.note_emotion)}</span></div>
-                        </div>
-                    `;
+                        </div>`;
                 } else {
-                    stack.innerHTML = `
-                        <div class="rating-main"><i class="far fa-star"></i><span></span></div>
+                    stack.innerHTML = `<div class="rating-main"><i class="far fa-star"></i><span></span></div>
                         <div class="rating-sub">
                             <div class="sub-item technique"><i class="fas fa-paintbrush"></i><span>—</span></div>
                             <div class="sub-item originalite"><i class="fas fa-lightbulb"></i><span>—</span></div>
                             <div class="sub-item emotion"><i class="fas fa-heart"></i><span>—</span></div>
-                        </div>
-                    `;
+                        </div>`;
                 }
             }
-            
             const title = card.querySelector('.work-title')?.textContent || '';
             const artist = card.querySelector('.work-artist')?.textContent || '';
             stack.setAttribute('onclick', `openRatingModal(event,'${artworkId}','${esc(title)}','${esc(artist)}')`);
@@ -1030,28 +1742,53 @@
         } catch(err) {}
     }
 
-    // Title only (recherche dans titre uniquement) - icône "T" pour Titre
     function toggleTitleOnly() {
         const p = params();
-        p.get('title_only') === '1' ? p.delete('title_only') : p.set('title_only', '1');
+        if (p.get('title_only') === '1') p.delete('title_only');
+        else p.set('title_only', '1');
         p.delete('page');
         navigate('/suggestions?' + p);
     }
 
-    // Filters
-    function toggleGroup(btn) { btn.closest('.filter-group').classList.toggle('open'); }
-    let allExpanded = true;
-    function toggleExpandAll() {
-        allExpanded = !allExpanded;
-        document.querySelectorAll('.filter-group').forEach(g => allExpanded ? g.classList.add('open') : g.classList.remove('open'));
-        document.querySelectorAll('.btn-expand-all, .drawer-expand-btn').forEach(btn => {
-            btn.innerHTML = allExpanded ? '<i class="fas fa-chevron-up"></i> Replier' : '<i class="fas fa-chevron-down"></i> Déplier';
-        });
+function toggleGroup(btn) {
+    const group = btn.closest('.filter-group');
+    if (!group) return;
+    
+    const isAdvancedMode = document.querySelector('.filters-sidebar.advanced-mode-active') !== null;
+    const isOpen = group.classList.contains('open');
+    
+    // Toggle la classe open
+    group.classList.toggle('open');
+    
+    // 🔥 En mode avancé, gérer l'affichage de la barre de recherche
+    if (isAdvancedMode) {
+        const searchDiv = group.querySelector('.filter-search');
+        if (searchDiv) {
+            if (!isOpen) {
+                // On ouvre : on montre la barre
+                searchDiv.style.display = 'block';
+            } else {
+                // On ferme : on cache la barre
+                searchDiv.style.display = 'none';
+            }
+        }
     }
-    function toggleMoreFilter(id, btn) { const el = document.getElementById(id); const isOpen = el.style.display === 'block'; el.style.display = isOpen ? 'none' : 'block'; btn.textContent = isOpen ? 'VOIR PLUS →' : 'VOIR MOINS ↑'; }
+    
+    // Si on ferme, on réinitialise la recherche
+    if (group.classList.contains('open') === false) {
+        const searchInput = group.querySelector('.filter-search-input');
+        if (searchInput && searchInput.value !== '') {
+            searchInput.value = '';
+            const event = new Event('keyup');
+            searchInput.dispatchEvent(event);
+        }
+    }
+}
+
     function removeFilter(type, value) {
         const p = params();
-        if (['artist', 'museum', 'city', 'movement'].includes(type)) {
+        if (type === 'q') { p.delete('q'); }
+        else if (['artist', 'museum', 'city', 'movement', 'type', 'genre'].includes(type)) {
             const list = p.getAll(type).filter(v => v !== value);
             p.delete(type);
             list.forEach(v => p.append(type, v));
@@ -1059,14 +1796,14 @@
         p.delete('page');
         navigate('/suggestions?' + p);
     }
+
     function clearAllFilters() {
         const p = params();
-        ['artist', 'museum', 'city', 'country', 'movement'].forEach(k => p.delete(k));
+        ['q', 'artist', 'museum', 'city', 'country', 'movement', 'type', 'genre'].forEach(k => p.delete(k));
         p.delete('page');
         navigate('/suggestions?' + p);
     }
 
-    // Load more
     function updateLoadMoreInfo() {
         const info = document.querySelector('.load-more-info');
         if (info) info.innerHTML = `Affichage de <span>${displayedCount}</span> œuvre${displayedCount > 1 ? 's' : ''} sur <span>${totalCount}</span>`;
@@ -1083,13 +1820,17 @@
         const btn = document.querySelector('.load-more-btn');
         if (btn) { btn.disabled = true; btn.textContent = 'CHARGEMENT…'; }
         try {
-            let url = `/api/works?page=${currentPage + 1}&limit=12&q={{ q }}`;
-            {% for a in request.args.getlist('artist') %}url += '&artist={{ a }}';{% endfor %}
-            {% for c in request.args.getlist('city') %}url += '&city={{ c }}';{% endfor %}
-            {% for m in request.args.getlist('museum') %}url += '&museum={{ m }}';{% endfor %}
-            {% if request.args.get('country') %}url += '&country={{ request.args.get('country') }}';{% endif %}
-            {% for m in request.args.getlist('movement') %}url += '&movement={{ m }}';{% endfor %}
-            {% if request.args.get('title_only') == '1' %}url += '&title_only=1';{% endif %}
+            let url = `/api/works?page=${currentPage + 1}&limit=12`;
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('q')) url += `&q=${urlParams.get('q')}`;
+            urlParams.getAll('artist').forEach(a => url += `&artist=${a}`);
+            urlParams.getAll('city').forEach(c => url += `&city=${c}`);
+            urlParams.getAll('museum').forEach(m => url += `&museum=${m}`);
+            if (urlParams.get('country')) url += `&country=${urlParams.get('country')}`;
+            urlParams.getAll('movement').forEach(m => url += `&movement=${m}`);
+            urlParams.getAll('type').forEach(t => url += `&type=${t}`);
+            urlParams.getAll('genre').forEach(g => url += `&genre=${g}`);
+            if (urlParams.get('title_only') === '1') url += '&title_only=1';
 
             const res = await fetch(url);
             const data = await res.json();
@@ -1133,11 +1874,582 @@
         return card;
     }
 
-    // Mobile drawer
-    function openDrawer() { document.getElementById('drawer-overlay').classList.add('open'); document.getElementById('mobile-drawer').classList.add('open'); document.body.style.overflow = 'hidden'; }
-    function closeDrawer() { document.getElementById('drawer-overlay').classList.remove('open'); document.getElementById('mobile-drawer').classList.remove('open'); document.body.style.overflow = ''; }
 
-    // Scroll top
+
+// ========== NOUVELLES FONCTIONS POUR LE PANEL FILTRES ==========
+
+let filterChipsData = {};
+let filterShowMoreStates = {};
+
+function openFilterPanel() {
+    document.getElementById('filter-panel').classList.add('open');
+    document.getElementById('filter-overlay').classList.add('visible');
+    document.body.style.overflow = 'hidden';
+    loadFilterOptionsForPanel();
+}
+
+function closeFilterPanel() {
+    document.getElementById('filter-panel').classList.remove('open');
+    document.getElementById('filter-overlay').classList.remove('visible');
+    document.body.style.overflow = '';
+}
+
+
+
+
+
+// Drag to close
+function initFilterDrag() {
+    const panel = document.getElementById('filter-panel');
+    if (!panel) return;
+
+    let startY = 0;
+    let startPanelY = 0;
+    let isDragging = false;
+    const DRAG_ZONE_HEIGHT = 120; // px depuis le haut du panneau = zone de drag
+
+    const onStart = (e) => {
+        const panelRect = panel.getBoundingClientRect();
+        const touchY = e.touches ? e.touches[0].clientY : e.clientY;
+        
+        // Déclenche le drag seulement si on touche dans les 120px du haut
+        if (touchY - panelRect.top > DRAG_ZONE_HEIGHT) return;
+        
+        startY = touchY;
+        isDragging = true;
+        panel.style.transition = 'none';
+    };
+
+    const onMove = (e) => {
+        if (!isDragging) return;
+        const y = e.touches ? e.touches[0].clientY : e.clientY;
+        const delta = y - startY;
+        if (delta > 0) {
+            panel.style.transform = `translateY(${delta}px)`;
+            e.preventDefault();
+        }
+    };
+
+    const onEnd = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        panel.style.transition = '';
+        const y = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+        if (y - startY > 80) {
+            closeFilterPanel();
+            panel.style.transform = '';
+        } else {
+            panel.style.transform = '';
+        }
+    };
+
+    // Écoute sur tout le panneau, mais onStart filtre par position Y
+    panel.addEventListener('touchstart', onStart, { passive: true });
+    panel.addEventListener('mousedown', onStart);
+    panel.addEventListener('touchmove', onMove, { passive: false });
+    panel.addEventListener('touchend', onEnd);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onEnd);
+}
+
+
+
+
+function loadFilterOptionsForPanel() {
+    // Récupérer les données directement depuis la sidebar existante
+    const getItemsFromSidebar = (sectionClass) => {
+        const items = [];
+        const container = document.querySelector(`.filters-sidebar .filter-group:has(.group-label:contains("${sectionClass}")) .filter-body`);
+        if (container) {
+            container.querySelectorAll('.filter-item').forEach(item => {
+                const nameEl = item.querySelector('.item-name');
+                const countEl = item.querySelector('.item-count');
+                if (nameEl) {
+                    items.push({
+                        name: nameEl.textContent.trim(),
+                        count: countEl ? parseInt(countEl.textContent) : 0,
+                        id: nameEl.textContent.trim()
+                    });
+                }
+            });
+        }
+        return items;
+    };
+    
+    // Version alternative : utiliser les données Jinja directement mais en vérifiant
+    const opts = {
+        artists: {{ search_results.artists|tojson if search_results else '[]' }},
+        museums: {{ search_results.museums|tojson if search_results else '[]' }},
+        cities: {{ search_results.cities|tojson if search_results else '[]' }},
+        countries: {{ search_results.countries|tojson if search_results else '[]' }},
+        movements: {{ search_results.movements|tojson if search_results else '[]' }},
+        types: {{ search_results.types|tojson if search_results else '[]' }},
+        genres: {{ search_results.genres|tojson if search_results else '[]' }}
+    };
+    
+    // Debug: vérifier dans la console ce qui est chargé
+    console.log('Filter options loaded:', {
+        movements: opts.movements.length,
+        artists: opts.artists.length,
+        museums: opts.museums.length
+    });
+    
+// Assure-toi que les clés sont correctes
+renderChipsWithMore('artist-chips', opts.artists || [], 'artist', 'id', 'nom');
+renderChipsWithMore('museum-chips', opts.museums || [], 'museum', 'id', 'nom');
+renderChipsWithMore('city-chips', opts.cities || [], 'city', 'id', 'nom');
+renderChipsWithMore('country-chips', opts.countries || [], 'country', 'id', 'nom');
+renderChipsWithMore('movement-chips', opts.movements || [], 'movement', 'name', 'name');
+renderChipsWithMore('type-chips', opts.types || [], 'type', 'name', 'name');
+renderChipsWithMore('genre-chips', opts.genres || [], 'genre', 'name', 'name');
+}
+
+function renderChipsWithMore(containerId, items, paramName, valueKey, nameKey) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    if (!items || items.length === 0) {
+        container.innerHTML = '<span style="color:var(--text-muted);">Aucun</span>';
+        return;
+    }
+    const selected = new URLSearchParams(window.location.search).getAll(paramName);
+    const INIT_SHOW = 4;
+    const expanded = !!filterShowMoreStates[containerId];
+    const visible = expanded ? items : items.slice(0, INIT_SHOW);
+    
+    container.innerHTML = '';
+    visible.forEach(item => {
+        // 🔥 CORRECTION : récupérer correctement la valeur
+        let val = item[valueKey];
+        // Si valueKey est 'id' mais que id n'existe pas, utiliser 'name' ou 'nom'
+        if (!val && valueKey === 'id') {
+            val = item.name || item.nom;
+        }
+        if (!val) val = item.name || item.nom;
+        
+        const activeClass = selected.includes(String(val)) ? 'active' : '';
+        const chip = document.createElement('div');
+        chip.className = 'filter-chip ' + activeClass;
+        chip.dataset.value = val;
+        chip.dataset.param = paramName;
+        chip.textContent = item[nameKey] || item.nom || item.name;
+        chip.addEventListener('click', (e) => {
+            e.stopPropagation();
+            chip.classList.toggle('active');
+        });
+        container.appendChild(chip);
+    });
+    
+    if (items.length > INIT_SHOW) {
+        const btn = document.createElement('button');
+        btn.className = 'show-more-chip';
+        btn.textContent = expanded ? 'Voir moins' : `Voir plus (${items.length - INIT_SHOW})`;
+        btn.addEventListener('click', () => {
+            filterShowMoreStates[containerId] = !filterShowMoreStates[containerId];
+            renderChipsWithMore(containerId, items, paramName, valueKey, nameKey);
+        });
+        container.appendChild(btn);
+    }
+}
+
+
+
+function buildFilterUrl(paramName, value) {
+    const p = new URLSearchParams(window.location.search);
+    p.delete('page');
+    
+    if (['artist', 'museum', 'city', 'movement', 'type', 'genre'].includes(paramName)) {
+        const existing = p.getAll(paramName);
+        if (existing.includes(value)) {
+            // Déjà actif → retirer
+            p.delete(paramName);
+            existing.filter(v => v !== value).forEach(v => p.append(paramName, v));
+        } else {
+            // Pas encore actif → ajouter
+            p.append(paramName, value);
+        }
+    } else {
+        // country : valeur unique
+        if (p.get(paramName) === value) p.delete(paramName);
+        else p.set(paramName, value);
+    }
+    return '/suggestions?' + p.toString();
+}
+
+function applyFiltersFromPanel() {
+    const p = new URLSearchParams();
+    ['artist', 'museum', 'city', 'country', 'movement', 'type', 'genre'].forEach(param => {
+        const chips = document.querySelectorAll(`#${param}-chips .filter-chip.active`);
+        chips.forEach(chip => p.append(param, chip.dataset.value));
+    });
+    const currentParams = new URLSearchParams(window.location.search);
+    if (currentParams.get('q')) p.set('q', currentParams.get('q'));
+    if (currentParams.get('title_only')) p.set('title_only', currentParams.get('title_only'));
+    navigate('/suggestions?' + p);
+}
+
+function applyFiltersFromPanel() {
+    const p = new URLSearchParams();
+    ['artist', 'museum', 'city', 'country', 'movement', 'type', 'genre'].forEach(param => {
+        const chips = document.querySelectorAll(`#${param}-chips .filter-chip.active`);
+        console.log(`Param ${param}:`, chips.length, 'chips actifs');
+        chips.forEach(chip => {
+            const value = chip.dataset.value;
+            if (value && value !== 'undefined') {
+                p.append(param, value);
+            }
+        });
+    });
+    const currentParams = new URLSearchParams(window.location.search);
+    if (currentParams.get('q')) p.set('q', currentParams.get('q'));
+    if (currentParams.get('title_only')) p.set('title_only', currentParams.get('title_only'));
+    navigate('/suggestions?' + p);
+}
+
+
+let gridIs4 = false;
+
+function toggleGrid() {
+    gridIs4 = !gridIs4;
+    const grid = document.getElementById('works-grid');
+    const btn = document.getElementById('btn-grid-toggle');
+    
+    if (gridIs4) {
+        // Mode 4 colonnes - bouton NORMAL (pas de couleur)
+        grid?.classList.add('grid-4');
+        btn?.classList.remove('active');  // Enlève la classe active
+        btn.innerHTML = '<i class="fas fa-large"></i> <span>4 colonnes</span>';
+    } else {
+        // Mode 6 colonnes - bouton COLORÉ (violet)
+        grid?.classList.remove('grid-4');
+        btn?.classList.add('active');     // Ajoute la classe active
+        btn.innerHTML = '<i class="fas fa-th"></i> <span>6 colonnes</span>';
+    }
+    localStorage.setItem('gridMode', gridIs4 ? '4' : '6');
+}
+
+
+
+// Bottom sheet functions
+function openBottomSheet() {
+    document.getElementById('bottom-sheet').classList.add('open');
+    document.getElementById('sheet-overlay').classList.add('visible');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeBottomSheet() {
+    document.getElementById('bottom-sheet').classList.remove('open');
+    document.getElementById('sheet-overlay').classList.remove('visible');
+    document.body.style.overflow = '';
+}
+
+// Drag to close
+let sheetStartY = 0, sheetDragging = false;
+function initBottomSheetDrag() {
+    const sheet = document.getElementById('bottom-sheet');
+    const handle = document.getElementById('drag-handle');
+    if (!sheet || !handle) return;
+    
+    const onStart = function(e) {
+        sheetStartY = e.touches ? e.touches[0].clientY : e.clientY;
+        sheetDragging = true;
+        sheet.style.transition = 'none';
+    };
+    const onMove = function(e) {
+        if (!sheetDragging) return;
+        const y = e.touches ? e.touches[0].clientY : e.clientY;
+        const delta = y - sheetStartY;
+        if (delta > 0) sheet.style.transform = 'translateY(' + delta + 'px)';
+    };
+    const onEnd = function(e) {
+        if (!sheetDragging) return;
+        sheetDragging = false;
+        sheet.style.transition = '';
+        const y = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+        if (y - sheetStartY > 100) closeBottomSheet();
+        else sheet.style.transform = '';
+    };
+    
+    handle.addEventListener('touchstart', onStart, { passive: true });
+    sheet.addEventListener('touchmove', onMove, { passive: true });
+    sheet.addEventListener('touchend', onEnd);
+    handle.addEventListener('mousedown', onStart);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onEnd);
+}
+
+
+
+// Advanced search mode
+let advancedSearchActive = localStorage.getItem('advancedSearch') === 'true';
+
+function toggleAdvancedSearch() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const isActive = urlParams.has('advanced') && urlParams.get('advanced') === '1';
+    
+    const newState = !isActive;
+    localStorage.setItem('advancedSearch', newState);
+    
+    const url = new URL(window.location.href);
+    if (newState) {
+        url.searchParams.set('advanced', '1');
+    } else {
+        url.searchParams.delete('advanced');
+        // En mode normal, il faut aussi supprimer le paramètre page
+        url.searchParams.delete('page');
+    }
+    window.location.href = url.toString();
+}
+
+function showAdvancedMode() {
+    document.querySelectorAll('.filter-group').forEach(group => {
+        const body = group.querySelector('.filter-body');
+        const moreBtn = group.querySelector('.filter-more-btn');
+        const hiddenDiv = group.querySelector('.more-items');
+        const searchDiv = group.querySelector('.filter-search');
+        
+        // En mode avancé, on ouvre TOUS les groupes
+        group.classList.add('open');
+        
+        // 🔥 Afficher la barre de recherche pour tous les groupes
+        if (searchDiv) searchDiv.style.display = 'block';
+        
+        // Cacher le bouton VOIR PLUS
+        if (moreBtn) moreBtn.style.display = 'none';
+        
+        // Afficher la div des items supplémentaires
+        if (hiddenDiv) hiddenDiv.style.display = 'block';
+        
+        // Afficher TOUS les items
+        const allItems = [];
+        const bodyItems = body ? Array.from(body.querySelectorAll('.filter-item:not(.more-items .filter-item)')) : [];
+        bodyItems.forEach(item => allItems.push(item));
+        
+        if (hiddenDiv) {
+            const hiddenItems = hiddenDiv.querySelectorAll('.filter-item');
+            hiddenItems.forEach(item => allItems.push(item));
+        }
+        
+        allItems.forEach(item => {
+            item.style.display = 'flex';
+        });
+    });
+}
+function showAllFilterItems() {
+    document.querySelectorAll('.filter-group').forEach(group => {
+        const body = group.querySelector('.filter-body');
+        const moreBtn = group.querySelector('.filter-more-btn');
+        const hiddenDiv = group.querySelector('.more-items');
+        
+        if (moreBtn) moreBtn.style.display = 'none';
+        if (hiddenDiv) hiddenDiv.style.display = 'block';
+        
+        const allItems = [];
+        const bodyItems = body ? body.querySelectorAll('.filter-item') : [];
+        bodyItems.forEach(item => allItems.push(item));
+        
+        if (hiddenDiv) {
+            const hiddenItems = hiddenDiv.querySelectorAll('.filter-item');
+            hiddenItems.forEach(item => allItems.push(item));
+        }
+        
+        allItems.forEach(item => item.style.display = 'flex');
+    });
+}
+
+function showNormalMode() {
+    document.querySelectorAll('.filter-group').forEach(group => {
+        const body = group.querySelector('.filter-body');
+        const moreBtn = group.querySelector('.filter-more-btn');
+        const hiddenDiv = group.querySelector('.more-items');
+        const searchDiv = group.querySelector('.filter-search');
+        
+        if (!body) return;
+        
+        // 🔥 Cacher toutes les barres de recherche
+        if (searchDiv) searchDiv.style.display = 'none';
+        
+        // Fermer tous les groupes
+        group.classList.remove('open');
+        
+        const items = body.querySelectorAll('.filter-item:not(.more-items .filter-item)');
+        const hasMoreItems = (items.length + (hiddenDiv ? hiddenDiv.children.length : 0)) > 4;
+        
+        // Mode normal : cacher le hiddenDiv
+        if (hiddenDiv) hiddenDiv.style.display = 'none';
+        
+        // Afficher seulement 4 items
+        items.forEach((item, index) => {
+            item.style.display = index < 4 ? 'flex' : 'none';
+        });
+        
+        // Gérer l'affichage du bouton
+        if (moreBtn) {
+            moreBtn.style.display = hasMoreItems ? 'block' : 'none';
+            moreBtn.textContent = 'VOIR PLUS →';
+        }
+        
+        // Réinitialiser la recherche
+        const searchInput = group.querySelector('.filter-search-input');
+        if (searchInput && searchInput.value !== '') {
+            searchInput.value = '';
+            const event = new Event('keyup');
+            searchInput.dispatchEvent(event);
+        }
+    });
+}
+
+// Filter items in each category (barre de recherche) - VERSION CORRECTE UNIQUE
+function filterFilterItems(input) {
+    const searchTerm = input.value.toLowerCase();
+    const targetId = input.dataset.filterTarget;
+    const container = document.getElementById(targetId);
+    if (!container) return;
+    
+    const group = container.closest('.filter-group');
+    if (!group) return;
+    
+    const hiddenDiv = group.querySelector('.more-items');
+    const isAdvancedMode = document.querySelector('.filters-sidebar.advanced-mode-active') !== null;
+    
+    // Récupérer TOUS les items
+    const allItems = [];
+    container.querySelectorAll('.filter-item').forEach(item => allItems.push(item));
+    if (hiddenDiv) {
+        hiddenDiv.querySelectorAll('.filter-item').forEach(item => allItems.push(item));
+    }
+    
+    if (searchTerm === '') {
+        // Pas de recherche : revenir à l'affichage normal selon le mode
+        if (isAdvancedMode) {
+            // Mode avancé : tout afficher
+            allItems.forEach(item => item.style.display = 'flex');
+            if (hiddenDiv) hiddenDiv.style.display = 'block';
+        } else {
+            // Mode normal : afficher 4 items + cacher hiddenDiv
+            const containerItems = container.querySelectorAll('.filter-item:not(.more-items .filter-item)');
+            containerItems.forEach((item, index) => {
+                item.style.display = index < 4 ? 'flex' : 'none';
+            });
+            if (hiddenDiv) hiddenDiv.style.display = 'none';
+        }
+    } else {
+        // Recherche active : tout afficher (comme avant)
+        allItems.forEach(item => {
+            const itemName = item.querySelector('.item-name').textContent.toLowerCase();
+            item.style.display = itemName.includes(searchTerm) ? 'flex' : 'none';
+        });
+        const moreBtn = group.querySelector('.filter-more-btn');
+        if (moreBtn) moreBtn.style.display = 'none';
+        if (hiddenDiv) hiddenDiv.style.display = 'block';
+    }
+}
+
+function resetFilterDisplay() {
+    document.querySelectorAll('.filter-search-input').forEach(input => {
+        if (input.value === '') {
+            const targetId = input.dataset.filterTarget;
+            const container = document.getElementById(targetId);
+            if (!container) return;
+            
+            const group = container.closest('.filter-group');
+            if (!group) return;
+            
+            const moreBtn = group.querySelector('.filter-more-btn');
+            const hiddenDiv = group.querySelector('.more-items');
+            const isAdvancedMode = document.querySelector('.filters-sidebar.advanced-mode-active') !== null;
+            
+            if (isAdvancedMode) {
+                // Mode avancé : afficher 5 résultats
+                const allItems = [];
+                const bodyItems = container.querySelectorAll('.filter-item');
+                bodyItems.forEach(item => allItems.push(item));
+                if (hiddenDiv) {
+                    const hiddenItems = hiddenDiv.querySelectorAll('.filter-item');
+                    hiddenItems.forEach(item => allItems.push(item));
+                }
+                allItems.forEach((item, index) => {
+                    item.style.display = index < 5 ? 'flex' : 'none';
+                });
+                if (moreBtn) moreBtn.style.display = 'none';
+            } else {
+                // Mode normal : afficher 4 résultats + bouton voir plus
+                const items = container.querySelectorAll('.filter-item');
+                const hasMoreItems = (items.length + (hiddenDiv ? hiddenDiv.children.length : 0)) > 4;
+                
+                items.forEach((item, index) => {
+                    item.style.display = index < 4 ? 'flex' : 'none';
+                });
+                if (hiddenDiv) hiddenDiv.style.display = 'none';
+                if (moreBtn) {
+                    moreBtn.style.display = hasMoreItems ? 'block' : 'none';
+                    moreBtn.textContent = 'VOIR PLUS →';
+                }
+            }
+        }
+    });
+}
+
+// Initialisation au chargement - VERSION COMPLÈTE
+(function initAdvancedMode() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let advancedSearchActive = false;
+    
+    // Vérifier d'abord l'URL
+    if (urlParams.has('advanced') && urlParams.get('advanced') === '1') {
+        advancedSearchActive = true;
+        localStorage.setItem('advancedSearch', 'true');
+    } else {
+        // Sinon vérifier localStorage
+        advancedSearchActive = localStorage.getItem('advancedSearch') === 'true';
+        // Si le mode est actif mais pas dans l'URL, on recharge pour ajouter le paramètre
+        if (advancedSearchActive) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('advanced', '1');
+            window.location.href = url.toString();
+            return; // Arrêter l'exécution car on recharge
+        }
+    }
+    
+    // Appliquer le mode après le chargement complet de la page
+    document.addEventListener('DOMContentLoaded', () => {
+        if (advancedSearchActive) {
+            const btn = document.getElementById('btn-advanced-search');
+            const badge = document.getElementById('advanced-badge');
+            const sidebar = document.querySelector('.filters-sidebar');
+            if (btn) btn.classList.add('active');
+            if (badge) badge.style.display = 'inline-block';
+            if (sidebar) sidebar.classList.add('advanced-mode-active');
+            showAdvancedMode();
+        }
+    });
+})();
+
+
+
+
+// Initialisation au chargement
+document.addEventListener('DOMContentLoaded', () => {
+    if (advancedSearchActive) {
+        const btn = document.getElementById('btn-advanced-search');
+        const badge = document.getElementById('advanced-badge');
+        const sidebar = document.querySelector('.filters-sidebar');
+        if (btn) btn.classList.add('active');
+        if (badge) badge.style.display = 'inline-block';
+        if (sidebar) sidebar.classList.add('advanced-mode-active');
+        showAllFilterItems(10);
+    }
+});
+
+
+
+
+
+
+
+
+// Modifier le bouton mobile-filter-btn
+document.querySelector('.mobile-filter-btn')?.addEventListener('click', openBottomSheet);
+
     const scrollBtn = document.getElementById('scroll-top');
     window.addEventListener('scroll', () => scrollBtn?.classList.toggle('visible', window.scrollY > 500));
     scrollBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
@@ -1199,62 +2511,114 @@
     </div>
 </div>
 
-<!-- Mobile Drawer -->
-<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
-<div class="mobile-drawer" id="mobile-drawer">
-    <div class="drawer-header">
-        <div class="drawer-header-left">
-            <span class="drawer-title">FILTRES DISPONIBLES</span>
-            <button class="drawer-expand-btn" onclick="toggleExpandAll()"><i class="fas fa-chevron-up"></i> Replier</button>
-        </div>
-        <button class="drawer-close" onclick="closeDrawer()"><i class="fas fa-times"></i></button>
+
+
+
+
+<!-- Mobile Bottom Sheet -->
+<div class="sheet-overlay" id="sheet-overlay" onclick="closeBottomSheet()"></div>
+
+
+
+<!-- Panneau Filtres (comme rated.html) -->
+<div class="overlay" id="filter-overlay" onclick="closeFilterPanel()"></div>
+<div class="filter-panel" id="filter-panel">
+    <div class="drag-handle" id="filter-drag-handle">
+        <div class="drag-handle-bar"></div>
     </div>
-    <div class="drawer-inner">
-        {%- macro filter_groups(pfx) %}
-        {% if search_results %}
-        {%- set ns = namespace(groups=[]) %}
-        {%- if search_results.artists and search_results.artists|length > 0 %}{% set _top = (search_results.artists|sort(attribute='count', reverse=true))[0] %}{% set ns.groups = ns.groups + [{'key': 'artists', 'weight': _top.count}] %}{% endif %}
-        {%- if search_results.museums and search_results.museums|length > 0 %}{% set _top = (search_results.museums|sort(attribute='count', reverse=true))[0] %}{% set ns.groups = ns.groups + [{'key': 'museums', 'weight': _top.count}] %}{% endif %}
-        {%- if search_results.cities and search_results.cities|length > 0 %}{% set _top = (search_results.cities|sort(attribute='oeuvres_count', reverse=true))[0] %}{% set ns.groups = ns.groups + [{'key': 'cities', 'weight': _top.oeuvres_count}] %}{% endif %}
-        {%- if search_results.countries and search_results.countries|length > 0 %}{% set _top = (search_results.countries|sort(attribute='oeuvres_count', reverse=true))[0] %}{% set ns.groups = ns.groups + [{'key': 'countries', 'weight': _top.oeuvres_count}] %}{% endif %}
-        {%- if search_results.movements and search_results.movements|length > 0 %}{% set _top = (search_results.movements|sort(attribute='count', reverse=true))[0] %}{% set ns.groups = ns.groups + [{'key': 'movements', 'weight': _top.count}] %}{% endif %}
-        
-        {% for grp in (ns.groups|sort(attribute='weight', reverse=true)) %}
-            {% if grp.key == 'artists' %}
-            {% set sorted = search_results.artists|sort(attribute='count', reverse=true) %}
-            <div class="filter-group open"><button class="filter-group-toggle" onclick="toggleGroup(this)"><span class="toggle-left"><span class="group-label">ARTISTES</span><span class="group-count">{{ sorted|length }}</span></span><i class="fas fa-chevron-down group-arrow"></i></button><div class="filter-body">{% for a in sorted[:5] %}<a href="/suggestions?q={{ q }}&artist={{ a.nom }}" class="filter-item {{ 'active' if a.nom in request.args.getlist('artist') }}"><span class="item-name">{{ a.nom|truncate(26) }}</span><span class="item-count">{{ a.count }}</span></a>{% endfor %}{% if sorted|length > 5 %}<div id="{{ pfx }}more-artists" style="display:none;">{% for a in sorted[5:] %}<a href="/suggestions?q={{ q }}&artist={{ a.nom }}" class="filter-item {{ 'active' if a.nom in request.args.getlist('artist') }}"><span class="item-name">{{ a.nom|truncate(26) }}</span><span class="item-count">{{ a.count }}</span></a>{% endfor %}</div><button class="filter-more-btn" onclick="toggleMoreFilter('{{ pfx }}more-artists',this)">VOIR PLUS →</button>{% endif %}</div></div>
-            {% endif %}
-            {% if grp.key == 'museums' %}
-            {% set sorted = search_results.museums|sort(attribute='count', reverse=true) %}
-            <div class="filter-group open"><button class="filter-group-toggle" onclick="toggleGroup(this)"><span class="toggle-left"><span class="group-label">MUSÉES</span><span class="group-count">{{ sorted|length }}</span></span><i class="fas fa-chevron-down group-arrow"></i></button><div class="filter-body">{% for m in sorted[:5] %}<a href="/suggestions?q={{ q }}&museum={{ m.id }}" class="filter-item {{ 'active' if m.id|string in request.args.getlist('museum') }}"><span class="item-name">{{ m.nom|truncate(26) }}</span><span class="item-count">{{ m.count }}</span></a>{% endfor %}{% if sorted|length > 5 %}<div id="{{ pfx }}more-museums" style="display:none;">{% for m in sorted[5:] %}<a href="/suggestions?q={{ q }}&museum={{ m.id }}" class="filter-item {{ 'active' if m.id|string in request.args.getlist('museum') }}"><span class="item-name">{{ m.nom|truncate(26) }}</span><span class="item-count">{{ m.count }}</span></a>{% endfor %}</div><button class="filter-more-btn" onclick="toggleMoreFilter('{{ pfx }}more-museums',this)">VOIR PLUS →</button>{% endif %}</div></div>
-            {% endif %}
-            {% if grp.key == 'cities' %}
-            {% set sorted = search_results.cities|sort(attribute='oeuvres_count', reverse=true) %}
-            <div class="filter-group open"><button class="filter-group-toggle" onclick="toggleGroup(this)"><span class="toggle-left"><span class="group-label">VILLES</span><span class="group-count">{{ sorted|length }}</span></span><i class="fas fa-chevron-down group-arrow"></i></button><div class="filter-body">{% for c in sorted[:5] %}<a href="/suggestions?q={{ q }}&city={{ c.nom }}" class="filter-item {{ 'active' if c.nom in request.args.getlist('city') }}"><span class="item-name">{{ c.nom|truncate(26) }}</span><span class="item-count">{{ c.oeuvres_count }}</span></a>{% endfor %}{% if sorted|length > 5 %}<div id="{{ pfx }}more-cities" style="display:none;">{% for c in sorted[5:] %}<a href="/suggestions?q={{ q }}&city={{ c.nom }}" class="filter-item {{ 'active' if c.nom in request.args.getlist('city') }}"><span class="item-name">{{ c.nom|truncate(26) }}</span><span class="item-count">{{ c.oeuvres_count }}</span></a>{% endfor %}</div><button class="filter-more-btn" onclick="toggleMoreFilter('{{ pfx }}more-cities',this)">VOIR PLUS →</button>{% endif %}</div></div>
-            {% endif %}
-            {% if grp.key == 'countries' %}
-            {% set sorted = search_results.countries|sort(attribute='oeuvres_count', reverse=true) %}
-            <div class="filter-group open"><button class="filter-group-toggle" onclick="toggleGroup(this)"><span class="toggle-left"><span class="group-label">PAYS</span><span class="group-count">{{ sorted|length }}</span></span><i class="fas fa-chevron-down group-arrow"></i></button><div class="filter-body">{% for p in sorted[:5] %}<a href="/suggestions?q={{ q }}&country={{ p.nom }}" class="filter-item {{ 'active' if p.nom == request.args.get('country') }}"><span class="item-name">{{ p.nom|truncate(26) }}</span><span class="item-count">{{ p.oeuvres_count }}</span></a>{% endfor %}{% if sorted|length > 5 %}<div id="{{ pfx }}more-countries" style="display:none;">{% for p in sorted[5:] %}<a href="/suggestions?q={{ q }}&country={{ p.nom }}" class="filter-item {{ 'active' if p.nom == request.args.get('country') }}"><span class="item-name">{{ p.nom|truncate(26) }}</span><span class="item-count">{{ p.oeuvres_count }}</span></a>{% endfor %}</div><button class="filter-more-btn" onclick="toggleMoreFilter('{{ pfx }}more-countries',this)">VOIR PLUS →</button>{% endif %}</div></div>
-            {% endif %}
-            {% if grp.key == 'movements' %}
-            {% set sorted = search_results.movements|sort(attribute='count', reverse=true) %}
-            <div class="filter-group open"><button class="filter-group-toggle" onclick="toggleGroup(this)"><span class="toggle-left"><span class="group-label">MOUVEMENTS</span><span class="group-count">{{ sorted|length }}</span></span><i class="fas fa-chevron-down group-arrow"></i></button><div class="filter-body">{% for m in sorted[:5] %}<a href="/suggestions?q={{ q }}&movement={{ m.nom }}" class="filter-item {{ 'active' if m.nom in request.args.getlist('movement') }}"><span class="item-name">{{ m.nom|truncate(26) }}</span><span class="item-count">{{ m.count }}</span></a>{% endfor %}{% if sorted|length > 5 %}<div id="{{ pfx }}more-movements" style="display:none;">{% for m in sorted[5:] %}<a href="/suggestions?q={{ q }}&movement={{ m.nom }}" class="filter-item {{ 'active' if m.nom in request.args.getlist('movement') }}"><span class="item-name">{{ m.nom|truncate(26) }}</span><span class="item-count">{{ m.count }}</span></a>{% endfor %}</div><button class="filter-more-btn" onclick="toggleMoreFilter('{{ pfx }}more-movements',this)">VOIR PLUS →</button>{% endif %}</div></div>
-            {% endif %}
-        {% endfor %}
-        {% endif %}
-        {%- endmacro %}
-        {{ filter_groups('d-') }}
+    <div class="filter-panel-header">
+        <h3>Filtrer</h3>
+        <button class="close-panel" onclick="closeFilterPanel()"><i class="fas fa-times"></i></button>
+        <div class="overlay" id="filter-overlay" onclick="closeFilterPanel()"></div>
+    </div>
+    
+    <!-- Artistes -->
+    <div class="filter-section">
+        <div class="filter-section-title">Artiste</div>
+        <div class="chips-row" id="artist-chips"></div>
+    </div>
+    
+    <!-- Musées -->
+    <div class="filter-section">
+        <div class="filter-section-title">Musée</div>
+        <div class="chips-row" id="museum-chips"></div>
+    </div>
+    
+    <!-- Villes -->
+    <div class="filter-section">
+        <div class="filter-section-title">Ville</div>
+        <div class="chips-row" id="city-chips"></div>
+    </div>
+    
+    <!-- Pays -->
+    <div class="filter-section">
+        <div class="filter-section-title">Pays</div>
+        <div class="chips-row" id="country-chips"></div>
+    </div>
+    
+    <!-- Mouvements -->
+    <div class="filter-section">
+        <div class="filter-section-title">Mouvement</div>
+        <div class="chips-row" id="movement-chips"></div>
+    </div>
+    
+    <!-- Types -->
+    <div class="filter-section">
+        <div class="filter-section-title">Type d'œuvre</div>
+        <div class="chips-row" id="type-chips"></div>
+    </div>
+    
+<!-- Genres -->
+<div class="filter-section">
+    <div class="filter-section-title">Genre</div>
+    <div class="chips-row" id="genre-chips"></div>
+</div>
+
+<!-- Actions supplémentaires (mobile uniquement) -->
+<div class="filter-section mobile-only-actions">
+    <div class="filter-section-title">Affichage</div>
+    <div class="chips-row">
+        <div id="mobile-title-search-chip" class="filter-chip">Titre uniquement</div>
+        <div id="mobile-notes-toggle-chip" class="filter-chip mode-community">Notes publiques</div>
     </div>
 </div>
 
-<div class="container main-content">
-    {% if q or artists or museums or cities or country or movements %}
-    <div class="hero-header">
-        <div class="hero-count">{{ total_oeuvres }}</div>
-        <div class="hero-label">Résutat{{ 'S' if total_oeuvres > 1 else '' }}</div>
-        <div class="hero-query">pour <strong>{{ q }}</strong></div>
-    </div>
+<div class="filter-actions">
+    <button class="btn-clear" onclick="clearAllFilters()">Tout effacer</button>
+    <button class="btn-apply" onclick="applyFiltersFromPanel()">Appliquer</button>
+</div>
+</div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container main-content">
+
+
+
+
+
+
+
+
+
+{% if q or artists or museums or cities or country or movements or types or genres %}
+<div class="hero-header">
+    <div class="hero-count">{{ total_oeuvres }}</div>
+    <div class="hero-label">RÉSULTAT{{ 'S' if total_oeuvres > 1 else '' }}</div>
+    {% if q %}
+    <div class="hero-query">POUR <strong>{{ q }}</strong></div>
+    {% endif %}
     {% if quick_suggestions and quick_suggestions|length > 0 %}
     <div class="suggestions-bar">
         {% for item in quick_suggestions %}
@@ -1265,39 +2629,416 @@
         {% endfor %}
     </div>
     {% endif %}
+</div>
+{% endif %}
+
+
+   
+        
+
 
     <div class="search-layout">
+    
+    
+    
+    
+    
+    
+        <!-- SIDEBAR DESKTOP -->
         <aside class="filters-sidebar">
-            {% set has_filters = request.args.getlist('artist') or request.args.getlist('museum') or request.args.getlist('city') or request.args.get('country') or request.args.getlist('movement') %}
             <div class="sidebar-header">
                 <span class="sidebar-title">FILTRES</span>
                 <div class="sidebar-actions">
                     <button class="btn-expand-all" onclick="toggleExpandAll()"><i class="fas fa-chevron-up"></i> Replier</button>
-                    {% if has_filters %}<button class="btn-clear-filters" onclick="clearAllFilters()"><i class="fas fa-times"></i> Effacer</button>{% endif %}
+                    <button class="btn-clear-filters" onclick="clearAllFilters()"><i class="fas fa-times"></i> Effacer</button>
                 </div>
             </div>
-            {{ filter_groups('s-') }}
+
+
+
+            {% if search_results %}
+
+
+<!-- ARTISTES -->
+{% if search_results and search_results.artists and search_results.artists|length > 0 %}
+{% set sorted_artists = search_results.artists|sort(attribute='count', reverse=true) %}
+<div class="filter-group">
+    <button class="filter-group-toggle" onclick="toggleGroup(this)">
+        <span class="group-label">ARTISTES</span>
+        <div class="right-group">
+            <span class="group-count">{{ total_artistes }} œuvres</span>
+            <i class="fas fa-chevron-down group-arrow"></i>
+        </div>
+    </button>
+    <div class="filter-search">
+        <input type="text" placeholder="🔍 Rechercher un artiste..." class="filter-search-input" data-filter-target="artists-list" onkeyup="filterFilterItems(this); if(this.value === '') resetFilterDisplay();">
+    </div>
+    <div class="filter-body" id="artists-list">
+        {% for a in sorted_artists[:4] %}
+        <a href="#" onclick="location.href=buildFilterUrl('artist','{{ a.nom|e }}');return false;" class="filter-item {{ 'active' if a.nom in artists }}">
+            <span class="item-name">{{ a.nom }}</span>
+            <span class="item-count">{{ a.count }}</span>
+        </a>
+        {% endfor %}
+        {% if sorted_artists|length > 4 %}
+        <div id="s-more-artists" class="more-items" style="display:none;">
+            {% for a in sorted_artists[4:] %}
+            <a href="#" onclick="location.href=buildFilterUrl('artist','{{ a.nom|e }}');return false;" class="filter-item {{ 'active' if a.nom in artists }}">
+                <span class="item-name">{{ a.nom }}</span>
+                <span class="item-count">{{ a.count }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        <button class="filter-more-btn" onclick="toggleMoreFilter('s-more-artists',this)">VOIR PLUS →</button>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- MUSÉES -->
+{% if search_results and search_results.museums and search_results.museums|length > 0 %}
+{% set sorted_museums = search_results.museums|sort(attribute='count', reverse=true) %}
+<div class="filter-group">
+    <button class="filter-group-toggle" onclick="toggleGroup(this)">
+        <span class="group-label">MUSÉES</span>
+        <div class="right-group">
+            <span class="group-count">{{ total_musees }} œuvres</span>
+            <i class="fas fa-chevron-down group-arrow"></i>
+        </div>
+    </button>
+    <div class="filter-search">
+        <input type="text" placeholder="🔍 Rechercher un musée..." class="filter-search-input" data-filter-target="museums-list" onkeyup="filterFilterItems(this); if(this.value === '') resetFilterDisplay();">
+    </div>
+    <div class="filter-body" id="museums-list">
+        {% for m in sorted_museums[:4] %}
+        <a href="#" onclick="location.href=buildFilterUrl('museum','{{ m.id|e }}');return false;" class="filter-item {{ 'active' if m.id|string in museums }}">
+            <span class="item-name">{{ m.nom }}</span>
+            <span class="item-count">{{ m.count }}</span>
+        </a>
+        {% endfor %}
+        {% if sorted_museums|length > 4 %}
+        <div id="s-more-museums" class="more-items" style="display:none;">
+            {% for m in sorted_museums[4:] %}
+            <a href="#" onclick="location.href=buildFilterUrl('museum','{{ m.id|e }}');return false;" class="filter-item {{ 'active' if m.id|string in museums }}">
+                <span class="item-name">{{ m.nom }}</span>
+                <span class="item-count">{{ m.count }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        <button class="filter-more-btn" onclick="toggleMoreFilter('s-more-museums',this)">VOIR PLUS →</button>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- VILLES -->
+{% if search_results and search_results.cities and search_results.cities|length > 0 %}
+{% set sorted_cities = search_results.cities|sort(attribute='oeuvres_count', reverse=true) %}
+<div class="filter-group">
+    <button class="filter-group-toggle" onclick="toggleGroup(this)">
+        <span class="group-label">VILLES</span>
+        <div class="right-group">
+            <span class="group-count">{{ total_villes }} œuvres</span>
+            <i class="fas fa-chevron-down group-arrow"></i>
+        </div>
+    </button>
+    <div class="filter-search">
+        <input type="text" placeholder="🔍 Rechercher une ville..." class="filter-search-input" data-filter-target="cities-list" onkeyup="filterFilterItems(this); if(this.value === '') resetFilterDisplay();">
+    </div>
+    <div class="filter-body" id="cities-list">
+        {% for c in sorted_cities[:4] %}
+        <a href="#" onclick="location.href=buildFilterUrl('city','{{ c.nom|e }}');return false;" class="filter-item {{ 'active' if c.nom in cities }}">
+            <span class="item-name">{{ c.nom }}</span>
+            <span class="item-count">{{ c.oeuvres_count }}</span>
+        </a>
+        {% endfor %}
+        {% if sorted_cities|length > 4 %}
+        <div id="s-more-cities" class="more-items" style="display:none;">
+            {% for c in sorted_cities[4:] %}
+            <a href="#" onclick="location.href=buildFilterUrl('city','{{ c.nom|e }}');return false;" class="filter-item {{ 'active' if c.nom in cities }}">
+                <span class="item-name">{{ c.nom }}</span>
+                <span class="item-count">{{ c.oeuvres_count }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        <button class="filter-more-btn" onclick="toggleMoreFilter('s-more-cities',this)">VOIR PLUS →</button>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- PAYS -->
+{% if search_results and search_results.countries and search_results.countries|length > 0 %}
+{% set sorted_countries = search_results.countries|sort(attribute='oeuvres_count', reverse=true) %}
+<div class="filter-group">
+    <button class="filter-group-toggle" onclick="toggleGroup(this)">
+        <span class="group-label">PAYS</span>
+        <div class="right-group">
+            <span class="group-count">{{ total_pays }} œuvres</span>
+            <i class="fas fa-chevron-down group-arrow"></i>
+        </div>
+    </button>
+    <div class="filter-search">
+        <input type="text" placeholder="🔍 Rechercher un pays..." class="filter-search-input" data-filter-target="countries-list" onkeyup="filterFilterItems(this); if(this.value === '') resetFilterDisplay();">
+    </div>
+    <div class="filter-body" id="countries-list">
+        {% for p in sorted_countries[:4] %}
+        <a href="#" onclick="location.href=buildFilterUrl('country','{{ p.nom|e }}');return false;" class="filter-item {{ 'active' if p.nom == country }}">
+            <span class="item-name">{{ p.nom }}</span>
+            <span class="item-count">{{ p.oeuvres_count }}</span>
+        </a>
+        {% endfor %}
+        {% if sorted_countries|length > 4 %}
+        <div id="s-more-countries" class="more-items" style="display:none;">
+            {% for p in sorted_countries[4:] %}
+            <a href="#" onclick="location.href=buildFilterUrl('country','{{ p.nom|e }}');return false;" class="filter-item {{ 'active' if p.nom == country }}">
+                <span class="item-name">{{ p.nom }}</span>
+                <span class="item-count">{{ p.oeuvres_count }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        <button class="filter-more-btn" onclick="toggleMoreFilter('s-more-countries',this)">VOIR PLUS →</button>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- MOUVEMENTS -->
+{% if search_results and search_results.movements and search_results.movements|length > 0 %}
+{% set sorted_movements = search_results.movements|sort(attribute='count', reverse=true) %}
+<div class="filter-group">
+    <button class="filter-group-toggle" onclick="toggleGroup(this)">
+        <span class="group-label">MOUVEMENTS</span>
+        <div class="right-group">
+            <span class="group-count">{{ total_mouvements }} œuvres</span>
+            <i class="fas fa-chevron-down group-arrow"></i>
+        </div>
+    </button>
+    <div class="filter-search">
+        <input type="text" placeholder="🔍 Rechercher un mouvement..." class="filter-search-input" data-filter-target="movements-list" onkeyup="filterFilterItems(this); if(this.value === '') resetFilterDisplay();">
+    </div>
+    <div class="filter-body" id="movements-list">
+        {% for m in sorted_movements[:4] %}
+        <a href="#" onclick="location.href=buildFilterUrl('movement','{{ m.nom|e }}');return false;" class="filter-item {{ 'active' if m.nom in movements }}">
+            <span class="item-name">{{ m.nom }}</span>
+            <span class="item-count">{{ m.count }}</span>
+        </a>
+        {% endfor %}
+        {% if sorted_movements|length > 4 %}
+        <div id="s-more-movements" class="more-items" style="display:none;">
+            {% for m in sorted_movements[4:] %}
+            <a href="#" onclick="location.href=buildFilterUrl('movement','{{ m.nom|e }}');return false;" class="filter-item {{ 'active' if m.nom in movements }}">
+                <span class="item-name">{{ m.nom }}</span>
+                <span class="item-count">{{ m.count }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        <button class="filter-more-btn" onclick="toggleMoreFilter('s-more-movements',this)">VOIR PLUS →</button>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- TYPES -->
+{% if search_results and search_results.types and search_results.types|length > 0 %}
+{% set sorted_types = search_results.types|sort(attribute='count', reverse=true) %}
+<div class="filter-group">
+    <button class="filter-group-toggle" onclick="toggleGroup(this)">
+        <span class="group-label">TYPES</span>
+        <div class="right-group">
+            <span class="group-count">{{ total_types }} œuvres</span>
+            <i class="fas fa-chevron-down group-arrow"></i>
+        </div>
+    </button>
+    <div class="filter-search">
+        <input type="text" placeholder="🔍 Rechercher un type..." class="filter-search-input" data-filter-target="types-list" onkeyup="filterFilterItems(this); if(this.value === '') resetFilterDisplay();">
+    </div>
+    <div class="filter-body" id="types-list">
+        {% for t in sorted_types[:4] %}
+        <a href="#" onclick="location.href=buildFilterUrl('type','{{ t.name|e }}');return false;" class="filter-item {{ 'active' if t.name in types }}">
+            <span class="item-name">{{ t.name }}</span>
+            <span class="item-count">{{ t.count }}</span>
+        </a>
+        {% endfor %}
+        {% if sorted_types|length > 4 %}
+        <div id="s-more-types" class="more-items" style="display:none;">
+            {% for t in sorted_types[4:] %}
+            <a href="#" onclick="location.href=buildFilterUrl('type','{{ t.name|e }}');return false;" class="filter-item {{ 'active' if t.name in types }}">
+                <span class="item-name">{{ t.name }}</span>
+                <span class="item-count">{{ t.count }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        <button class="filter-more-btn" onclick="toggleMoreFilter('s-more-types',this)">VOIR PLUS →</button>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- GENRES -->
+{% if search_results and search_results.genres and search_results.genres|length > 0 %}
+{% set sorted_genres = search_results.genres|sort(attribute='count', reverse=true) %}
+<div class="filter-group">
+    <button class="filter-group-toggle" onclick="toggleGroup(this)">
+        <span class="group-label">GENRES</span>
+        <div class="right-group">
+            <span class="group-count">{{ total_genres }} œuvres</span>
+            <i class="fas fa-chevron-down group-arrow"></i>
+        </div>
+    </button>
+    <div class="filter-search">
+        <input type="text" placeholder="🔍 Rechercher un genre..." class="filter-search-input" data-filter-target="genres-list" onkeyup="filterFilterItems(this); if(this.value === '') resetFilterDisplay();">
+    </div>
+    <div class="filter-body" id="genres-list">
+        {% for g in sorted_genres[:4] %}
+        <a href="#" onclick="location.href=buildFilterUrl('genre','{{ g.name|e }}');return false;" class="filter-item {{ 'active' if g.name in genres }}">
+            <span class="item-name">{{ g.name }}</span>
+            <span class="item-count">{{ g.count }}</span>
+        </a>
+        {% endfor %}
+        {% if sorted_genres|length > 4 %}
+        <div id="s-more-genres" class="more-items" style="display:none;">
+            {% for g in sorted_genres[4:] %}
+            <a href="#" onclick="location.href=buildFilterUrl('genre','{{ g.name|e }}');return false;" class="filter-item {{ 'active' if g.name in genres }}">
+                <span class="item-name">{{ g.name }}</span>
+                <span class="item-count">{{ g.count }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        <button class="filter-more-btn" onclick="toggleMoreFilter('s-more-genres',this)">VOIR PLUS →</button>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+
+
+
+
+
+
+            {% endif %}
         </aside>
 
-        <div class="content-area">
-            <div class="toolbar">
-                <div class="active-filters">
-                    <button class="mobile-filter-btn" onclick="openDrawer()">
-                        <i class="fas fa-sliders-h"></i> FILTRER
-                        {% set fc = request.args.getlist('artist')|length + request.args.getlist('museum')|length + request.args.getlist('city')|length + (1 if request.args.get('country') else 0) + request.args.getlist('movement')|length %}
-                        {% if fc > 0 %}<span class="filter-badge">{{ fc }}</span>{% endif %}
-                    </button>
-                    {% for a in request.args.getlist('artist') %}<div class="filter-tag"><span>{{ a }}</span><button onclick="removeFilter('artist','{{ a }}')"><i class="fas fa-times"></i></button></div>{% endfor %}
-                    {% for m in request.args.getlist('museum') %}<div class="filter-tag"><span>{{ m }}</span><button onclick="removeFilter('museum','{{ m }}')"><i class="fas fa-times"></i></button></div>{% endfor %}
-                    {% for c in request.args.getlist('city') %}<div class="filter-tag"><span>{{ c }}</span><button onclick="removeFilter('city','{{ c }}')"><i class="fas fa-times"></i></button></div>{% endfor %}
-                    {% if request.args.get('country') %}<div class="filter-tag"><span>{{ request.args.get('country') }}</span><button onclick="removeFilter('country','{{ request.args.get('country') }}')"><i class="fas fa-times"></i></button></div>{% endif %}
-                    {% for m in request.args.getlist('movement') %}<div class="filter-tag"><span>{{ m }}</span><button onclick="removeFilter('movement','{{ m }}')"><i class="fas fa-times"></i></button></div>{% endfor %}
-                </div>
-                <div class="toolbar-actions">
-                    <button class="btn-icon {% if request.args.get('title_only') == '1' %}active{% endif %}" id="btn-title-only" onclick="toggleTitleOnly()" title="Rechercher uniquement dans le titre"><i class="fas fa-font"></i></button>
-                    <button class="btn-notes-toggle mode-community" id="notes-toggle-btn" onclick="toggleNoteDisplay()"><i class="fas fa-users"></i> <span>Notes public</span></button>
-                </div>
-            </div>
+        <!-- CONTENT AREA -->
+
+
+
+        <div class="content-area" style="flex:1;">
+        
+       {% set fc = artists|length + museums|length + cities|length + (1 if country else 0) + movements|length + types|length + genres|length %} 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+<div class="toolbar">
+    <div class="toolbar-actions" style="width: 100%; display: flex; justify-content: space-between;">
+        <!-- Côté gauche : tags filtrés -->
+<!-- Côté gauche : tags filtrés -->
+<div class="filter-tags desktop-only">
+    {% if q %}
+    <div class="filter-tag">{{ q }}<i class="fas fa-times tag-remove" onclick="removeFilter('q')"></i></div>
+    {% endif %}
+    {% for a in artists %}
+    <div class="filter-tag"><i class="fas fa-user"></i> {{ a }}<i class="fas fa-times tag-remove" onclick="removeFilter('artist','{{ a }}')"></i></div>
+    {% endfor %}
+    {% for m in museums %}
+    <div class="filter-tag"><i class="fas fa-landmark"></i> {{ m }}<i class="fas fa-times tag-remove" onclick="removeFilter('museum','{{ m }}')"></i></div>
+    {% endfor %}
+    {% for c in cities %}
+    <div class="filter-tag"><i class="fas fa-city"></i> {{ c }}<i class="fas fa-times tag-remove" onclick="removeFilter('city','{{ c }}')"></i></div>
+    {% endfor %}
+    {% if country %}
+    <div class="filter-tag"><i class="fas fa-globe"></i> {{ country }}<i class="fas fa-times tag-remove" onclick="removeFilter('country')"></i></div>
+    {% endif %}
+    {% for m in movements %}
+    <div class="filter-tag"><i class="fas fa-palette"></i> {{ m }}<i class="fas fa-times tag-remove" onclick="removeFilter('movement','{{ m }}')"></i></div>
+    {% endfor %}
+    {% for t in types %}
+    <div class="filter-tag"><i class="fas fa-tag"></i> {{ t }}<i class="fas fa-times tag-remove" onclick="removeFilter('type','{{ t }}')"></i></div>
+    {% endfor %}
+    {% for g in genres %}
+    <div class="filter-tag"><i class="fas fa-heart"></i> {{ g }}<i class="fas fa-times tag-remove" onclick="removeFilter('genre','{{ g }}')"></i></div>
+    {% endfor %}
+</div>
+        <!-- Côté droit : boutons -->
+<!-- Côté droit : boutons réordonnés -->
+<div class="btn-group-right" style="display: flex; gap: 0.5rem; flex-shrink: 0;">
+    <!-- 1. 4 Colonnes -->
+    <button class="btn-grid-toggle desktop-only" id="btn-grid-toggle" onclick="toggleGrid()">
+        <i class="fas fa-th-large"></i> <span>4 colonnes</span>
+    </button>
+    
+    <!-- 2. Notes (L'œil est géré en CSS pour la couleur) -->
+    <button class="btn-notes-toggle" id="notes-toggle-btn" onclick="toggleNoteDisplay()">
+        <i class="far fa-eye-slash"></i> <span>Notes</span>
+    </button>
+
+    <!-- 3. Titre uniquement -->
+    <button class="btn-title-search {% if request.args.get('title_only') == '1' %}active{% endif %}" id="btn-title-only" onclick="toggleTitleOnly()">
+        <i class="fas fa-bullseye"></i><span>Titre uniquement</span>
+    </button>
+
+    <!-- 4. Recherche avancée -->
+    <button class="btn-advanced-search" id="btn-advanced-search" onclick="toggleAdvancedSearch()">
+        <i class="fas fa-search-plus"></i> <span>Recherche avancée</span>
+        <span id="advanced-badge" class="advanced-badge" style="display:none;">ACTIVE</span>
+    </button>
+</div>
+    </div>
+</div>        
+
+
+
+
+<!-- MOBILE UNIQUEMENT : bouton filtrer hero + tags en dessous -->
+<div class="mobile-only">
+    <div class="mobile-filter-hero">
+        <button class="mobile-filter-hero-btn" onclick="openFilterPanel()">
+            <i class="fas fa-sliders-h"></i> FILTRER
+            {% if fc > 0 %}<span class="mobile-filter-hero-badge">{{ fc }}</span>{% endif %}
+        </button>
+    </div>
+
+    <!-- Tags actifs sous le bouton -->
+    <div class="filter-tags mobile-filter-tags">
+        {% if q %}
+        <div class="filter-tag">{{ q }}<i class="fas fa-times tag-remove" onclick="removeFilter('q')"></i></div>
+        {% endif %}
+        {% for a in artists %}
+        <div class="filter-tag"><i class="fas fa-user"></i> {{ a }}<i class="fas fa-times tag-remove" onclick="removeFilter('artist','{{ a }}')"></i></div>
+        {% endfor %}
+        {% for m in museums %}
+        <div class="filter-tag"><i class="fas fa-landmark"></i> {{ m }}<i class="fas fa-times tag-remove" onclick="removeFilter('museum','{{ m }}')"></i></div>
+        {% endfor %}
+        {% for c in cities %}
+        <div class="filter-tag"><i class="fas fa-city"></i> {{ c }}<i class="fas fa-times tag-remove" onclick="removeFilter('city','{{ c }}')"></i></div>
+        {% endfor %}
+        {% if country %}
+        <div class="filter-tag"><i class="fas fa-globe"></i> {{ country }}<i class="fas fa-times tag-remove" onclick="removeFilter('country')"></i></div>
+        {% endif %}
+        {% for m in movements %}
+        <div class="filter-tag"><i class="fas fa-palette"></i> {{ m }}<i class="fas fa-times tag-remove" onclick="removeFilter('movement','{{ m }}')"></i></div>
+        {% endfor %}
+        {% for t in types %}
+        <div class="filter-tag"><i class="fas fa-tag"></i> {{ t }}<i class="fas fa-times tag-remove" onclick="removeFilter('type','{{ t }}')"></i></div>
+        {% endfor %}
+        {% for g in genres %}
+        <div class="filter-tag"><i class="fas fa-heart"></i> {{ g }}<i class="fas fa-times tag-remove" onclick="removeFilter('genre','{{ g }}')"></i></div>
+        {% endfor %}
+    </div>
+
+    <!-- Boutons Recherche titre + Notes sur mobile -->
+
+</div>       
+        
+        
+
 
             {% if works and works|length > 0 %}
             <div class="works-grid" id="works-grid">
@@ -1309,11 +3050,10 @@
                         <img src="https://images.weserv.nl/?url={{ w.image_url|urlencode }}&w=300&h=450&fit=cover&output=webp&q=75" alt="{{ w.titre }}" data-f1="https://wsrv.nl/?url={{ w.image_url|urlencode }}&w=300&h=450&fit=cover&output=webp&q=75" data-f2="{{ w.image_url }}" data-err="0" loading="lazy" onload="this.style.opacity='1'" onerror="imgErr(this)">
                         <div class="image-placeholder" style="display:none;"><i class="fas fa-image"></i></div>
                         {% else %}
-                        <div class="no-copyright-badge"><i class="fas fa-lock"></i><span>© Non disponible</span></div>
+                        <div class="no-copyright-badge">No copyright</div>
+
                         {% endif %}
-                        <div class="work-fav" onclick="toggleFav(event,'{{ w.id }}',this)">
-                            <i class="{% if session.user_id and w.id in favorites %}fas{% else %}far{% endif %} fa-heart"></i>
-                        </div>
+                        <div class="work-fav" onclick="toggleFav(event,'{{ w.id }}',this)"><i class="far fa-heart"></i></div>
                     </div>
                     <div class="work-title">{{ w.titre|truncate(40) if w.titre else 'SANS TITRE' }}</div>
                     <div class="work-artist">{{ w.createur|truncate(30) if w.createur else 'ARTISTE INCONNU' }}</div>
@@ -1321,23 +3061,30 @@
                 {% endfor %}
             </div>
 
-            {% if has_more %}
-            <div class="load-more-container">
-                <button class="load-more-btn" onclick="loadMoreWorks()">VOIR PLUS</button>
-                <div class="load-more-info">Affichage de <span>{{ works|length }}</span> œuvre{% if works|length > 1 %}s{% endif %} sur <span>{{ total_oeuvres }}</span></div>
-            </div>
-            {% else %}
-            <div class="load-more-info" style="text-align:center;margin-top:1.5rem"><span>{{ works|length }}</span> résultat{% if works|length > 1 %}s{% endif %} affiché{% if works|length > 1 %}s{% endif %} sur <span>{{ total_oeuvres }}</span></div>
-            {% endif %}
 
-            {% else %}
-            <div class="no-results"><i class="fas fa-search"></i><h3>Aucun résultat trouvé</h3><p>Essayez d'autres mots-clés ou ajustez vos filtres</p></div>
-            {% endif %}
+
+
+        {% if has_more %}
+        <div class="load-more-container">
+            <button class="load-more-btn" onclick="loadMoreWorks()">VOIR PLUS</button>
+            <div class="load-more-info">...</div>
         </div>
+        {% endif %}
+        {% else %}
+        <div class="no-results">
+            <i class="fas fa-search"></i>
+            <p>Aucun résultat trouvé</p>
+        </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="no-results"><i class="fas fa-search"></i><h3>Recherchez une œuvre, un artiste, un musée ou une ville</h3><p>Utilisez la barre de recherche ci-dessus</p></div>
-    {% endif %}
+</div>
+    
+    
+    
+    
+
+
+    
 </div>
 
 <div class="scroll-top" id="scroll-top"><i class="fas fa-arrow-up"></i></div>

@@ -19,35 +19,43 @@
         :root {
             --accent: #6c5ce7;
             --accent-soft: #8b7df2;
-            --gold: #f5bd42;
-            --silver: #a8a8b0;
+            --gold: #e6b422;
+            --silver: #b0b0b8;
             --bronze: #cd7a4a;
             --font-display: 'Space Grotesk', sans-serif;
             --font-text: 'Inter', sans-serif;
         }
 
+        /* THEME DARK - contrastes renforcés */
         body.theme-dark {
-            --bg-primary: #050505;
-            --bg-card: #0d0d0d;
-            --bg-elevated: #121212;
+            --bg-primary: #0a0a0c;
+            --bg-card: #121214;
+            --bg-elevated: #1a1a1e;
             --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --text-tertiary: #6b6b6b;
-            --border: #1f1f1f;
-            --shadow: 0 4px 20px rgba(0,0,0,0.4);
-            --hover-bg: rgba(255,255,255,0.03);
+            --text-secondary: #c0c0c8;
+            --text-tertiary: #8a8a92;
+            --border: #2a2a30;
+            --border-soft: #2a2a30;
+            --shadow: 0 8px 24px rgba(0,0,0,0.6);
+            --hover-bg: rgba(108, 92, 231, 0.15);
+            --skeleton-bg: #1e1e24;
+            --skeleton-glow: #2a2a32;
         }
 
+        /* THEME LIGHT */
         body.theme-light {
-            --bg-primary: #f5f5f5;
+            --bg-primary: #f0f0f2;
             --bg-card: #ffffff;
-            --bg-elevated: #f0f0f0;
-            --text-primary: #1a1a1a;
-            --text-secondary: #5a5a5a;
-            --text-tertiary: #9a9a9a;
-            --border: #e0e0e0;
-            --shadow: 0 4px 20px rgba(0,0,0,0.08);
-            --hover-bg: rgba(0,0,0,0.02);
+            --bg-elevated: #fafafc;
+            --text-primary: #111111;
+            --text-secondary: #3a3a40;
+            --text-tertiary: #7a7a80;
+            --border: #e2e2e8;
+            --border-soft: #e2e2e8;
+            --shadow: 0 8px 20px rgba(0,0,0,0.08);
+            --hover-bg: rgba(108, 92, 231, 0.08);
+            --skeleton-bg: #e8e8ec;
+            --skeleton-glow: #f0f0f4;
         }
 
         body {
@@ -58,57 +66,66 @@
         }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
-        .main-content { margin-top: 80px; padding-bottom: 4rem; }
+        .main-content { margin-top: 80px; padding-bottom: 5rem; }
 
-        /* HERO */
+        /* Hero */
         .hero-section {
-            margin-bottom: 0rem;
-            padding: 1.5rem 0;
-
+            padding: 1rem 0 1.5rem;
+            border-bottom: 1px solid var(--border);
         }
         .hero-title {
-            font-size: clamp(2rem, 5vw, 3rem);
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 5vw, 2.6rem);
             font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        .hero-sub {
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
         }
 
-        /* STATS BAR */
-        .stats-bar {
+        /* Stats row */
+        .stats-row {
             display: flex;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            padding: 1rem 0;
+            gap: 2.5rem;
+            padding: 1.5rem 0;
             border-bottom: 1px solid var(--border);
+        }
+        .stat-item {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
         }
         .stat-number {
             font-family: var(--font-display);
-            font-size: 1.3rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--accent);
+            line-height: 1;
         }
         .stat-label {
             font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             color: var(--text-tertiary);
-            margin-left: 0.5rem;
         }
 
-        /* TABS */
+        /* Tabs */
         .tabs {
             display: flex;
             gap: 0.5rem;
-            margin-bottom: 2rem;
+            margin: 2rem 0 1.5rem;
         }
         .tab-btn {
-            padding: 0.6rem 1.5rem;
+            padding: 0.6rem 1.4rem;
             background: transparent;
             border: 1px solid var(--border);
             border-radius: 40px;
             font-family: var(--font-display);
             font-size: 0.8rem;
-            font-weight: 600;
+            font-weight: 500;
             color: var(--text-secondary);
             cursor: pointer;
             transition: all 0.2s;
@@ -120,86 +137,119 @@
         }
         .tab-btn:hover:not(.active) {
             border-color: var(--accent);
-            color: var(--text-primary);
+            color: var(--accent);
+            background: var(--hover-bg);
         }
 
-        /* PANELS */
+        /* Panels */
         .panel { display: none; animation: fadeIn 0.3s ease; }
         .panel.active { display: block; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* RANKING CARDS */
-        .ranking-grid {
+        /* Ranking list */
+        .ranking-list {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
-        .rank-card {
+        .rank-item {
             display: flex;
             align-items: center;
-            gap: 1.2rem;
-            padding: 0.6rem 1rem;
+            gap: 1rem;
+            padding: 0.85rem 1.2rem;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 20px;
             text-decoration: none;
             color: inherit;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
-        .rank-card:hover {
+        .rank-item:hover {
             transform: translateX(4px);
             border-color: var(--accent);
             background: var(--bg-elevated);
+            box-shadow: var(--shadow);
         }
 
-        /* POSITION */
-        .rank-pos {
-            width: 55px;
+        /* Position - numéros uniquement */
+        .rank-position {
+            width: 56px;
             text-align: center;
             font-family: var(--font-display);
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--text-tertiary);
-        }
-        .rank-pos.gold { color: var(--gold); }
-        .rank-pos.silver { color: var(--silver); }
-        .rank-pos.bronze { color: var(--bronze); }
-        .rank-pos i { font-size: 1.4rem; }
-
-        /* IMAGE - PLUS GRANDE */
-        .rank-img {
-            width: 110px;
-            height: 80px;
-            border-radius: 10px;
-            overflow: hidden;
-            background: var(--bg-elevated);
             flex-shrink: 0;
+            letter-spacing: -0.02em;
         }
-        .rank-img img {
+        .rank-position.gold { color: var(--gold); }
+        .rank-position.silver { color: var(--silver); }
+        .rank-position.bronze { color: var(--bronze); }
+
+        /* Image avec skeleton loading */
+        .rank-image {
+            width: 96px;
+            height: 72px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: var(--skeleton-bg);
+            flex-shrink: 0;
+            position: relative;
+        }
+        .rank-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.25s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        .rank-image img.loaded {
+            opacity: 1;
+        }
+        .rank-item:hover .rank-image img.loaded {
+            transform: scale(1.02);
+        }
+        /* Skeleton animation */
+        .rank-image.skeleton {
+            background: linear-gradient(90deg, var(--skeleton-bg) 25%, var(--skeleton-glow) 50%, var(--skeleton-bg) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .rank-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-elevated);
+            color: var(--text-tertiary);
+            font-size: 1.2rem;
         }
 
-        /* INFOS */
+        /* Infos */
         .rank-info {
             flex: 1;
             min-width: 0;
         }
         .rank-title {
             font-family: var(--font-display);
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             margin-bottom: 0.2rem;
+            color: var(--text-primary);
         }
-        .rank-creator {
-            font-size: 0.7rem;
+        .rank-artist {
+            font-size: 0.75rem;
             color: var(--text-secondary);
             white-space: nowrap;
             overflow: hidden;
@@ -208,10 +258,10 @@
         .rank-meta {
             font-size: 0.65rem;
             color: var(--text-tertiary);
-            margin-top: 0.2rem;
+            margin-top: 0.25rem;
         }
 
-        /* SCORE */
+        /* Score / Heart */
         .rank-score {
             text-align: right;
             flex-shrink: 0;
@@ -224,22 +274,26 @@
             color: var(--accent);
             line-height: 1;
         }
-        .heart-count {
+        .rank-heart {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            color: #ff4757;
+            justify-content: flex-end;
+            gap: 0.3rem;
             font-size: 1.2rem;
             font-weight: 700;
+            color: #ff5e6e;
         }
-        .heart-count i { font-size: 1.1rem; }
+        .rank-heart i { 
+            font-size: 0.95rem;
+            color: #ff5e6e;
+        }
 
-        /* EMPTY STATE */
+        /* Empty state */
         .empty-state {
             text-align: center;
-            padding: 4rem;
+            padding: 4rem 2rem;
             background: var(--bg-card);
-            border-radius: 16px;
+            border-radius: 24px;
             border: 1px solid var(--border);
         }
         .empty-state i {
@@ -248,15 +302,18 @@
             margin-bottom: 1rem;
             opacity: 0.5;
         }
-        .empty-state p { color: var(--text-secondary); font-size: 0.85rem; }
+        .empty-state p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
 
-        /* SCROLL TOP */
+        /* Scroll top */
         .scroll-top {
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            width: 42px;
-            height: 42px;
+            width: 46px;
+            height: 46px;
             background: var(--accent);
             border: none;
             border-radius: 50%;
@@ -266,30 +323,58 @@
             visibility: hidden;
             transition: all 0.2s;
             z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
         }
         .scroll-top.visible { opacity: 1; visibility: visible; }
         .scroll-top:hover { transform: translateY(-3px); background: var(--accent-soft); }
 
+        /* Responsive */
         @media (max-width: 700px) {
-            .main-content { margin-top: 58px; }
-            .rank-img { width: 80px; height: 60px; }
-            .rank-pos { width: 40px; font-size: 1.2rem; }
-            .rank-value { font-size: 1.2rem; }
-            .rank-title { font-size: 0.75rem; }
-            .stats-bar { gap: 1rem; flex-wrap: wrap; }
+            .main-content { margin-top: 68px; }
+            .rank-image { width: 70px; height: 56px; }
+            .rank-position { width: 44px; font-size: 1.4rem; }
+            .rank-value { font-size: 1.3rem; }
+            .rank-title { font-size: 0.85rem; }
+            .rank-artist { font-size: 0.65rem; }
+            .stats-row { gap: 1.5rem; }
+            .stat-number { font-size: 1.5rem; }
+            .rank-item { padding: 0.65rem 1rem; }
         }
 
+
         @media (max-width: 500px) {
-            .rank-img { display: none; }
-            .rank-pos { width: 35px; }
+            .rank-image { width: 56px; height: 48px; }
+            .rank-position { width: 38px; font-size: 1.2rem; }
+            .container { padding: 0 1rem; }
+            .rank-item { padding: 0.6rem 0.9rem; gap: 0.75rem; }
+            .tabs { gap: 0.3rem; }
+            .tab-btn { padding: 0.4rem 1rem; font-size: 0.7rem; }
+            .rank-value { font-size: 1.1rem; }
+            .rank-heart { font-size: 1rem; }
         }
+
+
+/* S'assurer que le dernier élément de la liste a de l'espace */
+.ranking-list:last-child {
+    margin-bottom: 2rem;
+}
+
+/* Sur mobile, un peu plus d'espace */
+@media (max-width: 700px) {
+    .ranking-list:last-child {
+        margin-bottom: 3rem;
+    }
+}
     </style>
 </head>
 
 <body class="theme-dark" style="visibility:hidden">
 <script>
 (function() {
-    const t = localStorage.getItem('theme') || 'dark';
+    const t = localStorage.getItem('theme') || 'light';
     document.body.classList.remove('theme-dark', 'theme-light');
     document.body.classList.add('theme-' + t);
     document.body.style.visibility = '';
@@ -302,12 +387,22 @@
     
     <div class="hero-section">
         <h1 class="hero-title">Classements</h1>
+        <div class="hero-sub">Les œuvres les plus remarquables de la collection</div>
     </div>
 
-    <div class="stats-bar">
-        <div><span class="stat-number">{{ top_rated|length if top_rated else 0 }}</span><span class="stat-label">œuvres notées</span></div>
-        <div><span class="stat-number">{{ top_fav|length if top_fav else 0 }}</span><span class="stat-label">favoris cumulés</span></div>
-        <div><span class="stat-number">{{ recent_comments|length if recent_comments else 0 }}</span><span class="stat-label">commentaires</span></div>
+    <div class="stats-row">
+        <div class="stat-item">
+            <span class="stat-number">{{ top_rated|length if top_rated else 0 }}</span>
+            <span class="stat-label">œuvres notées</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ top_fav|sum(attribute='1') if top_fav else 0 }}</span>
+            <span class="stat-label">favoris cumulés</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ recent_comments|length if recent_comments else 0 }}</span>
+            <span class="stat-label">commentaires</span>
+        </div>
     </div>
 
     <div class="tabs">
@@ -315,40 +410,33 @@
         <button class="tab-btn" data-tab="fav">Plus de favoris</button>
     </div>
 
-    <!-- PANEL MIEUX NOTÉES -->
+    <!-- PANEL: Mieux notées (TOP 10) -->
     <div class="panel active" id="panel-rated">
         {% if top_rated %}
-        <div class="ranking-grid">
+        <div class="ranking-list">
             {% for artwork, avg_rating, nb_notes in top_rated[:10] %}
             {% set rank = loop.index %}
-            <a href="/oeuvre/{{ artwork.id }}" class="rank-card">
-                <div class="rank-pos {% if rank == 1 %}gold{% elif rank == 2 %}silver{% elif rank == 3 %}bronze{% endif %}">
-                    {% if rank == 1 %}
-                        <i class="fas fa-crown"></i>
-                    {% elif rank == 2 %}
-                        <i class="fas fa-medal"></i>
-                    {% elif rank == 3 %}
-                        <i class="fas fa-medal"></i>
-                    {% else %}
-                        {{ rank }}
-                    {% endif %}
+            <a href="/oeuvre/{{ artwork.id }}" class="rank-item">
+                <div class="rank-position 
+                    {% if rank == 1 %}gold{% elif rank == 2 %}silver{% elif rank == 3 %}bronze{% endif %}">
+                    {{ rank }}
                 </div>
-                <div class="rank-img">
+                <div class="rank-image skeleton" id="img-container-{{ loop.index }}-rated">
                     {% if artwork.image_url %}
-                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=220&h=160&fit=cover&output=webp&q=85"
+                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=200&h=140&fit=cover&output=webp&q=85"
                          alt="{{ artwork.titre }}"
                          loading="lazy"
-                         onerror="this.src='{{ artwork.image_url }}'">
+                         data-loaded="false"
+                         onload="this.classList.add('loaded'); this.parentElement.classList.remove('skeleton');"
+                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'rank-image-placeholder\'><i class=\'fas fa-image\'></i></div>'; this.parentElement.classList.remove('skeleton');">
                     {% else %}
-                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated);">
-                        <i class="fas fa-image" style="color:var(--text-tertiary);"></i>
-                    </div>
+                    <div class="rank-image-placeholder"><i class="fas fa-image"></i></div>
                     {% endif %}
                 </div>
                 <div class="rank-info">
-                    <div class="rank-title">{{ artwork.titre|truncate(50) if artwork.titre else 'Sans titre' }}</div>
-                    <div class="rank-creator">{{ artwork.createur|truncate(40) if artwork.createur else 'Artiste inconnu' }}</div>
-                    <div class="rank-meta">{{ nb_notes }} notes</div>
+                    <div class="rank-title">{{ artwork.titre|truncate(55) if artwork.titre else 'Sans titre' }}</div>
+                    <div class="rank-artist">{{ artwork.createur|truncate(45) if artwork.createur else 'Artiste inconnu' }}</div>
+                    <div class="rank-meta">{{ nb_notes }} avis</div>
                 </div>
                 <div class="rank-score">
                     <div class="rank-value">{{ "%.1f"|format(avg_rating) }}</div>
@@ -359,47 +447,40 @@
         {% else %}
         <div class="empty-state">
             <i class="fas fa-star"></i>
-            <p>Aucune œuvre notée pour l'instant.</p>
+            <p>Aucune œuvre notée pour le moment.<br>Commencez à noter des œuvres pour voir apparaître les classements.</p>
         </div>
         {% endif %}
     </div>
 
-    <!-- PANEL PLUS DE FAVORIS -->
+    <!-- PANEL: Plus de favoris (TOP 10) -->
     <div class="panel" id="panel-fav">
         {% if top_fav %}
-        <div class="ranking-grid">
+        <div class="ranking-list">
             {% for artwork, fav_count in top_fav[:10] %}
             {% set rank = loop.index %}
-            <a href="/oeuvre/{{ artwork.id }}" class="rank-card">
-                <div class="rank-pos {% if rank == 1 %}gold{% elif rank == 2 %}silver{% elif rank == 3 %}bronze{% endif %}">
-                    {% if rank == 1 %}
-                        <i class="fas fa-crown"></i>
-                    {% elif rank == 2 %}
-                        <i class="fas fa-medal"></i>
-                    {% elif rank == 3 %}
-                        <i class="fas fa-medal"></i>
-                    {% else %}
-                        {{ rank }}
-                    {% endif %}
+            <a href="/oeuvre/{{ artwork.id }}" class="rank-item">
+                <div class="rank-position 
+                    {% if rank == 1 %}gold{% elif rank == 2 %}silver{% elif rank == 3 %}bronze{% endif %}">
+                    {{ rank }}
                 </div>
-                <div class="rank-img">
+                <div class="rank-image skeleton" id="img-container-{{ loop.index }}-fav">
                     {% if artwork.image_url %}
-                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=220&h=160&fit=cover&output=webp&q=85"
+                    <img src="https://images.weserv.nl/?url={{ artwork.image_url|urlencode }}&w=200&h=140&fit=cover&output=webp&q=85"
                          alt="{{ artwork.titre }}"
                          loading="lazy"
-                         onerror="this.src='{{ artwork.image_url }}'">
+                         data-loaded="false"
+                         onload="this.classList.add('loaded'); this.parentElement.classList.remove('skeleton');"
+                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'rank-image-placeholder\'><i class=\'fas fa-image\'></i></div>'; this.parentElement.classList.remove('skeleton');">
                     {% else %}
-                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated);">
-                        <i class="fas fa-image" style="color:var(--text-tertiary);"></i>
-                    </div>
+                    <div class="rank-image-placeholder"><i class="fas fa-image"></i></div>
                     {% endif %}
                 </div>
                 <div class="rank-info">
-                    <div class="rank-title">{{ artwork.titre|truncate(50) if artwork.titre else 'Sans titre' }}</div>
-                    <div class="rank-creator">{{ artwork.createur|truncate(40) if artwork.createur else 'Artiste inconnu' }}</div>
+                    <div class="rank-title">{{ artwork.titre|truncate(55) if artwork.titre else 'Sans titre' }}</div>
+                    <div class="rank-artist">{{ artwork.createur|truncate(45) if artwork.createur else 'Artiste inconnu' }}</div>
                 </div>
                 <div class="rank-score">
-                    <div class="heart-count">
+                    <div class="rank-heart">
                         <i class="fas fa-heart"></i>
                         <span>{{ fav_count }}</span>
                     </div>
@@ -410,7 +491,7 @@
         {% else %}
         <div class="empty-state">
             <i class="fas fa-heart"></i>
-            <p>Aucun favori enregistré pour l'instant.</p>
+            <p>Aucun favori enregistré pour l'instant.<br>Ajoutez vos œuvres préférées à vos favoris.</p>
         </div>
         {% endif %}
     </div>
@@ -425,8 +506,9 @@
 
 <script>
 (function() {
+    // Theme sync
     function syncTheme() {
-        const t = localStorage.getItem('theme') || 'dark';
+        const t = localStorage.getItem('theme') || 'light';
         document.body.classList.remove('theme-dark', 'theme-light');
         document.body.classList.add('theme-' + t);
     }
@@ -446,8 +528,13 @@
     function switchTab(tabId) {
         tabs.forEach(tab => tab.classList.remove('active'));
         panels.forEach(panel => panel.classList.remove('active'));
-        document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
-        document.getElementById(`panel-${tabId}`).classList.add('active');
+        const activeTab = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+        if (activeTab) activeTab.classList.add('active');
+        const activePanel = document.getElementById(`panel-${tabId}`);
+        if (activePanel) activePanel.classList.add('active');
+        
+        // Update URL hash without reload
+        history.replaceState(null, '', `#${tabId}`);
     }
 
     tabs.forEach(tab => {
@@ -456,13 +543,33 @@
         });
     });
 
+    // Check URL hash on load
+    const hash = window.location.hash.slice(1);
+    if (hash === 'fav') {
+        switchTab('fav');
+    } else if (hash === 'rated') {
+        switchTab('rated');
+    }
+
     // SCROLL TOP
     const scrollBtn = document.getElementById('scroll-top');
     window.addEventListener('scroll', () => {
-        scrollBtn.classList.toggle('visible', window.scrollY > 400);
+        if (scrollBtn) {
+            scrollBtn.classList.toggle('visible', window.scrollY > 400);
+        }
     });
-    scrollBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (scrollBtn) {
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // Fix for images that might already be cached and load before onload attaches
+    document.querySelectorAll('.rank-image img').forEach(img => {
+        if (img.complete && img.naturalHeight !== 0) {
+            img.classList.add('loaded');
+            if (img.parentElement) img.parentElement.classList.remove('skeleton');
+        }
     });
 })();
 </script>

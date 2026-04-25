@@ -1,5 +1,9 @@
 <!-- navbar.html - clean, modern, high contrast, no borders -->
 
+
+<!-- ===== INCLUSION DU LOADER ===== -->
+{% include 'loader.html' %}
+
 <!-- ===== LOGO ===== -->
 <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
@@ -17,7 +21,8 @@
         <div class="navbar-left">
             <a href="/" class="navbar-logo"><span style="color: var(--accent);">/</span>{{ site_name }}<span style="color: var(--accent);">/</span></a>
             <div class="navbar-links">
-                <a href="/discover" class="nav-link">Explorer</a>
+    <a href="/suggestions" class="nav-link">Rechercher</a>  <!-- AJOUTER CETTE LIGNE --> 
+               <a href="/discover" class="nav-link">Explorer</a>
                 <a href="/top" class="nav-link">Classement</a>   
                 <a href="/all-rated" class="nav-link">Communnauté</a>                
                 <a href="/favoris" class="nav-link">Favoris</a>
@@ -127,6 +132,7 @@
         </div>
 <nav class="mob-drawer-nav">
     <a href="/home" class="mdn-link" onclick="closeMobDrawer()"><span>Accueil</span><i class="fas fa-chevron-right"></i></a>
+    <a href="/suggestions" class="mdn-link" onclick="closeMobDrawer()"><span>Rechercher</span><i class="fas fa-chevron-right"></i></a>  <!-- AJOUTER CETTE LIGNE -->
     <a href="/discover" class="mdn-link" onclick="closeMobDrawer()"><span>Explorer</span><i class="fas fa-chevron-right"></i></a>
     <a href="/top" class="mdn-link" onclick="closeMobDrawer()"><span>Classement</span><i class="fas fa-chevron-right"></i></a>
     <a href="/all-rated" class="mdn-link" onclick="closeMobDrawer()"><span>Communauté</span><i class="fas fa-chevron-right"></i></a>    
@@ -1067,6 +1073,10 @@ function setActiveNavLink() {
         else if (href === '/rated' && currentPath === '/rated') {
             link.classList.add('active');
         }
+        // Pour /suggestions (AJOUTER CETTE PARTIE)
+        else if (href === '/suggestions' && currentPath === '/suggestions') {
+            link.classList.add('active');
+        }
     });
 }
 
@@ -1085,11 +1095,11 @@ function dispMobResults(data) {
     const c = document.getElementById('mso-results'); 
     c.innerHTML = '';
     const cats = [
-        {key:'artistes',icon:'fa-user',cat:'ARTISTE',url:i=>`/suggestions?artist=${encodeURIComponent(i.nom)}`,name:i=>i.nom},
-        {key:'oeuvres',icon:'fa-paint-brush',cat:'OEUVRE',url:i=>`/oeuvre/${i.id}`,name:i=>i.titre},
-        {key:'musees',icon:'fa-landmark',cat:'MUSÉE',url:i=>`/suggestions?museum=${encodeURIComponent(i.nom)}`,name:i=>i.nom},
         {key:'villes',icon:'fa-city',cat:'VILLE',url:i=>`/suggestions?city=${encodeURIComponent(i.nom)}`,name:i=>i.nom},
-        {key:'pays',icon:'fa-flag',cat:'PAYS',url:i=>`/suggestions?country=${encodeURIComponent(i.nom)}`,name:i=>i.nom}
+        {key:'artistes',icon:'fa-user',cat:'ARTISTE',url:i=>`/suggestions?artist=${encodeURIComponent(i.nom)}`,name:i=>i.nom},
+        {key:'musees',icon:'fa-landmark',cat:'MUSÉE',url:i=>`/suggestions?museum=${encodeURIComponent(i.nom)}`,name:i=>i.nom},
+        {key:'pays',icon:'fa-flag',cat:'PAYS',url:i=>`/suggestions?country=${encodeURIComponent(i.nom)}`,name:i=>i.nom},
+        {key:'oeuvres',icon:'fa-paint-brush',cat:'OEUVRE',url:i=>`/oeuvre/${i.id}`,name:i=>i.titre}
     ];
     cats.forEach(({key,icon,cat,url,name}) => {
         (data[key] || []).slice(0,4).forEach(item => {

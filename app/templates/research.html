@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ site_name }}</title>
+    <title>{{ site_name }} · Rechercher</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"><link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2115,7 +2115,7 @@ window.handleImageError = function(img) {
         // GESTION DU THEME
         // ================================================
         function syncTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const savedTheme = localStorage.getItem('theme') || 'light';
             document.body.classList.remove('theme-dark', 'theme-light');
             document.body.classList.add(`theme-${savedTheme}`);
         }

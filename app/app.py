@@ -18,7 +18,7 @@ import unicodedata
 from datetime import datetime, timedelta
 from logging.handlers import RotatingFileHandler
 from functools import lru_cache
-
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -115,9 +115,9 @@ Talisman(
         ],
         'img-src': ["'self'", "data:", "https:", "http:", "*"],
     },
-    force_https=False,
+    force_https=os.environ.get('FORCE_HTTPS', 'False').lower() == 'true',
     strict_transport_security=True,
-    session_cookie_secure=False,
+    session_cookie_secure=os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() == 'true',
     session_cookie_http_only=True,
     referrer_policy='strict-origin-when-cross-origin',
 )
@@ -973,251 +973,273 @@ def about():
     return render_template('about.html', **stats)
 
 
-# ---- Page Découvrir ----
-_cache_time = {}
-_cache_data = {}
 
-def cached_discover_data():
-    global _cache_time, _cache_data
-    now = datetime.utcnow()
-    if 'discover' in _cache_time and (now - _cache_time['discover']).seconds < 3600:
-        return _cache_data['discover']
-    
-    lang = session.get('language', 'fr')
 
-    if lang == 'fr':
-        mov_col = 'movement_fr'
-        type_col = 'instance_of_fr'
-        art_col = 'creator_fr'
-        city_col = 'city_fr'
-        country_col = 'country_fr'
-        genre_col = 'genre_fr'
-        museum_col = 'collection_fr'
-    else:
-        mov_col = 'movement_en'
-        type_col = 'instance_of_en'
-        art_col = 'creator_en'
-        city_col = 'city_en'
-        country_col = 'country_en'
-        genre_col = 'genre_en'
-        museum_col = 'collection_en'
 
-    def get_first_image(field, table_alias='a'):
-        return f"""
-            (SELECT image_url FROM artworks 
-             WHERE {field} = {table_alias}.{field} 
-             AND image_url IS NOT NULL AND image_url != '' 
-             LIMIT 1)
-        """
 
-    mov_sql = text(f"""
-        SELECT {mov_col} as name, COUNT(*) as count, {get_first_image(mov_col, 'm')} as image
-        FROM artworks m
-        WHERE {mov_col} IS NOT NULL AND {mov_col} != ''
-          AND image_url IS NOT NULL AND image_url != ''
-        GROUP BY {mov_col}
-        ORDER BY count DESC LIMIT 12
-    """)
-    movements = [{'name': r.name, 'count': r.count, 'image': r.image} for r in db.session.execute(mov_sql)]
 
-    type_sql = text(f"""
-        SELECT {type_col} as name, COUNT(*) as count, {get_first_image(type_col, 't')} as image
-        FROM artworks t
-        WHERE {type_col} IS NOT NULL AND {type_col} != ''
-          AND image_url IS NOT NULL AND image_url != ''
-        GROUP BY {type_col}
-        ORDER BY count DESC LIMIT 12
-    """)
-    types = [{'name': r.name, 'count': r.count, 'image': r.image} for r in db.session.execute(type_sql)]
 
-    museums_sql = text(f"""
-        SELECT {museum_col} as name, COUNT(*) as count
-        FROM artworks
-        WHERE {museum_col} IS NOT NULL AND {museum_col} != ''
-          AND image_url IS NOT NULL AND image_url != ''
-        GROUP BY {museum_col}
-        ORDER BY count DESC LIMIT 12
-    """)
-    museums = [{'name': r.name, 'count': r.count} for r in db.session.execute(museums_sql)]
 
-    artist_ids = ['Q762', 'Q290407', 'Q217434', 'Q5582', 'Q296', 'Q130531']
-    artist_sql = text(f"""
-        SELECT DISTINCT ON (a.{art_col})
-            a.{art_col} as name, a.creator_id,
-            COUNT(*) OVER (PARTITION BY a.{art_col}) as count,
-            {get_first_image(art_col, 'a')} as image
-        FROM artworks a
-        WHERE a.creator_id IN ({','.join([f"'{id}'" for id in artist_ids])})
-          AND a.image_url IS NOT NULL AND a.image_url != ''
-          AND a.{art_col} IS NOT NULL AND a.{art_col} != ''
-        GROUP BY a.{art_col}, a.creator_id, a.image_url
-        ORDER BY a.{art_col} LIMIT 6
-    """)
-    artists = [{'name': r.name, 'count': r.count, 'image': r.image, 'creator_id': r.creator_id} for r in db.session.execute(artist_sql)]
 
-    city_sql = text(f"""
-        SELECT {city_col} as name, COUNT(*) as count
-        FROM artworks
-        WHERE {city_col} IS NOT NULL AND {city_col} != ''
-          AND image_url IS NOT NULL AND image_url != ''
-        GROUP BY {city_col}
-        ORDER BY count DESC LIMIT 5
-    """)
-    cities = [{'name': r.name, 'count': r.count} for r in db.session.execute(city_sql)]
 
-    country_sql = text(f"""
-        SELECT {country_col} as name, COUNT(*) as count
-        FROM artworks
-        WHERE {country_col} IS NOT NULL AND {country_col} != ''
-          AND image_url IS NOT NULL AND image_url != ''
-        GROUP BY {country_col}
-        ORDER BY count DESC LIMIT 5
-    """)
-    countries = [{'name': r.name, 'count': r.count} for r in db.session.execute(country_sql)]
 
-    genre_sql = text(f"""
-        SELECT {genre_col} as name, COUNT(*) as count
-        FROM artworks
-        WHERE {genre_col} IS NOT NULL AND {genre_col} != ''
-          AND image_url IS NOT NULL AND image_url != ''
-        GROUP BY {genre_col}
-        ORDER BY count DESC LIMIT 12
-    """)
-    genres = [{'name': r.name, 'count': r.count} for r in db.session.execute(genre_sql)]
-
-    result = {
-        'movements': movements,
-        'types': types,
-        'museums': museums,
-        'cities': cities,
-        'countries': countries,
-        'genres': genres,
-        'artists': artists
-    }
-    
-    _cache_time['discover'] = now
-    _cache_data['discover'] = result
-    return result
 
 
 @app.route('/discover')
 def discover():
-    static_data = cached_discover_data()
+    """Version avec images pour les catégories"""
     
-    hero_sql = text("""
-        SELECT image_url
-        FROM artworks
-        WHERE image_url IS NOT NULL AND image_url != ''
-          AND (instance_of_fr ILIKE '%peinture%' OR instance_of_en ILIKE '%painting%')
-        ORDER BY random() LIMIT 1
-    """)
-    hero_result = db.session.execute(hero_sql).first()
-    hero_image = hero_result.image_url if hero_result else None
+    import random
+    lang = session.get('language', 'fr')
     
+    # ============================================================
+    # DONNÉES STATIQUES AVEC IMAGES
+    # ============================================================
+    
+    if lang == 'fr':
+        mov_col = Artwork.movement_fr
+        type_col = Artwork.instance_of_fr
+        art_col = Artwork.creator_fr
+        city_col = Artwork.city_fr
+        country_col = Artwork.country_fr
+        genre_col = Artwork.genre_fr
+        museum_col = Artwork.collection_fr
+    else:
+        mov_col = Artwork.movement_en
+        type_col = Artwork.instance_of_en
+        art_col = Artwork.creator_en
+        city_col = Artwork.city_en
+        country_col = Artwork.country_en
+        genre_col = Artwork.genre_en
+        museum_col = Artwork.collection_en
+    
+    # Mouvements avec image (prend la première image dispo)
+    movements = db.session.query(
+        mov_col.label('name'),
+        func.count().label('count'),
+        func.max(Artwork.image_url).label('image')
+    ).filter(
+        mov_col.isnot(None), mov_col != '',
+        Artwork.image_url.isnot(None), Artwork.image_url != ''
+    ).group_by(mov_col).order_by(func.count().desc()).limit(12).all()
+    movements = [{'name': m.name, 'count': m.count, 'image': m.image} for m in movements]
+    
+    # Types avec image
+    types = db.session.query(
+        type_col.label('name'),
+        func.count().label('count'),
+        func.max(Artwork.image_url).label('image')
+    ).filter(
+        type_col.isnot(None), type_col != '',
+        Artwork.image_url.isnot(None), Artwork.image_url != ''
+    ).group_by(type_col).order_by(func.count().desc()).limit(12).all()
+    types = [{'name': t.name, 'count': t.count, 'image': t.image} for t in types]
+    
+    # Musées (sans image, juste le nom)
+    museums = db.session.query(
+        museum_col.label('name'),
+        func.count().label('count')
+    ).filter(
+        museum_col.isnot(None), museum_col != '',
+        Artwork.image_url.isnot(None), Artwork.image_url != ''
+    ).group_by(museum_col).order_by(func.count().desc()).limit(12).all()
+    museums = [{'name': m.name, 'count': m.count} for m in museums]
+    
+    # Artistes vedettes avec image (IDs fixes)
+    artist_ids = ['Q762', 'Q290407', 'Q217434', 'Q5582', 'Q296', 'Q130531']
+    artists = db.session.query(
+        art_col.label('name'),
+        Artwork.creator_id,
+        func.max(Artwork.image_url).label('image')
+    ).filter(
+        Artwork.creator_id.in_(artist_ids),
+        Artwork.image_url.isnot(None), Artwork.image_url != '',
+        art_col.isnot(None), art_col != ''
+    ).group_by(art_col, Artwork.creator_id).limit(6).all()
+    artists = [{'name': a.name, 'creator_id': a.creator_id, 'image': a.image} for a in artists]
+    
+    # Villes
+    cities = db.session.query(
+        city_col.label('name'),
+        func.count().label('count')
+    ).filter(
+        city_col.isnot(None), city_col != '',
+        Artwork.image_url.isnot(None), Artwork.image_url != ''
+    ).group_by(city_col).order_by(func.count().desc()).limit(5).all()
+    cities = [{'name': c.name, 'count': c.count} for c in cities]
+    
+    # Pays
+    countries = db.session.query(
+        country_col.label('name'),
+        func.count().label('count')
+    ).filter(
+        country_col.isnot(None), country_col != '',
+        Artwork.image_url.isnot(None), Artwork.image_url != ''
+    ).group_by(country_col).order_by(func.count().desc()).limit(5).all()
+    countries = [{'name': c.name, 'count': c.count} for c in countries]
+    
+    # Genres
+    genres = db.session.query(
+        genre_col.label('name'),
+        func.count().label('count')
+    ).filter(
+        genre_col.isnot(None), genre_col != '',
+        Artwork.image_url.isnot(None), Artwork.image_url != ''
+    ).group_by(genre_col).order_by(func.count().desc()).limit(12).all()
+    genres = [{'name': g.name, 'count': g.count} for g in genres]
+    
+    # ============================================================
+    # HERO IMAGE - avec OFFSET aléatoire
+    # ============================================================
+    def get_random_image(use_painting_filter=False):
+        query = db.session.query(Artwork.image_url).filter(
+            Artwork.image_url.isnot(None), Artwork.image_url != ''
+        )
+        if use_painting_filter:
+            query = query.filter(
+                db.or_(
+                    Artwork.instance_of_fr.ilike('%peinture%'),
+                    Artwork.instance_of_en.ilike('%painting%')
+                )
+            )
+        
+        count = query.count()
+        if count == 0:
+            return None
+        
+        offset = random.randint(0, min(count - 1, 1000))
+        return query.offset(offset).limit(1).scalar()
+    
+    hero_image = get_random_image(use_painting_filter=True)
     if not hero_image:
-        hero_fallback_sql = text("""
-            SELECT image_url FROM artworks
-            WHERE image_url IS NOT NULL AND image_url != ''
-            ORDER BY random() LIMIT 1
-        """)
-        hero_result = db.session.execute(hero_fallback_sql).first()
-        hero_image = hero_result.image_url if hero_result else None
-
+        hero_image = get_random_image(use_painting_filter=False)
+    
+    # ============================================================
+    # SÉLECTION QUOTIDIENNE
+    # ============================================================
     daily_selection = []
     artist_name = ""
     
-    artist_with_3_works_sql = text("""
-        SELECT creator_fr, creator_en, COUNT(*) as work_count
-        FROM artworks
-        WHERE image_url IS NOT NULL AND image_url != ''
-          AND creator_fr IS NOT NULL AND creator_fr != ''
-          AND creator_fr NOT IN ('Artiste inconnu', 'Unknown artist')
-        GROUP BY creator_fr, creator_en
-        HAVING COUNT(*) >= 3
-        ORDER BY random() LIMIT 1
-    """)
+    artist_query = db.session.query(
+        Artwork.creator_fr, Artwork.creator_en
+    ).filter(
+        Artwork.image_url.isnot(None), Artwork.image_url != '',
+        Artwork.creator_fr.isnot(None), Artwork.creator_fr != '',
+        Artwork.creator_fr.notin_(['Artiste inconnu', 'Unknown artist'])
+    ).group_by(Artwork.creator_fr, Artwork.creator_en).having(func.count() >= 3)
     
-    random_artist = db.session.execute(artist_with_3_works_sql).first()
+    artist_count = artist_query.count()
     
-    if random_artist:
-        creator_fr = random_artist.creator_fr
-        creator_en = random_artist.creator_en
-        artist_name = creator_fr or creator_en or "un artiste"
+    if artist_count > 0:
+        offset = random.randint(0, min(artist_count - 1, 500))
+        random_artist = artist_query.offset(offset).limit(1).first()
         
-        artist_works_sql = text("""
-            SELECT id, COALESCE(label_fr, label_en, 'Sans titre') as title,
-                   COALESCE(creator_fr, creator_en, 'Artiste inconnu') as creator, image_url
-            FROM artworks
-            WHERE image_url IS NOT NULL AND image_url != ''
-              AND (creator_fr = :creator_fr OR creator_en = :creator_en)
-            ORDER BY random() LIMIT 3
-        """)
-        for r in db.session.execute(artist_works_sql, {'creator_fr': creator_fr, 'creator_en': creator_en}):
-            daily_selection.append({
-                'id': r.id, 'title': r.title or 'Sans titre',
-                'creator': r.creator or 'Artiste inconnu', 'image_url': r.image_url
-            })
+        if random_artist:
+            creator_fr = random_artist[0]
+            creator_en = random_artist[1]
+            artist_name = creator_fr or creator_en or "un artiste"
+            
+            works = db.session.query(
+                Artwork.id,
+                db.func.coalesce(Artwork.label_fr, Artwork.label_en, 'Sans titre').label('title'),
+                db.func.coalesce(Artwork.creator_fr, Artwork.creator_en, 'Artiste inconnu').label('creator'),
+                Artwork.image_url
+            ).filter(
+                Artwork.image_url.isnot(None), Artwork.image_url != '',
+                db.or_(Artwork.creator_fr == creator_fr, Artwork.creator_en == creator_en)
+            ).limit(3).all()
+            
+            for r in works:
+                daily_selection.append({
+                    'id': r.id,
+                    'title': r.title,
+                    'creator': r.creator,
+                    'image_url': r.image_url
+                })
     
     if not daily_selection:
-        fallback_sql = text("""
-            SELECT id, COALESCE(label_fr, label_en, 'Sans titre') as title,
-                   COALESCE(creator_fr, creator_en, 'Artiste inconnu') as creator, image_url
-            FROM artworks
-            WHERE image_url IS NOT NULL AND image_url != ''
-            ORDER BY random() LIMIT 3
-        """)
-        for r in db.session.execute(fallback_sql):
+        works = db.session.query(
+            Artwork.id,
+            db.func.coalesce(Artwork.label_fr, Artwork.label_en, 'Sans titre').label('title'),
+            db.func.coalesce(Artwork.creator_fr, Artwork.creator_en, 'Artiste inconnu').label('creator'),
+            Artwork.image_url
+        ).filter(
+            Artwork.image_url.isnot(None), Artwork.image_url != ''
+        ).limit(3).all()
+        
+        for r in works:
             daily_selection.append({
-                'id': r.id, 'title': r.title or 'Sans titre',
-                'creator': r.creator or 'Artiste inconnu', 'image_url': r.image_url
+                'id': r.id,
+                'title': r.title,
+                'creator': r.creator,
+                'image_url': r.image_url
             })
         artist_name = daily_selection[0]['creator'] if daily_selection else "un artiste"
-
-    lang = session.get('language', 'fr')
-    creator_col = 'creator_fr' if lang == 'fr' else 'creator_en'
     
-    creators_with_works_sql = text(f"""
-        SELECT {creator_col} as name, COUNT(*) as work_count
-        FROM artworks
-        WHERE {creator_col} IS NOT NULL AND {creator_col} != ''
-          AND {creator_col} NOT IN ('Artiste inconnu', 'Unknown artist')
-          AND image_url IS NOT NULL AND image_url != ''
-        GROUP BY {creator_col}
-        HAVING COUNT(*) >= 4
-        ORDER BY random() LIMIT 3
-    """)
+    # ============================================================
+    # ARTISTES AVEC ŒUVRES
+    # ============================================================
+    creator_col = Artwork.creator_fr if lang == 'fr' else Artwork.creator_en
     
-    creators_list = db.session.execute(creators_with_works_sql).fetchall()
+    creators_query = db.session.query(
+        creator_col.label('name')
+    ).filter(
+        creator_col.isnot(None), creator_col != '',
+        creator_col.notin_(['Artiste inconnu', 'Unknown artist']),
+        Artwork.image_url.isnot(None), Artwork.image_url != ''
+    ).group_by(creator_col).having(func.count() >= 4)
+    
+    creators_count = creators_query.count()
     
     creators_with_works = []
-    for creator_row in creators_list:
-        creator_name = creator_row.name
-        works_sql = text(f"""
-            SELECT id, COALESCE(label_fr, label_en, 'Sans titre') as title, image_url
-            FROM artworks
-            WHERE image_url IS NOT NULL AND image_url != ''
-              AND {creator_col} = :creator_name
-            ORDER BY random() LIMIT 4
-        """)
-        works = db.session.execute(works_sql, {'creator_name': creator_name}).fetchall()
-        creators_with_works.append({
-            'name': creator_name,
-            'works': [{'id': w.id, 'title': w.title, 'image_url': w.image_url} for w in works]
-        })
-
+    if creators_count > 0:
+        max_offset = min(creators_count - 1, 500)
+        if max_offset >= 0:
+            offsets = random.sample(range(max_offset + 1), min(3, max_offset + 1))
+            
+            for offset in offsets:
+                creator_row = creators_query.offset(offset).limit(1).first()
+                
+                if creator_row:
+                    works = db.session.query(
+                        Artwork.id,
+                        db.func.coalesce(Artwork.label_fr, Artwork.label_en, 'Sans titre').label('title'),
+                        Artwork.image_url
+                    ).filter(
+                        Artwork.image_url.isnot(None), Artwork.image_url != '',
+                        creator_col == creator_row.name
+                    ).limit(4).all()
+                    
+                    if works:
+                        creators_with_works.append({
+                            'name': creator_row.name,
+                            'works': [{'id': w.id, 'title': w.title, 'image_url': w.image_url} for w in works]
+                        })
+    
     return render_template('discover.html',
         hero_image=hero_image,
-        movements=static_data['movements'],
-        types=static_data['types'],
-        museums=static_data['museums'],
-        cities=static_data['cities'],
-        countries=static_data['countries'],
-        genres=static_data['genres'],
-        artists=static_data['artists'],
+        movements=movements,
+        types=types,
+        museums=museums,
+        cities=cities,
+        countries=countries,
+        genres=genres,
+        artists=artists,
         daily_selection=daily_selection,
         daily_artist=artist_name,
         creators_with_works=creators_with_works
     )
+
+
+
+
+
+
+
+
+
+
+
 
 
 # ---- Page Top (classements) ----
@@ -1273,84 +1295,160 @@ def suggestions():
     cities = request.args.getlist('city')
     museums = request.args.getlist('museum')
     movements = request.args.getlist('movement')
+    types = request.args.getlist('type')
+    genres = request.args.getlist('genre')
     sort = request.args.get('sort', 'relevance')
     view = request.args.get('view', 6, type=int)
+    title_only = request.args.get('title_only') == '1'
+    
+    # Mode recherche avancée
+    advanced_mode = request.args.get('advanced') == '1'
+    
+    # Limite sidebar
+    sidebar_limit = 9999 if advanced_mode else 10
+    
+    # Récupérer la langue
+    lang = session.get('language', 'fr')
     
     # ============================================================
-    # REQUÊTE AVEC FILTRES
+    # DÉFINIR LES CHAMPS SELON LA LANGUE UNIQUEMENT
     # ============================================================
+    if lang == 'fr':
+        label_field = Artwork.label_fr
+        creator_field = Artwork.creator_fr
+        city_field = Artwork.city_fr
+        country_field = Artwork.country_fr
+        collection_field = Artwork.collection_fr
+        movement_field = Artwork.movement_fr
+        instance_of_field = Artwork.instance_of_fr
+        genre_field = Artwork.genre_fr
+    else:
+        label_field = Artwork.label_en
+        creator_field = Artwork.creator_en
+        city_field = Artwork.city_en
+        country_field = Artwork.country_en
+        collection_field = Artwork.collection_en
+        movement_field = Artwork.movement_en
+        instance_of_field = Artwork.instance_of_en
+        genre_field = Artwork.genre_en
+
     from sqlalchemy import case as sql_case, func
     
     query = db.session.query(Artwork.id, Artwork.label_fr, Artwork.label_en, 
                               Artwork.creator_fr, Artwork.creator_en, Artwork.image_url)
     
-    # Recherche par mot-clé avec progression (fallback)
+    # ============================================================
+    # RECHERCHE PAR MOT-CLÉ - CORRIGÉE (UNIQUEMENT DANS LA LANGUE)
+    # ============================================================
     if q:
         s = f"%{q}%"
-        lang = session.get('language', 'fr')
         
-        # Niveau 1 : Ville + Musée + Artiste (champs prioritaires)
-        primary_fields = db.or_(
-            Artwork.city_fr.ilike(s),
-            Artwork.collection_fr.ilike(s),
-            Artwork.creator_fr.ilike(s)
-        )
+        # 🔥 CORRECTION : Recherche UNIQUEMENT dans les champs de la langue sélectionnée
+        if lang == 'fr':
+            search_conditions = db.or_(
+                Artwork.label_fr.ilike(s),
+                Artwork.creator_fr.ilike(s),
+                Artwork.city_fr.ilike(s),
+                Artwork.collection_fr.ilike(s),
+                Artwork.country_fr.ilike(s)
+            )
+        else:  # anglais
+            search_conditions = db.or_(
+                Artwork.label_en.ilike(s),
+                Artwork.creator_en.ilike(s),
+                Artwork.city_en.ilike(s),
+                Artwork.collection_en.ilike(s),
+                Artwork.country_en.ilike(s)
+            )
         
-        temp_query = db.session.query(Artwork.id).filter(primary_fields)
-        temp_count = temp_query.limit(1000).count()
-        
-        if temp_count >= 24:
-            query = query.filter(primary_fields)
-        else:
-            if lang == 'fr':
-                query = query.filter(
-                    db.or_(
-                        primary_fields,
-                        Artwork.label_fr.ilike(s),
-                        Artwork.country_fr.ilike(s),
-                        Artwork.movement_fr.ilike(s)
-                    )
-                )
-            else:
-                query = query.filter(
-                    db.or_(
-                        primary_fields,
-                        Artwork.label_en.ilike(s),
-                        Artwork.country_en.ilike(s),
-                        Artwork.movement_en.ilike(s)
-                    )
-                )
+        query = query.filter(search_conditions)
     
-    # Filtres
+    # FILTRES DYNAMIQUES (déjà dans la bonne langue)
     if country:
-        query = query.filter(db.or_(
-            Artwork.country_fr.ilike(f"%{country}%"), 
-            Artwork.country_en.ilike(f"%{country}%")
-        ))
+        query = query.filter(country_field.ilike(f"%{country}%"))
     
     if artists:
-        filters = [Artwork.creator_fr.ilike(f"%{a}%") for a in artists]
+        filters = []
+        for a in artists:
+            filters.append(creator_field.ilike(f"%{a}%"))
         query = query.filter(db.or_(*filters))
     
     if cities:
-        filters = [Artwork.city_fr.ilike(f"%{c}%") for c in cities]
+        filters = []
+        for c in cities:
+            filters.append(city_field.ilike(f"%{c}%"))
         query = query.filter(db.or_(*filters))
     
     if museums:
-        filters = [Artwork.collection_fr.ilike(f"%{m}%") for m in museums]
+        filters = []
+        for m in museums:
+            filters.append(collection_field.ilike(f"%{m}%"))
         query = query.filter(db.or_(*filters))
     
     if movements:
-        filters = [Artwork.movement_fr.ilike(f"%{m}%") for m in movements]
+        filters = []
+        for m in movements:
+            filters.append(movement_field.ilike(f"%{m}%"))
         query = query.filter(db.or_(*filters))
     
-    # ✅ SAUVEGARDER LA REQUÊTE FILTRÉE (avant pagination et tri)
+    if types:
+        filters = []
+        for t in types:
+            filters.append(instance_of_field.ilike(f"%{t}%"))
+        query = query.filter(db.or_(*filters))
+    
+    if genres:
+        filters = []
+        for g in genres:
+            filters.append(genre_field.ilike(f"%{g}%"))
+        query = query.filter(db.or_(*filters))
+    
+    # TITLE_ONLY (recherche uniquement dans le titre de la langue)
+    if title_only and q:
+        query = query.filter(label_field.ilike(f"%{q}%"))
+    
+    # Sauvegarder la requête filtrée pour les stats
     filtered_query = query
     
-    # Tri
-    if sort != 'relevance':
-        query = _apply_sort(query, sort)
+    # ============================================================
+    # TOTAUX PAR CATÉGORIE
+    # ============================================================
+    total_pays = filtered_query.filter(
+        country_field.isnot(None), 
+        country_field != ''
+    ).count()
     
+    total_villes = filtered_query.filter(
+        city_field.isnot(None), 
+        city_field != ''
+    ).count()
+    
+    total_artistes = filtered_query.filter(
+        creator_field.isnot(None), 
+        creator_field != '',
+        creator_field != ('Artiste inconnu' if lang == 'fr' else 'Unknown artist')
+    ).count()
+    
+    total_musees = filtered_query.filter(
+        collection_field.isnot(None), 
+        collection_field != ''
+    ).count()
+    
+    total_mouvements = filtered_query.filter(
+        movement_field.isnot(None), 
+        movement_field != ''
+    ).count()
+    
+    total_types = filtered_query.filter(
+        instance_of_field.isnot(None), 
+        instance_of_field != ''
+    ).count()
+    
+    total_genres = filtered_query.filter(
+        genre_field.isnot(None), 
+        genre_field != ''
+    ).count()
+
     query = query.order_by(
         sql_case((Artwork.image_url.isnot(None), 0), else_=1).asc()
     )
@@ -1374,61 +1472,80 @@ def suggestions():
         has_more = True
     
     total_oeuvres = db.session.query(func.count()).select_from(filtered_query.subquery()).scalar()
-    
+
     # ============================================================
     # RÉSULTATS POUR LA BARRE LATÉRALE
     # ============================================================
     search_results = None
     
-    # ✅ MODIFICATION : calculer search_results s'il y a q OU des filtres
-    if (q or artists or country or cities or museums or movements) and page == 1:
-        lang = session.get('language', 'fr')
-        pattern = f"%{q}%" if q else None
+    if page == 1:
+        base_query = filtered_query
         
-        base_query = filtered_query  # ← maintenant filtered_query existe !
-        
+        # Artistes
         sr_artists = base_query.with_entities(
-            Artwork.creator_fr.label('nom'), 
+            creator_field.label('nom'), 
             func.count(Artwork.id).label('count')
         ).filter(
-            Artwork.creator_fr.isnot(None), 
-            Artwork.creator_fr != '',
-            Artwork.creator_fr != 'Artiste inconnu'
-        ).group_by(Artwork.creator_fr).order_by(func.count(Artwork.id).desc()).limit(10).all()
+            creator_field.isnot(None), 
+            creator_field != '',
+            creator_field != ('Artiste inconnu' if lang == 'fr' else 'Unknown artist')
+        ).group_by(creator_field).order_by(func.count(Artwork.id).desc()).limit(sidebar_limit).all()
         
+        # Villes
         sr_cities = base_query.with_entities(
-            Artwork.city_fr.label('nom'),
+            city_field.label('nom'),
             func.count(Artwork.id).label('oeuvres_count')
         ).filter(
-            Artwork.city_fr.isnot(None), 
-            Artwork.city_fr != ''
-        ).group_by(Artwork.city_fr).order_by(func.count(Artwork.id).desc()).limit(10).all()
+            city_field.isnot(None), 
+            city_field != ''
+        ).group_by(city_field).order_by(func.count(Artwork.id).desc()).limit(sidebar_limit).all()
         
+        # Pays
         sr_countries = base_query.with_entities(
-            Artwork.country_fr.label('nom'),
+            country_field.label('nom'),
             func.count(Artwork.id).label('oeuvres_count')
         ).filter(
-            Artwork.country_fr.isnot(None), 
-            Artwork.country_fr != ''
-        ).group_by(Artwork.country_fr).order_by(func.count(Artwork.id).desc()).limit(10).all()
+            country_field.isnot(None), 
+            country_field != ''
+        ).group_by(country_field).order_by(func.count(Artwork.id).desc()).limit(sidebar_limit).all()
         
+        # Musées
         sr_museums = base_query.with_entities(
-            Artwork.collection_fr.label('nom'), 
+            collection_field.label('nom'), 
             func.count(Artwork.id).label('count')
         ).filter(
-            Artwork.collection_fr.isnot(None), 
-            Artwork.collection_fr != ''
-        ).group_by(Artwork.collection_fr).order_by(func.count(Artwork.id).desc()).limit(10).all()
+            collection_field.isnot(None), 
+            collection_field != ''
+        ).group_by(collection_field).order_by(func.count(Artwork.id).desc()).limit(sidebar_limit).all()
         
+        # Mouvements
         sr_movements = base_query.with_entities(
-            Artwork.movement_fr.label('nom'), 
+            movement_field.label('nom'), 
             func.count(Artwork.id).label('count')
         ).filter(
-            Artwork.movement_fr.isnot(None), 
-            Artwork.movement_fr != ''
-        ).group_by(Artwork.movement_fr).order_by(func.count(Artwork.id).desc()).limit(10).all()
+            movement_field.isnot(None), 
+            movement_field != ''
+        ).group_by(movement_field).order_by(func.count(Artwork.id).desc()).limit(sidebar_limit).all()
         
-        if any([sr_artists, sr_countries, sr_cities, sr_museums, sr_movements]):
+        # Types
+        sr_types = base_query.with_entities(
+            instance_of_field.label('name'), 
+            func.count(Artwork.id).label('count')
+        ).filter(
+            instance_of_field.isnot(None), 
+            instance_of_field != ''
+        ).group_by(instance_of_field).order_by(func.count(Artwork.id).desc()).limit(sidebar_limit).all()
+        
+        # Genres
+        sr_genres = base_query.with_entities(
+            genre_field.label('name'), 
+            func.count(Artwork.id).label('count')
+        ).filter(
+            genre_field.isnot(None), 
+            genre_field != ''
+        ).group_by(genre_field).order_by(func.count(Artwork.id).desc()).limit(sidebar_limit).all()
+        
+        if any([sr_artists, sr_countries, sr_cities, sr_museums, sr_movements, sr_types, sr_genres]):
             search_results = {
                 'query': q or 'filtres',
                 'artists': [{'nom': a.nom, 'count': a.count} for a in sr_artists],
@@ -1436,6 +1553,8 @@ def suggestions():
                 'cities': [{'nom': c.nom, 'oeuvres_count': c.oeuvres_count} for c in sr_cities],
                 'museums': [{'id': m.nom, 'nom': m.nom, 'count': m.count} for m in sr_museums],
                 'movements': [{'nom': m.nom, 'count': m.count} for m in sr_movements],
+                'types': [{'name': t.name, 'count': t.count} for t in sr_types],
+                'genres': [{'name': g.name, 'count': g.count} for g in sr_genres]
             }
     
     # ============================================================
@@ -1444,17 +1563,51 @@ def suggestions():
     quick_suggestions = []
     if search_results:
         all_items = []
-        for museum in search_results.get('museums', [])[:2]:
-            all_items.append({'name': museum['nom'], 'count': museum['count'], 'icon': 'fa-landmark', 'url': f"/suggestions?q={q}&museum={museum['id']}"})
-        for artist in search_results.get('artists', [])[:2]:
-            all_items.append({'name': artist['nom'], 'count': artist['count'], 'icon': 'fa-user', 'url': f"/suggestions?q={q}&artist={artist['nom']}"})
-        for city in search_results.get('cities', [])[:2]:
-            all_items.append({'name': city['nom'], 'count': city['oeuvres_count'], 'icon': 'fa-city', 'url': f"/suggestions?q={q}&city={city['nom']}"})
-        for country_item in search_results.get('countries', [])[:2]:
-            all_items.append({'name': country_item['nom'], 'count': country_item['oeuvres_count'], 'icon': 'fa-globe', 'url': f"/suggestions?q={q}&country={country_item['nom']}"})
-        for movement in search_results.get('movements', [])[:2]:
-            all_items.append({'name': movement['nom'], 'count': movement['count'], 'icon': 'fa-palette', 'url': f"/suggestions?q={q}&movement={movement['nom']}"})
+        from urllib.parse import urlencode
+
+        def build_suggestion_url(base_params, param_name, value):
+            p = dict(base_params)
+            if param_name in p:
+                existing = p[param_name] if isinstance(p[param_name], list) else [p[param_name]]
+                if value not in existing:
+                    p[param_name] = existing + [value]
+            else:
+                p[param_name] = value
+            return '/suggestions?' + urlencode(p, doseq=True)
+
+        base_params = {}
+        if q:
+            base_params['q'] = q
+        if artists:
+            base_params['artist'] = artists
+        if cities:
+            base_params['city'] = cities
+        if museums:
+            base_params['museum'] = museums
+        if country:
+            base_params['country'] = country
+        if movements:
+            base_params['movement'] = movements
+        if types:
+            base_params['type'] = types
+        if genres:
+            base_params['genre'] = genres
         
+        for museum in search_results.get('museums', [])[:2]:
+            all_items.append({'name': museum['nom'], 'count': museum['count'], 'icon': 'fa-landmark', 'url': build_suggestion_url(base_params, 'museum', museum['id'])})
+        for artist in search_results.get('artists', [])[:2]:
+            all_items.append({'name': artist['nom'], 'count': artist['count'], 'icon': 'fa-user', 'url': build_suggestion_url(base_params, 'artist', artist['nom'])})
+        for city in search_results.get('cities', [])[:2]:
+            all_items.append({'name': city['nom'], 'count': city['oeuvres_count'], 'icon': 'fa-city', 'url': build_suggestion_url(base_params, 'city', city['nom'])})
+        for country_item in search_results.get('countries', [])[:2]:
+            all_items.append({'name': country_item['nom'], 'count': country_item['oeuvres_count'], 'icon': 'fa-globe', 'url': build_suggestion_url(base_params, 'country', country_item['nom'])})
+        for movement in search_results.get('movements', [])[:2]:
+            all_items.append({'name': movement['nom'], 'count': movement['count'], 'icon': 'fa-palette', 'url': build_suggestion_url(base_params, 'movement', movement['nom'])})
+        for t in search_results.get('types', [])[:2]:
+            all_items.append({'name': t['name'], 'count': t['count'], 'icon': 'fa-tag', 'url': build_suggestion_url(base_params, 'type', t['name'])})
+        for g in search_results.get('genres', [])[:2]:
+            all_items.append({'name': g['name'], 'count': g['count'], 'icon': 'fa-heart', 'url': build_suggestion_url(base_params, 'genre', g['name'])})
+
         all_items.sort(key=lambda x: x['count'], reverse=True)
         quick_suggestions = all_items[:3]
     
@@ -1470,24 +1623,27 @@ def suggestions():
         has_more=has_more,
         sort=sort,
         museum_names={},
-        artists=artists,           # <-- AJOUTE
-        museums=museums,           # <-- AJOUTE
-        cities=cities,             # <-- AJOUTE
-        country=country,           # <-- AJOUTE
-        movements=movements  
+        artists=artists,
+        museums=museums,
+        cities=cities,
+        country=country,
+        movements=movements,
+        types=types,
+        genres=genres,
+        title_only=title_only,
+        total_pays=total_pays,
+        total_villes=total_villes,
+        total_artistes=total_artistes,
+        total_musees=total_musees,
+        total_mouvements=total_mouvements,
+        total_types=total_types,
+        total_genres=total_genres
     )
 
 
 
 
 
-
-
-
-
-    
-    
-    
     
 
 
@@ -1937,6 +2093,176 @@ def all_rated():
     )
 
 
+
+from functools import lru_cache
+from datetime import datetime, timedelta
+
+# Cache simple
+_suggestions_cache = {}
+_cache_expiry = {}
+
+@app.route('/api/artwork/suggestions/<artwork_id>')
+def artwork_suggestions(artwork_id):
+    """Retourne 3 suggestions avec cache"""
+    
+    # Vérifier le cache
+    now = datetime.utcnow()
+    if artwork_id in _suggestions_cache and artwork_id in _cache_expiry:
+        if now < _cache_expiry[artwork_id]:
+            return jsonify(_suggestions_cache[artwork_id])
+    
+    try:
+        current = Artwork.query.get(artwork_id)
+        if not current:
+            return jsonify([])
+        
+        lang = session.get('language', 'fr')
+        suggestions = []
+        seen_ids = {artwork_id}
+        
+        # Récupérer les attributs
+        artist_name = current.creator_fr if lang == 'fr' else current.creator_en
+        movement = current.movement_fr if lang == 'fr' else current.movement_en
+        instance_type = current.instance_of_fr if lang == 'fr' else current.instance_of_en
+        
+        # 1. Même artiste + même type
+        if artist_name and artist_name not in ['Artiste inconnu', 'Unknown artist', ''] and instance_type:
+            needed = 3
+            if lang == 'fr':
+                same_artist_same_type = Artwork.query.filter(
+                    Artwork.creator_fr == artist_name,
+                    Artwork.instance_of_fr == instance_type,
+                    Artwork.id != artwork_id,
+                    Artwork.image_url.isnot(None),
+                    Artwork.image_url != ''
+                ).limit(needed).all()
+            else:
+                same_artist_same_type = Artwork.query.filter(
+                    Artwork.creator_en == artist_name,
+                    Artwork.instance_of_en == instance_type,
+                    Artwork.id != artwork_id,
+                    Artwork.image_url.isnot(None),
+                    Artwork.image_url != ''
+                ).limit(needed).all()
+            
+            for artwork in same_artist_same_type:
+                suggestions.append(artwork)
+                seen_ids.add(artwork.id)
+        
+        # 2. Même artiste seulement
+        if len(suggestions) < 3 and artist_name and artist_name not in ['Artiste inconnu', 'Unknown artist', '']:
+            needed = 3 - len(suggestions)
+            if lang == 'fr':
+                same_artist = Artwork.query.filter(
+                    Artwork.creator_fr == artist_name,
+                    ~Artwork.id.in_(seen_ids),
+                    Artwork.image_url.isnot(None),
+                    Artwork.image_url != ''
+                ).limit(needed).all()
+            else:
+                same_artist = Artwork.query.filter(
+                    Artwork.creator_en == artist_name,
+                    ~Artwork.id.in_(seen_ids),
+                    Artwork.image_url.isnot(None),
+                    Artwork.image_url != ''
+                ).limit(needed).all()
+            
+            for artwork in same_artist:
+                suggestions.append(artwork)
+                seen_ids.add(artwork.id)
+        
+        # 3. Même mouvement
+        if len(suggestions) < 3 and movement:
+            needed = 3 - len(suggestions)
+            if lang == 'fr':
+                same_movement = Artwork.query.filter(
+                    Artwork.movement_fr == movement,
+                    ~Artwork.id.in_(seen_ids),
+                    Artwork.image_url.isnot(None),
+                    Artwork.image_url != ''
+                ).limit(needed).all()
+            else:
+                same_movement = Artwork.query.filter(
+                    Artwork.movement_en == movement,
+                    ~Artwork.id.in_(seen_ids),
+                    Artwork.image_url.isnot(None),
+                    Artwork.image_url != ''
+                ).limit(needed).all()
+            
+            for artwork in same_movement:
+                suggestions.append(artwork)
+                seen_ids.add(artwork.id)
+        
+        # 4. Même type seulement
+        if len(suggestions) < 3 and instance_type:
+            needed = 3 - len(suggestions)
+            if lang == 'fr':
+                same_type = Artwork.query.filter(
+                    Artwork.instance_of_fr == instance_type,
+                    ~Artwork.id.in_(seen_ids),
+                    Artwork.image_url.isnot(None),
+                    Artwork.image_url != ''
+                ).limit(needed).all()
+            else:
+                same_type = Artwork.query.filter(
+                    Artwork.instance_of_en == instance_type,
+                    ~Artwork.id.in_(seen_ids),
+                    Artwork.image_url.isnot(None),
+                    Artwork.image_url != ''
+                ).limit(needed).all()
+            
+            for artwork in same_type:
+                suggestions.append(artwork)
+                seen_ids.add(artwork.id)
+        
+        # Fallback
+        if len(suggestions) < 3:
+            needed = 3 - len(suggestions)
+            fallback = Artwork.query.filter(
+                ~Artwork.id.in_(seen_ids),
+                Artwork.image_url.isnot(None),
+                Artwork.image_url != ''
+            ).order_by(func.random()).limit(needed).all()
+            
+            for artwork in fallback:
+                suggestions.append(artwork)
+        
+        # Récupérer les notes
+        artwork_ids = [a.id for a in suggestions]
+        ratings_data = {}
+        
+        if artwork_ids:
+            rating_results = db.session.query(
+                Rating.artwork_id,
+                func.avg(Rating.note_globale).label('avg_rating')
+            ).filter(
+                Rating.artwork_id.in_(artwork_ids),
+                Rating.is_public == True
+            ).group_by(Rating.artwork_id).all()
+            
+            for result in rating_results:
+                ratings_data[result.artwork_id] = float(result.avg_rating)
+        
+        result = []
+        for artwork in suggestions:
+            result.append({
+                'id': artwork.id,
+                'titre': artwork.titre,
+                'createur': artwork.createur,
+                'image_url': artwork.image_url,
+                'note': round(ratings_data.get(artwork.id, 0), 1)
+            })
+        
+        # Mettre en cache (1 heure)
+        _suggestions_cache[artwork_id] = result
+        _cache_expiry[artwork_id] = now + timedelta(hours=1)
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        print(f"Erreur suggestions: {e}")
+        return jsonify([])
+
 # ---- Page détail d'une œuvre ----
 @app.route('/oeuvre/<string:oeuvre_id>')
 def oeuvre_detail(oeuvre_id):
@@ -2072,13 +2398,23 @@ def login():
             flash('Veuillez vérifier votre email avant de vous connecter.', 'warning')
             return redirect(url_for('verify_email_pending', email=user.email))
 
+        # --- UX : Activation de la session permanente (30 jours) ---
+        session.permanent = True
         session['user_id'] = user.id
         session['username'] = user.username
+        
         user.last_login = datetime.utcnow()
         db.session.commit()
 
-        if next_url and next_url.startswith('/'):
-            return redirect(next_url)
+        # --- SÉCURITÉ : Redirection sécurisée (Open Redirect protection) ---
+        if next_url:
+            from urllib.parse import urlparse
+            parsed_url = urlparse(next_url)
+            # On vérifie que c'est un chemin local (pas de domaine externe) 
+            # et que ça commence par un /
+            if not parsed_url.netloc and next_url.startswith('/'):
+                return redirect(next_url)
+        
         return redirect(url_for('index'))
 
     flash('Email ou mot de passe incorrect', 'danger')
@@ -4133,4 +4469,5 @@ if __name__ == '__main__':
         except Exception as exc:
             logger.warning("Init DB : %s", exc)
 
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app_debug = os.environ.get('DEBUG', 'False').lower() == 'true'
+    app.run(host='0.0.0.0', port=5000, debug=app_debug)
