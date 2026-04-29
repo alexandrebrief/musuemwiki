@@ -36,23 +36,68 @@
 
 <script>
 (function() {
+    const loader = document.getElementById('loader-spin');
+
+    window.showLoader = function() {
+        loader?.classList.add('visible');
+    };
+
+    window.hideLoader = function() {
+        loader?.classList.remove('visible');
+    };
+
+    // --- CAS 1 : Les clics sur les liens (<a>) ---
     document.addEventListener('click', function(e) {
         let link = e.target.closest('a');
-        if (link && link.href && !link.target && !link.href.startsWith('#') && !link.href.startsWith('javascript:')) {
-            document.getElementById('loader-spin')?.classList.add('visible');
+        
+        // 1. On ignore si ce n'est pas un lien
+        if (!link || !link.href) return;
+
+        // 2. SÉCURITÉ : On ignore si l'utilisateur veut ouvrir dans un nouvel onglet
+        // e.ctrlKey (Windows/Linux), e.metaKey (Mac/Command), e.shiftKey, ou clic milieu (button 1)
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) {
+            return; 
+        }
+
+        // 3. On ignore les cas classiques (target blank, javascript, ancres)
+        if (link.target === "_blank" || link.href.startsWith('javascript:')) return;
+        
+        const url = link.getAttribute('href');
+        if (!url || url === '#' || url.startsWith('#')) return;
+
+        // Si on arrive ici, c'est une navigation normale sur le même onglet
+        showLoader();
+    });
+
+    // --- CAS 2 : Les envois de formulaires ---
+    document.addEventListener('submit', function(e) {
+        if (e.target.method === 'get' || e.target.method === 'post') {
+            // On vérifie aussi que le formulaire n'est pas censé s'ouvrir dans un nouvel onglet
+            if (e.target.target !== "_blank") {
+                showLoader();
+            }
         }
     });
-    
-    window.addEventListener('load', function() {
-        document.getElementById('loader-spin')?.classList.remove('visible');
+
+    // --- CAS 3 : Les redirections JavaScript ---
+    window.addEventListener('beforeunload', function(e) {
+        // Note : On ne peut pas savoir ici si c'est un CTRL+clic, 
+        // mais le listener 'click' au-dessus s'exécute AVANT celui-ci
+        showLoader();
     });
-    
-    window.showLoader = function() {
-        document.getElementById('loader-spin')?.classList.add('visible');
-    };
-    
-    window.hideLoader = function() {
-        document.getElementById('loader-spin')?.classList.remove('visible');
-    };
+
+    // --- SÉCURITÉ SUPPLÉMENTAIRE ---
+    // Si l'utilisateur fait "Précédent" ou si le chargement est annulé
+    window.addEventListener('pageshow', function() {
+        hideLoader();
+    });
+
+    // Si la page devient à nouveau visible (cas où le loader resterait bloqué)
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible') {
+            // On laisse un petit délai pour voir si la page change vraiment
+            setTimeout(hideLoader, 500); 
+        }
+    });
 })();
 </script>

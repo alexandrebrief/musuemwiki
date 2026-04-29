@@ -430,8 +430,12 @@ footer {
     overflow-y: auto;
     border-radius: 20px 20px 0 0;
     touch-action: pan-y;
+    visibility: hidden;  /* 🔥 Caché par défaut */
 }
-.filter-panel.open { transform: translateY(0); }
+.filter-panel.open { 
+    transform: translateY(0);
+    visibility: visible;  /* 🔥 Visible quand ouvert */
+}
 
 .drag-handle {
     display: flex;
@@ -1401,6 +1405,15 @@ function params() {
 }
 
 function navigate(url) { 
+    // On affiche le loader avant de changer de page
+    if (window.showLoader) {
+        window.showLoader();
+    } else {
+        // Fallback si le script du loader n'est pas encore prêt
+        const loader = document.getElementById('loader-spin');
+        if (loader) loader.classList.add('visible');
+    }
+    
     window.location.href = url; 
 }
 
