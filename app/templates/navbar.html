@@ -102,10 +102,26 @@
 
 <div class="mob-drawer" id="mob-drawer">
     <div class="mob-drawer-inner">
+        <!-- 1. LE HAUT (Logo et Fermer) -->
         <div class="mob-drawer-top">
-            <span class="mob-drawer-logo"><span style="color: var(--accent);">/</span>{{ site_name }}<span style="color: var(--accent);">/</span></span>
+            <span class="mob-drawer-logo">
+                <span style="color: var(--accent);">/</span>{{ site_name }}<span style="color: var(--accent);">/</span>
+            </span>
             <button class="mob-drawer-close" onclick="closeMobDrawer()"><i class="fas fa-times"></i></button>
         </div>
+
+        <!-- 2. LE MILIEU (Navigation - va prendre tout l'espace vide) -->
+        <nav class="mob-drawer-nav">
+            <a href="/home" class="mdn-link" onclick="closeMobDrawer()"><span>Accueil</span><i class="fas fa-chevron-right"></i></a>
+            <a href="/suggestions" class="mdn-link" onclick="closeMobDrawer()"><span>Rechercher</span><i class="fas fa-chevron-right"></i></a>
+            <a href="/discover" class="mdn-link" onclick="closeMobDrawer()"><span>Explorer</span><i class="fas fa-chevron-right"></i></a>
+            <a href="/top" class="mdn-link" onclick="closeMobDrawer()"><span>Classement</span><i class="fas fa-chevron-right"></i></a>
+            <a href="/all-rated" class="mdn-link" onclick="closeMobDrawer()"><span>Communauté</span><i class="fas fa-chevron-right"></i></a>
+            <a href="/favoris" class="mdn-link" onclick="closeMobDrawer()"><span>Mes favoris</span><i class="fas fa-chevron-right"></i></a>
+            <a href="/rated" class="mdn-link" onclick="closeMobDrawer()"><span>Mes notes</span><i class="fas fa-chevron-right"></i></a>
+        </nav>
+
+        <!-- 3. LE BAS (Utilitaires - Thème et Langue) -->
         <div class="mob-drawer-footer">
             <div class="mob-drawer-utils">
                 <button class="mdu-btn" onclick="toggleTheme()">
@@ -118,15 +134,6 @@
                 </a>
             </div>
         </div>
-        <nav class="mob-drawer-nav">
-            <a href="/home" class="mdn-link" onclick="closeMobDrawer()"><span>Accueil</span><i class="fas fa-chevron-right"></i></a>
-            <a href="/suggestions" class="mdn-link" onclick="closeMobDrawer()"><span>Rechercher</span><i class="fas fa-chevron-right"></i></a>
-            <a href="/discover" class="mdn-link" onclick="closeMobDrawer()"><span>Explorer</span><i class="fas fa-chevron-right"></i></a>
-            <a href="/top" class="mdn-link" onclick="closeMobDrawer()"><span>Classement</span><i class="fas fa-chevron-right"></i></a>
-            <a href="/all-rated" class="mdn-link" onclick="closeMobDrawer()"><span>Communauté</span><i class="fas fa-chevron-right"></i></a>
-            <a href="/favoris" class="mdn-link" onclick="closeMobDrawer()"><span>Mes favoris</span><i class="fas fa-chevron-right"></i></a>
-            <a href="/rated" class="mdn-link" onclick="closeMobDrawer()"><span>Mes notes</span><i class="fas fa-chevron-right"></i></a>
-        </nav>
     </div>
 </div>
 
@@ -540,14 +547,29 @@ body.theme-light .navbar-home.scrolled .nav-action i {
 
 /* DRAWER */
 .mob-drawer {
-    position: fixed; top: 0; right: 0; bottom: 0; width: 290px; z-index: 1004;
-    transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.77,0,0.175,1);
+    position: fixed;
+    top: 0;
+    right: 0;
+    /* On utilise bottom: 0 au lieu de height: 100vh */
+    bottom: 0; 
+    /* Sécurité pour les navigateurs très anciens */
+    height: -webkit-fill-available; 
+    width: 290px;
+    z-index: 1004;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+    /* Empêche le rebond élastique bizarre sur iOS */
+    overflow: hidden; 
 }
 .mob-drawer.open { transform: translateX(0); }
 .mob-drawer-inner {
-    position: absolute; inset: 0; background: var(--nb);
-    border-left: 1px solid var(--nb-line); display: flex; flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ici 100% se basera sur le bottom: 0 du parent */
+    background: var(--nb);
     border-left: 4px solid var(--accent);
+    /* Très important pour le mobile */
+    position: relative;
 }
 .mob-drawer-top {
     display: flex; align-items: center; justify-content: space-between;
@@ -563,7 +585,18 @@ body.theme-light .navbar-home.scrolled .nav-action i {
     justify-content: center; border-radius: 50%; transition: color 0.2s;
 }
 .mob-drawer-close:active { color: var(--accent); }
-.mob-drawer-nav { flex: 1; }
+.mob-drawer-nav {
+    flex: 1; /* Prend tout l'espace vide entre le top et le footer */
+    overflow-y: auto; /* Permet de scroller si tu as trop de liens */
+    -webkit-overflow-scrolling: touch;
+}
+
+.mob-drawer-footer {
+    padding: 1.2rem;
+    padding-bottom: calc(1.2rem + env(safe-area-inset-bottom)); /* Gère les encoches en bas des iPhone récents */
+    border-top: 1px solid var(--nb-line);
+    background: var(--nb); /* Assure que le fond est bien opaque en bas */
+}
 .mdn-link {
     display: flex; align-items: center; justify-content: space-between;
     padding: 1.3rem 1.4rem; color: var(--nt); text-decoration: none;
@@ -573,7 +606,7 @@ body.theme-light .navbar-home.scrolled .nav-action i {
 }
 .mdn-link:active { background: var(--nh); color: var(--accent); }
 .mdn-link i { font-size: 0.65rem; color: var(--nt); }
-.mob-drawer-footer { padding: 1.2rem; border-top: 1px solid var(--nb-line); }
+
 .mob-drawer-utils { display: flex; gap: 0.6rem; }
 .mdu-btn {
     flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.35rem;

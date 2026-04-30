@@ -115,9 +115,9 @@ Talisman(
         ],
         'img-src': ["'self'", "data:", "https:", "http:", "*"],
     },
-    force_https=os.environ.get('FORCE_HTTPS', 'False').lower() == 'true',   # -
-    strict_transport_security=False,   # on change "False" sinon le site ne marchait pas sur les réseaux d'entreprise car le site utilise HSTS et les pare feux le bloque
-    session_cookie_secure=os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() == 'true',
+    force_https=False, 
+    strict_transport_security=False,   # on change "False" sinon le site ne marchait pas sur les réseaux d'entreprise car le site utilise HSTS
+    session_cookie_secure=False,
     session_cookie_http_only=True,
     referrer_policy='strict-origin-when-cross-origin',
 )

@@ -426,11 +426,11 @@ footer {
     transform: translateY(100%);
     transition: transform 0.3s ease-out;
     z-index: 1000;
-    max-height: 80vh;
+    max-height: 70vh; /* <-- On baisse à 70% de la hauteur de l'écran */
     overflow-y: auto;
     border-radius: 20px 20px 0 0;
     touch-action: pan-y;
-    visibility: hidden;  /* 🔥 Caché par défaut */
+    visibility: hidden;
 }
 .filter-panel.open { 
     transform: translateY(0);
@@ -1207,7 +1207,7 @@ footer {
     transform: translateY(100%);
     transition: transform 0.3s ease-out;
     z-index: 999;
-    max-height: 85vh;
+    max-height: 70vh;
     overflow-y: auto;
     touch-action: pan-y;
 }
@@ -1353,7 +1353,13 @@ document.addEventListener('DOMContentLoaded', () => {
     {% if session.user_id %}loadUserRatings();{% endif %}
     loadAllCommunityRatings();
     updateLoadMoreInfo();
-    if (localStorage.getItem('gridMode') === '4') toggleGrid();
+if (localStorage.getItem('gridMode') === '4') {
+    gridIs4 = false; // On le met à false pour que toggleGrid() le passe à true
+    toggleGrid();
+} else {
+    gridIs4 = true; // On le met à true pour que toggleGrid() le passe à false
+    toggleGrid();
+}
     const params = new URLSearchParams(window.location.search);
     if (params.get('title_only') === '1') document.getElementById('btn-title-only')?.classList.add('active');
     if (hideImages) {
@@ -1417,60 +1423,79 @@ function navigate(url) {
     window.location.href = url; 
 }
 
-// Version améliorée de loadMoreWorks avec loader
+// Version unique et corrigée de loadMoreWorks
 window.loadMoreWorks = async function() {
+    // 1. Sécurité pour éviter les clics multiples
     if (isLoading || !hasMore) return;
     isLoading = true;
+
     const btn = document.querySelector('.load-more-btn');
-    const originalText = btn?.textContent;
+    const infoArea = document.querySelector('.load-more-info');
+    
     if (btn) { 
         btn.disabled = true; 
-        btn.innerHTML = '<span class="btn-loader"></span> CHARGEMENT…';
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> CHARGEMENT…';
     }
-    try {
-        let url = `/api/works?page=${currentPage + 1}&limit=12`;
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('q')) url += `&q=${urlParams.get('q')}`;
-        urlParams.getAll('artist').forEach(a => url += `&artist=${a}`);
-        urlParams.getAll('city').forEach(c => url += `&city=${c}`);
-        urlParams.getAll('museum').forEach(m => url += `&museum=${m}`);
-        if (urlParams.get('country')) url += `&country=${urlParams.get('country')}`;
-        urlParams.getAll('movement').forEach(m => url += `&movement=${m}`);
-        urlParams.getAll('type').forEach(t => url += `&type=${t}`);
-        urlParams.getAll('genre').forEach(g => url += `&genre=${g}`);
-        if (urlParams.get('title_only') === '1') url += '&title_only=1';
 
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data.works && data.works.length) {
-            const grid = document.querySelector('.works-grid');
-            for (const w of data.works) grid.appendChild(buildCard(w));
-            currentPage++;
+    try {
+        // 2. Récupérer TOUS les paramètres actuels de l'URL (filtres inclus)
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // 3. Mettre à jour la page pour le prochain chargement
+        const nextPage = currentPage + 1;
+        urlParams.set('page', nextPage);
+        urlParams.set('limit', 12);
+
+        // 4. Appel API
+        const response = await fetch(`/api/works?${urlParams.toString()}`);
+        if (!response.ok) throw new Error('Erreur réseau');
+        
+        const data = await response.json();
+
+        if (data.works && data.works.length > 0) {
+            const grid = document.getElementById('works-grid');
+            
+            // 5. Ajouter les nouvelles cartes
+            data.works.forEach(w => {
+                grid.appendChild(buildCard(w));
+            });
+
+            // 6. Mettre à jour l'état global
+            currentPage = nextPage;
             hasMore = data.has_more;
             displayedCount += data.works.length;
-            for (const w of data.works) {
-                await loadOneCommunityRating(w.id);
-                {% if session.user_id %}await fetchUserRating(w.id);{% endif %}
-            }
-            refreshAllNoteDisplays();
+
+            // 7. Charger les notes pour les nouveaux éléments
+            // On le fait en arrière-plan pour ne pas bloquer l'UI
+            data.works.forEach(w => {
+                loadOneCommunityRating(w.id);
+                {% if session.user_id %} fetchUserRating(w.id); {% endif %}
+            });
+
+            // Petit délai pour laisser les notes se charger avant de rafraîchir l'affichage
+            setTimeout(refreshAllNoteDisplays, 300);
+        } else {
+            hasMore = false;
         }
-        if (!hasMore) { 
-            const c = document.querySelector('.load-more-container'); 
-            if (c) c.style.display = 'none'; 
+
+        // 8. Cacher le bouton si c'est fini
+        if (!hasMore && btn) {
+            const container = document.querySelector('.load-more-container');
+            if (container) container.style.display = 'none';
         }
-        updateLoadMoreInfo();
-    } catch(e) { 
-        console.error('Erreur chargement:', e); 
-    } finally { 
-        isLoading = false; 
-        if (btn) { 
-            btn.disabled = false; 
-            btn.innerHTML = originalText || 'VOIR PLUS';
-            updateLoadMoreInfo();
-        } 
+
+    } catch (error) {
+        console.error('Erreur lors du chargement des œuvres:', error);
+        if (btn) btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ERREUR, RÉESSAYER';
+    } finally {
+        // 9. Libérer le verrou
+        isLoading = false;
+        if (btn && hasMore) {
+            btn.disabled = false;
+            updateLoadMoreInfo(); // Met à jour le texte du bouton
+        }
     }
 };
-
 
 function toggleExpandAll() {
     allExpanded = !allExpanded;
@@ -1817,16 +1842,19 @@ function toggleGroup(btn) {
         navigate('/suggestions?' + p);
     }
 
-    function updateLoadMoreInfo() {
-        const info = document.querySelector('.load-more-info');
-        if (info) info.innerHTML = `Affichage de <span>${displayedCount}</span> œuvre${displayedCount > 1 ? 's' : ''} sur <span>${totalCount}</span>`;
-        const btn = document.querySelector('.load-more-btn');
-        if (btn && !isLoading) {
-            const remaining = totalCount - displayedCount;
-            btn.textContent = remaining > 0 ? `VOIR PLUS (${Math.min(remaining, 12)} supplémentaires)` : 'TOUT AFFICHÉ';
+function updateLoadMoreInfo() {
+    const info = document.querySelector('.load-more-info');
+    if (info) {
+        info.innerHTML = `Affichage de <span>${displayedCount}</span> œuvre${displayedCount > 1 ? 's' : ''} sur <span>${totalCount}</span>`;
+    }
+    const btn = document.querySelector('.load-more-btn');
+    if (btn && !isLoading) {
+        const remaining = totalCount - displayedCount;
+        if (remaining > 0) {
+            btn.innerHTML = `VOIR PLUS (${Math.min(remaining, 12)} supplémentaires)`;
         }
     }
-
+}
     window.loadMoreWorks = async function() {
         if (isLoading || !hasMore) return;
         isLoading = true;
@@ -2127,14 +2155,15 @@ function toggleGrid() {
     const btn = document.getElementById('btn-grid-toggle');
     
     if (gridIs4) {
-        // Mode 4 colonnes - bouton NORMAL (pas de couleur)
+        // Mode 4 colonnes
         grid?.classList.add('grid-4');
-        btn?.classList.remove('active');  // Enlève la classe active
-        btn.innerHTML = '<i class="fas fa-large"></i> <span>4 colonnes</span>';
+        btn?.classList.remove('active');  
+        // CORRECTION ICI : fa-th-large au lieu de fa-large
+        btn.innerHTML = '<i class="fas fa-th-large"></i> <span>4 colonnes</span>';
     } else {
-        // Mode 6 colonnes - bouton COLORÉ (violet)
+        // Mode 6 colonnes
         grid?.classList.remove('grid-4');
-        btn?.classList.add('active');     // Ajoute la classe active
+        btn?.classList.add('active');     
         btn.innerHTML = '<i class="fas fa-th"></i> <span>6 colonnes</span>';
     }
     localStorage.setItem('gridMode', gridIs4 ? '4' : '6');
@@ -2197,20 +2226,19 @@ let advancedSearchActive = localStorage.getItem('advancedSearch') === 'true';
 
 function toggleAdvancedSearch() {
     const urlParams = new URLSearchParams(window.location.search);
-    const isActive = urlParams.has('advanced') && urlParams.get('advanced') === '1';
+    const isActive = urlParams.get('advanced') === '1';
     
-    const newState = !isActive;
-    localStorage.setItem('advancedSearch', newState);
-    
-    const url = new URL(window.location.href);
-    if (newState) {
-        url.searchParams.set('advanced', '1');
+    if (isActive) {
+        urlParams.delete('advanced');
     } else {
-        url.searchParams.delete('advanced');
-        // En mode normal, il faut aussi supprimer le paramètre page
-        url.searchParams.delete('page');
+        urlParams.set('advanced', '1');
     }
-    window.location.href = url.toString();
+    
+    // On réinitialise la page à 1 lors du changement de mode
+    urlParams.delete('page');
+    
+    // On recharge avec les nouveaux paramètres
+    window.location.href = window.location.pathname + '?' + urlParams.toString();
 }
 
 function showAdvancedMode() {
@@ -2405,38 +2433,27 @@ function resetFilterDisplay() {
 // Initialisation au chargement - VERSION COMPLÈTE
 (function initAdvancedMode() {
     const urlParams = new URLSearchParams(window.location.search);
-    let advancedSearchActive = false;
     
-    // Vérifier d'abord l'URL
-    if (urlParams.has('advanced') && urlParams.get('advanced') === '1') {
-        advancedSearchActive = true;
-        localStorage.setItem('advancedSearch', 'true');
-    } else {
-        // Sinon vérifier localStorage
-        advancedSearchActive = localStorage.getItem('advancedSearch') === 'true';
-        // Si le mode est actif mais pas dans l'URL, on recharge pour ajouter le paramètre
-        if (advancedSearchActive) {
-            const url = new URL(window.location.href);
-            url.searchParams.set('advanced', '1');
-            window.location.href = url.toString();
-            return; // Arrêter l'exécution car on recharge
-        }
-    }
-    
-    // Appliquer le mode après le chargement complet de la page
+    // On ne regarde QUE l'URL. Si pas de "advanced=1", on est en mode normal.
+    const isAdvancedInUrl = urlParams.get('advanced') === '1';
+
     document.addEventListener('DOMContentLoaded', () => {
-        if (advancedSearchActive) {
-            const btn = document.getElementById('btn-advanced-search');
-            const badge = document.getElementById('advanced-badge');
-            const sidebar = document.querySelector('.filters-sidebar');
+        const sidebar = document.querySelector('.filters-sidebar');
+        const btn = document.getElementById('btn-advanced-search');
+        const badge = document.getElementById('advanced-badge');
+
+        if (isAdvancedInUrl) {
+            // Activer le mode avancé uniquement si présent dans l'URL
             if (btn) btn.classList.add('active');
             if (badge) badge.style.display = 'inline-block';
             if (sidebar) sidebar.classList.add('advanced-mode-active');
             showAdvancedMode();
+        } else {
+            // Mode normal par défaut
+            showNormalMode();
         }
     });
 })();
-
 
 
 
@@ -2587,14 +2604,7 @@ document.querySelector('.mobile-filter-btn')?.addEventListener('click', openBott
     <div class="chips-row" id="genre-chips"></div>
 </div>
 
-<!-- Actions supplémentaires (mobile uniquement) -->
-<div class="filter-section mobile-only-actions">
-    <div class="filter-section-title">Affichage</div>
-    <div class="chips-row">
-        <div id="mobile-title-search-chip" class="filter-chip">Titre uniquement</div>
-        <div id="mobile-notes-toggle-chip" class="filter-chip mode-community">Notes publiques</div>
-    </div>
-</div>
+
 
 <div class="filter-actions">
     <button class="btn-clear" onclick="clearAllFilters()">Tout effacer</button>
